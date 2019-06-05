@@ -48,18 +48,16 @@ namespace OPIDDaily.Controllers
                 }
             }
 
-            /*
-            using (OpidDB opidcontext = new OpidDB())
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                var user = opidcontext.Invitations.Where(i => i.UserName == userName).SingleOrDefault();
+                var user = opiddailycontext.Invitations.Where(i => i.UserName == userName).SingleOrDefault();
 
                 if (user != null)
                 {
                     return true;
                 }
             }
-            */
-
+            
             return false;
         }
 
