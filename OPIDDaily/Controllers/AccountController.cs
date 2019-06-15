@@ -152,7 +152,7 @@ namespace OPIDDaily.Controllers
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             
-            Invitation invite = DataManager.AcceptedInvitation(model.UserName, model.Email);
+            Invitation invite = Identity.AcceptedInvitation(model.UserName, model.Email);
 
             if (invite == null)
             {

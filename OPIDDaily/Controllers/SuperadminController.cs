@@ -55,14 +55,14 @@ namespace OPIDDaily.Controllers
                 return status;
             }
 
-            DataManager.ExtendInvitation(invite);
+            Identity.ExtendInvitation(invite);
 
             return "Success";
         }
 
         public JsonResult GetUsers(int page, int rows)
         {
-            List<InvitationViewModel> invitations = DataManager.GetUsers();
+            List<InvitationViewModel> invitations = Identity.GetUsers();
 
             var jsonData = new
             {

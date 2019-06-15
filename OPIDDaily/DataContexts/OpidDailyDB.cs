@@ -17,6 +17,8 @@ namespace OPIDDaily.DataContexts
         }
 
         public DbSet<Invitation> Invitations { get; set; }
+
+        public DbSet<Client> Clients { get; set; }
     }
     
 }
