@@ -8,9 +8,9 @@ using System.Web.Mvc;
 
 namespace OPIDDaily.Controllers
 {
-    public class FrontDeskController : Controller
+    public class InterviewerController : UsersController
     {
-        // GET: FrontDesk
+        // GET: Interviewer
         public ActionResult Home()
         {
             return View();

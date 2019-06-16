@@ -32,7 +32,7 @@ namespace OPIDDaily.Controllers
 
         public JsonResult GetRoles(int page, int rows)
         {
-            List<RoleViewModel> roles = DataManager.GetRoles();
+            List<RoleViewModel> roles = Identity.GetRoles();
 
             var jsonData = new
             {
