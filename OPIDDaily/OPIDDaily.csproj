@@ -438,7 +438,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>59272</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost/OPIDDaily</IISUrl>
+          <IISUrl>http://localhost/OPIDDaily</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

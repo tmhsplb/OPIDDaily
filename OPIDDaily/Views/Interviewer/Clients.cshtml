@@ -4,9 +4,7 @@
     Layout = "~/Views/Shared/_Interviewer.cshtml";
 }
 
-<br /><br />
-<p>Users</p>
-<br />
+<br /><br /><br />
 
 <div>
     <table id="clientsGrid"></table>
@@ -31,9 +29,10 @@
         { key: false, align: 'center', name: 'ReferralDate', index: 'ReferralDate', width: 150, editable: false, sortable: true, search: false },
         { key: false, align: 'center', name: 'AppearanceDate', index: 'AppearanceDate', width: 150, editable: false, sortable: true, search: false },
         { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: false },
+        { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'MiddleName', index: 'MiddleName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'BirthName', index: 'BirthName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false } 
+        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' }  } 
         ],
         pager: jQuery('#clientsPager'),
         rowNum: 20,
@@ -69,8 +68,8 @@
                   }
               }
           }
-      }
-       
+      },
+             
       );
 
     // http://www.trirand.com/blog/?page_id=393/help/how-to-use-add-form-dialog-popup-window-set-position
@@ -91,5 +90,4 @@
         bNo: "No",
         bExit: "Cancel"
     });
-
 </script>

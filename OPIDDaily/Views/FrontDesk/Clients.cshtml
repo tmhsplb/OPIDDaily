@@ -4,9 +4,7 @@
     Layout = "~/Views/Shared/_FrontDesk.cshtml";
 }
 
-<br /><br />
-<p>Users</p>
-<br />
+<br /><br /><br />
 
 <div>
     <table id="clientsGrid"></table>
@@ -28,13 +26,13 @@
         colNames: ['Id', 'Referral Date', 'Appearance Date', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'Notes'],
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
-        { key: false, align: 'center', name: 'ReferralDate', index: 'ReferralDate', width: 150, editable: false, sortable: true, search: false },
-        { key: false, align: 'center', name: 'AppearanceDate', index: 'AppearanceDate', width: 150, editable: false, sortable: true, search: false },
+        { key: false, align: 'center', name: 'ReferralDate', index: 'ReferralDate', width: 150, editable: true, sortable: true, search: false },
+        { key: false, align: 'center', name: 'AppearanceDate', index: 'AppearanceDate', width: 150, editable: true, sortable: true, search: false },
         { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'MiddleName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'BirthName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false } 
+        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' }  } 
         ],
         pager: jQuery('#clientsPager'),
         rowNum: 20,
@@ -117,5 +115,4 @@
         bNo: "No",
         bExit: "Cancel"
     });
-
 </script>

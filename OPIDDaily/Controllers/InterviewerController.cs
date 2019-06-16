@@ -10,20 +10,24 @@ namespace OPIDDaily.Controllers
 {
     public class InterviewerController : UsersController
     {
-        // GET: Interviewer
         public ActionResult Home()
         {
             return View();
         }
 
-        public JsonResult GetClients() //(int page, int rows)
+        public ActionResult ManageClients()
+        {
+            return View("Clients");
+        }
+
+        public JsonResult GetClients(int? page = 1, int? rows = 20)
         {
             List<ClientViewModel> clients = Clients.GetClients();
 
             var jsonData = new
             {
                 total = 1,
-                page = 1,
+                page,  
                 records = clients.Count,
                 rows = clients
             };
