@@ -37,9 +37,10 @@
         { key: false, name: 'Email', index: 'Email', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'Role', index: 'Role', width: 150, editable: true, edittype: 'select', editoptions: { value: { '--': '--', 'FrontDesk': 'FrontDesk', 'Interviewer': 'Interviewer' } }, sortable: false, search: false }
         ],
-        pager: jQuery('#invitationsPager'),
-        rowNum: 20,
-        rowList: [5, 10, 15, 20],
+        //pager: jQuery('#invitationsPager'),
+        pager: '#invitationsPager',
+        rowNum: 25,
+       // rowList: [5, 10, 15, 20],
         height: "100%",
         viewrecords: true,
         loadonce: false,
@@ -128,10 +129,11 @@
 <script>
     $(function () {
         var theHub = $.connection.oPIDDailyHub;
+        var lastPage = jQuery("#invitationsGrid").jqGrid('getGridParam', 'lastpage');
 
        theHub.client.refreshPage = function () {
             $.ajax({
-                url: "/opiddaily/superadmin/GetUsers?page=1&rows=20",
+                url: "/opiddaily/superadmin/GetUsers?page=" + lastPage + "&rows=25",
                 cache: false,
                 dataType: "json",
                 success: function (data) {

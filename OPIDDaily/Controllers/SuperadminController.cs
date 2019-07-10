@@ -66,11 +66,18 @@ namespace OPIDDaily.Controllers
         {
             List<InvitationViewModel> invitations = Identity.GetUsers();
 
+            int pageIndex = page - 1;
+            int pageSize = rows;
+            int totalRecords = invitations.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            invitations = invitations.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
             var jsonData = new
             {
-                total = 1,
+                total = totalPages,
                 page,
-                records = invitations.Count,
+                records = totalRecords,
                 rows = invitations
             };
 
