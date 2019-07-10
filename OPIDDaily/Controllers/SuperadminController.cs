@@ -57,20 +57,15 @@ namespace OPIDDaily.Controllers
 
             Identity.ExtendInvitation(invite);
 
-            OPIDDailyHub.Refresh();
-
             return "Success";
         }
 
         public string EditUser(InvitationViewModel invite)
         {
-            string status = DataManager.EditUser(invite);
-
-            OPIDDailyHub.Refresh();
+            string status = Users.EditUser(invite);
             return status;
         }
-
-
+        
         public JsonResult GetUsers(int page, int rows)
         {
             List<InvitationViewModel> invitations = Identity.GetUsers();

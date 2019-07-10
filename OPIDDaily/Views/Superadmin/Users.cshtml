@@ -82,7 +82,7 @@
           afterComplete: function (response) {
               if (response.responseText) {
                   if (response.responseText != "Success") {
-                      alert(response.responseText);
+                      // alert(response.responseText);
                   }
               }
           }
@@ -95,7 +95,7 @@
           recreateForm: true,
           afterComplete: function (response) {
               if (response.responseText) {
-                  alert(response.responseText);
+                  // alert(response.responseText);
               }
           }
       });
@@ -120,31 +120,5 @@
         bExit: "Cancel"
     });
 
-</script>
-
-<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.signalR-2.4.1.min.js")"></script>
-
-<script type="text/javascript" src="~/signalr/hubs"></script>
-
-<script>
-    $(function () {
-        var theHub = $.connection.oPIDDailyHub;
-        var lastPage = jQuery("#invitationsGrid").jqGrid('getGridParam', 'lastpage');
-
-       theHub.client.refreshPage = function () {
-            $.ajax({
-                url: "/opiddaily/superadmin/GetUsers?page=" + lastPage + "&rows=25",
-                cache: false,
-                dataType: "json",
-                success: function (data) {
-                    var mygrid = jQuery("#invitationsGrid")[0];
-                    mygrid.addJSONData(data); 
-                }
-            });
-        }; 
-        
-        $.connection.hub.start().done(function () {       
-        });
-    });
 </script>
 

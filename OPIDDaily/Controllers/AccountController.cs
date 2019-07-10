@@ -203,9 +203,12 @@ namespace OPIDDaily.Controllers
                         UserManager.Delete(user);
                         opiddailycontext.Invitations.Remove(invite);
                         opiddailycontext.SaveChanges();
-
-                        OPIDDailyHub.Refresh();
-
+                         return "Success";
+                    }
+                    else
+                    {
+                        opiddailycontext.Invitations.Remove(invite);
+                        opiddailycontext.SaveChanges();
                         return "Success";
                     }
                 }

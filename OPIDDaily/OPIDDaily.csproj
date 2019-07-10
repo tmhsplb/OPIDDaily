@@ -186,7 +186,8 @@
     <Compile Include="DAL\Clients.cs" />
     <Compile Include="DAL\DataManager.cs" />
     <Compile Include="DAL\Identity.cs" />
-    <Compile Include="DAL\OPIDDailyHub.cs" />
+    <Compile Include="DAL\CheckinHub.cs" />
+    <Compile Include="DAL\Users.cs" />
     <Compile Include="DataContexts\IdentityDB.cs" />
     <Compile Include="DataContexts\IdentityMigrations\201906051504117_InitialCreate.cs" />
     <Compile Include="DataContexts\IdentityMigrations\201906051504117_InitialCreate.Designer.cs">

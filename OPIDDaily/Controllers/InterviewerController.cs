@@ -20,19 +20,37 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
-        public JsonResult GetClients(int? page = 1, int? rows = 20)
+        public JsonResult GetClients(int page, int rows)
         {
             List<ClientViewModel> clients = Clients.GetClients();
 
+            int pageIndex = page - 1;
+            int pageSize = rows;
+            int totalRecords = clients.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
             var jsonData = new
             {
-                total = 1,
+                total = totalPages,
                 page,  
-                records = clients.Count,
+                records = totalRecords,
                 rows = clients
             };
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
+        public string EditClient(ClientViewModel cvm)
+        {
+            string status = Clients.EditClient(cvm);
+
+            if (status.Equals("Success"))
+            {
+                CheckinHub.Refresh();
+            }
+            return status;
         }
     }
 }
