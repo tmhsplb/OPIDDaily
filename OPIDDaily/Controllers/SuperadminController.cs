@@ -57,6 +57,8 @@ namespace OPIDDaily.Controllers
 
             Identity.ExtendInvitation(invite);
 
+            OPIDDailyHub.Refresh();
+
             return "Success";
         }
 
