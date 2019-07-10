@@ -388,6 +388,7 @@
     <Content Include="Views\Shared\_Interviewer.cshtml" />
     <Content Include="Views\Interviewer\Clients.cshtml" />
     <Content Include="Views\FrontDesk\Clients.cshtml" />
+    <Content Include="Views\Account\Warning.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

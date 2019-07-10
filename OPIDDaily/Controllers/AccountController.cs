@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using OPIDDaily.Models;
 using OPIDDaily.DAL;
 using OpidDailyEntities;
+using OPIDDaily.DataContexts;
 
 namespace OPIDDaily.Controllers
 {
@@ -19,7 +20,7 @@ namespace OPIDDaily.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        
         public AccountController()
         {
         }
@@ -156,7 +157,7 @@ namespace OPIDDaily.Controllers
 
             if (invite == null)
             {
-                ViewBag.Warning = "Registration failed. You must be invited to register for OPIDChecks and must register using the user name and email you supplied the Site Administrator when you were invited.";
+                ViewBag.Warning = "Registration failed. You must be invited to register for OPIDDaily and must register using the user name and email you supplied the Site Administrator when you were invited.";
                 return View("Warning");
             }
             
@@ -185,6 +186,32 @@ namespace OPIDDaily.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        public async Task<string> DeleteUser(int id)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                Invitation invite = opiddailycontext.Invitations.Where(i => i.Id == id).SingleOrDefault();
+
+                if (invite != null)
+                {
+                    var user = await UserManager.FindByNameAsync(invite.UserName);
+
+                    if (user != null)
+                    {
+                        UserManager.Delete(user);
+                        opiddailycontext.Invitations.Remove(invite);
+                        opiddailycontext.SaveChanges();
+
+                        OPIDDailyHub.Refresh();
+
+                        return "Success";
+                    }
+                }
+
+                return "Failure";
+            }
         }
 
         //
