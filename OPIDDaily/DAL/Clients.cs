@@ -15,24 +15,24 @@ namespace OPIDDaily.DAL
             return new ClientViewModel
             {
                 Id = client.Id,
-                ReferralDate = client.ReferralDate.ToString("MM/dd/yyyy"),
-                AppearanceDate = (client.AppearanceDate == (System.DateTime)System.Data.SqlTypes.SqlDateTime.Null ? string.Empty : client.AppearanceDate.ToString("MM/dd/yyyy")),
                 LastName = client.LastName,
                 FirstName = client.FirstName,
                 MiddleName = client.MiddleName,
                 BirthName = client.BirthName,
+                DOB = client.DOB.ToString("MM/dd/yyyy"),
+                Age = client.Age,
                 Notes = client.Notes,
             };
         }
 
         private static void ClientViewModelToClientEntity(ClientViewModel cvm, Client client)
         {
-            client.ReferralDate = DateTime.Parse(cvm.ReferralDate);
-            client.AppearanceDate = (string.IsNullOrEmpty(cvm.AppearanceDate) ? (System.DateTime)System.Data.SqlTypes.SqlDateTime.Null : DateTime.Parse(cvm.AppearanceDate));
             client.LastName = cvm.LastName;
             client.FirstName = cvm.FirstName;
             client.MiddleName = cvm.MiddleName;
             client.BirthName = cvm.BirthName;
+            client.DOB = DateTime.Parse(cvm.DOB);
+            client.Age = CalculateAge(DateTime.Parse(cvm.DOB));
             client.Notes = cvm.Notes;
         }
 
@@ -59,12 +59,12 @@ namespace OPIDDaily.DAL
             {
                 Client client = new Client
                 {
-                    ReferralDate = DateTime.Parse(cvm.ReferralDate),
-                    AppearanceDate = DateTime.Parse(cvm.AppearanceDate),
                     FirstName = cvm.FirstName,
                     MiddleName = cvm.MiddleName,
                     LastName = cvm.LastName,
                     BirthName = cvm.BirthName,
+                    DOB = DateTime.Parse(cvm.DOB),
+                    Age = CalculateAge(DateTime.Parse(cvm.DOB)),
                     Notes = cvm.Notes
                 };
 
@@ -91,11 +91,12 @@ namespace OPIDDaily.DAL
         }
 
         // https://stackoverflow.com/questions/9/calculate-age-in-c-sharp
-        private static int CalculateAge(DateTime dob, DateTime now)
+        private static int CalculateAge(DateTime dob)
         {
-            int age = now.Year - dob.Year;
+            DateTime today = DateTime.Today;
+            int age = today.Year - dob.Year;
 
-            if (now.Month < dob.Month || (now.Month == dob.Month && now.Day < dob.Day))
+            if (today.Month < dob.Month || (today.Month == dob.Month && today.Day < dob.Day))
                 age--;
 
             return age;
