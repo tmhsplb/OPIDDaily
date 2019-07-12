@@ -205,6 +205,14 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\201907120006570_History.Designer.cs">
       <DependentUpon>201907120006570_History.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907121958186_DOBandAge.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907121958186_DOBandAge.Designer.cs">
+      <DependentUpon>201907121958186_DOBandAge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907122132153_RemoveTwoDates.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907122132153_RemoveTwoDates.Designer.cs">
+      <DependentUpon>201907122132153_RemoveTwoDates.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -428,6 +436,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907120006570_History.resx">
       <DependentUpon>201907120006570_History.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907121958186_DOBandAge.resx">
+      <DependentUpon>201907121958186_DOBandAge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907122132153_RemoveTwoDates.resx">
+      <DependentUpon>201907122132153_RemoveTwoDates.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -10,10 +10,6 @@ namespace OpidDailyEntities
         [Key]
         public int Id { get; set; }
 
-        public DateTime ReferralDate { get; set; }
-
-        public DateTime AppearanceDate { get; set; }
-
         public string LastName { get; set; }
 
         public string FirstName { get; set; }
@@ -21,6 +17,10 @@ namespace OpidDailyEntities
         public string MiddleName { get; set; }
 
         public string BirthName { get; set; }
+
+        public DateTime DOB { get; set; }
+
+        public int Age { get; set; }
         
         public string Notes { get; set; }
 
