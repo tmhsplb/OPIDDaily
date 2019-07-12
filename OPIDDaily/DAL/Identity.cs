@@ -73,20 +73,12 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void ExtendInvitation(InvitationViewModel invitation)
+        public static void ExtendInvitation(InvitationViewModel ivm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                Invitation invite = new Invitation
-                {
-                    Extended = DateTime.Today,
-                    Accepted = (System.DateTime)System.Data.SqlTypes.SqlDateTime.Null,
-                    UserName = invitation.UserName,
-                    FullName = invitation.FullName,
-                    Email = invitation.Email,
-                    Role = invitation.Role,
-                };
-
+                Invitation invite = InvitationViewModelToInvite(ivm);
+                   
                 opiddailycontext.Invitations.Add(invite);
                 opiddailycontext.SaveChanges();
             }
@@ -105,6 +97,19 @@ namespace OPIDDaily.DAL
                 FullName = invite.FullName,
                 Email = invite.Email,
                 Role = invite.Role,
+            };
+        }
+
+        private static Invitation InvitationViewModelToInvite(InvitationViewModel ivm)
+        {
+            return new Invitation
+            {
+                Extended = DateTime.Today,
+                Accepted = (System.DateTime)System.Data.SqlTypes.SqlDateTime.Null,
+                UserName = ivm.UserName,
+                FullName = ivm.FullName,
+                Email = ivm.Email,
+                Role = ivm.Role
             };
         }
 

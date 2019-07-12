@@ -89,5 +89,32 @@ namespace OPIDDaily.DAL
                 return "Failure";
             }
         }
+
+        // https://stackoverflow.com/questions/9/calculate-age-in-c-sharp
+        private static int CalculateAge(DateTime dob, DateTime now)
+        {
+            int age = now.Year - dob.Year;
+
+            if (now.Month < dob.Month || (now.Month == dob.Month && now.Day < dob.Day))
+                age--;
+
+            return age;
+        }
+
+        public static string ClientBeingServed(int nowServing)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                Client client = opidcontext.Clients.Find(nowServing);
+
+                if (client != null)
+                {
+                    string clientName = string.Format("{0} {1}", client.FirstName, client.LastName);
+                    return clientName;
+                }
+
+                return "Unknown";
+            }
+        }
     }
 }

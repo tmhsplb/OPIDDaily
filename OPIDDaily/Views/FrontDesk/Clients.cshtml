@@ -23,7 +23,7 @@
         url: "@Url.Action("GetClients", "FrontDesk")",
         datatype: "json",
         mtype: "Get",
-        colNames: ['Id', 'Referral Date', 'Appearance Date', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'Notes'],
+        colNames: ['Id', 'Referral Date', 'Appearance Date', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'XID', 'XBC', 'Notes'],
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ReferralDate', index: 'ReferralDate', width: 150, editable: true, sortable: true, search: false },
@@ -32,12 +32,25 @@
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'MiddleName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'BirthName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
+        { name: 'XID', index: 'XID', align: 'center', editable: true, edittype: "checkbox", editoptions: { value: "Yes:''" } },
+        { name: 'XBC', index: 'XBC', align: 'center', editable: true, edittype: "checkbox", editoptions: { value: "Yes:''" }, },
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' }  }
         ],
        // pager: jQuery('#clientsPager'),
         pager: '#clientsPager',
         rowNum: 25,
-      //  rowList: [5, 10, 15, 20],
+        onSelectRow: function (nowServing) {
+            if (nowServing == null) {
+                alert("nowServing is null!");
+            } else {
+                // alert("clientsGrid nowServing = " + nowServing);
+                jQuery("#clientsGrid").jqGrid('setGridParam',
+                    {
+                        postData: { nowServing: nowServing }, 
+                        url: "@Url.Action("NowServing", "FrontDesk")"
+                    }).trigger('reloadGrid');
+            }
+        },
         height: "100%",
         viewrecords: true,
         loadonce: false,

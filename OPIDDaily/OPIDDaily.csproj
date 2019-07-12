@@ -187,7 +187,9 @@
     <Compile Include="DAL\DataManager.cs" />
     <Compile Include="DAL\Identity.cs" />
     <Compile Include="DAL\CheckinHub.cs" />
+    <Compile Include="DAL\SessionHelper.cs" />
     <Compile Include="DAL\Users.cs" />
+    <Compile Include="DAL\Visits.cs" />
     <Compile Include="DataContexts\IdentityDB.cs" />
     <Compile Include="DataContexts\IdentityMigrations\201906051504117_InitialCreate.cs" />
     <Compile Include="DataContexts\IdentityMigrations\201906051504117_InitialCreate.Designer.cs">
@@ -199,6 +201,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\201906152111225_Clients.Designer.cs">
       <DependentUpon>201906152111225_Clients.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907120006570_History.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907120006570_History.Designer.cs">
+      <DependentUpon>201907120006570_History.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -209,6 +215,7 @@
     <Compile Include="Models\InvitationViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RoleViewModel.cs" />
+    <Compile Include="Models\VisitViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -390,6 +397,10 @@
     <Content Include="Views\Interviewer\Clients.cshtml" />
     <Content Include="Views\FrontDesk\Clients.cshtml" />
     <Content Include="Views\Account\Warning.cshtml" />
+    <Content Include="Views\FrontDesk\Warning.cshtml" />
+    <Content Include="Views\FrontDesk\History.cshtml" />
+    <Content Include="Views\Interviewer\History.cshtml" />
+    <Content Include="Views\Interviewer\Warning.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -414,6 +425,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201906152111225_Clients.resx">
       <DependentUpon>201906152111225_Clients.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907120006570_History.resx">
+      <DependentUpon>201907120006570_History.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

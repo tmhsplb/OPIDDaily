@@ -23,5 +23,7 @@ namespace OpidDailyEntities
         public string BirthName { get; set; }
         
         public string Notes { get; set; }
+
+        public ICollection<Visit> Visits { get; set; }
     }
 }
