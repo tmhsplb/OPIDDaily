@@ -213,6 +213,14 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\201907122132153_RemoveTwoDates.Designer.cs">
       <DependentUpon>201907122132153_RemoveTwoDates.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907131549174_ServiceTicket.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907131549174_ServiceTicket.Designer.cs">
+      <DependentUpon>201907131549174_ServiceTicket.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907131651454_Stage.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907131651454_Stage.Designer.cs">
+      <DependentUpon>201907131651454_Stage.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -442,6 +450,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907122132153_RemoveTwoDates.resx">
       <DependentUpon>201907122132153_RemoveTwoDates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907131549174_ServiceTicket.resx">
+      <DependentUpon>201907131549174_ServiceTicket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907131651454_Stage.resx">
+      <DependentUpon>201907131651454_Stage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

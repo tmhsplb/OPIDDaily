@@ -5,6 +5,8 @@
 }
 
 <br /><br /><br />
+<h2>@ViewBag.ServiceDate</h2>
+<br/>
 
 <div>
     <table id="clientsGrid"></table>
@@ -23,9 +25,12 @@
         url: "@Url.Action("GetClients", "FrontDesk")",
         datatype: "json",
         mtype: "Get",
-        colNames: ['Id', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'XID', 'XBC', 'Notes'],
+        colNames: ['Id', 'ST', 'WT', 'S','Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'XID', 'XBC', 'Notes'],
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
+        { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
+        { key: false, align: 'center', name: 'WaitTime', index: 'WaitTime', width: 50, editable: false, sortable: true, search: false },
+        { key: false, name: 'Stage', index: 'Stage', width: 100, editable: true, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing' : 'Interviewing', 'Interviewed' : 'Interviewed', 'BackOffice' : 'BackOffice', 'Done' : 'Done' } }, sortable: false, search: false },
         { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'MiddleName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
@@ -36,7 +41,6 @@
         { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' }  }
         ],
-       // pager: jQuery('#clientsPager'),
         pager: '#clientsPager',
         rowNum: 25,
         
