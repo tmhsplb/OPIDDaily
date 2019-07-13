@@ -9,9 +9,11 @@ namespace OpidDaily.Models
     {
         public int Id { get; set; }
 
-        public string ReferralDate { get; set; }
+        public string ServiceTicket { get; set; }
 
-        public string AppearanceDate { get; set; }
+        public int WaitTime { get; set; }
+
+        public string Stage { get; set; }
 
         public string LastName { get; set; }
 
@@ -24,6 +26,18 @@ namespace OpidDaily.Models
         public string DOB { get; set; }
 
         public int Age { get; set; }
+
+        public DateTime Screened { get; set; }
+
+        public DateTime CheckedIn { get; set; }
+
+        public DateTime Interviewing { get; set; }
+
+        public DateTime Interviewed { get; set; }
+
+        public DateTime BackOffice { get; set; }
+
+        public DateTime Done { get; set; }
         
         public string Notes { get; set; }
     }

@@ -5,6 +5,8 @@
 }
 
 <br /><br /><br />
+<h2>@ViewBag.ServiceDate</h2>
+<br />
 
 <div>
     <table id="clientsGrid"></table>
@@ -46,9 +48,9 @@
                 // alert("clientsGrid nowServing = " + nowServing);
                 jQuery("#clientsGrid").jqGrid('setGridParam',
                     {
-                        postData: { nowServing: nowServing }, 
+                        postData: { nowServing: nowServing },
                         url: "@Url.Action("NowServing", "FrontDesk")"
-                    }).trigger('reloadGrid').jqGrid('setSelection', nowServing, true);   
+                    }).trigger('reloadGrid').jqGrid('setSelection', nowServing, true);
             }
         },
         height: "100%",

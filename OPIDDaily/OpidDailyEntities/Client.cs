@@ -10,6 +10,14 @@ namespace OpidDailyEntities
         [Key]
         public int Id { get; set; }
 
+        public DateTime ServiceDate { get; set; }
+
+        public string ServiceTicket { get; set; }
+
+        public int WaitTime { get; set; }
+
+        public string Stage { get; set; }
+
         public string LastName { get; set; }
 
         public string FirstName { get; set; }
@@ -23,6 +31,18 @@ namespace OpidDailyEntities
         public int Age { get; set; }
         
         public string Notes { get; set; }
+
+        public DateTime Screened { get; set; }
+
+        public DateTime CheckedIn { get; set; }
+
+        public DateTime Interviewing { get; set; }
+
+        public DateTime Interviewed { get; set; }
+
+        public DateTime BackOffice { get; set; }
+
+        public DateTime Done { get; set; }
 
         public ICollection<Visit> Visits { get; set; }
     }

@@ -18,12 +18,17 @@ namespace OPIDDaily.Controllers
 
         public ActionResult ManageClients()
         {
+            DateTime today = DateTime.Today;
+            ViewBag.ServiceDate = today.ToString("ddd  MMM d");
             return View("Clients");
         }
 
         public JsonResult GetClients(int page, int rows)
         {
-            List<ClientViewModel> clients = Clients.GetClients();
+            DateTime today = DateTime.Today;
+            ViewBag.ServiceDate = today.ToString("ddd  MMM d");
+
+            List<ClientViewModel> clients = Clients.GetClients(DateTime.Today);
 
             int pageIndex = page - 1;
             int pageSize = rows;
