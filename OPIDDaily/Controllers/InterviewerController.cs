@@ -54,7 +54,7 @@ namespace OPIDDaily.Controllers
 
             if (status.Equals("Success"))
             {
-                CheckinHub.Refresh();
+                DailyHub.Refresh();
             }
             return status;
         }

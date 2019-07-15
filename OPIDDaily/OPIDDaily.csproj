@@ -187,7 +187,7 @@
     <Compile Include="DAL\Clients.cs" />
     <Compile Include="DAL\DataManager.cs" />
     <Compile Include="DAL\Identity.cs" />
-    <Compile Include="DAL\CheckinHub.cs" />
+    <Compile Include="DAL\DailyHub.cs" />
     <Compile Include="DAL\SessionHelper.cs" />
     <Compile Include="DAL\Users.cs" />
     <Compile Include="DAL\Visits.cs" />
@@ -231,6 +231,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ClientReviewViewModel.cs" />
     <Compile Include="Models\ClientViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InvitationViewModel.cs" />
@@ -427,6 +428,8 @@
     <Content Include="Views\Shared\_BackOffice.cshtml" />
     <Content Include="Views\BackOffice\Warning.cshtml" />
     <Content Include="Views\BackOffice\Home.cshtml" />
+    <Content Include="Views\FrontDesk\Review.cshtml" />
+    <Content Include="Views\BackOffice\Review.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

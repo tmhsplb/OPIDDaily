@@ -1,16 +1,18 @@
 ﻿
 @{
     ViewBag.Title = "Clients";
-    Layout = "~/Views/Shared/_Interviewer.cshtml";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
+    // See this link for highlighting a row whose client has history
+    // https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
 }
 
 <br /><br /><br />
 <h2>@ViewBag.ServiceDate</h2>
-<br />
+<br/>
 
 <div>
-    <table id="clientsGrid"></table>
-    <div id="clientsPager"></div>
+    <table id="reviewGrid"></table>
+    <div id="reviewPager"></div>
 </div>
 
 <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" />
@@ -23,29 +25,22 @@
 <script type="text/javascript">
     var lastServed = 0;
 
-    $("#clientsGrid").jqGrid({
-        url: "@Url.Action("GetClients", "Interviewer")",
+    $("#reviewGrid").jqGrid({
+        url: "@Url.Action("GetReviewClients", "BackOffice")",
         datatype: "json",
         mtype: "Get",
-        colNames: ['Id', 'ST', 'WT', 'Stage', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'PND', 'XID', 'XBC', 'HIS', 'Notes'],
+        colNames: ['Id', 'ST', 'Stage', 'CheckedIn', 'Last Name', 'First Name', 'Active', 'Notes'],
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
-        { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
-        { key: false, align: 'center', name: 'WaitTime', index: 'WaitTime', width: 50, editable: false, sortable: true, search: false },
-        { key: false, name: 'Stage', index: 'Stage', width: 100, editable: true, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing' : 'Interviewing', 'Interviewed' : 'Interviewed', 'BackOffice' : 'BackOffice', 'Done' : 'Done' } }, sortable: false, search: false },
+        { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: false, sortable: true, search: false },
+        { key: false, name: 'Stage', index: 'Stage', width: 100, editable: false, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing' : 'Interviewing', 'Interviewed' : 'Interviewed', 'BackOffice' : 'BackOffice', 'Done' : 'Done' } }, sortable: false, search: false },
+        { key: false, hidden: true, name: 'CheckedIn', index: 'CheckedIn', width: 150, editable: false, sortable: false, search: false },
         { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'MiddleName', index: 'MiddleName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'BirthName', index: 'BirthName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, align: 'center', name: 'DOB', index: 'DOB', width: 100, editable: true, sortable: true, search: false },
-        { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: true, search: false },
-        { name: 'PND', index: 'PND', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
-        { name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
-        { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
-        { name: 'History', index: 'History', align: 'center', width: 50, editable: false, sortable: false, search: false },
+        { name: 'Active', index: 'Active', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' }  }
         ],
-        pager: '#clientsPager',
+        pager: '#reviewPager',
         rowNum: 25,
 
         onSelectRow: function (nowServing) {
@@ -54,13 +49,14 @@
                 //alert("nowServing is null or nowServing == lastServed!");
             } else { 
                 lastServed = nowServing;
-                jQuery("#clientsGrid").jqGrid('setGridParam',
+                jQuery("#reviewGrid").jqGrid('setGridParam',
                     {
                         postData: { nowServing: nowServing },
                         url: "@Url.Action("NowServing", "FrontDesk")"
                     }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
             }
-        }, 
+        },
+      
         height: "100%",
         viewrecords: true,
         loadonce: false,
@@ -78,22 +74,20 @@
         multiselect: false
     })
 
-    jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: false, del: false, search: false, refresh: true },
-      {
-          zIndex: 100,
-          url: "@Url.Action("EditClient", "Interviewer")",
-          closeOnEscape: true,
-          closeAfterEdit: true,
-          recreateForm: true,
-          afterComplete: function (response) {
-              if (response.responseText) {
-                //  alert("Interviewer: " + response.responseText);
-              }
-          }
-      },
-
-      );
-
+    jQuery("#reviewGrid").jqGrid('navGrid', '#reviewPager', { edit: true, add: false, del: false, search: false, refresh: true },
+        {
+            zIndex: 100,
+            url: "@Url.Action("EditReviewClient", "BackOffice")",
+            closeOnEscape: true,
+            closeAfterEdit: true,
+            recreateForm: true,
+            afterComplete: function (response) {
+                if (response.responseText) {
+                    //  alert("Review: " + response.responseText);
+                }
+            }
+        });
+       
     // http://www.trirand.com/blog/?page_id=393/help/how-to-use-add-form-dialog-popup-window-set-position
     $.extend($.jgrid.edit, {
         recreateForm: true,
@@ -103,6 +97,7 @@
         width: 500,
         top: 400,
         left: 450,
+        addCaption: "Add Client",
         editCaption: "Edit Client",
         bSubmit: "Submit",
         bCancel: "Cancel",
@@ -121,15 +116,15 @@
 <script>
     $(function () {
         var theHub = $.connection.dailyHub;
-        var lastPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'lastpage');
+        var lastPage = jQuery("#reviewGrid").jqGrid('getGridParam', 'lastpage');
 
         theHub.client.refreshPage = function () {
             $.ajax({
-                url: "/opiddaily/interviewer/GetClients?page=" + lastPage + "&rows=25",
+                url: "/opiddaily/backoffice/GetReviewClients?page=" + lastPage + "&rows=25",
                 cache: false,
                 dataType: "json",
                 success: function (data) {
-                    var mygrid = jQuery("#clientsGrid")[0];
+                    var mygrid = jQuery("#reviewGrid")[0];
                     mygrid.addJSONData(data);
                 }
             });
@@ -139,3 +134,4 @@
           });
     });
 </script>
+

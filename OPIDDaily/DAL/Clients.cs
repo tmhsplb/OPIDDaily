@@ -183,7 +183,6 @@ namespace OPIDDaily.DAL
                 if (client != null)
                 {
                     client.Active = false; // Don't remove client, just mark client inactive
-                   // opidcontext.Clients.Remove(client);
                     opidcontext.SaveChanges();
                 }
             }
@@ -214,6 +213,63 @@ namespace OPIDDaily.DAL
                 }
 
                 return "Unknown";
+            }
+        }
+
+        private static ClientReviewViewModel ClientEntityToClientReviewViewModel(Client client)
+        {
+            return new ClientReviewViewModel
+            {
+                Id = client.Id,
+                ServiceTicket = client.ServiceTicket,
+                Stage = client.Stage,
+                LastName = client.LastName,
+                FirstName = client.FirstName,
+                Active = (client.Active ? "Y" : string.Empty),
+                CheckedIn = client.CheckedIn,
+                Notes = client.Notes
+            };
+        }
+
+        public static List<ClientReviewViewModel> GetReviewClients(DateTime date)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                List<ClientReviewViewModel> clientRVMS = new List<ClientReviewViewModel>();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date).ToList();
+
+                foreach (Client client in clients)
+                {
+                    clientRVMS.Add(ClientEntityToClientReviewViewModel(client));
+                }
+
+                opiddailycontext.SaveChanges();
+                return clientRVMS;
+            }
+        }
+
+        private static void ClientReviewViewModelToClientEntity(ClientReviewViewModel crvm, Client client)
+        {
+            client.LastName = crvm.LastName;
+            client.FirstName = crvm.FirstName;  
+            client.Active = (crvm.Active.Equals("Y") ? true : false);
+            client.Notes = crvm.Notes;
+        }
+
+        public static string EditReviewClient(ClientReviewViewModel crvm)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                Client client = opidcontext.Clients.Find(crvm.Id);
+
+                if (client != null)
+                {
+                    ClientReviewViewModelToClientEntity(crvm, client);
+                    opidcontext.SaveChanges();
+                    return "Success";
+                }
+
+                return "Failure";
             }
         }
     }

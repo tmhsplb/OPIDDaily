@@ -6,11 +6,11 @@ using System.Web;
 
 namespace OPIDDaily.DAL
 {
-    public class CheckinHub : Hub
+    public class DailyHub : Hub
     {
         public static void Refresh()
         {
-            var hubContext = GlobalHost.ConnectionManager.GetHubContext<CheckinHub>();
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<DailyHub>();
             hubContext.Clients.All.refreshPage();
         }
     }

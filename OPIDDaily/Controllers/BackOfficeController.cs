@@ -53,7 +53,7 @@ namespace OPIDDaily.Controllers
         {
             Clients.AddClient(cvm);
 
-            CheckinHub.Refresh();
+            DailyHub.Refresh();
             return "Success";
         }
 
@@ -63,7 +63,7 @@ namespace OPIDDaily.Controllers
 
             if (status.Equals("Success"))
             {
-                CheckinHub.Refresh();
+                DailyHub.Refresh();
             }
             return status;
         }
@@ -147,6 +147,50 @@ namespace OPIDDaily.Controllers
             Visits.DeleteVisit(nowServing, id);
 
             return "Success";
+        }
+
+
+        public ActionResult Review()
+        {
+            DateTime today = DateTime.Today;
+            ViewBag.ServiceDate = today.ToString("ddd  MMM d");
+            return View("Review");
+        }
+
+        public JsonResult GetReviewClients(int page, int rows)
+        {
+            DateTime today = DateTime.Today;
+            List<ClientReviewViewModel> clients = Clients.GetReviewClients(today);
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+            int totalRecords = clients.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            clients = clients.OrderBy(c => c.CheckedIn).ToList();
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = clients
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
+        public string EditReviewClient(ClientReviewViewModel crvm)
+        {
+            string status = Clients.EditReviewClient(crvm);
+
+            if (status.Equals("Success"))
+            {
+                DailyHub.Refresh();
+            }
+            return status;
         }
     }
 }
