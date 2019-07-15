@@ -10,7 +10,7 @@ namespace OPIDDaily.DAL
 {
     public class Clients
     {
-        private static ClientViewModel ClientEntityToClientViewModel(Client client)
+        private static ClientViewModel ClientEntityToClientViewModel(Client client, bool hasHistory)
         {
             return new ClientViewModel
             {
@@ -24,7 +24,11 @@ namespace OPIDDaily.DAL
                 BirthName = client.BirthName,
                 DOB = client.DOB.ToString("MM/dd/yyyy"),
                 Age = client.Age,
-                Notes = client.Notes,
+                PND = (client.PND == true ? "Y" : string.Empty),
+                XID = (client.XID == true ? "Y" : string.Empty),
+                XBC = (client.XBC == true ? "Y" : string.Empty),
+                History = (hasHistory ? "Y" : string.Empty),
+                Notes = client.Notes
             };
         }
 
@@ -38,6 +42,9 @@ namespace OPIDDaily.DAL
             client.BirthName = cvm.BirthName;
             client.DOB = DateTime.Parse(cvm.DOB);
             client.Age = CalculateAge(DateTime.Parse(cvm.DOB));
+            client.PND = (cvm.PND.Equals("Y") ? true : false);
+            client.XID = (cvm.XID.Equals("Y") ? true : false);
+            client.XBC = (cvm.XBC.Equals("Y") ? true : false);
             client.Notes = cvm.Notes;
         }
 
@@ -46,6 +53,12 @@ namespace OPIDDaily.DAL
             if (client.Stage.Equals("CheckedIn"))
             {
                 double waitTime = (DateTime.Now).Subtract(client.CheckedIn).TotalMinutes;
+                int waitMinutes = (int)Math.Round(waitTime);
+                return waitMinutes;
+            }
+            else if (client.Stage.Equals("Interviewed") || client.Stage.Equals("BackOffice"))
+            {
+                double waitTime = (DateTime.Now).Subtract(client.Interviewed).TotalMinutes;
                 int waitMinutes = (int)Math.Round(waitTime);
                 return waitMinutes;
             }
@@ -58,12 +71,16 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date).ToList();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date && c.Active == true).ToList();
 
                 foreach (Client client in clients)
                 {
+                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+
+                    bool hasHistory = client.Visits.Count > 0;
+
                     client.WaitTime = GetUpdatedWaitTime(client);
-                    clientCVMS.Add(ClientEntityToClientViewModel(client));
+                    clientCVMS.Add(ClientEntityToClientViewModel(client, hasHistory));
                 }
 
                 opiddailycontext.SaveChanges();
@@ -86,13 +103,17 @@ namespace OPIDDaily.DAL
                     BirthName = cvm.BirthName,
                     DOB = (string.IsNullOrEmpty(cvm.DOB) ? DateTime.Today : DateTime.Parse(cvm.DOB)),
                     Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
+                    PND = false,
+                    XID = false,
+                    XBC = false,
                     Notes = cvm.Notes,
                     Screened = DateTime.Now,
                     CheckedIn = DateTime.Now,
                     Interviewing = DateTime.Now,
                     Interviewed = DateTime.Now,
                     BackOffice = DateTime.Now,
-                    Done = DateTime.Now
+                    Done = DateTime.Now,
+                    Active = true
                 };
 
                 opidcontext.Clients.Add(client);
@@ -120,6 +141,13 @@ namespace OPIDDaily.DAL
             if (cvm.Stage.Equals("BackOffice") && client.Stage.Equals("Interviewed"))
             {
                 client.BackOffice = DateTime.Now;
+            }
+
+            if (cvm.Stage.Equals("BackOffice") && (client.Stage.Equals("CheckedIn") || client.Stage.Equals("Interviewing")))
+            {
+                // Interviewer forgot to make a change in stage
+                client.Stage = "Interviewed";
+                client.Interviewed = DateTime.Now.AddMinutes(-5);  // Assume interview completed 5 minutes ago.
             }
 
             if (cvm.Stage.Equals("Done") && client.Stage.Equals("BackOffice"))
@@ -152,8 +180,12 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
                 Client client = opidcontext.Clients.Find(id);
-                opidcontext.Clients.Remove(client);
-                opidcontext.SaveChanges();
+                if (client != null)
+                {
+                    client.Active = false; // Don't remove client, just mark client inactive
+                   // opidcontext.Clients.Remove(client);
+                    opidcontext.SaveChanges();
+                }
             }
         }
 

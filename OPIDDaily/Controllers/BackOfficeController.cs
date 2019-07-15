@@ -9,8 +9,9 @@ using System.Web.Mvc;
 
 namespace OPIDDaily.Controllers
 {
-    public class FrontDeskController : Controller
+    public class BackOfficeController : Controller
     {
+
         public ActionResult Home()
         {
             return View();
@@ -28,7 +29,7 @@ namespace OPIDDaily.Controllers
             DateTime today = DateTime.Today;
             ViewBag.ServiceDate = today.ToString("ddd  MMM d");
 
-            List<ClientViewModel> clients = Clients.GetClients(today);
+            List<ClientViewModel> clients = Clients.GetClients(DateTime.Today);
 
             int pageIndex = page - 1;
             int pageSize = rows;
@@ -39,7 +40,7 @@ namespace OPIDDaily.Controllers
 
             var jsonData = new
             {
-                total = (totalPages == 0 ? 1 : totalPages),
+                total = totalPages,
                 page,
                 records = totalRecords,
                 rows = clients
@@ -70,14 +71,12 @@ namespace OPIDDaily.Controllers
         public string DeleteClient(int id)
         {
             Clients.DeleteClient(id);
-            CheckinHub.Refresh();
-            return id.ToString();
-           // return "Success";
+            return ("Success");
         }
 
         public void NowServing(int? nowServing = 0)
         {
-            SessionHelper.Set("NowServing", nowServing.ToString());    
+            SessionHelper.Set("NowServing", nowServing.ToString());
         }
 
         public ActionResult History()

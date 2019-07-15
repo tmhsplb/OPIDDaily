@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "History";
-    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
 }
 
 <br /><br /><br />
@@ -20,7 +20,7 @@
 
 <script type="text/javascript">
     $("#historyGrid").jqGrid({
-        url: "@Url.Action("GetHistory", "FrontDesk")",
+        url: "@Url.Action("GetHistory", "BackOffice")",
         datatype: "json",
         mtype: "Get",
         colNames: ['Id', 'Date', 'Item', 'Check', 'Status', 'Notes'],
@@ -54,7 +54,7 @@
     jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: true, del: true, search: false, refresh: true },
       {
           zIndex: 100,
-          url: "@Url.Action("EditVisit", "FrontDesk")",
+          url: "@Url.Action("EditVisit", "BackOffice")",
           closeOnEscape: true,
           closeAfterEdit: true,
           recreateForm: true,
@@ -66,7 +66,7 @@
       },
       {
           zIndex: 100,
-          url: "@Url.Action("AddVisit", "FrontDesk")",
+          url: "@Url.Action("AddVisit", "BackOffice")",
           closeOnEscape: true,
           closeAfterAdd: true,
           recreateForm: true,
@@ -80,7 +80,7 @@
       },
       {
           zIndex: 100,
-          url: "@Url.Action("DeleteVisit", "FrontDesk")",
+          url: "@Url.Action("DeleteVisit", "BackOffice")",
           closeOnEscape: true,
           closeAfterDelete: true,
           recreateForm: true,

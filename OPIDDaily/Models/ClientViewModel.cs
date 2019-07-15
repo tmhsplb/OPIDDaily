@@ -27,6 +27,14 @@ namespace OpidDaily.Models
 
         public int Age { get; set; }
 
+        public string PND { get; set; }
+
+        public string XID { get; set; }
+
+        public string XBC { get; set; }
+        
+        public string History { get; set; }
+
         public DateTime Screened { get; set; }
 
         public DateTime CheckedIn { get; set; }
@@ -38,7 +46,7 @@ namespace OpidDaily.Models
         public DateTime BackOffice { get; set; }
 
         public DateTime Done { get; set; }
-        
+                
         public string Notes { get; set; }
     }
 }

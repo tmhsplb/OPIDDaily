@@ -176,6 +176,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BackOfficeController.cs" />
     <Compile Include="Controllers\FrontDeskController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InterviewerController.cs" />
@@ -220,6 +221,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\201907131651454_Stage.cs" />
     <Compile Include="DataContexts\OPIDDailyMigrations\201907131651454_Stage.Designer.cs">
       <DependentUpon>201907131651454_Stage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907142053047_PXXA.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907142053047_PXXA.Designer.cs">
+      <DependentUpon>201907142053047_PXXA.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Global.asax.cs">
@@ -417,6 +422,11 @@
     <Content Include="Views\FrontDesk\History.cshtml" />
     <Content Include="Views\Interviewer\History.cshtml" />
     <Content Include="Views\Interviewer\Warning.cshtml" />
+    <Content Include="Views\BackOffice\Clients.cshtml" />
+    <Content Include="Views\BackOffice\History.cshtml" />
+    <Content Include="Views\Shared\_BackOffice.cshtml" />
+    <Content Include="Views\BackOffice\Warning.cshtml" />
+    <Content Include="Views\BackOffice\Home.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -456,6 +466,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907131651454_Stage.resx">
       <DependentUpon>201907131651454_Stage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907142053047_PXXA.resx">
+      <DependentUpon>201907142053047_PXXA.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

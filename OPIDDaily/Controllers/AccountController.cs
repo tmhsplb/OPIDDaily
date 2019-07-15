@@ -184,7 +184,7 @@ namespace OPIDDaily.Controllers
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
+            // If we got this far then something failed, so redisplay the form
             return View(model);
         }
 
@@ -203,7 +203,7 @@ namespace OPIDDaily.Controllers
                         UserManager.Delete(user);
                         opiddailycontext.Invitations.Remove(invite);
                         opiddailycontext.SaveChanges();
-                         return "Success";
+                        return "Success";
                     }
                     else
                     {
