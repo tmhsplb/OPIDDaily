@@ -64,9 +64,14 @@ namespace OPIDDaily.Controllers
             return Convert.ToInt32(SessionHelper.Get("NowServing"));
         }
 
+        public void NowServing(int? nowServing = 0)
+        {
+            SessionHelper.Set("NowServing", nowServing.ToString());
+        }
+
         public ActionResult History()
         {
-            int nowServing = Convert.ToInt32(SessionHelper.Get("NowServing"));
+            int nowServing = NowServing();
 
             if (nowServing == 0)
             {

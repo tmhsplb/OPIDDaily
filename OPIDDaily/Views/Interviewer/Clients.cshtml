@@ -55,7 +55,7 @@
                 jQuery("#clientsGrid").jqGrid('setGridParam',
                     {
                         postData: { nowServing: nowServing },
-                        url: "@Url.Action("NowServing", "FrontDesk")"
+                        url: "@Url.Action("NowServing", "Interviewer")"
                     }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
             }
         }, 
@@ -122,7 +122,7 @@
         var lastPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'lastpage');
 
         theHub.client.refreshPage = function () {
-            var url = "@Url.Action("GetClients", "BackOffice", new { page = "replaceToken" })";
+            var url = "@Url.Action("GetClients", "Interviewer", new { page = "replaceToken" })";
             url = url.replace("replaceToken", lastPage);
             $.ajax({
                 url: url,

@@ -74,6 +74,11 @@ namespace OPIDDaily.Controllers
             return ("Success");
         }
 
+        private static int NowServing()
+        {
+            return Convert.ToInt32(SessionHelper.Get("NowServing"));
+        }
+
         public void NowServing(int? nowServing = 0)
         {
             SessionHelper.Set("NowServing", nowServing.ToString());
@@ -81,7 +86,7 @@ namespace OPIDDaily.Controllers
 
         public ActionResult History()
         {
-            int nowServing = Convert.ToInt32(SessionHelper.Get("NowServing"));
+            int nowServing = NowServing();
 
             if (nowServing == 0)
             {
@@ -92,11 +97,6 @@ namespace OPIDDaily.Controllers
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
 
             return View();
-        }
-
-        private static int NowServing()
-        {
-            return Convert.ToInt32(SessionHelper.Get("NowServing"));
         }
 
         public JsonResult GetHistory(int page, int rows)

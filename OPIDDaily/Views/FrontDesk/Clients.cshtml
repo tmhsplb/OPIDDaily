@@ -151,7 +151,7 @@
         var lastPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'lastpage');
 
         theHub.client.refreshPage = function () {
-            var url = "@Url.Action("GetClients", "BackOffice", new { page = "replaceToken" })";
+            var url = "@Url.Action("GetClients", "FrontDesk", new { page = "replaceToken" })";
             url = url.replace("replaceToken", lastPage);
             $.ajax({
                 url: url,

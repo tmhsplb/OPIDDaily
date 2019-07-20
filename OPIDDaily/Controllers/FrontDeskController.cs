@@ -86,7 +86,7 @@ namespace OPIDDaily.Controllers
 
         public ActionResult History()
         {
-            int nowServing = Convert.ToInt32(SessionHelper.Get("NowServing"));
+            int nowServing = NowServing();
 
             if (nowServing == 0)
             {

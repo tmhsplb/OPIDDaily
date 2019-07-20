@@ -55,7 +55,7 @@
                 jQuery("#clientsGrid").jqGrid('setGridParam',
                     {
                         postData: { nowServing: nowServing },
-                        url: "@Url.Action("NowServing", "FrontDesk")"
+                        url: "@Url.Action("NowServing", "BackOffice")"
                     }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
             }
         },
