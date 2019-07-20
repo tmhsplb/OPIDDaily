@@ -124,7 +124,7 @@
         dataheight: '100%',
         reloadAfterSubmit: true,
         width: 500,
-        top: 400,
+        top: 300,
         left: 450,
         addCaption: "Add Client",
         editCaption: "Edit Client",
@@ -148,15 +148,17 @@
         var lastPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'lastpage');
 
         theHub.client.refreshPage = function () {
+            var url = "@Url.Action("GetClients", "BackOffice", new { page = "replaceToken" })";
+            url = url.replace("replaceToken", lastPage);
             $.ajax({
-                url: "/opiddaily/frontdesk/GetClients?page=" + lastPage + "&rows=25",
+                url: url,
                 cache: false,
                 dataType: "json",
                 success: function (data) {
-                    var mygrid = jQuery("#clientsGrid")[0];
-                    mygrid.addJSONData(data);
-                }
-            });
+                        var mygrid = jQuery("#clientsGrid")[0];
+                        mygrid.addJSONData(data);
+                    }
+                });
         };
 
         $.connection.hub.start().done(function () {

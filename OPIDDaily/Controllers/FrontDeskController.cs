@@ -23,7 +23,7 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
-        public JsonResult GetClients(int page, int rows)
+        public JsonResult GetClients(int page, int? rows = 25)
         {
             DateTime today = DateTime.Today;
             ViewBag.ServiceDate = today.ToString("ddd  MMM d");
@@ -31,7 +31,7 @@ namespace OPIDDaily.Controllers
             List<ClientViewModel> clients = Clients.GetClients(today);
 
             int pageIndex = page - 1;
-            int pageSize = rows;
+            int pageSize = (int)rows;
             int totalRecords = clients.Count;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
 
@@ -74,6 +74,11 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
+        private static int NowServing()
+        {
+            return Convert.ToInt32(SessionHelper.Get("NowServing"));
+        }
+
         public void NowServing(int? nowServing = 0)
         {
             SessionHelper.Set("NowServing", nowServing.ToString());    
@@ -92,11 +97,6 @@ namespace OPIDDaily.Controllers
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
 
             return View();
-        }
-
-        private static int NowServing()
-        {
-            return Convert.ToInt32(SessionHelper.Get("NowServing"));
         }
 
         public JsonResult GetHistory(int page, int rows)

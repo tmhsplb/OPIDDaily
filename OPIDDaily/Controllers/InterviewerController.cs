@@ -23,7 +23,7 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
-        public JsonResult GetClients(int page, int rows)
+        public JsonResult GetClients(int page, int? rows = 25)
         {
             DateTime today = DateTime.Today;
             ViewBag.ServiceDate = today.ToString("ddd  MMM d");
@@ -31,7 +31,7 @@ namespace OPIDDaily.Controllers
             List<ClientViewModel> clients = Clients.GetClients(DateTime.Today);
 
             int pageIndex = page - 1;
-            int pageSize = rows;
+            int pageSize = (int)rows;
             int totalRecords = clients.Count;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
 
