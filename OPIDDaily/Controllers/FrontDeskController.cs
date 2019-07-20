@@ -129,7 +129,7 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Visits.AddVisit(nowServing, vvm);
-
+            DailyHub.Refresh();
             return "Success";
         }
 
