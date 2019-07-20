@@ -64,6 +64,21 @@ namespace OPIDDaily.Controllers
             return Convert.ToInt32(SessionHelper.Get("NowServing"));
         }
 
+        public ActionResult History()
+        {
+            int nowServing = Convert.ToInt32(SessionHelper.Get("NowServing"));
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please select a client from the Clients Table before viewing History.";
+                return View("Warning");
+            }
+
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+
+            return View();
+        }
+
         public JsonResult GetHistory(int page, int rows)
         {
             int nowServing = NowServing();
