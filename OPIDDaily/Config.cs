@@ -38,8 +38,7 @@ namespace OPIDDaily
         {
             get
             {
-               // return "Server=6da6d9ef-7d51-442f-bfdc-a8f7014dca90.sqlserver.sequelizer.com;Database=db6da6d9ef7d51442fbfdca8f7014dca90;User ID=aeufensilubpmsyv;Password=BNLhPTfGCs4cnLcDYzp2XTrroE3buxoAJijhUBooepR2LQgXUFTdBfbRwt3iZenf;";
-                return "Server=57d3c1fb-7e27-4b81-a9f2-aa8f0182310e.sqlserver.sequelizer.com;Database=db57d3c1fb7e274b81a9f2aa8f0182310e;User ID=fnalfcnlfsgdzgys;Password=LBwjPwsBZk577fNWh25JqJh3AKBaQiQzibLomTwYoGJckFBgdz8dswBcuCRd3sTQ";
+                return "Server=57d3c1fb-7e27-4b81-a9f2-aa8f0182310e.sqlserver.sequelizer.com;Database=db57d3c1fb7e274b81a9f2aa8f0182310e;User ID=fnalfcnlfsgdzgys;Password=LBwjPwsBZk577fNWh25JqJh3AKBaQiQzibLomTwYoGJckFBgdz8dswBcuCRd3sTQ;";
             }
         }
 
