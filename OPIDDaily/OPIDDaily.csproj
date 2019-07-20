@@ -227,6 +227,9 @@
       <DependentUpon>201907142053047_PXXA.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
+    <Compile Include="Entities\Client.cs" />
+    <Compile Include="Entities\Invitation.cs" />
+    <Compile Include="Entities\Visit.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -500,12 +503,6 @@
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907142053047_PXXA.resx">
       <DependentUpon>201907142053047_PXXA.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="OpidDailyEntities\OpidDailyEntities.csproj">
-      <Project>{bb3325f6-a98a-4df0-aac4-fa87f754b415}</Project>
-      <Name>OpidDailyEntities</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

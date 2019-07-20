@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OPIDDaily", "OPIDDaily\OPIDDaily.csproj", "{A9ECE01C-8E94-4798-B40E-A5AACB69576C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpidDailyEntities", "OPIDDaily\OpidDailyEntities\OpidDailyEntities.csproj", "{BB3325F6-A98A-4DF0-AAC4-FA87F754B415}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpidDailyEntities", "OPIDDaily\OpidDailyEntities\OpidDailyEntities.csproj", "{BB3325F6-A98A-4DF0-AAC4-FA87F754B415}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
