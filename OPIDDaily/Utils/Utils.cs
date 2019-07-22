@@ -11,9 +11,9 @@ namespace OPIDDaily.Utils
         {
             // This compensates for the fact that DateTime.Today on the AppHarbor server returns
             // the time in the timezone of the server.
-            // Here we convert UTC to Central Standard Time to get the time in Houston.
+            // Here we convert DateTime.Now.Date UTC to Central Standard Time to get today in Houston.
             // It also properly handles daylight savings time.
-            DateTime today = DateTime.Today.AddMinutes(1).ToUniversalTime();
+            DateTime today = DateTime.Now.Date.ToUniversalTime();
             DateTime cstToday = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(today, "UTC", "Central Standard Time");
             return cstToday;
         }
