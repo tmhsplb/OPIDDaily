@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using OPIDDaily.DataContexts;
 using OPIDDaily.Models;
+using OPIDDaily.Utils;
 using OpidDailyEntities;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ namespace OPIDDaily.DAL
 
                 if (invite != null && invite.Email == email)
                 {
-                    invite.Accepted = DateTime.Today;
+                    invite.Accepted = Extras.DateTimeToday();
                     opiddailycontext.SaveChanges();
                     return invite;
                 }
@@ -104,7 +105,7 @@ namespace OPIDDaily.DAL
         {
             return new Invitation
             {
-                Extended = DateTime.Today,
+                Extended = Extras.DateTimeToday(),
                 Accepted = (System.DateTime)System.Data.SqlTypes.SqlDateTime.Null,
                 UserName = ivm.UserName,
                 FullName = ivm.FullName,

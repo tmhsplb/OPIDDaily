@@ -1,5 +1,6 @@
 ﻿using OpidDaily.Models;
 using OPIDDaily.DataContexts;
+using OPIDDaily.Utils;
 using OpidDailyEntities;
 using System;
 using System.Collections.Generic;
@@ -52,13 +53,13 @@ namespace OPIDDaily.DAL
         {
             if (client.Stage.Equals("CheckedIn"))
             {
-                double waitTime = (DateTime.Now).Subtract(client.CheckedIn).TotalMinutes;
+                double waitTime = (Extras.DateTimeNow()).Subtract(client.CheckedIn).TotalMinutes;
                 int waitMinutes = (int)Math.Round(waitTime);
                 return waitMinutes;
             }
             else if (client.Stage.Equals("Interviewed") || client.Stage.Equals("BackOffice"))
             {
-                double waitTime = (DateTime.Now).Subtract(client.Interviewed).TotalMinutes;
+                double waitTime = (Extras.DateTimeNow()).Subtract(client.Interviewed).TotalMinutes;
                 int waitMinutes = (int)Math.Round(waitTime);
                 return waitMinutes;
             }
@@ -94,25 +95,25 @@ namespace OPIDDaily.DAL
             {
                 Client client = new Client
                 {
-                    ServiceDate = DateTime.Today,
+                    ServiceDate = Extras.DateTimeToday(),
                     ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
                     Stage = "Screened",
                     FirstName = cvm.FirstName,
                     MiddleName = cvm.MiddleName,
                     LastName = cvm.LastName,
                     BirthName = cvm.BirthName,
-                    DOB = (string.IsNullOrEmpty(cvm.DOB) ? DateTime.Today : DateTime.Parse(cvm.DOB)),
+                    DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday() : DateTime.Parse(cvm.DOB)),
                     Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
                     PND = false,
                     XID = false,
                     XBC = false,
                     Notes = cvm.Notes,
-                    Screened = DateTime.Now,
-                    CheckedIn = DateTime.Now,
-                    Interviewing = DateTime.Now,
-                    Interviewed = DateTime.Now,
-                    BackOffice = DateTime.Now,
-                    Done = DateTime.Now,
+                    Screened = Extras.DateTimeNow(),
+                    CheckedIn = Extras.DateTimeNow(),
+                    Interviewing = Extras.DateTimeNow(),
+                    Interviewed = Extras.DateTimeNow(),
+                    BackOffice = Extras.DateTimeNow(),
+                    Done = Extras.DateTimeNow(),
                     Active = true
                 };
 
@@ -125,34 +126,34 @@ namespace OPIDDaily.DAL
         {
             if (cvm.Stage.Equals("CheckedIn") && client.Stage.Equals("Screened"))
             {
-                client.CheckedIn = DateTime.Now;
+                client.CheckedIn = Extras.DateTimeNow();
             }
 
             if (cvm.Stage.Equals("Interviewing") && client.Stage.Equals("CheckedIn"))
             {
-                client.Interviewing = DateTime.Now;
+                client.Interviewing = Extras.DateTimeNow();
             }
 
             if (cvm.Stage.Equals("Interviewed") && client.Stage.Equals("Interviewing"))
             {
-                client.Interviewed = DateTime.Now;
+                client.Interviewed = Extras.DateTimeNow();
             }
 
             if (cvm.Stage.Equals("BackOffice") && client.Stage.Equals("Interviewed"))
             {
-                client.BackOffice = DateTime.Now;
+                client.BackOffice = Extras.DateTimeNow();
             }
 
             if (cvm.Stage.Equals("BackOffice") && (client.Stage.Equals("CheckedIn") || client.Stage.Equals("Interviewing")))
             {
                 // Interviewer forgot to make a change in stage
                 client.Stage = "Interviewed";
-                client.Interviewed = DateTime.Now.AddMinutes(-5);  // Assume interview completed 5 minutes ago.
+                client.Interviewed = Extras.DateTimeNow().AddMinutes(-5);  // Assume interview completed 5 minutes ago.
             }
 
             if (cvm.Stage.Equals("Done") && client.Stage.Equals("BackOffice"))
             {
-                client.Done = DateTime.Now;
+                client.Done = Extras.DateTimeNow();
             }
         }
 
@@ -191,7 +192,7 @@ namespace OPIDDaily.DAL
         // https://stackoverflow.com/questions/9/calculate-age-in-c-sharp
         private static int CalculateAge(DateTime dob)
         {
-            DateTime today = DateTime.Today;
+            DateTime today = Extras.DateTimeToday();
             int age = today.Year - dob.Year;
 
             if (today.Month < dob.Month || (today.Month == dob.Month && today.Day < dob.Day))

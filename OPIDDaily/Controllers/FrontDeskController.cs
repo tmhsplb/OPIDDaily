@@ -1,6 +1,7 @@
 ﻿using OpidDaily.Models;
 using OPIDDaily.DAL;
 using OPIDDaily.Models;
+using OPIDDaily.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,14 @@ namespace OPIDDaily.Controllers
 
         public ActionResult ManageClients()
         {
-            DateTime today = DateTime.Today;
+            DateTime today = Extras.DateTimeToday();
             ViewBag.ServiceDate = today.ToString("ddd  MMM d");
             return View("Clients");
         }
 
         public JsonResult GetClients(int page, int? rows = 25)
         {
-            DateTime today = DateTime.Today;
+            DateTime today = Extras.DateTimeToday();
             ViewBag.ServiceDate = today.ToString("ddd  MMM d");
 
             List<ClientViewModel> clients = Clients.GetClients(today);
@@ -151,14 +152,14 @@ namespace OPIDDaily.Controllers
 
         public ActionResult Review()
         {
-            DateTime today = DateTime.Today;
+            DateTime today = Extras.DateTimeToday();
             ViewBag.ServiceDate = today.ToString("ddd  MMM d");
             return View("Review");
         }
 
         public JsonResult GetReviewClients(int page, int rows)
         {
-            DateTime today = DateTime.Today;
+            DateTime today = Extras.DateTimeToday();
             List<ClientReviewViewModel> clients = Clients.GetReviewClients(today);
 
             int pageIndex = page - 1;
