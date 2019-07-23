@@ -23,6 +23,7 @@
 
 <script type="text/javascript">
     var lastServed = 0;
+    var rowsToColor = [];
 
     $("#clientsGrid").jqGrid({
         url: "@Url.Action("GetClients", "FrontDesk")",
@@ -32,7 +33,7 @@
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
-        { key: false, align: 'center', name: 'WaitTime', index: 'WaitTime', width: 50, editable: false, sortable: true, search: false },
+        { key: false, align: 'center', name: 'WaitTime', index: 'WaitTime', width: 50, formatter: rowColorFormatter, editable: false, sortable: true, search: false },
         { key: false, name: 'Stage', index: 'Stage', width: 100, editable: true, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing' : 'Interviewing', 'Interviewed' : 'Interviewed', 'BackOffice' : 'BackOffice', 'Done' : 'Done' } }, sortable: false, search: false },
         { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
@@ -66,6 +67,14 @@
         height: "100%",
         viewrecords: true,
         loadonce: false,
+       
+        gridComplete: function () {
+            for (var i = 0; i < rowsToColor.length; i++) {
+                  //  alert("colored row: " + rowsToColor[i]);
+                  $("#" + rowsToColor[i].rowId).css("color", rowsToColor[i].rowColor)       
+            }
+        },
+      
         caption: 'Clients',
         emptyrecords: 'No records to display',
         jsonReader: {
@@ -87,6 +96,7 @@
           closeOnEscape: true,
           closeAfterEdit: true,
           recreateForm: true,
+           
           afterComplete: function (response) {
               if (response.responseText) {
                 //  alert("FrontDesk: " + response.responseText);
@@ -118,7 +128,20 @@
                   // alert(response.responseText);
               }
           }
-      });
+        });
+
+    // See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
+    function rowColorFormatter(cellValue, options, rowObject) {
+        if (cellValue > 10 && cellValue < 15) { 
+            rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "LightPink" };
+        } else if (cellValue > 15 && cellValue < 20) {  
+            rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "HotPink" };
+        } else if (cellValue > 20) {   
+            rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "Red" };
+        }
+        return cellValue;
+    }
+    
 
     // http://www.trirand.com/blog/?page_id=393/help/how-to-use-add-form-dialog-popup-window-set-position
     $.extend($.jgrid.edit, {

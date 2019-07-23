@@ -10,6 +10,7 @@ namespace OPIDDaily.Utils
         public static DateTime DateTimeToday ()
         {
             // This is tricky!
+            // See: https://stackoverflow.com/questions/14576967/datetime-today-vs-datetime-now
             DateTime now = DateTimeNow();
             return now.Date;
         }
