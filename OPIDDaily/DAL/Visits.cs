@@ -27,7 +27,7 @@ namespace OPIDDaily.DAL
         {
             return new Visit
             {
-                Date = vvm.Date,
+                Date = vvm.Date.AddHours(12), // make the time be 12 noon
                 Item = vvm.Item,
                 Check = vvm.Check,
                 Status = vvm.Status,
@@ -93,7 +93,7 @@ namespace OPIDDaily.DAL
 
                     if (visit != null)
                     {
-                        visit.Date = vvm.Date;
+                        visit.Date = vvm.Date.AddHours(12);  // make the time be 12 noon
                         visit.Item = vvm.Item;
                         visit.Check = vvm.Check;
                         visit.Status = vvm.Status;

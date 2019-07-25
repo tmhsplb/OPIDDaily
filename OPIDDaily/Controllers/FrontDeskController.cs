@@ -106,21 +106,22 @@ namespace OPIDDaily.Controllers
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
 
-            List<VisitViewModel> clients = Visits.GetVisits(nowServing);
+            List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             int pageIndex = page - 1;
             int pageSize = rows;
-            int totalRecords = clients.Count;
+            int totalRecords = visits.Count;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
 
-            clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            visits = visits.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            visits = visits.OrderBy(v => v.Date).ToList();
 
             var jsonData = new
             {
                 total = totalPages,
                 page,
                 records = totalRecords,
-                rows = clients
+                rows = visits
             };
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
