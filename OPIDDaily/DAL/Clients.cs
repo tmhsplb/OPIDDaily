@@ -67,7 +67,7 @@ namespace OPIDDaily.DAL
             return 0;
         }
 
-        public static List<ClientViewModel> GetClients(DateTime date)
+        public static List<ClientViewModel> GetClients(DateTime date, bool? updateWaittimes = true)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
@@ -80,7 +80,10 @@ namespace OPIDDaily.DAL
 
                     bool hasHistory = client.Visits.Count > 0;
 
-                    client.WaitTime = GetUpdatedWaitTime(client);
+                    if (updateWaittimes == true)
+                    {
+                        client.WaitTime = GetUpdatedWaitTime(client);
+                    }
                     clientCVMS.Add(ClientEntityToClientViewModel(client, hasHistory));
                 }
 

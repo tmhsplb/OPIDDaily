@@ -107,7 +107,7 @@ namespace OPIDDaily.Controllers
         {
             string serviceDate = SessionHelper.Get("ServiceDate");
             DateTime selectedDate = DateTime.Parse(serviceDate);
-            List<ClientViewModel> clients = Clients.GetClients(selectedDate);
+            List<ClientViewModel> clients = Clients.GetClients(selectedDate, false);
 
             int pageIndex = page - 1;
             int pageSize = (int)rows;
