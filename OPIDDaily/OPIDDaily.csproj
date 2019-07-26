@@ -235,6 +235,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ClientReviewViewModel.cs" />
     <Compile Include="Models\ClientViewModel.cs" />
+    <Compile Include="Models\DatePickerViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InvitationViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -484,6 +485,10 @@
     <Content Include="Views\BackOffice\Home.cshtml" />
     <Content Include="Views\FrontDesk\Review.cshtml" />
     <Content Include="Views\BackOffice\Review.cshtml" />
+    <Content Include="Views\Superadmin\Clients.cshtml" />
+    <Content Include="Views\Superadmin\History.cshtml" />
+    <Content Include="Views\Superadmin\Review.cshtml" />
+    <Content Include="Views\Superadmin\Warning.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

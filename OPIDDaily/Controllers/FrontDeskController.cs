@@ -27,8 +27,6 @@ namespace OPIDDaily.Controllers
         public JsonResult GetClients(int page, int? rows = 25)
         {
             DateTime today = Extras.DateTimeToday();
-            ViewBag.ServiceDate = today.ToString("ddd  MMM d");
-
             List<ClientViewModel> clients = Clients.GetClients(today);
 
             int pageIndex = page - 1;
