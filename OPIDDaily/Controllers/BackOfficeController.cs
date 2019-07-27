@@ -12,7 +12,6 @@ namespace OPIDDaily.Controllers
 {
     public class BackOfficeController : Controller
     {
-
         public ActionResult Home()
         {
             return View();

@@ -28,6 +28,7 @@
     $("#clientsGrid").jqGrid({
         url: "@Url.Action("GetClients", "FrontDesk")",
         datatype: "json",
+        pageable: true,
         mtype: "Get",
         colNames: ['Id', 'ST', 'WT', 'Stage','Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'PND', 'XID', 'XBC', 'HIS', 'Notes'],
         colModel: [
@@ -171,11 +172,16 @@
 <script>
     $(function () {
         var theHub = $.connection.dailyHub;
-        var lastPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'lastpage');
-
+       
         theHub.client.refreshPage = function () {
-            var url = "@Url.Action("GetClients", "FrontDesk", new { page = "replaceToken" })";
-            url = url.replace("replaceToken", lastPage);
+            var currentPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'page');
+           // alert("currentPage = " + currentPage)
+            var url = "@Url.Action("GetClients", "FrontDesk", new { page = "pageToken", rows = "rowsToken" })";
+            
+            url = url.replace("pageToken", currentPage);
+            url = url.replace("rowsToken", 25);
+           // alert("url = " + url);
+
             $.ajax({
                 url: url,
                 cache: false,
@@ -184,11 +190,11 @@
                     var mygrid = jQuery("#clientsGrid")[0];
                     mygrid.addJSONData(data);
                 }
-            });
+             });    
         };
-
-          $.connection.hub.start().done(function () {
-          });
+        
+        $.connection.hub.start().done(function () {
+        });
     });
 </script>
 

@@ -25,6 +25,7 @@
     $("#clientsGrid").jqGrid({
         url: "@Url.Action("GetClients", "Interviewer")",
         datatype: "json",
+        pageable: true,
         mtype: "Get",
         colNames: ['Id', 'ST', 'WT', 'Stage', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'PND', 'XID', 'XBC', 'HIS', 'Notes'],
         colModel: [
@@ -138,11 +139,13 @@
 <script>
     $(function () {
         var theHub = $.connection.dailyHub;
-        var lastPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'lastpage');
+       
 
         theHub.client.refreshPage = function () {
-            var url = "@Url.Action("GetClients", "Interviewer", new { page = "replaceToken" })";
-            url = url.replace("replaceToken", lastPage);
+            var currentPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'page');
+            var url = "@Url.Action("GetClients", "Interviewer", new { page = "pageToken" })";
+            url = url.replace("pageToken", currentPage);
+
             $.ajax({
                 url: url,
                 cache: false,
@@ -154,7 +157,7 @@
             });
         };
 
-          $.connection.hub.start().done(function () {
-          });
+        $.connection.hub.start().done(function () {
+        });
     });
 </script>

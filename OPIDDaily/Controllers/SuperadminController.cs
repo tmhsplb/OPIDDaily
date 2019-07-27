@@ -103,14 +103,14 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
-        public JsonResult GetClients(int page, int? rows = 25)
+        public JsonResult GetClients(int page, int rows)
         {
             string serviceDate = SessionHelper.Get("ServiceDate");
             DateTime selectedDate = DateTime.Parse(serviceDate);
             List<ClientViewModel> clients = Clients.GetClients(selectedDate, false);
 
             int pageIndex = page - 1;
-            int pageSize = (int)rows;
+            int pageSize = rows;
             int totalRecords = clients.Count;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
 

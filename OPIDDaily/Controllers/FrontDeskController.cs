@@ -31,14 +31,15 @@ namespace OPIDDaily.Controllers
 
             int pageIndex = page - 1;
             int pageSize = (int)rows;
+          
             int totalRecords = clients.Count;
-            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
             var jsonData = new
             {
-                total = (totalPages == 0 ? 1 : totalPages),
+                total = totalPages,
                 page,
                 records = totalRecords,
                 rows = clients

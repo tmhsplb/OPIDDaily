@@ -68,6 +68,7 @@
     $("#clientsGrid").jqGrid({
         url: "@Url.Action("GetClients", "Superadmin")",
         datatype: "json",
+        pageable: true,
         mtype: "Get",
         colNames: ['Id', 'ST', 'WT', 'Stage','Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'PND', 'XID', 'XBC', 'HIS', 'Notes'],
         colModel: [
