@@ -118,8 +118,8 @@ namespace OPIDDaily.Controllers
 
             var jsonData = new
             {
-                total = (totalPages == 0 ? 1 : totalPages),
-                page,
+                total = totalPages,
+                page = page,
                 records = totalRecords,
                 rows = clients
             };
@@ -211,7 +211,7 @@ namespace OPIDDaily.Controllers
             var jsonData = new
             {
                 total = totalPages,
-                page,
+                page = page,
                 records = totalRecords,
                 rows = clients
             };

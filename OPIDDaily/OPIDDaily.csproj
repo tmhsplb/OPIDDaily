@@ -238,7 +238,6 @@
     <Compile Include="Models\DatePickerViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InvitationViewModel.cs" />
-    <Compile Include="Models\jqGridViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RoleViewModel.cs" />
     <Compile Include="Models\VisitViewModel.cs" />

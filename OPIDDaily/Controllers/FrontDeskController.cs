@@ -40,7 +40,7 @@ namespace OPIDDaily.Controllers
             var jsonData = new
             {
                 total = totalPages,
-                page,
+                page = page,
                 records = totalRecords,
                 rows = clients
             };
@@ -174,7 +174,7 @@ namespace OPIDDaily.Controllers
             var jsonData = new
             {
                 total = totalPages,
-                page,
+                page = page,
                 records = totalRecords,
                 rows = clients
             };
