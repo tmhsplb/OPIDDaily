@@ -8,14 +8,14 @@
 
 <br /><br /><br />
 <h2>@ViewBag.ServiceDate</h2>
-<br/>
+<br />
 
 <div>
     <table id="reviewGrid"></table>
     <div id="reviewPager"></div>
 </div>
 
- 
+
 <link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
 <script src="@Url.Content("~/Scripts/i18n/grid.locale-en.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.jqGrid.min.js")" type="text/javascript"></script>
@@ -46,7 +46,7 @@
             if (nowServing == null || nowServing == lastServed) {
                 // Prevent infinite recursion caused by reloadGrid
                 //alert("nowServing is null or nowServing == lastServed!");
-            } else { 
+            } else {
                 lastServed = nowServing;
                 jQuery("#reviewGrid").jqGrid('setGridParam',
                     {
@@ -55,7 +55,7 @@
                     }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
             }
         },
-      
+
         height: "100%",
         viewrecords: true,
         loadonce: false,
@@ -73,7 +73,7 @@
         multiselect: false
     })
 
-    jQuery("#reviewGrid").jqGrid('navGrid', '#reviewPager', { edit: true, add: false, del: false, search: false, refresh: true },
+    jQuery("#reviewGrid").jqGrid('navGrid', '#reviewPager', { edit: true, add: false, del: false, search: false, refresh: false },
         {
             zIndex: 100,
             url: "@Url.Action("EditReviewClient", "BackOffice")",
@@ -86,7 +86,7 @@
                 }
             }
         });
-       
+
     // http://www.trirand.com/blog/?page_id=393/help/how-to-use-add-form-dialog-popup-window-set-position
     $.extend($.jgrid.edit, {
         recreateForm: true,
@@ -115,7 +115,7 @@
 <script>
     $(function () {
         var theHub = $.connection.dailyHub;
-        
+
         theHub.client.refreshPage = function () {
             var currentPage = jQuery("#reviewGrid").jqGrid('getGridParam', 'page');
             var url = "@Url.Action("GetReviewClients", "BackOffice", new { page = "pageToken" })";

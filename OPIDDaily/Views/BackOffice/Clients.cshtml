@@ -87,7 +87,7 @@
         multiselect: false
     })
 
-    jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: true, del: true, search: false, refresh: true },
+    jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: true, del: true, search: false, refresh: false },
       {
           zIndex: 100,
           url: "@Url.Action("EditClient", "BackOffice")",

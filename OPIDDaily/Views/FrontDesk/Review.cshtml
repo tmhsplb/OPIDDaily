@@ -2,18 +2,19 @@
 @{
     ViewBag.Title = "Clients";
     Layout = "~/Views/Shared/_FrontDesk.cshtml";
-    // See this link for highlighting a row whose client has history
-    // https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
 }
 
 <br /><br /><br />
 <h2>@ViewBag.ServiceDate</h2>
-<br/>
+<br />
 
 <div>
     <table id="reviewGrid"></table>
     <div id="reviewPager"></div>
 </div>
+<br/>
+<a class="button" href="@Url.Action("PrintTable", "FrontDesk")">Print Table</a>
+
 
 <link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
 
@@ -46,7 +47,7 @@
             if (nowServing == null || nowServing == lastServed) {
                 // Prevent infinite recursion caused by reloadGrid
                 //alert("nowServing is null or nowServing == lastServed!");
-            } else { 
+            } else {
                 lastServed = nowServing;
                 jQuery("#reviewGrid").jqGrid('setGridParam',
                     {
@@ -55,7 +56,7 @@
                     }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
             }
         },
-      
+
         height: "100%",
         viewrecords: true,
         loadonce: false,
@@ -73,7 +74,7 @@
         multiselect: false
     })
 
-    jQuery("#reviewGrid").jqGrid('navGrid', '#reviewPager', { edit: true, add: false, del: false, search: false, refresh: true },
+    jQuery("#reviewGrid").jqGrid('navGrid', '#reviewPager', { edit: true, add: false, del: false, search: false, refresh: false },
         {
             zIndex: 100,
             url: "@Url.Action("EditReviewClient", "FrontDesk")",
@@ -86,7 +87,7 @@
                 }
             }
         });
-       
+
     // http://www.trirand.com/blog/?page_id=393/help/how-to-use-add-form-dialog-popup-window-set-position
     $.extend($.jgrid.edit, {
         recreateForm: true,
@@ -115,7 +116,7 @@
 <script>
     $(function () {
         var theHub = $.connection.dailyHub;
-      
+
         theHub.client.refreshPage = function () {
             var currentPage = jQuery("#reviewGrid").jqGrid('getGridParam', 'page');
             var url = "@Url.Action("GetReviewClients", "FrontDesk", new { page = "pageToken" })";

@@ -50,7 +50,7 @@
         multiselect: false
     })
 
-    jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: true, del: true, search: false, refresh: true },
+    jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: true, del: true, search: false, refresh: false },
       {
           zIndex: 100,
           url: "@Url.Action("EditVisit", "Interviewer")",

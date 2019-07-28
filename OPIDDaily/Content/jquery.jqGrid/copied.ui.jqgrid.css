@@ -189,7 +189,7 @@ tr.ui-search-toolbar select {
     font-weight: normal;
     overflow: hidden;
     white-space: pre;
-    height: 22px;
+    height: 25px;  /* default was 22px; */
     padding: 0 2px 0 2px;
     border-bottom-width: 1px;
     border-bottom-color: inherit;

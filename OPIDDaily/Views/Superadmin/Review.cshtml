@@ -2,8 +2,6 @@
 @{
     ViewBag.Title = "Clients";
     Layout = "~/Views/Shared/_Superadmin.cshtml";
-    // See this link for highlighting a row whose client has history
-    // https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
 }
 
 <br /><br /><br />
@@ -14,7 +12,9 @@
     <table id="reviewGrid"></table>
     <div id="reviewPager"></div>
 </div>
-
+<br/>
+<a class="button" href="@Url.Action("PrintTable", "SuperAdmin")">Print Table</a>
+ 
 <link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
 
 <script src="@Url.Content("~/Scripts/i18n/grid.locale-en.js")" type="text/javascript"></script>
@@ -72,7 +72,7 @@
         multiselect: false
     })
 
-    jQuery("#reviewGrid").jqGrid('navGrid', '#reviewPager', { edit: false, add: false, del: false, search: false, refresh: true });
+    jQuery("#reviewGrid").jqGrid('navGrid', '#reviewPager', { edit: false, add: false, del: false, search: false, refresh: false });
        
 </script>
 

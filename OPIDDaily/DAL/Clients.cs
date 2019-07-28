@@ -1,5 +1,6 @@
 ﻿using OpidDaily.Models;
 using OPIDDaily.DataContexts;
+using OPIDDaily.Models;
 using OPIDDaily.Utils;
 using OpidDailyEntities;
 using System;
@@ -169,7 +170,7 @@ namespace OPIDDaily.DAL
                 if (client != null)
                 {
                     StageTransition(cvm, client);
-                    
+
                     ClientViewModelToClientEntity(cvm, client);
                     opidcontext.SaveChanges();
                     return "Success";
@@ -255,7 +256,7 @@ namespace OPIDDaily.DAL
         private static void ClientReviewViewModelToClientEntity(ClientReviewViewModel crvm, Client client)
         {
             client.LastName = crvm.LastName;
-            client.FirstName = crvm.FirstName;  
+            client.FirstName = crvm.FirstName;
             client.Active = (crvm.Active.Equals("Y") ? true : false);
             client.Notes = crvm.Notes;
         }
@@ -274,6 +275,33 @@ namespace OPIDDaily.DAL
                 }
 
                 return "Failure";
+            }
+        }
+
+        private static ClientServedViewModel ClientToClientServedViewModel(Client client)
+        {
+            return new ClientServedViewModel
+            {
+                LastName = client.LastName,
+                FirstName = client.FirstName,
+                MiddleName = client.MiddleName,
+                Notes = client.Notes
+            };
+        }
+
+        public static List<ClientServedViewModel> ClientsServed(DateTime date)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                List<ClientServedViewModel> clientsServed = new List<ClientServedViewModel>();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date).ToList();
+
+                foreach (Client client in clients)
+                {
+                    clientsServed.Add(ClientToClientServedViewModel(client));
+                }
+
+                return clientsServed;
             }
         }
     }

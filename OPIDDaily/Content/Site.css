@@ -22,3 +22,17 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+/* https://stackoverflow.com/questions/8357058/how-to-make-a-href-link-look-like-a-button */
+.button {
+    display: block;
+    width: 215px;
+    height: 45px;
+    background: #CCCCCC;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: black;
+    font-weight: bold;
+}

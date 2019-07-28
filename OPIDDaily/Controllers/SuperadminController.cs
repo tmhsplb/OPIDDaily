@@ -187,6 +187,7 @@ namespace OPIDDaily.Controllers
                 DateTime today = Extras.DateTimeToday();
                 serviceDate = today.ToString("ddd MMM d");
             }
+
             ViewBag.ServiceDate = DateTime.Parse(serviceDate).ToString("ddd MMM d");
             SessionHelper.Set("ServiceDate", serviceDate);
             return View("Review");
@@ -224,6 +225,22 @@ namespace OPIDDaily.Controllers
         {
             SessionHelper.Set("ServiceDate", dpvm.datepicker);
             return RedirectToAction("ManageClients");
+        }
+
+        public ActionResult PrintTable()
+        {
+            string serviceDate = SessionHelper.Get("ServiceDate");
+            ViewBag.ServiceDate = DateTime.Parse(serviceDate).ToString("ddd MMM d");
+
+            DateTime specifiedDate = DateTime.Parse(serviceDate);
+
+            List<ClientServedViewModel> clientsServed = Clients.ClientsServed(specifiedDate);
+            return View("ClientsServed", clientsServed);
+        }
+
+        public ActionResult _ClientsServed()
+        {
+            return PartialView();
         }
     }
 }

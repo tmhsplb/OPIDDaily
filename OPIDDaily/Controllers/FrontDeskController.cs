@@ -192,5 +192,20 @@ namespace OPIDDaily.Controllers
             }
             return status;
         }
+
+        public ActionResult PrintTable()
+        {
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.ServiceDate = today.ToString("ddd  MMM d");
+
+            List<ClientServedViewModel> clientsServed = Clients.ClientsServed(today);
+
+            return View("ClientsServed", clientsServed);
+        }
+
+        public ActionResult _ClientsServed()
+        {
+            return PartialView();
+        }
     }
 }

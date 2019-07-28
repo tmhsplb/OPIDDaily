@@ -234,6 +234,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ClientReviewViewModel.cs" />
+    <Compile Include="Models\ClientServedViewModel.cs" />
     <Compile Include="Models\ClientViewModel.cs" />
     <Compile Include="Models\DatePickerViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -489,6 +490,9 @@
     <Content Include="Views\Superadmin\History.cshtml" />
     <Content Include="Views\Superadmin\Review.cshtml" />
     <Content Include="Views\Superadmin\Warning.cshtml" />
+    <Content Include="Views\FrontDesk\ClientsServed.cshtml" />
+    <Content Include="Views\Shared\_ClientsServed.cshtml" />
+    <Content Include="Views\Superadmin\ClientsServed.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
