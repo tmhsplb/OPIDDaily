@@ -7,6 +7,7 @@ namespace OPIDDaily.Models
 {
     public class ClientServedViewModel
     {
+        public string ServiceTicket { get; set; }
         public string LastName { get; set; }
 
         public string FirstName { get; set; }

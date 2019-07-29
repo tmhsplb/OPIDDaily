@@ -230,7 +230,7 @@ namespace OPIDDaily.Controllers
         public ActionResult PrintTable()
         {
             string serviceDate = SessionHelper.Get("ServiceDate");
-            ViewBag.ServiceDate = DateTime.Parse(serviceDate).ToString("ddd MMM d");
+            ViewBag.ServiceDate = DateTime.Parse(serviceDate).ToString("ddd MMM d yyyy");
 
             DateTime specifiedDate = DateTime.Parse(serviceDate);
 

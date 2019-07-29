@@ -37,7 +37,7 @@
             table, th, td {
                 border: 1px solid black;
                 border-collapse: collapse;
-            }
+            }            
         </style>
 
         <br /><br /><br />
@@ -45,13 +45,14 @@
         <br />
 
         <table id="clientsServed" width="100%">
-            <tr><th>Last Name</th><th>First Name</th><th>Middle Name</th><th>Notes</th></tr>
+            <tr><th>ST</th><th>Last Name</th><th>First Name</th><th>Middle Name</th><th>Notes</th></tr>
             @foreach (var client in Model)
             {
                 <tr>
-                    <td width="120">@client.LastName</td>
-                    <td width="120">@client.FirstName</td>
-                    <td width="120">@client.MiddleName</td>
+                    <td align ="center" width="50">@client.ServiceTicket</td>
+                    <td width="120">&nbsp;&nbsp; @client.LastName</td>
+                    <td width="120">&nbsp;&nbsp; @client.FirstName</td>
+                    <td width="120">&nbsp;&nbsp; @client.MiddleName</td>
                     <td>@client.Notes</td>
                 </tr>
             }

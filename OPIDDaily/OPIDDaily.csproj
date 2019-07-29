@@ -225,6 +225,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\201907142053047_PXXA.Designer.cs">
       <DependentUpon>201907142053047_PXXA.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907291405451_ExpressClient.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201907291405451_ExpressClient.Designer.cs">
+      <DependentUpon>201907291405451_ExpressClient.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Client.cs" />
     <Compile Include="Entities\Invitation.cs" />
@@ -535,6 +539,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907142053047_PXXA.resx">
       <DependentUpon>201907142053047_PXXA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907291405451_ExpressClient.resx">
+      <DependentUpon>201907291405451_ExpressClient.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

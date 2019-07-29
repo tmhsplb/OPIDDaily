@@ -44,6 +44,8 @@ namespace OpidDailyEntities
 
         public DateTime Done { get; set; }
 
+        public bool EXP { get; set; }
+
         public bool PND { get; set; }
 
         public bool XID { get; set; }

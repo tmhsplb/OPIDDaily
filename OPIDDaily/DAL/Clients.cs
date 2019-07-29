@@ -26,6 +26,7 @@ namespace OPIDDaily.DAL
                 BirthName = client.BirthName,
                 DOB = client.DOB.ToString("MM/dd/yyyy"),
                 Age = client.Age,
+                EXP = (client.EXP == true ? "Y" : string.Empty),
                 PND = (client.PND == true ? "Y" : string.Empty),
                 XID = (client.XID == true ? "Y" : string.Empty),
                 XBC = (client.XBC == true ? "Y" : string.Empty),
@@ -44,6 +45,7 @@ namespace OPIDDaily.DAL
             client.BirthName = cvm.BirthName;
             client.DOB = DateTime.Parse(cvm.DOB);
             client.Age = CalculateAge(DateTime.Parse(cvm.DOB));
+            client.EXP = (cvm.EXP.Equals("Y") ? true : false);
             client.PND = (cvm.PND.Equals("Y") ? true : false);
             client.XID = (cvm.XID.Equals("Y") ? true : false);
             client.XBC = (cvm.XBC.Equals("Y") ? true : false);
@@ -108,6 +110,7 @@ namespace OPIDDaily.DAL
                     BirthName = cvm.BirthName,
                     DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday() : DateTime.Parse(cvm.DOB)),
                     Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
+                    EXP = false,
                     PND = false,
                     XID = false,
                     XBC = false,
@@ -282,6 +285,7 @@ namespace OPIDDaily.DAL
         {
             return new ClientServedViewModel
             {
+                ServiceTicket = client.ServiceTicket,
                 LastName = client.LastName,
                 FirstName = client.FirstName,
                 MiddleName = client.MiddleName,

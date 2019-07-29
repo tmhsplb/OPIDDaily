@@ -27,7 +27,7 @@
         datatype: "json",
         pageable: true,
         mtype: "Get",
-        colNames: ['Id', 'ST', 'WT', 'Stage','Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'PND', 'XID', 'XBC', 'HIS', 'Notes'],
+        colNames: ['Id', 'ST', 'WT', 'Stage','Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'EXP', 'PND', 'XID', 'XBC', 'HIS', 'Notes'],
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
@@ -39,6 +39,7 @@
         { key: false, name: 'BirthName', index: 'BirthName', width: 150, editable: true, sortable: false, search: false },
         { key: false, align: 'center', name: 'DOB', index: 'DOB', width: 100, editable: true, sortable: true, search: false },
         { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: true, search: false },
+        { name: 'EXP', index: 'EXP', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { name: 'PND', index: 'PND', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
         { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
