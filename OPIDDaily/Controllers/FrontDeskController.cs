@@ -2,6 +2,7 @@
 using OPIDDaily.DAL;
 using OPIDDaily.Models;
 using OPIDDaily.Utils;
+using OpidDailyEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,6 +83,61 @@ namespace OPIDDaily.Controllers
         public void NowServing(int? nowServing = 0)
         {
             SessionHelper.Set("NowServing", nowServing.ToString());    
+        }
+
+        public ActionResult ExpressClient()
+        {
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please select a client from the Clients Table before selecting Express Client.";
+                return View("Warning");
+            }
+
+            Client client = Clients.GetClient(nowServing);
+
+            if (client == null)
+            {
+                ViewBag.Warning = "Could not find selected client.";
+                return View("Warning");
+            }
+
+            if (client.EXP == false)
+            {
+                ViewBag.Warning = "The selected client is not marked as an Express Client.";
+                return View("Warning");
+            }
+
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult PrepareExpressClient(RequestedServicesViewModel rsvm)
+        {
+            int nowServing = NowServing();
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+
+            return View("PrintExpressClient", rsvm);
+        }
+
+        [HttpPost]
+        public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
+        {
+            int nowServing = NowServing();
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            List<VisitViewModel> visits = Visits.GetVisits(nowServing);
+
+            var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
+
+            return View("PrintExistingClient", objTuple);
+        }
+
+        public ActionResult _RequestedServices()
+        {
+            return PartialView();
         }
 
         public ActionResult History()
@@ -193,7 +249,7 @@ namespace OPIDDaily.Controllers
             return status;
         }
 
-        public ActionResult PrintTable()
+        public ActionResult PrepareTable()
         {
             DateTime today = Extras.DateTimeToday();
             ViewBag.ServiceDate = today.ToString("ddd  MMM d");

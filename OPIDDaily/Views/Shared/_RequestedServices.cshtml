@@ -1,0 +1,119 @@
+﻿
+@model OPIDDaily.Models.RequestedServicesViewModel
+
+<script type="text/javascript">
+    // https://stackoverflow.com/questions/19028419/how-to-adjust-print-options-through-code
+    function printTable() {
+        var win = window.open('', '', 'left=0,top=0,width=552,height=477,toolbar=0,scrollbars=0,status =0');
+
+        var comments = document.getElementById("comments");
+        if (comments != null && comments.value.trim() != '') {
+            $('#comments').replaceWith(comments.value);
+        }
+
+        var content = "<html>";
+        content += "<body onload=\"window.print(); window.close();\">";
+        content += document.getElementById("printerDiv").innerHTML;
+        content += "</body>";
+        content += "</html>";
+        win.document.write(content);
+        win.document.close();
+    }
+
+/**/</script>
+
+<div id="requestedServicesTable">
+    <!-- Must include stylesheet inside of <div> to apply styles to printing -->
+    <style>
+        /* https://stackoverflow.com/questions/1664049/can-i-force-a-page-jump-in-html-printing/1664058 */
+        .pagebreak {
+            page-break-before: always;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        table {
+             border: 1px solid black;
+             border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            height: 30px;
+        }
+
+        
+    </style>
+
+    <table id="requestedServices" width="100%">
+        <tr><th>Item</th><th>Check</th><th>Notes</th></tr>
+        @if (Model.BC && Model.HCC == false)
+        {
+            <tr>
+                <td align="center" width="80">BC</td>
+                <td width="120"></td>
+                <td width="200"></td>
+            </tr>
+        }
+        @if (Model.BC && Model.HCC == true)
+        {
+            <tr>
+                <td align="center" width="80">BC</td>
+                <td width="80"></td>
+                <td width="200">&nbsp;&nbsp; Harris County Clerk</td>
+            </tr>
+        }
+        @if (Model.MBVD)
+        {
+            <tr>
+                <td align="center" width="80">MBVD</td>
+                <td width="120"></td>
+                <td width="200">&nbsp;&nbsp; @Model.State</td>
+            </tr>
+        }
+        @if (Model.NewTID)
+        {
+            <tr>
+                <td align="center" width="80">New/Duplicate TID</td>
+                <td width="120"></td>
+                <td width="200"></td>
+            </tr>
+        }
+        @if (Model.ReplacementTID)
+        {
+            <tr>
+                <td align="center" width="80">Replacement TID</td>
+                <td width="120"></td>
+                <td width="200"></td>
+            </tr>
+        }
+        @if (Model.NewTDL)
+        {
+            <tr>
+                <td align="center" width="80">New/Duplicate TDL</td>
+                <td width="120"></td>
+                <td width="200"></td>
+            </tr>
+        }
+        @if (Model.ReplacementTDL)
+        {
+            <tr>
+                <td align="center" width="80">Replacement TDL</td>
+                <td width="120"></td>
+                <td width="200"></td>
+            </tr>
+        }
+        @if (Model.Numident)
+        {
+            <tr>
+                <td align="center" width="80">Numident</td>
+                <td width="120"></td>
+                <td width="200"></td>
+            </tr>
+        }
+    </table>
+</div>
+<br /><br />

@@ -12,6 +12,16 @@ namespace OPIDDaily.DAL
 {
     public class Clients
     {
+
+        public static Client GetClient(int nowServing)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                Client client = opidcontext.Clients.Find(nowServing);
+                return client;
+            }
+        }
+
         private static ClientViewModel ClientEntityToClientViewModel(Client client, bool hasHistory)
         {
             return new ClientViewModel
@@ -103,7 +113,7 @@ namespace OPIDDaily.DAL
                 {
                     ServiceDate = Extras.DateTimeToday(),
                     ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
-                    Stage = "Screened",
+                    Stage = cvm.Stage,
                     FirstName = cvm.FirstName,
                     MiddleName = cvm.MiddleName,
                     LastName = cvm.LastName,

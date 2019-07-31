@@ -1,0 +1,18 @@
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
+@{
+    ViewBag.Title = "Print Express Client";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+}
+
+<div id="printerDiv">
+<br/><br/><br/>
+<h2>Express Client: @ViewBag.ClientName</h2>
+<br/>
+
+@Html.Partial("_RequestedServices");
+</div>
+
+<center>
+    <button class="btn btn-primary hidden-print" onclick="printTable()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+</center>

@@ -4,8 +4,6 @@
 @{
     ViewBag.Title = "Clients";
     Layout = "~/Views/Shared/_Superadmin.cshtml";
-    // See this link for highlighting a row whose client has history
-    // https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
 }
 
 
@@ -24,7 +22,7 @@
 <br /><br />
 <div class="row">
     <div class="col-md-8">
-        <section id="loginForm">
+        <section id="datepickerForm">
             @using (Html.BeginForm("ChangeServiceDate", "Superadmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()

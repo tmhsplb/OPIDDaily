@@ -130,15 +130,15 @@
                   // alert(response.responseText);
               }
           }
-        });
+      });
 
     // See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
     function rowColorFormatter(cellValue, options, rowObject) {
-        if (cellValue > 10 && cellValue < 15) { 
+        if (cellValue > 30 && cellValue < 45) { 
             rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "LightPink" };
-        } else if (cellValue > 15 && cellValue < 20) {  
+        } else if (cellValue > 45 && cellValue < 60) {  
             rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "HotPink" };
-        } else if (cellValue > 20) {   
+        } else if (cellValue > 60) {   
             rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "Red" };
         }
         return cellValue;

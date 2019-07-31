@@ -1,0 +1,59 @@
+﻿@model Tuple<List<VisitViewModel>, RequestedServicesViewModel>
+@using OPIDDaily.Models
+
+@{
+    ViewBag.Title = "Print Existing Client";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+}
+
+
+    <div id="printerDiv">
+        <!-- Must include stylesheet inside of <div> to apply styles to printing -->
+        <style>
+            /* https://stackoverflow.com/questions/1664049/can-i-force-a-page-jump-in-html-printing/1664058 */
+            .pagebreak {
+                page-break-before: always;
+            }
+
+            th {
+                text-align: center;
+            }
+
+            table {
+               border: 1px solid black;
+               border-collapse: collapse;
+            }
+
+            th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+           
+        </style>
+
+        <br /><br /><br />
+        <h2>Existing Client: @ViewBag.ClientName</h2>
+        <br />
+
+        <table id="visitHistory" width="100%">
+            <tr><th>Date</th><th>Item</th><th>Check</th><th>Status</th><th>Notes</th></tr>
+            @foreach (VisitViewModel vvm in Model.Item1)
+            {
+                <tr>
+                    <td align="center" width="80">@vvm.Date.ToString("mm/dd/yyyy")</td>
+                    <td width="50">&nbsp;&nbsp; @vvm.Item</td>
+                    <td width="70" align="center">@vvm.Check</td>
+                    <td width="100">&nbsp;&nbsp; @vvm.Status</td>
+                    <td width="150">&nbsp;&nbsp; @vvm.Notes</td>
+                </tr>
+            }
+        </table>
+
+        <br /><br /><br />
+        @Html.Partial("_RequestedServices", Model.Item2);
+
+    </div>
+
+    <center>
+        <button class="btn btn-primary hidden-print" onclick="printTable()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+    </center>

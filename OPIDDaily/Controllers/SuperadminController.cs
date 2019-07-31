@@ -227,7 +227,7 @@ namespace OPIDDaily.Controllers
             return RedirectToAction("ManageClients");
         }
 
-        public ActionResult PrintTable()
+        public ActionResult PrepareTable()
         {
             string serviceDate = SessionHelper.Get("ServiceDate");
             ViewBag.ServiceDate = DateTime.Parse(serviceDate).ToString("ddd MMM d yyyy");

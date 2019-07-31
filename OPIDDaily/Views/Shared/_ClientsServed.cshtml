@@ -1,7 +1,5 @@
 ﻿@model List<OPIDDaily.Models.ClientServedViewModel>
 
- 
-
     <script type="text/javascript">
     // https://stackoverflow.com/questions/19028419/how-to-adjust-print-options-through-code
     function printTable() {
@@ -14,7 +12,7 @@
 
         var content = "<html>";
         content += "<body onload=\"window.print(); window.close();\">";
-        content += document.getElementById("clientsServedTable").innerHTML;
+        content += document.getElementById("printerDiv").innerHTML;
         content += "</body>";
         content += "</html>";
         win.document.write(content);
@@ -22,7 +20,7 @@
     }
     </script>
  
-    <div id="clientsServedTable">
+    <div id="printerDiv">
         <!-- Must include stylesheet inside of <div> to apply styles to printing -->
         <style>
             /* https://stackoverflow.com/questions/1664049/can-i-force-a-page-jump-in-html-printing/1664058 */
@@ -57,8 +55,8 @@
                 </tr>
             }
         </table>
-
     </div>
+
     <br/><br/>
     <center>
         <button class="btn btn-primary hidden-print" onclick="printTable()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>

@@ -1,4 +1,5 @@
-﻿
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
 @{
     ViewBag.Title = "History";
     Layout = "~/Views/Shared/_FrontDesk.cshtml";
@@ -24,7 +25,6 @@
         colNames: ['Id', 'Date', 'Item', 'Check', 'Status', 'Notes'],
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
-         //{ key: false, align: 'center', name: 'VDate', index: 'VDate', width: 80, editable: true, sortable: true, search: false },
         { key: false, align: 'center', name: 'Date', index: 'Date', formatter: 'date', width: 80, editable: true, sortable: true, search: false },
         { key: false, name: 'Item', index: 'Item', width: 80, editable: true, sortable: false, search: false },
         { key: false, name: 'Check', index: 'Check', width: 80, editable: true, sortable: false, search: false },
@@ -97,8 +97,8 @@
         dataheight: '100%',
         reloadAfterSubmit: true,
         width: 500,
-        top: 400,
-        left: 450,
+        top: 300,
+        left: 150,
         addCaption: "Add Visit",
         editCaption: "Edit Visit",
         bSubmit: "Submit",
@@ -110,3 +110,89 @@
         bExit: "Cancel"
     });
 </script>
+
+<style>
+    input[type="checkbox"] {
+        transform: scale(0.75,0.75);
+    }
+</style>
+
+<br /><br/>
+<div class="row">
+    <div class="col-md-8">
+        <section id="expressclientForm">
+            @using (Html.BeginForm("PrepareExistingClient", "FrontDesk", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <fieldset>
+                <legend>Requested Services</legend>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.BC, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(m => m.BC, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.HCC, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(m => m.HCC, new { @class = "control-label" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.MBVD, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(m => m.MBVD, new { @class = "control-label" })
+                    </div>
+                    <div>
+                        @Html.TextBoxFor(m => m.State, new { placeholder = "State", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.NewTID, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.LabelFor(m => m.NewTID, new { @class = "control-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.ReplacementTID, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.LabelFor(m => m.ReplacementTID, new { @class = "control-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.NewTDL, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.LabelFor(m => m.NewTDL, new { @class = "control-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.ReplacementTDL, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.LabelFor(m => m.ReplacementTDL, new { @class = "control-label" })
+                    </div>
+                </div>
+                <br />
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Prepare Existing Client" class="btn btn-default" />
+                    </div>
+                </div>
+                </fieldset>
+            }
+        </section>
+    </div>
+</div>
