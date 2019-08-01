@@ -120,10 +120,10 @@ namespace OPIDDaily.DAL
                     BirthName = cvm.BirthName,
                     DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday() : DateTime.Parse(cvm.DOB)),
                     Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
-                    EXP = false,
-                    PND = false,
-                    XID = false,
-                    XBC = false,
+                    EXP = (cvm.EXP.Equals("Y") ? true : false),
+                    PND = (cvm.PND.Equals("Y") ? true : false),
+                    XID = (cvm.XID.Equals("Y") ? true : false),
+                    XBC = (cvm.XBC.Equals("Y") ? true : false),
                     Notes = cvm.Notes,
                     Screened = Extras.DateTimeNow(),
                     CheckedIn = Extras.DateTimeNow(),
@@ -226,7 +226,7 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    string clientName = string.Format("{0} {1}", client.FirstName, client.LastName);
+                    string clientName = string.Format("{0}, {1} {2}", client.LastName, client.FirstName, client.MiddleName);
                     return clientName;
                 }
 

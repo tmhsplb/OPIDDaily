@@ -8,6 +8,8 @@ namespace OPIDDaily.Models
 {
     public class RequestedServicesViewModel
     {
+        public string Agency { get; set; }
+
         [Display(Name = "Texas Birth Certificate")]
         public bool BC { get; set; }
 

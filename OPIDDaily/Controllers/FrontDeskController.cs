@@ -118,7 +118,11 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareExpressClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
+            Client client = Clients.GetClient(nowServing);
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            ViewBag.Agency = rsvm.Agency;
 
             return View("PrintExpressClient", rsvm);
         }
@@ -127,7 +131,11 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
+            Client client = Clients.GetClient(nowServing);
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            ViewBag.Agency = rsvm.Agency;
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);

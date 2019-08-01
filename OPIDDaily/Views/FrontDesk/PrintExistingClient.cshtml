@@ -6,7 +6,6 @@
     Layout = "~/Views/Shared/_FrontDesk.cshtml";
 }
 
-
     <div id="printerDiv">
         <!-- Must include stylesheet inside of <div> to apply styles to printing -->
         <style>
@@ -20,19 +19,20 @@
             }
 
             table {
-               border: 1px solid black;
-               border-collapse: collapse;
+                border: 1px solid black;
+                border-collapse: collapse;
             }
 
             th, td {
                 border: 1px solid black;
                 border-collapse: collapse;
             }
-           
         </style>
 
         <br /><br /><br />
-        <h2>Existing Client: @ViewBag.ClientName</h2>
+        <h3>Existing Client: @ViewBag.ClientName</h3>
+        <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+        <h4>@ViewBag.Agency</h4>
         <br />
 
         <table id="visitHistory" width="100%">

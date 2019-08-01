@@ -34,8 +34,8 @@
         }
 
         table {
-             border: 1px solid black;
-             border-collapse: collapse;
+            border: 1px solid black;
+            border-collapse: collapse;
         }
 
         th, td {
@@ -43,12 +43,10 @@
             border-collapse: collapse;
             height: 30px;
         }
-
-        
     </style>
 
-    <fieldset>
-    <legend>Requested Services</legend>
+    <h4>Requested Services</h4>
+    <hr/>
     <table id="requestedServices" width="100%">
         <tr><th>Item</th><th>Check</th><th>Notes</th></tr>
         @if (Model.BC && Model.HCC == false)
@@ -116,6 +114,5 @@
             </tr>
         }
     </table>
-</fieldset>
 </div>
 <br /><br />
