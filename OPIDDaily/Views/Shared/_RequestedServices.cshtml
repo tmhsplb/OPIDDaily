@@ -19,8 +19,7 @@
         win.document.write(content);
         win.document.close();
     }
-
-/**/</script>
+</script>
 
 <div id="requestedServicesTable">
     <!-- Must include stylesheet inside of <div> to apply styles to printing -->
@@ -48,6 +47,8 @@
         
     </style>
 
+    <fieldset>
+    <legend>Requested Services</legend>
     <table id="requestedServices" width="100%">
         <tr><th>Item</th><th>Check</th><th>Notes</th></tr>
         @if (Model.BC && Model.HCC == false)
@@ -115,5 +116,6 @@
             </tr>
         }
     </table>
+</fieldset>
 </div>
 <br /><br />
