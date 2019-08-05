@@ -119,7 +119,9 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing);
+            ViewBag.ServiceTicket = client.ServiceTicket;
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
             ViewBag.Agency = rsvm.Agency;
@@ -132,14 +134,15 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing);
+            ViewBag.ServiceTicket = client.ServiceTicket;
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
             ViewBag.Agency = rsvm.Agency;
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
-
             return View("PrintExistingClient", objTuple);
         }
 
