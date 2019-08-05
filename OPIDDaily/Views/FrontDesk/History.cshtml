@@ -117,76 +117,86 @@
     }
 </style>
 
-<br /><br/>
+<br /><br /><br />
+<h3>Existing Client: @ViewBag.ClientName</h3>
+<br />
+
+<br /><br />
 <div class="row">
     <div class="col-md-8">
         <section id="existingclientForm">
             @using (Html.BeginForm("PrepareExistingClient", "FrontDesk", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                 <div class="form-group">
-                   <div class="col-md-12">
-                     @Html.TextBoxFor(m => m.Agency, new { placeholder = "Agency", @class = "form-control" })
-                   </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.Agency, new { placeholder = "Agency", @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.UseBirthName, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(m => m.UseBirthName, new { @class = "control-label" })
+                    </div>
                 </div>
-                 <div class="form-group">
-                     <div class="col-md-2">
-                         @Html.CheckBoxFor(m => m.BC, new { @class = "form-control" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.LabelFor(m => m.BC, new { @class = "control-label" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.CheckBoxFor(m => m.HCC, new { @class = "form-control" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.LabelFor(m => m.HCC, new { @class = "control-label" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.CheckBoxFor(m => m.BCEligible, new { @class = "form-control" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.LabelFor(m => m.BCEligible, new { @class = "control-label" })
-                     </div>
-                 </div>
-                 <div class="form-group">
-                     <div class="col-md-2">
-                         @Html.CheckBoxFor(m => m.MBVD, new { @class = "form-control" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.LabelFor(m => m.MBVD, new { @class = "control-label" })
-                     </div>
-                     <div class="col-md-4">
-                         @Html.TextBoxFor(m => m.State, new { placeholder = "State", @class = "form-control" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.CheckBoxFor(m => m.MBVDEligible, new { @class = "form-control" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.LabelFor(m => m.MBVDEligible, new { @class = "control-label" })
-                     </div>
-                 </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.BC, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.BC, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.HCC, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.HCC, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.BCEligible, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.BCEligible, new { @class = "control-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.MBVD, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.MBVD, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.State, new { placeholder = "State", @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.MBVDEligible, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.MBVDEligible, new { @class = "control-label" })
+                    </div>
+                </div>
 
-                 <div class="form-group">
-                     <div class="col-md-2">
-                         @Html.CheckBoxFor(m => m.NewTID, new { @class = "form-control" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.LabelFor(m => m.NewTID, new { @class = "control-label" })
-                     </div>
-                     <div class="col-md-2">
-                         &nbsp;
-                     </div>
-                     <div class="col-md-2">
-                         &nbsp;
-                     </div>
-                     <div class="col-md-2">
-                         @Html.CheckBoxFor(m => m.NewTIDEligible, new { @class = "form-control" })
-                     </div>
-                     <div class="col-md-2">
-                         @Html.LabelFor(m => m.NewTIDEligible, new { @class = "control-label" })
-                     </div>
-                 </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.NewTID, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.NewTID, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-2">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.NewTIDEligible, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.NewTIDEligible, new { @class = "control-label" })
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="col-md-2">
                         @Html.CheckBoxFor(m => m.ReplacementTID, new { @class = "form-control" })

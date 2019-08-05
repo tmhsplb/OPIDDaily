@@ -30,6 +30,9 @@ namespace OPIDDaily.Models
         [Display(Name = "New/Dup ID")]
         public bool NewTID { get; set; }
 
+        [Display(Name = "Use Birth Name?")]
+        public bool UseBirthName { get; set; }
+
         [Display(Name = "Eligible?")]
         public bool NewTIDEligible { get; set; }
 

@@ -226,7 +226,7 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    string clientName = string.Format("{0}, {1} {2}", client.LastName, client.FirstName, client.MiddleName);
+                    string clientName = string.Format("{0}, {1} {2} (Birth name: {3})", client.LastName, client.FirstName, client.MiddleName, client.BirthName);
                     return clientName;
                 }
 
