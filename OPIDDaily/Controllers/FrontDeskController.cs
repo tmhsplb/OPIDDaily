@@ -142,6 +142,9 @@ namespace OPIDDaily.Controllers
             ViewBag.Agency = rsvm.Agency;
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
+            rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;
+            rsvm.XID = client.XID == true ? "XID" : string.Empty;
+
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClient", objTuple);
         }

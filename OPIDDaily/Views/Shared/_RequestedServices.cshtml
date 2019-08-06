@@ -54,7 +54,7 @@
             <tr>
                 <td align="center" width="80">BC</td>
                 <td width="120"></td>
-                <td width="200">@(Model.BCEligible ? "--- eligible?" : string.Empty)</td>
+                <td width="200">&nbsp;&nbsp; @(!string.IsNullOrEmpty(Model.XBC) ? Model.XBC : (Model.BCEligible ? "--- eligible?" : string.Empty))</td>
             </tr>
         }
         @if (Model.BC && Model.HCC == true)
@@ -62,7 +62,7 @@
             <tr>
                 <td align="center" width="80">BC</td>
                 <td width="80"></td>
-                <td width="200">&nbsp;&nbsp; Harris County Clerk @(Model.BCEligible ? "--- eligible?" : string.Empty)</td>
+                <td width="200">&nbsp;&nbsp; Harris County Clerk &nbsp;&nbsp; @(!string.IsNullOrEmpty(Model.XBC) ? Model.XBC : (Model.BCEligible ? "--- eligible?" : string.Empty))</td>
             </tr>
         }
         @if (Model.MBVD)
@@ -70,7 +70,7 @@
             <tr>
                 <td align="center" width="80">MBVD</td>
                 <td width="120"></td>
-                <td width="200">&nbsp;&nbsp; @Model.State @(Model.MBVDEligible ? "--- eligible?" : string.Empty)</td>
+                <td width="200">&nbsp;&nbsp; @Model.State &nbsp;&nbsp;  @(!string.IsNullOrEmpty(Model.XBC) ? Model.XBC : (Model.MBVDEligible ? "--- eligible?" : string.Empty))</td>
             </tr>
         }
         @if (Model.NewTID)
@@ -78,7 +78,7 @@
             <tr>
                 <td align="center" width="80">New/Duplicate TID</td>
                 <td width="120"></td>
-                <td width="200">&nbsp;&nbsp; @(Model.UseBirthName ? "Use birth name" : string.Empty)&nbsp;@(Model.NewTIDEligible ? "--- eligible?" : string.Empty)</td>
+                <td width="200">&nbsp;&nbsp; @(Model.UseBirthName ? "Use birth name" : string.Empty) &nbsp;&nbsp; @(!string.IsNullOrEmpty(Model.XID) ? Model.XID : (Model.NewTIDEligible ? "--- eligible?" : string.Empty))</td>
             </tr>
         }
         @if (Model.ReplacementTID)
@@ -86,7 +86,7 @@
             <tr>
                 <td align="center" width="80">Replacement TID</td>
                 <td width="120"></td>
-                <td width="200">&nbsp;&nbsp; @(Model.UseBirthName ? "Use birth name" : string.Empty)&nbsp;@(Model.ReplacementTIDEligible ? "--- eligible?" : string.Empty)</td>
+                <td width="200">&nbsp;&nbsp; @(Model.UseBirthName ? "Use birth name" : string.Empty) &nbsp;&nbsp; @(!string.IsNullOrEmpty(Model.XID) ? Model.XID : (Model.NewTIDEligible ? "--- eligible?" : string.Empty))</td>
             </tr>
         }
         @if (Model.NewTDL)
@@ -94,7 +94,7 @@
             <tr>
                 <td align="center" width="80">New/Duplicate TDL</td>
                 <td width="120"></td>
-                <td width="200">&nbsp;&nbsp; @(Model.UseBirthName ? "Use birth name" : string.Empty)&nbsp;@(Model.NewTDLEligible ? "--- eligible?" : string.Empty)</td>
+                <td width="200">&nbsp;&nbsp; @(Model.UseBirthName ? "Use birth name" : string.Empty) &nbsp;&nbsp; @(!string.IsNullOrEmpty(Model.XID) ? Model.XID : (Model.NewTIDEligible ? "--- eligible?" : string.Empty))</td>
             </tr>
         }
         @if (Model.ReplacementTDL)
@@ -102,7 +102,7 @@
             <tr>
                 <td align="center" width="80">Replacement TDL</td>
                 <td width="120"></td>
-                <td width="200">&nbsp;&nbsp; @(Model.UseBirthName ? "Use birth name" : string.Empty)&nbsp;@(Model.ReplacementTDLEligible ? "--- eligible?" : string.Empty)</td>
+                <td width="200">&nbsp;&nbsp; @(Model.UseBirthName ? "Use birth name" : string.Empty) &nbsp;&nbsp; @(!string.IsNullOrEmpty(Model.XID) ? Model.XID : (Model.NewTIDEligible ? "--- eligible?" : string.Empty))</td>
             </tr>
         }
         @if (Model.Numident)
