@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 
 namespace OPIDDaily.DAL
 {
@@ -316,6 +317,26 @@ namespace OPIDDaily.DAL
                 }
 
                 return clientsServed;
+            }
+        }
+
+        public static void RemoveClients(DateTime date)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date).ToList();
+
+                foreach (Client client in clients)
+                {
+                    // Manually perform cascade delete on the related (by a foreign key) Visits table.
+                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+                    opiddailycontext.Visits.RemoveRange(client.Visits);
+
+                    // Physically remove client from table
+                    opiddailycontext.Clients.Remove(client);
+                }
+
+                opiddailycontext.SaveChanges();
             }
         }
     }

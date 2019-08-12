@@ -242,5 +242,14 @@ namespace OPIDDaily.Controllers
         {
             return PartialView();
         }
+
+        [HttpPost]
+        public ActionResult RemoveClients()
+        {
+            string serviceDate = SessionHelper.Get("ServiceDate");
+            DateTime date = DateTime.Parse(serviceDate);
+            Clients.RemoveClients(date);
+            return RedirectToAction("ManageClients");
+        }
     }
 }
