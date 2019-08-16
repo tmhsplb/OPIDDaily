@@ -54,6 +54,8 @@ namespace OpidDailyEntities
 
         public bool Active { get; set; }
 
+      //  public string Agency { get; set; }
+
         public ICollection<Visit> Visits { get; set; }
     }
 }

@@ -339,5 +339,20 @@ namespace OPIDDaily.DAL
                 opiddailycontext.SaveChanges();
             }
         }
+
+        public static void StoreRequestedServices(int nowServing, RequestedServicesViewModel rsvm)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+
+                if (client != null)
+                {
+                //    client.Agency = rsvm.Agency;
+                }
+
+                opiddailycontext.SaveChanges();   
+            }
+        }
     }
 }

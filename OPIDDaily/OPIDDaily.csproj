@@ -181,6 +181,7 @@
     <Compile Include="Controllers\InterviewerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\SuperadminController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\Clients.cs" />
@@ -502,6 +503,10 @@
     <Content Include="Views\FrontDesk\PrintExpressClient.cshtml" />
     <Content Include="Views\Shared\_RequestedServices.cshtml" />
     <Content Include="Views\FrontDesk\PrintExistingClient.cshtml" />
+    <Content Include="Views\Interviewer\ExpressClient.cshtml" />
+    <Content Include="Views\Interviewer\PrintExistingClient.cshtml" />
+    <Content Include="Views\Interviewer\PrintExpressClient.cshtml" />
+    <Content Include="Views\Shared\_SignatureBlock.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,25 @@
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
+@{
+    ViewBag.Title = "Print Express Client";
+    Layout = "~/Views/Shared/_Interviewer.cshtml";
+}
+
+    <div id="printerDiv">
+        <br /><br /><br />
+        <h3>Service Ticket: @ViewBag.ServiceTicket</h3>
+        <br />
+        <h3>Express Client: @ViewBag.ClientName</h3>
+        <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+        <h4>@ViewBag.Agency</h4>
+        <br /><br/><br/>
+
+        @Html.Partial("_RequestedServices")
+        <br /><br />
+        @Html.Partial("_SignatureBlock")
+        <br /><br />
+    </div>
+
+<center>
+    <button class="btn btn-primary hidden-print" onclick="printTable()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+</center>
