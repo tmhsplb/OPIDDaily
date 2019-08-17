@@ -507,6 +507,7 @@
     <Content Include="Views\Interviewer\PrintExistingClient.cshtml" />
     <Content Include="Views\Interviewer\PrintExpressClient.cshtml" />
     <Content Include="Views\Shared\_SignatureBlock.cshtml" />
+    <Content Include="Views\Shared\_RequestedServicesOnly.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -18,22 +18,23 @@
 <h4>Requested Services</h4>
 <hr/>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <section id="expressclientForm">
             @using (Html.BeginForm("PrepareExpressClient", "FrontDesk", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-            <div class="form-group">
-                <div class="col-md-6">
-                    @Html.TextBoxFor(m => m.Agency, new { placeholder = "Agency", @class = "form-control" })
+               
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.Agency, new { placeholder = "Agency", @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.UseBirthName, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(m => m.UseBirthName, new { @class = "control-label" })
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    @Html.CheckBoxFor(m => m.UseBirthName, new { @class = "form-control" })
-                </div>
-                <div class="col-md-4">
-                    @Html.LabelFor(m => m.UseBirthName, new { @class = "control-label" })
-                </div>
-            </div>
                 <div class="form-group">
                     <div class="col-md-2">
                         @Html.CheckBoxFor(m => m.BC, new { @class = "form-control" })
@@ -67,9 +68,6 @@
                     <div class="col-md-2">
                         @Html.LabelFor(m => m.NewTID, new { @class = "control-label" })
                     </div>
-                   
-                </div>
-                <div class="form-group">
                     <div class="col-md-2">
                         @Html.CheckBoxFor(m => m.ReplacementTID, new { @class = "form-control" })
                     </div>
@@ -84,8 +82,6 @@
                     <div class="col-md-2">
                         @Html.LabelFor(m => m.NewTDL, new { @class = "control-label" })
                     </div>
-                </div>
-                <div class="form-group">
                     <div class="col-md-2">
                         @Html.CheckBoxFor(m => m.ReplacementTDL, new { @class = "form-control" })
                     </div>
@@ -93,22 +89,23 @@
                         @Html.LabelFor(m => m.ReplacementTDL, new { @class = "control-label" })
                     </div>
                 </div>
-                    <div class="form-group">
-                        <div class="col-md-2">
-                            @Html.CheckBoxFor(m => m.Numident, new { @class = "form-control" })
-                        </div>
-                        <div class="col-md-10">
-                            @Html.LabelFor(m => m.Numident, new { @class = "control-label" })
-                        </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.Numident, new { @class = "form-control" })
                     </div>
-                    <br />
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            <input type="submit" value="Prepare Service Ticket" class="btn btn-default" />
-                        </div>
+                    <div class="col-md-10">
+                        @Html.LabelFor(m => m.Numident, new { @class = "control-label" })
                     </div>
-                    }
-</section>
+                </div>
+                <br />
+               
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Prepare Service Ticket" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
     </div>
 </div>
  

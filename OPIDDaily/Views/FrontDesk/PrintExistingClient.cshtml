@@ -29,7 +29,7 @@
             }
         </style>
 
-        <br /><br /><br />
+        <br />
         <h3>Service Ticket: @ViewBag.ServiceTicket</h3>
         <br/>
         <h3>Existing Client: @ViewBag.ClientName</h3>
@@ -51,9 +51,8 @@
             }
         </table>
 
-        <br /><br /><br />
-        @Html.Partial("_RequestedServices", Model.Item2)
-
+        <br />
+        @Html.Partial("_RequestedServicesOnly", Model.Item2)
     </div>
 
     <center>
