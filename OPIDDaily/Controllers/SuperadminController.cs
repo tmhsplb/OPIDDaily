@@ -10,7 +10,7 @@ using OPIDDaily.Utils;
 
 namespace OPIDDaily.Controllers
 {
-    public class SuperadminController : UsersController
+    public class SuperadminController : Controller 
     {
         public ActionResult Home()
         {
@@ -36,58 +36,6 @@ namespace OPIDDaily.Controllers
 
             // Log.Info("Goto Superadmin home page");
             return View();
-        }
-
-        public ActionResult ManageRoles()
-        {
-            return RedirectToAction("Index", "Role");
-        }
-
-        
-        public ActionResult ManageUsers()
-        {
-            return View("Users");
-        }
-
-        public string ExtendInvitation(InvitationViewModel invite)
-        {
-            if (InUse(invite.UserName))
-            {
-                string status = string.Format("The user name {0} is already in use. Please use a different user name.", invite.UserName);
-                return status;
-            }
-
-            Identity.ExtendInvitation(invite);
-
-            return "Success";
-        }
-
-        public string EditUser(InvitationViewModel invite)
-        {
-            string status = Users.EditUser(invite);
-            return status;
-        }
-        
-        public JsonResult GetUsers(int page, int rows)
-        {
-            List<InvitationViewModel> invitations = Identity.GetUsers();
-
-            int pageIndex = page - 1;
-            int pageSize = rows;
-            int totalRecords = invitations.Count;
-            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
-
-            invitations = invitations.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-
-            var jsonData = new
-            {
-                total = totalPages,
-                page,
-                records = totalRecords,
-                rows = invitations
-            };
-
-            return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ManageClients()
@@ -126,7 +74,7 @@ namespace OPIDDaily.Controllers
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
- 
+
         private static int NowServing()
         {
             return Convert.ToInt32(SessionHelper.Get("NowServing"));

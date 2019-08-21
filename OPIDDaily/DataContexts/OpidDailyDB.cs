@@ -5,7 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using OpidDailyEntities;
- 
+
 namespace OPIDDaily.DataContexts
 {
     public class OpidDailyDB : DbContext
@@ -15,6 +15,8 @@ namespace OPIDDaily.DataContexts
           : base(Config.ConnectionString) //  PLB: Added on 4/7/19
         {
         }
+
+        public DbSet<Agency> Agencies { get; set; }
 
         public DbSet<Invitation> Invitations { get; set; }
 

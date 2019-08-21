@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using OPIDDaily.DAL;
 using OPIDDaily.DataContexts;
 using OPIDDaily.Models;
 using System;
@@ -96,5 +97,52 @@ namespace OPIDDaily.Controllers
 
             return View();
         }
+
+        public ActionResult ManageUsers()
+        {
+            return View("Users");
+        }
+
+        public string ExtendInvitation(InvitationViewModel invite)
+        {
+            if (InUse(invite.UserName))
+            {
+                string status = string.Format("The user name {0} is already in use. Please use a different user name.", invite.UserName);
+                return status;
+            }
+
+            Identity.ExtendInvitation(invite);
+
+            return "Success";
+        }
+
+        public string EditUser(InvitationViewModel invite)
+        {
+            string status = Users.EditUser(invite);
+            return status;
+        }
+
+        public JsonResult GetUsers(int page, int rows)
+        {
+            List<InvitationViewModel> invitations = Identity.GetUsers();
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+            int totalRecords = invitations.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            invitations = invitations.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = invitations
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

@@ -175,6 +175,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AgencyController.cs" />
     <Compile Include="Controllers\BackOfficeController.cs" />
     <Compile Include="Controllers\FrontDeskController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\SuperadminController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="DAL\Agencies.cs" />
     <Compile Include="DAL\Clients.cs" />
     <Compile Include="DAL\DataManager.cs" />
     <Compile Include="DAL\Identity.cs" />
@@ -230,7 +232,12 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\201907291405451_ExpressClient.Designer.cs">
       <DependentUpon>201907291405451_ExpressClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201908191518448_Agencies.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201908191518448_Agencies.Designer.cs">
+      <DependentUpon>201908191518448_Agencies.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
+    <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
     <Compile Include="Entities\Invitation.cs" />
     <Compile Include="Entities\Visit.cs" />
@@ -238,6 +245,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AgencyViewModel.cs" />
     <Compile Include="Models\ClientReviewViewModel.cs" />
     <Compile Include="Models\ClientServedViewModel.cs" />
     <Compile Include="Models\ClientViewModel.cs" />
@@ -471,7 +479,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Superadmin\Home.cshtml" />
-    <Content Include="Views\Superadmin\Users.cshtml" />
     <Content Include="Views\Shared\_Superadmin.cshtml" />
     <Content Include="Views\Role\Roles.cshtml" />
     <Content Include="Views\FrontDesk\Home.cshtml" />
@@ -508,6 +515,8 @@
     <Content Include="Views\Interviewer\PrintExpressClient.cshtml" />
     <Content Include="Views\Shared\_SignatureBlock.cshtml" />
     <Content Include="Views\Shared\_RequestedServicesOnly.cshtml" />
+    <Content Include="Views\Agency\Agencies.cshtml" />
+    <Content Include="Views\Users\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -553,6 +562,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201907291405451_ExpressClient.resx">
       <DependentUpon>201907291405451_ExpressClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201908191518448_Agencies.resx">
+      <DependentUpon>201908191518448_Agencies.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

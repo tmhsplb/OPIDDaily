@@ -23,13 +23,13 @@ namespace OPIDDaily.Controllers
         /// Get All Roles
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index()
+        public ActionResult ManageRoles()
         {
             //    var roles = context.Roles.ToList();
             //    return View(roles);
             return View("Roles");
         }
-
+ 
         public JsonResult GetRoles(int page, int rows)
         {
             List<RoleViewModel> roles = Identity.GetRoles();

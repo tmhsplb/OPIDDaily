@@ -1,13 +1,13 @@
 ﻿@model OPIDDaily.Models.RequestedServicesViewModel
 
 @{
-    ViewBag.Title = "History";
+    ViewBag.Title = "Express Client";
     Layout = "~/Views/Shared/_Interviewer.cshtml";
 }
 
 <style>
     input[type="checkbox"] {
-        transform:scale(0.75,0.75);
+        transform: scale(0.75,0.75);
     }
 </style>
 
@@ -25,7 +25,7 @@
                 <hr />
                 <div class="form-group">
                     <div class="col-md-6">
-                        @Html.TextBoxFor(m => m.Agency, new { placeholder = "Agency", @class = "form-control" })
+                        @Html.DropDownListFor(model => model.Agency.Id, Model.Agencies, "Select Agency", new { @class = "form-control" })
                     </div>
                     <div class="col-md-2">
                         @Html.CheckBoxFor(m => m.UseBirthName, new { @class = "form-control" })
@@ -220,4 +220,4 @@
         </section>
     </div>
 </div>
- 
+

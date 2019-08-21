@@ -24,7 +24,7 @@
 
 <script type="text/javascript">
     $("#invitationsGrid").jqGrid({
-        url: "@Url.Action("GetUsers", "Superadmin")",
+        url: "@Url.Action("GetUsers", "Users")",
         datatype: "json",
         mtype: "Get",
         colNames: ['Id', 'Extended', 'Accepted', 'User Name', 'Full Name', 'Email', 'Role'],
@@ -61,7 +61,7 @@
     jQuery("#invitationsGrid").jqGrid('navGrid', '#invitationsPager', { edit: true, add: true, del: true, search: false, refresh: true },
       {
           zIndex: 100,
-          url: "@Url.Action("EditUser", "Superadmin")",
+          url: "@Url.Action("EditUser", "Users")",
           closeOnEscape: true,
           closeAfterEdit: true,
           recreateForm: true,
@@ -75,7 +75,7 @@
       },
       {
           zIndex: 100,
-          url: "@Url.Action("ExtendInvitation", "Superadmin")",
+          url: "@Url.Action("ExtendInvitation", "Users")",
           closeOnEscape: true,
           closeAfterAdd: true,
           recreateForm: true,

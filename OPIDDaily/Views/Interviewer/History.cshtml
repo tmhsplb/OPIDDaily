@@ -75,7 +75,7 @@
                 @Html.AntiForgeryToken()
                 <div class="form-group">
                     <div class="col-md-6">
-                        @Html.TextBoxFor(m => m.Agency, new { placeholder = "Agency", @class = "form-control" })
+                        @Html.DropDownListFor(model => model.Agency.Id, Model.Agencies, "Select Agency", new { @class = "form-control" })
                     </div>
                     <div class="col-md-2">
                         @Html.CheckBoxFor(m => m.UseBirthName, new { @class = "form-control" })

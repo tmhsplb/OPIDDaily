@@ -1,8 +1,10 @@
-﻿using System;
+﻿using OpidDailyEntities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace OPIDDaily.Models
 {
@@ -12,8 +14,10 @@ namespace OPIDDaily.Models
 
         public string XBC { get; set; }
 
-        public string Agency { get; set; }
+        public Agency Agency { get; set; }
 
+        public SelectList Agencies { get; set; }
+ 
         [Display(Name = "Use Birth Name?")]
         public bool UseBirthName { get; set; }
 

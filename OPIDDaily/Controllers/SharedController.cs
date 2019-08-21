@@ -5,6 +5,7 @@ using OPIDDaily.Utils;
 using OpidDailyEntities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -82,6 +83,8 @@ namespace OPIDDaily.Controllers
 
         public ActionResult History()
         {
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
+
             int nowServing = NowServing();
 
             if (nowServing == 0)
@@ -92,7 +95,9 @@ namespace OPIDDaily.Controllers
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
 
-            return View();
+            BackButtonHelper("Get", rsvm);
+
+            return View(rsvm);
         }
 
         public JsonResult GetHistory(int page, int rows)
@@ -146,9 +151,79 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
+        private static void BackButtonHelper(string mode, RequestedServicesViewModel rsvm)
+        {
+            switch (mode)
+            {
+                case "Get":
+                    rsvm.Agency = (SessionHelper.Get("AgencyId").Equals("0") ? new Agency { Id = 0, AgencyName = "Select Agency" } : new Agency { Id = Convert.ToInt32(SessionHelper.Get("AgencyId")), AgencyName = Agencies.GetAgencyName(Convert.ToInt32(SessionHelper.Get("AgencyId"))) });
+                    rsvm.UseBirthName = (SessionHelper.Get("UseBirthName").Equals("Requested") ? true : false);
+                    rsvm.BC = (SessionHelper.Get("BC").Equals("Requested") ? true : false);
+                    rsvm.HCC = (SessionHelper.Get("HCC").Equals("Requested") ? true : false);
+                    rsvm.MBVD = (SessionHelper.Get("MBVD").Equals("Requested") ? true : false);
+                    rsvm.NewTID = (SessionHelper.Get("NTID").Equals("Requested") ? true : false);
+                    rsvm.ReplacementTID = (SessionHelper.Get("RTID").Equals("Requested") ? true : false);
+                    rsvm.NewTDL = (SessionHelper.Get("NTDL").Equals("Requested") ? true : false);
+                    rsvm.ReplacementTDL = (SessionHelper.Get("RTDL").Equals("Requested") ? true : false);
+                    rsvm.Numident = (SessionHelper.Get("Numident").Equals("Requested") ? true : false);
+
+                    // Supporting documents
+                    rsvm.SDBC = (SessionHelper.Get("SDBC").Equals("Requested") ? true : false);
+                    rsvm.SDSSC = (SessionHelper.Get("SDSSC").Equals("Requested") ? true : false);
+                    rsvm.SDTID = (SessionHelper.Get("SDTID").Equals("Requested") ? true : false);
+                    rsvm.SDTDL = (SessionHelper.Get("SDTDL").Equals("Requested") ? true : false);
+                    rsvm.SDOSID = (SessionHelper.Get("SDOSID").Equals("Requested") ? true : false);
+                    rsvm.SDOSDL = (SessionHelper.Get("SDOSDL").Equals("Requested") ? true : false);
+                    rsvm.SDML = (SessionHelper.Get("SDML").Equals("Requested") ? true : false);
+                    rsvm.SDDD = (SessionHelper.Get("SDDD").Equals("Requested") ? true : false);
+                    rsvm.SDSL = (SessionHelper.Get("SDSL").Equals("Requested") ? true : false);
+                    rsvm.SDDD214 = (SessionHelper.Get("SDDD214").Equals("Requested") ? true : false);
+                    rsvm.SDGC = (SessionHelper.Get("SDGC").Equals("Requested") ? true : false);
+                    rsvm.SDEBT = (SessionHelper.Get("SDEBT").Equals("Requested") ? true : false);
+                    rsvm.SDHOTID = (SessionHelper.Get("SDHOTID").Equals("Requested") ? true : false);
+                    rsvm.SDSchoolRecords = (SessionHelper.Get("SDSRECS").Equals("Requested") ? true : false);
+                    rsvm.SDPassport = (SessionHelper.Get("SDPassport").Equals("Requested") ? true : false);
+                    rsvm.SDJobOffer = (SessionHelper.Get("SDJobOffer").Equals("Requested") ? true : false);
+                    break;
+                    
+                case "Set":
+                    SessionHelper.Set("AgencyId", rsvm.Agency.Id.ToString());
+                    SessionHelper.Set("UseBirthName", (rsvm.UseBirthName ? "Requested" : string.Empty));
+                    SessionHelper.Set("BC", (rsvm.BC ? "Requested" : string.Empty));
+                    SessionHelper.Set("HCC", (rsvm.HCC ? "Requested" : string.Empty));
+                    SessionHelper.Set("MBVD", (rsvm.MBVD ? "Requested" : string.Empty));
+                    SessionHelper.Set("NTID", (rsvm.NewTID ? "Requested" : string.Empty));
+                    SessionHelper.Set("RTID", (rsvm.ReplacementTID ? "Requested" : string.Empty));
+                    SessionHelper.Set("NTDL", (rsvm.NewTDL ? "Requested" : string.Empty));
+                    SessionHelper.Set("RTDL", (rsvm.ReplacementTDL ? "Requested" : string.Empty));
+                    SessionHelper.Set("Numident", (rsvm.Numident ? "Requested" : string.Empty));
+
+                    // Supporting documents
+                    SessionHelper.Set("SDBC", (rsvm.SDBC ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDSSC", (rsvm.SDSSC ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDTID", (rsvm.SDTID ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDTDL", (rsvm.SDTDL ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDOSID", (rsvm.SDOSID ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDOSDL", (rsvm.SDOSDL ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDML", (rsvm.SDML ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDDD", (rsvm.SDDD ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDSL", (rsvm.SDSL ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDDD214", (rsvm.SDDD214 ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDGC", (rsvm.SDGC ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDEBT", (rsvm.SDEBT ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDHOTID", (rsvm.SDHOTID ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDSRECS", (rsvm.SDSchoolRecords ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDPassport", (rsvm.SDPassport ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDJobOffer", (rsvm.SDJobOffer ? "Requested" : string.Empty));
+                    break;
+            }
+        }
+
         public ActionResult ExpressClient()
         {
             int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
+
 
             if (nowServing == 0)
             {
@@ -172,7 +247,9 @@ namespace OPIDDaily.Controllers
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
 
-            return View();
+            BackButtonHelper("Get", rsvm);
+
+            return View(rsvm);
         }
 
 
@@ -181,12 +258,15 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing);
+          
             ViewBag.ServiceTicket = client.ServiceTicket;
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = rsvm.Agency;
+            ViewBag.Agency = Agencies.GetAgencyName(rsvm.Agency.Id);
+
+            BackButtonHelper("Set", rsvm);
 
             //  Clients.StoreRequestedServices(nowServing, rsvm);
 
@@ -203,13 +283,15 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = rsvm.Agency;
+            ViewBag.Agency = Agencies.GetAgencyName(rsvm.Agency.Id);
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;
             rsvm.XID = client.XID == true ? "XID" : string.Empty;
 
             //   Clients.StoreRequestedServices(nowServing, rsvm);
+
+            BackButtonHelper("Set", rsvm);
 
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClient", objTuple);

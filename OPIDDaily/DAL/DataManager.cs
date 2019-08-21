@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using OpidDailyEntities;
- 
+using System.Web.Mvc;
+
 namespace OPIDDaily.DAL
 {
     public class DataManager
     {
-        
+      
     }
 }
