@@ -15,13 +15,18 @@ namespace OPIDDaily.Controllers
     {
         public ActionResult Home()
         {
-            BackButtonHelper("Reset", null);
+            ServiceTicketBackButtonHelper("Reset", null);
+            SpecialReferralBackButtonHelper("Reset", null);
             return View();
         } 
         
         public ActionResult SpecialReferral()
         {
-            return View("SpecialReferral");
+            SpecialReferralViewModel srvm = new SpecialReferralViewModel();
+        
+            SpecialReferralBackButtonHelper("Get", srvm);
+
+            return View("SpecialReferral", srvm);
         }
 
         public ActionResult PrepareSpecialReferral(SpecialReferralViewModel srvm)
@@ -39,6 +44,8 @@ namespace OPIDDaily.Controllers
             {
                 srvm.AgencyContact = "_________________________";
             }
+
+            SpecialReferralBackButtonHelper("Set", srvm);
 
             DateTime today = Extras.DateTimeToday();
             ViewBag.SpecialReferralDate = today.ToString("MMM d, yyyy");

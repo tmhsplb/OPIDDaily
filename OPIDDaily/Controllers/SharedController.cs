@@ -36,7 +36,8 @@ namespace OPIDDaily.Controllers
             DateTime today = Extras.DateTimeToday();
             List<ClientViewModel> clients = Clients.GetClients(today);
 
-            BackButtonHelper("Reset", null);
+            ServiceTicketBackButtonHelper("Reset", null);
+            SpecialReferralBackButtonHelper("Reset", null);
 
             int pageIndex = page - 1;
             int pageSize = (int)rows;
@@ -97,7 +98,7 @@ namespace OPIDDaily.Controllers
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
 
-            BackButtonHelper("Get", rsvm);
+            ServiceTicketBackButtonHelper("Get", rsvm);
 
             return View(rsvm);
         }
@@ -152,8 +153,8 @@ namespace OPIDDaily.Controllers
 
             return "Success";
         }
-
-        protected static void BackButtonHelper(string mode, RequestedServicesViewModel rsvm)
+        
+        protected static void ServiceTicketBackButtonHelper(string mode, RequestedServicesViewModel rsvm)
         {
             switch (mode)
             {
@@ -163,6 +164,7 @@ namespace OPIDDaily.Controllers
                     rsvm.BC = (SessionHelper.Get("BC").Equals("Requested") ? true : false);
                     rsvm.HCC = (SessionHelper.Get("HCC").Equals("Requested") ? true : false);
                     rsvm.MBVD = (SessionHelper.Get("MBVD").Equals("Requested") ? true : false);
+                    rsvm.State = SessionHelper.Get("State");
                     rsvm.NewTID = (SessionHelper.Get("NTID").Equals("Requested") ? true : false);
                     rsvm.ReplacementTID = (SessionHelper.Get("RTID").Equals("Requested") ? true : false);
                     rsvm.NewTDL = (SessionHelper.Get("NTDL").Equals("Requested") ? true : false);
@@ -194,6 +196,7 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("BC", (rsvm.BC ? "Requested" : string.Empty));
                     SessionHelper.Set("HCC", (rsvm.HCC ? "Requested" : string.Empty));
                     SessionHelper.Set("MBVD", (rsvm.MBVD ? "Requested" : string.Empty));
+                    SessionHelper.Set("State", rsvm.State);
                     SessionHelper.Set("NTID", (rsvm.NewTID ? "Requested" : string.Empty));
                     SessionHelper.Set("RTID", (rsvm.ReplacementTID ? "Requested" : string.Empty));
                     SessionHelper.Set("NTDL", (rsvm.NewTDL ? "Requested" : string.Empty));
@@ -225,6 +228,7 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("BC", string.Empty);
                     SessionHelper.Set("HCC", string.Empty);
                     SessionHelper.Set("MBVD", string.Empty);
+                    SessionHelper.Set("State", string.Empty);
                     SessionHelper.Set("NTID", string.Empty);
                     SessionHelper.Set("RTID", string.Empty);
                     SessionHelper.Set("NTDL", string.Empty);
@@ -247,7 +251,40 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("SDHOTID", string.Empty);
                     SessionHelper.Set("SDSRECS", string.Empty);
                     SessionHelper.Set("SDPassport", string.Empty);
-                    SessionHelper.Set("SDJobOffer", string.Empty);
+                    SessionHelper.Set("SDJobOffer", string.Empty);         
+                    break;
+            }
+        }
+
+        protected static void SpecialReferralBackButtonHelper(string mode, SpecialReferralViewModel srvm)
+        {
+            switch (mode)
+            {
+                case "Get":
+                    srvm.FirstName = SessionHelper.Get("FirstName");
+                    srvm.MiddleName = SessionHelper.Get("MiddleName");
+                    srvm.LastName = SessionHelper.Get("LastName");
+                    srvm.Agency = SessionHelper.Get("Agency");
+                    srvm.AgencyContact = SessionHelper.Get("AgencyContact");
+                    srvm.SpecialInstructions = SessionHelper.Get("SpecialInstructions");
+                    break;
+
+                case "Set":
+                    SessionHelper.Set("FirstName", srvm.FirstName);
+                    SessionHelper.Set("MiddleName", srvm.MiddleName);
+                    SessionHelper.Set("LastName", srvm.LastName);
+                    SessionHelper.Set("Agency", srvm.Agency);
+                    SessionHelper.Set("AgencyContact", srvm.AgencyContact);
+                    SessionHelper.Set("SpecialInstructions", srvm.SpecialInstructions);
+                    break;
+
+                case "Reset":
+                    SessionHelper.Set("FirstName", string.Empty);
+                    SessionHelper.Set("MiddleName", string.Empty);
+                    SessionHelper.Set("LastName", string.Empty);
+                    SessionHelper.Set("Agency", string.Empty);
+                    SessionHelper.Set("AgencyContact", string.Empty);
+                    SessionHelper.Set("SpecialInstructions", string.Empty);
                     break;
             }
         }
@@ -280,11 +317,10 @@ namespace OPIDDaily.Controllers
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
 
-            BackButtonHelper("Get", rsvm);
+            ServiceTicketBackButtonHelper("Get", rsvm);
 
             return View(rsvm);
         }
-
 
         [HttpPost]
         public ActionResult PrepareExpressClient(RequestedServicesViewModel rsvm)
@@ -299,7 +335,7 @@ namespace OPIDDaily.Controllers
             ViewBag.Age = client.Age;
             ViewBag.Agency = Agencies.GetAgencyName(rsvm.Agency.Id);
 
-            BackButtonHelper("Set", rsvm);
+            ServiceTicketBackButtonHelper("Set", rsvm);
 
             //  Clients.StoreRequestedServices(nowServing, rsvm);
 
@@ -324,12 +360,11 @@ namespace OPIDDaily.Controllers
 
             //   Clients.StoreRequestedServices(nowServing, rsvm);
 
-            BackButtonHelper("Set", rsvm);
+            ServiceTicketBackButtonHelper("Set", rsvm);
 
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClient", objTuple);
         }
-
 
         public ActionResult _RequestedServices()
         {
@@ -357,7 +392,8 @@ namespace OPIDDaily.Controllers
 
             clients = clients.OrderBy(c => c.CheckedIn).ToList();
 
-            BackButtonHelper("Reset", null);
+            ServiceTicketBackButtonHelper("Reset", null);
+            SpecialReferralBackButtonHelper("Reset", null);
 
             var jsonData = new
             {

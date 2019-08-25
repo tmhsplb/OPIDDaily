@@ -64,6 +64,7 @@ namespace OPIDDaily.Models
         [Display(Name = "Numident")]
         public bool Numident { get; set; }
 
+        // Supporting Documents
         [Display(Name = "Birth Certificate")]
         public bool SDBC { get; set; }
 
@@ -111,6 +112,8 @@ namespace OPIDDaily.Models
 
         [Display(Name = "Job Offer Letter")]
         public bool SDJobOffer { get; set; }
+
+       
 
     }
 }
