@@ -1,0 +1,159 @@
+﻿@model OPIDDaily.Models.SpecialReferralViewModel
+
+@{
+    ViewBag.Title = "Print Special Referral";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+}
+
+  <script type="text/javascript">
+    // https://stackoverflow.com/questions/19028419/how-to-adjust-print-options-through-code
+    function printSpecialReferral() {
+        var win = window.open('', '', 'left=0,top=0,width=552,height=477,toolbar=0,scrollbars=0,status =0');
+
+        var comments = document.getElementById("comments");
+        if (comments != null && comments.value.trim() != '') {
+            $('#comments').replaceWith(comments.value);
+        }
+
+        var content = "<html>";
+        content += "<body onload=\"window.print(); window.close();\">";
+        content += document.getElementById("printerDiv").innerHTML;
+        content += "</body>";
+        content += "</html>";
+        win.document.write(content);
+        win.document.close();
+    }
+  </script>
+
+  <div id="printerDiv">
+      <style>
+          .pagebreak {
+              page-break-before: always;
+          }
+
+          input[type="checkbox"] {
+              width: 20px;
+              height: 20px;
+          }
+
+          /* https://stackoverflow.com/questions/5684144/how-to-completely-remove-borders-from-html-table */
+          .noborder {
+              border: none !important
+          }
+      </style>
+     
+      <table>
+        <tr>
+            <td><img style="height:150px;" src= "@Url.Content("~/Content/images/msmlogo.png")" /></td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td><h4>SPECIAL CASE - REFERRAL</h4></td>
+        </tr>
+      </table>
+     
+      <div align="right"><span style="width: 30px; border-bottom: 1px solid black;">@ViewBag.SpecialReferralDate</span></div>
+      <div>
+          Please assist <span style="width: 100px; border-bottom: 1px solid black;">@Model.FirstName @Model.MiddleName  @Model.LastName</span> in obtaining his/her identification document(s):
+      </div>
+      <br />
+      <table style="border-collapse: collapse; border: none;" width="80%">
+          <tr>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.EMP)</td>
+              <td class="noborder" width="120">@Html.LabelFor(m => m.EMP)</td>
+          </tr>
+          <tr>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.SID)</td>
+              <td class="noborder" width="120">@Html.LabelFor(m => m.SID)</td>
+          </tr>
+          <tr>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.HGP)</td>
+              <td class="noborder" width="120">@Html.LabelFor(m => m.HGP)</td>
+          </tr>
+          <tr>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.NPP)</td>
+              <td class="noborder" width="120">@Html.LabelFor(m => m.NPP)</td>
+          </tr>
+      </table>
+
+      <br /><br />
+
+      <table>
+          <tr>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td class="noborder"><span style="width:100px; border-bottom: 1px solid black">@Model.Agency</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AGENCY NAME</td>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td class="noborder"><span style="width:100px; border-bottom: 1px solid black">@Model.AgencyContact</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AGENCY CONTACT</td>
+          </tr>
+      </table>
+
+      <br /><br />
+
+      <div>
+          We have verified that he/she has the following documentation (please mark all applicable):
+      </div>
+
+      <br />
+
+      <table>
+          <tr>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.SSCARD)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.SSCARD)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.VREG)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.VREG)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.MLIC)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.MLIC)</td>
+          </tr>
+          <tr>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.DDEC)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.DDEC)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.DD214)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.DD214)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.SREC)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.SREC)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.Other)</td>
+              <td class="noborder" width="320">@Html.LabelFor(m => m.Other)</td>
+          </tr>
+      </table>
+      <br /><br />
+
+      <div>
+          We are requesting your assistance in obtaining the following ID documents:
+      </div>
+      <br/>
+
+      <table>
+          <tr>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.TID)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.TID)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.NTID)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.NTID)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.RTID)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.RTID)</td>
+          </tr>
+          <tr>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.TDL)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.TDL)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.NTDL)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.NTID)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.RTDL)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.RTID)</td>
+          </tr>
+       
+          <tr>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.BC)</td>
+              <td class="noborder" width="145">@Html.LabelFor(m => m.BC)</td>
+              <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.MBVD)</td>
+              <td colspan="3" class="noborder" width="180">@Html.LabelFor(m => m.MBVD)</td>
+          </tr>
+      </table>
+      <br/>
+      <div>Special Instructions:</div>
+      <div style="box-sizing: border-box; width: 800px; height: 80px; padding: 10px; border: 1px solid black">@Model.SpecialInstructions</div>
+      <br /><br/>
+      <div>_____________________________</div>
+      <div>&nbsp;&nbsp;Margrit McCray</div>
+
+  </div>
+  <br/> <br/>
+    <center>
+        <button class="btn btn-primary hidden-print" onclick="printSpecialReferral()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+    </center>

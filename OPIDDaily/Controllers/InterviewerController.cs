@@ -14,6 +14,7 @@ namespace OPIDDaily.Controllers
     {
         public ActionResult Home()
         {
+            BackButtonHelper("Reset", null);
             return View();
         }
     }

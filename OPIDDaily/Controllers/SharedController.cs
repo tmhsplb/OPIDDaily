@@ -36,6 +36,8 @@ namespace OPIDDaily.Controllers
             DateTime today = Extras.DateTimeToday();
             List<ClientViewModel> clients = Clients.GetClients(today);
 
+            BackButtonHelper("Reset", null);
+
             int pageIndex = page - 1;
             int pageSize = (int)rows;
 
@@ -151,7 +153,7 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
-        private static void BackButtonHelper(string mode, RequestedServicesViewModel rsvm)
+        protected static void BackButtonHelper(string mode, RequestedServicesViewModel rsvm)
         {
             switch (mode)
             {
@@ -215,6 +217,37 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("SDSRECS", (rsvm.SDSchoolRecords ? "Requested" : string.Empty));
                     SessionHelper.Set("SDPassport", (rsvm.SDPassport ? "Requested" : string.Empty));
                     SessionHelper.Set("SDJobOffer", (rsvm.SDJobOffer ? "Requested" : string.Empty));
+                    break;
+
+                case "Reset":
+                    SessionHelper.Set("AgencyId", "0");
+                    SessionHelper.Set("UseBirthName", string.Empty);
+                    SessionHelper.Set("BC", string.Empty);
+                    SessionHelper.Set("HCC", string.Empty);
+                    SessionHelper.Set("MBVD", string.Empty);
+                    SessionHelper.Set("NTID", string.Empty);
+                    SessionHelper.Set("RTID", string.Empty);
+                    SessionHelper.Set("NTDL", string.Empty);
+                    SessionHelper.Set("RTDL", string.Empty);
+                    SessionHelper.Set("Numident", string.Empty);
+
+                    // Supporting documents
+                    SessionHelper.Set("SDBC", string.Empty);
+                    SessionHelper.Set("SDSSC", string.Empty);
+                    SessionHelper.Set("SDTID", string.Empty);
+                    SessionHelper.Set("SDTDL", string.Empty);
+                    SessionHelper.Set("SDOSID", string.Empty);
+                    SessionHelper.Set("SDOSDL", string.Empty);
+                    SessionHelper.Set("SDML", string.Empty);
+                    SessionHelper.Set("SDDD", string.Empty);
+                    SessionHelper.Set("SDSL", string.Empty);
+                    SessionHelper.Set("SDDD214", string.Empty);
+                    SessionHelper.Set("SDGC", string.Empty);
+                    SessionHelper.Set("SDEBT",string.Empty);
+                    SessionHelper.Set("SDHOTID", string.Empty);
+                    SessionHelper.Set("SDSRECS", string.Empty);
+                    SessionHelper.Set("SDPassport", string.Empty);
+                    SessionHelper.Set("SDJobOffer", string.Empty);
                     break;
             }
         }
@@ -323,6 +356,8 @@ namespace OPIDDaily.Controllers
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
             clients = clients.OrderBy(c => c.CheckedIn).ToList();
+
+            BackButtonHelper("Reset", null);
 
             var jsonData = new
             {

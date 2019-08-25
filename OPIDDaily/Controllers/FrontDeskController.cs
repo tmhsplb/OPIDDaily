@@ -15,7 +15,34 @@ namespace OPIDDaily.Controllers
     {
         public ActionResult Home()
         {
+            BackButtonHelper("Reset", null);
             return View();
-        }  
+        } 
+        
+        public ActionResult SpecialReferral()
+        {
+            return View("SpecialReferral");
+        }
+
+        public ActionResult PrepareSpecialReferral(SpecialReferralViewModel srvm)
+        {
+            if (string.IsNullOrEmpty(srvm.Agency))
+            {
+                srvm.Agency = "_____________________";
+            }
+            else
+            {
+                srvm.NPP = true;
+            }
+
+            if (string.IsNullOrEmpty(srvm.AgencyContact))
+            {
+                srvm.AgencyContact = "_________________________";
+            }
+
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.SpecialReferralDate = today.ToString("MMM d, yyyy");
+            return View("PrintSpecialReferral", srvm);
+        }
     }
 }

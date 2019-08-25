@@ -17,7 +17,7 @@ namespace OPIDDaily.Controllers
             string workingConnectionString = string.Empty;
 
             ViewBag.Release = Config.Release;
-
+             
             switch (Config.Release)
             {
                 case "Desktop":

@@ -1,0 +1,74 @@
+﻿@model OPIDDaily.Models.SpecialReferralViewModel
+
+@{
+    ViewBag.Title = "Special Referral";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <section id="specialreferralForm">
+            @using (Html.BeginForm("PrepareSpecialReferral", "FrontDesk", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <h4>SPECIAL CASE - REFERRAL</h4>
+                <br /><br />
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.MiddleName, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <strong>New Potential Partner Agency</strong>
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.Agency, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <strong>Agency Contact (Name and Phone Number)</strong>
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.AgencyContact, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <strong>Special Instructions</strong>
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextAreaFor(m => m.SpecialInstructions, new { @class = "form-control", @cols="80", @rows="4" })
+                    </div>
+                </div>
+                <br /><br /><br />
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Prepare Special Referral" class="btn btn-default" />
+                    </div>
+                </div>
+
+            }
+        </section>
+    </div>
+</div>
