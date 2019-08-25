@@ -10,6 +10,7 @@ using OPIDDaily.Utils;
 
 namespace OPIDDaily.Controllers
 {
+    [Authorize(Roles = "SuperAdmin")]
     public class SuperadminController : Controller 
     {
         public ActionResult Home()
@@ -169,6 +170,7 @@ namespace OPIDDaily.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ChangeServiceDate(DatePickerViewModel dpvm)
         {
             SessionHelper.Set("ServiceDate", dpvm.datepicker);
@@ -192,6 +194,7 @@ namespace OPIDDaily.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult RemoveClients()
         {
             string serviceDate = SessionHelper.Get("ServiceDate");

@@ -164,7 +164,7 @@ namespace OPIDDaily.Controllers
                     rsvm.BC = (SessionHelper.Get("BC").Equals("Requested") ? true : false);
                     rsvm.HCC = (SessionHelper.Get("HCC").Equals("Requested") ? true : false);
                     rsvm.MBVD = (SessionHelper.Get("MBVD").Equals("Requested") ? true : false);
-                    rsvm.State = SessionHelper.Get("State");
+                    rsvm.State = (SessionHelper.Get("State").Equals("0") ? string.Empty : SessionHelper.Get("State"));
                     rsvm.NewTID = (SessionHelper.Get("NTID").Equals("Requested") ? true : false);
                     rsvm.ReplacementTID = (SessionHelper.Get("RTID").Equals("Requested") ? true : false);
                     rsvm.NewTDL = (SessionHelper.Get("NTDL").Equals("Requested") ? true : false);
@@ -261,12 +261,12 @@ namespace OPIDDaily.Controllers
             switch (mode)
             {
                 case "Get":
-                    srvm.FirstName = SessionHelper.Get("FirstName");
-                    srvm.MiddleName = SessionHelper.Get("MiddleName");
-                    srvm.LastName = SessionHelper.Get("LastName");
-                    srvm.Agency = SessionHelper.Get("Agency");
-                    srvm.AgencyContact = SessionHelper.Get("AgencyContact");
-                    srvm.SpecialInstructions = SessionHelper.Get("SpecialInstructions");
+                    srvm.FirstName = (SessionHelper.Get("FirstName").Equals("0") ? string.Empty : SessionHelper.Get("FirstName"));
+                    srvm.MiddleName = (SessionHelper.Get("MiddleName").Equals("0") ? string.Empty : SessionHelper.Get("MiddleName"));
+                    srvm.LastName = (SessionHelper.Get("LastName").Equals("0") ? string.Empty : SessionHelper.Get("LastName"));
+                    srvm.Agency = (SessionHelper.Get("Agency").StartsWith("_") ? string.Empty : SessionHelper.Get("Agency"));
+                    srvm.AgencyContact = (SessionHelper.Get("AgencyContact").StartsWith("_") ? string.Empty : SessionHelper.Get("AgencyContact"));
+                    srvm.SpecialInstructions = (SessionHelper.Get("SpecialInstructions").Equals("0") ? string.Empty : SessionHelper.Get("SpecialInstructions"));
                     break;
 
                 case "Set":
@@ -323,6 +323,7 @@ namespace OPIDDaily.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PrepareExpressClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
@@ -343,6 +344,7 @@ namespace OPIDDaily.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();

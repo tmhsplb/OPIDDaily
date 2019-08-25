@@ -10,6 +10,7 @@ using OPIDDaily.Utils;
 
 namespace OPIDDaily.Controllers
 {
+    [Authorize(Roles = "BackOffice")]
     public class BackOfficeController : SharedController
     {
         public ActionResult Home()

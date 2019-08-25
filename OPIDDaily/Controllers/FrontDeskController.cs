@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace OPIDDaily.Controllers
 {
+    [Authorize(Roles = "FrontDesk")]
     public class FrontDeskController : SharedController
     {
         public ActionResult Home()
@@ -29,6 +30,8 @@ namespace OPIDDaily.Controllers
             return View("SpecialReferral", srvm);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PrepareSpecialReferral(SpecialReferralViewModel srvm)
         {
             if (string.IsNullOrEmpty(srvm.Agency))
