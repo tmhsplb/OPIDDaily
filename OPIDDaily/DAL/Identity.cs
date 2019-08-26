@@ -91,7 +91,7 @@ namespace OPIDDaily.DAL
         {
             return new InvitationViewModel
             {
-               // Id = invite.Id,
+                Id = invite.Id,
                 Extended = invite.Extended.ToString("MM/dd/yyyy"),
                 Accepted = (invite.Accepted == (System.DateTime)System.Data.SqlTypes.SqlDateTime.Null ? string.Empty : invite.Accepted.ToString("MM/dd/yyyy")),
                 UserName = invite.UserName,

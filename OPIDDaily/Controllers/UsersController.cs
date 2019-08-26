@@ -13,7 +13,6 @@ namespace OPIDDaily.Controllers
 {
     public class UsersController : Controller
     {
-
         public bool IsInRole(string role)
         {
             if (User.Identity.IsAuthenticated)
@@ -143,6 +142,5 @@ namespace OPIDDaily.Controllers
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
     }
 }
