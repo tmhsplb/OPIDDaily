@@ -17,15 +17,15 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
                 List<Agency> agencies = opiddailycontext.Agencies.ToList();
-                return new SelectList(agencies, "Id", "AgencyName");
+                return new SelectList(agencies, "AgencyId", "AgencyName");
             }
         }
 
-        public static string GetAgencyName(int id)
+        public static string GetAgencyName(int agencyId)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                Agency agency = opiddailycontext.Agencies.Find(id);
+                Agency agency = opiddailycontext.Agencies.Where(a => a.AgencyId == agencyId).SingleOrDefault();
 
                 if (agency != null)
                 {

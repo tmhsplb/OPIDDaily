@@ -51,7 +51,7 @@
         multiselect: false
     })
 
-    jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: false, add: false, del: false, search: false, refresh: false }});
+    jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: false, add: false, del: false, search: false, refresh: false });
 
 
 </script>
@@ -69,18 +69,19 @@
 <br /><br />
 <div class="row">
     <div class="col-md-12">
-        <section id="existingclientForm">
-            @using (Html.BeginForm("PrepareExistingClient", "Interviewer", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+       @* <section id="existingclientForm"> *@
+            @using (Html.BeginForm("PrepareExistingClient", "Interviewer", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
             {
-                @Html.AntiForgeryToken()
+                @Html.AntiForgeryToken()       
                 <div class="form-group">
-                    <div class="col-md-6">
-                        @Html.DropDownListFor(model => model.Agency.Id, Model.Agencies, "Select Agency", new { @class = "form-control" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.Agency, Model.Agencies, "Select Agency", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-2">
                         @Html.CheckBoxFor(m => m.UseBirthName, new { @class = "form-control" })
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         @Html.LabelFor(m => m.UseBirthName, new { @class = "control-label" })
                     </div>
                 </div>
@@ -97,12 +98,14 @@
                     <div class="col-md-2">
                         @Html.LabelFor(m => m.HCC, new { @class = "control-label" })
                     </div>
-                    <div class="col-md-2">
-                        @Html.CheckBoxFor(m => m.BCEligible, new { @class = "form-control" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.LabelFor(m => m.BCEligible, new { @class = "control-label" })
-                    </div>
+                    @*
+                <div class="col-md-2">
+                    @Html.CheckBoxFor(m => m.BCEligible, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(m => m.BCEligible, new { @class = "control-label" })
+                </div>
+                    *@
                 </div>
                 <div class="form-group">
                     <div class="col-md-2">
@@ -114,12 +117,14 @@
                     <div class="col-md-4">
                         @Html.TextBoxFor(m => m.State, new { placeholder = "State", @class = "form-control" })
                     </div>
-                    <div class="col-md-2">
-                        @Html.CheckBoxFor(m => m.MBVDEligible, new { @class = "form-control" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.LabelFor(m => m.MBVDEligible, new { @class = "control-label" })
-                    </div>
+                    @*
+                <div class="col-md-2">
+                    @Html.CheckBoxFor(m => m.MBVDEligible, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(m => m.MBVDEligible, new { @class = "control-label" })
+                </div>
+                    *@
                 </div>
 
                 <div class="form-group">
@@ -135,12 +140,14 @@
                     <div class="col-md-2">
                         &nbsp;
                     </div>
-                    <div class="col-md-2">
-                        @Html.CheckBoxFor(m => m.NewTIDEligible, new { @class = "form-control" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.LabelFor(m => m.NewTIDEligible, new { @class = "control-label" })
-                    </div>
+                    @*
+                <div class="col-md-2">
+                    @Html.CheckBoxFor(m => m.NewTIDEligible, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(m => m.NewTIDEligible, new { @class = "control-label" })
+                </div>
+                    *@
                 </div>
                 <div class="form-group">
                     <div class="col-md-2">
@@ -155,12 +162,14 @@
                     <div class="col-md-2">
                         &nbsp;
                     </div>
-                    <div class="col-md-2">
-                        @Html.CheckBoxFor(m => m.ReplacementTIDEligible, new { @class = "form-control" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.LabelFor(m => m.ReplacementTIDEligible, new { @class = "control-label" })
-                    </div>
+                    @*
+                <div class="col-md-2">
+                    @Html.CheckBoxFor(m => m.ReplacementTIDEligible, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(m => m.ReplacementTIDEligible, new { @class = "control-label" })
+                </div>
+                    *@
                 </div>
                 <div class="form-group">
                     <div class="col-md-2">
@@ -175,12 +184,14 @@
                     <div class="col-md-2">
                         &nbsp;
                     </div>
-                    <div class="col-md-2">
-                        @Html.CheckBoxFor(m => m.NewTDLEligible, new { @class = "form-control" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.LabelFor(m => m.NewTDLEligible, new { @class = "control-label" })
-                    </div>
+                    @*
+                <div class="col-md-2">
+                    @Html.CheckBoxFor(m => m.NewTDLEligible, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(m => m.NewTDLEligible, new { @class = "control-label" })
+                </div>
+                    *@
                 </div>
                 <div class="form-group">
                     <div class="col-md-2">
@@ -195,12 +206,14 @@
                     <div class="col-md-2">
                         &nbsp;
                     </div>
-                    <div class="col-md-2">
-                        @Html.CheckBoxFor(m => m.ReplacementTDLEligible, new { @class = "form-control" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.LabelFor(m => m.ReplacementTDLEligible, new { @class = "control-label" })
-                    </div>
+                    @*
+                <div class="col-md-2">
+                    @Html.CheckBoxFor(m => m.ReplacementTDLEligible, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.LabelFor(m => m.ReplacementTDLEligible, new { @class = "control-label" })
+                </div>
+                    *@
                 </div>
                 <h4>Supporting Documents</h4>
                 <hr />
@@ -323,6 +336,6 @@
                     </div>
                 </div>
             }
-        </section>
+       @* </section> *@
     </div>
 </div>
