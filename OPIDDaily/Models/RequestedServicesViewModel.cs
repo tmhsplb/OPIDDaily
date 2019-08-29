@@ -14,7 +14,9 @@ namespace OPIDDaily.Models
 
         public string XBC { get; set; }
 
-        public Agency Agency { get; set; }
+        [Required(ErrorMessage = "Please select an agency from the list.")]
+       // public Agency Agency { get; set; }
+        public string Agency { get; set; }
 
         public SelectList Agencies { get; set; }
  
@@ -27,7 +29,7 @@ namespace OPIDDaily.Models
         [Display(Name = "Eligible?")]
         public bool BCEligible { get; set; }
 
-        [Display(Name = "HCC")]
+        [Display(Name = "Harris County Clerk")]
         public bool HCC { get; set; }
 
         [Display(Name = "MBVD")]

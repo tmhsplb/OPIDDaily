@@ -78,6 +78,6 @@ namespace OPIDDaily.Models
         [Display(Name = "Out of State Birth Certificate")]
         public bool MBVD { get; set; }
 
-        public string SpecialInstructions { get; set; }
+        public string Notes { get; set; }
     }
 }

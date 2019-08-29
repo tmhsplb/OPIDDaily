@@ -24,8 +24,9 @@
                 <h4>Requested Services</h4>
                 <hr />
                 <div class="form-group">
-                    <div class="col-md-6">
-                        @Html.DropDownListFor(model => model.Agency.Id, Model.Agencies, "Select Agency", new { @class = "form-control" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.Agency, Model.Agencies, "Select Agency", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-2">
                         @Html.CheckBoxFor(m => m.UseBirthName, new { @class = "form-control" })

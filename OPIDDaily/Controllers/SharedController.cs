@@ -84,25 +84,6 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
-        public ActionResult History()
-        {
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
-
-            int nowServing = NowServing();
-
-            if (nowServing == 0)
-            {
-                ViewBag.Warning = "Please select a client from the Clients Table before viewing History.";
-                return View("Warning");
-            }
-
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
-
-            ServiceTicketBackButtonHelper("Get", rsvm);
-
-            return View(rsvm);
-        }
-
         public JsonResult GetHistory(int page, int rows)
         {
             int nowServing = NowServing();
@@ -159,7 +140,7 @@ namespace OPIDDaily.Controllers
             switch (mode)
             {
                 case "Get":
-                    rsvm.Agency = (SessionHelper.Get("AgencyId").Equals("0") ? new Agency { Id = 0, AgencyName = "Select Agency" } : new Agency { Id = Convert.ToInt32(SessionHelper.Get("AgencyId")), AgencyName = Agencies.GetAgencyName(Convert.ToInt32(SessionHelper.Get("AgencyId"))) });
+                    rsvm.Agency = SessionHelper.Get("Agency");
                     rsvm.UseBirthName = (SessionHelper.Get("UseBirthName").Equals("Requested") ? true : false);
                     rsvm.BC = (SessionHelper.Get("BC").Equals("Requested") ? true : false);
                     rsvm.HCC = (SessionHelper.Get("HCC").Equals("Requested") ? true : false);
@@ -191,7 +172,7 @@ namespace OPIDDaily.Controllers
                     break;
                     
                 case "Set":
-                    SessionHelper.Set("AgencyId", rsvm.Agency.Id.ToString());
+                    SessionHelper.Set("Agency", rsvm.Agency);
                     SessionHelper.Set("UseBirthName", (rsvm.UseBirthName ? "Requested" : string.Empty));
                     SessionHelper.Set("BC", (rsvm.BC ? "Requested" : string.Empty));
                     SessionHelper.Set("HCC", (rsvm.HCC ? "Requested" : string.Empty));
@@ -223,7 +204,7 @@ namespace OPIDDaily.Controllers
                     break;
 
                 case "Reset":
-                    SessionHelper.Set("AgencyId", "0");
+                    SessionHelper.Set("Agency", "0");
                     SessionHelper.Set("UseBirthName", string.Empty);
                     SessionHelper.Set("BC", string.Empty);
                     SessionHelper.Set("HCC", string.Empty);
@@ -266,7 +247,7 @@ namespace OPIDDaily.Controllers
                     srvm.LastName = (SessionHelper.Get("LastName").Equals("0") ? string.Empty : SessionHelper.Get("LastName"));
                     srvm.Agency = (SessionHelper.Get("Agency").StartsWith("_") ? string.Empty : SessionHelper.Get("Agency"));
                     srvm.AgencyContact = (SessionHelper.Get("AgencyContact").StartsWith("_") ? string.Empty : SessionHelper.Get("AgencyContact"));
-                    srvm.SpecialInstructions = (SessionHelper.Get("SpecialInstructions").Equals("0") ? string.Empty : SessionHelper.Get("SpecialInstructions"));
+                    srvm.Notes = (SessionHelper.Get("Notes").Equals("0") ? string.Empty : SessionHelper.Get("Notes"));
                     break;
 
                 case "Set":
@@ -275,7 +256,7 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("LastName", srvm.LastName);
                     SessionHelper.Set("Agency", srvm.Agency);
                     SessionHelper.Set("AgencyContact", srvm.AgencyContact);
-                    SessionHelper.Set("SpecialInstructions", srvm.SpecialInstructions);
+                    SessionHelper.Set("Notes", srvm.Notes);
                     break;
 
                 case "Reset":
@@ -284,9 +265,39 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("LastName", string.Empty);
                     SessionHelper.Set("Agency", string.Empty);
                     SessionHelper.Set("AgencyContact", string.Empty);
-                    SessionHelper.Set("SpecialInstructions", string.Empty);
+                    SessionHelper.Set("Notes", string.Empty);
                     break;
             }
+        }
+
+        // Called only by user in role "Interviewer" 
+        public ActionResult ServiceTicket()
+        {
+            int nowServing = NowServing();
+        
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please select a client from the Clients Table before selecting Service Ticket.";
+                return View("Warning");
+            }
+
+            Client client = Clients.GetClient(nowServing);
+
+
+            if (client == null)
+            {
+                ViewBag.Warning = "Could not find selected client.";
+                return View("Warning");
+            }
+
+            if (client.EXP == true)
+            {
+                return RedirectToAction("ExpressClient");
+            }
+
+            
+            
+            return RedirectToAction("History");
         }
 
         public ActionResult ExpressClient()
@@ -334,13 +345,32 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(rsvm.Agency.Id);
+            ViewBag.Agency =  Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
 
             ServiceTicketBackButtonHelper("Set", rsvm);
 
             //  Clients.StoreRequestedServices(nowServing, rsvm);
 
             return View("PrintExpressClient", rsvm);
+        }
+
+        public ActionResult History()
+        {
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
+
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please select a client from the Clients Table before viewing History.";
+                return View("Warning");
+            }
+
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+
+            ServiceTicketBackButtonHelper("Get", rsvm);
+
+            return View(rsvm);
         }
 
         [HttpPost]
@@ -354,7 +384,7 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(rsvm.Agency.Id);
+            ViewBag.Agency =  Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;
