@@ -283,7 +283,6 @@ namespace OPIDDaily.Controllers
 
             Client client = Clients.GetClient(nowServing);
 
-
             if (client == null)
             {
                 ViewBag.Warning = "Could not find selected client.";
@@ -294,9 +293,7 @@ namespace OPIDDaily.Controllers
             {
                 return RedirectToAction("ExpressClient");
             }
-
-            
-            
+   
             return RedirectToAction("History");
         }
 
