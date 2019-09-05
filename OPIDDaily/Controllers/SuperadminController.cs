@@ -17,18 +17,21 @@ namespace OPIDDaily.Controllers
         {
             string workingConnectionString = string.Empty;
 
-            ViewBag.Release = Config.GetRelease();  /* was Config.Release */
+            //ViewBag.Release = Config.GetRelease();  /* was Config.Release */
              
             switch (Config.GetRelease())  /* was Config.Release */
             {
                 case "Desktop":
                     workingConnectionString = Config.WorkingDesktopConnectionString;
+                    ViewBag.Release = "Desktop";
                     break;
                 case "Staging":
                     workingConnectionString = Config.WorkingStagingConnectionString;
+                    ViewBag.Release = "Staging";
                     break;
                 case "Production":
                     workingConnectionString = Config.WorkingProductionConnectionString;
+                    ViewBag.Release = "Production";
                     break;
             }
 
