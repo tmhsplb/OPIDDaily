@@ -1,8 +1,8 @@
-﻿@if (Config.Release.Equals("Desktop"))
+﻿@if (Config.GetRelease().Equals("Desktop"))
 {
     <div class="greenbar"></div>
 }
-else if (Config.Release.Equals("Staging"))
+else if (Config.GetRelease().Equals("Staging"))
 {
     <div class="redbar"></div>
 }

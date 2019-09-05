@@ -65,5 +65,10 @@ namespace OPIDDaily
                 return ConfigurationManager.AppSettings["Release"];
             }
         }
+
+        public static string GetRelease()
+        {
+            return ConfigurationManager.AppSettings ["Release"];
+        }
     }
 }
