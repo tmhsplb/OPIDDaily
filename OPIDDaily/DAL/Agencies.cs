@@ -17,6 +17,9 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
                 List<Agency> agencies = opiddailycontext.Agencies.ToList();
+
+                agencies = agencies.OrderBy(a => a.AgencyId).ToList();
+
                 return new SelectList(agencies, "AgencyId", "AgencyName");
             }
         }

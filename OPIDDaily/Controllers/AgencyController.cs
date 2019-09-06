@@ -43,6 +43,8 @@ namespace OPIDDaily.Controllers
 
             agencies = agencies.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
+            agencies = agencies.OrderBy(a => a.AgencyId).ToList();
+
             var jsonData = new
             {
                 total = totalPages,
