@@ -12,8 +12,7 @@ namespace OPIDDaily
         {
             get
             {
-                // The value configured on Web.config is overwritten at AppHarbor deployment time.
-                //return "Data Source=DEKTOP-GDDTDIC\\SqlExpress;Initial Catalog=OpidDB;Integrated Security=True";
+                // The value of SQLSERVER_CONNECTION_STRING configured on Web.config is overwritten at AppHarbor deployment time.
                 return ConfigurationManager.AppSettings["SQLSERVER_CONNECTION_STRING"];
             }
         }
@@ -22,7 +21,8 @@ namespace OPIDDaily
         {
             get
             {
-                return ConfigurationManager.AppSettings["SQLSERVER_CONNECTION_STRING"];
+               // return ConfigurationManager.AppSettings["SQLSERVER_CONNECTION_STRING"];
+                return "data source=DESKTOP-0U83VML\\SqlExpress;initial catalog=OpidDailyDB;Integrated Security=True";
             }
         }
 
@@ -68,7 +68,22 @@ namespace OPIDDaily
 
         public static string GetRelease()
         {
-            return ConfigurationManager.AppSettings ["Release"];
+            // return ConfigurationManager.AppSettings ["Release"];  // this should work, but it doesn't
+
+            string connectionString = Config.ConnectionString;
+
+            if (connectionString.Equals(Config.WorkingDesktopConnectionString))
+            {
+                return "Desktop";
+            }
+            else if (connectionString.Equals(Config.WorkingStagingConnectionString))
+            {
+                return "Staging";
+            }
+            else
+            {
+                return "Production";
+            }
         }
     }
 }
