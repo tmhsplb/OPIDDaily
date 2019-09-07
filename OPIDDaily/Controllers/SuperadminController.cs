@@ -202,5 +202,10 @@ namespace OPIDDaily.Controllers
             Clients.RemoveClients(date);
             return RedirectToAction("ManageClients");
         }
+
+        public ActionResult Version()
+        {
+            return View("Version");
+        }
     }
 }

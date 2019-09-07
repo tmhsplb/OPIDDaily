@@ -528,6 +528,7 @@
     <Content Include="Views\FrontDesk\SpecialReferral.cshtml" />
     <Content Include="Views\FrontDesk\PrintSpecialReferral.cshtml" />
     <Content Include="Views\Shared\_EnvironmentPartial.cshtml" />
+    <Content Include="Views\Superadmin\Version.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
