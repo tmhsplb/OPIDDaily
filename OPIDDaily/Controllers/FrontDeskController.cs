@@ -31,12 +31,16 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
 
-            return RedirectToAction("UpdateClientView", "Client", new { nowServing = Convert.ToInt32(nowServing) });
+            DailyHub.RefreshClient(Convert.ToInt32(nowServing));
+
+            return View("Clients");
         }
 
         public ActionResult ClearClientView()
         {
-            return RedirectToAction("ClearClientView", "Client");
+            DailyHub.RefreshClient(0);
+
+            return View("Clients");
         }
         
         public ActionResult SpecialReferral()

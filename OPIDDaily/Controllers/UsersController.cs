@@ -87,6 +87,11 @@ namespace OPIDDaily.Controllers
                     return RedirectToAction("Home", "BackOffice");
                 }
 
+                else if (IsInRole("Client"))
+                {
+                    return RedirectToAction("Init", "Client");
+                }
+
                 ViewBag.Warning = "User in unrecognized role.";
             }
             else
