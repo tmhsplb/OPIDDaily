@@ -20,6 +20,24 @@ namespace OPIDDaily.Controllers
             SpecialReferralBackButtonHelper("Reset", null);
             return View();
         } 
+
+        public ActionResult UpdateClientView()
+        {
+            string nowServing = SessionHelper.Get("NowServing");
+
+            if (nowServing.Equals("0"))
+            {
+                ViewBag.Warning = "Please select a client from the Clients Table before selecting Update Client View.";
+                return View("Warning");
+            }
+
+            return RedirectToAction("UpdateClientView", "Client", new { nowServing = Convert.ToInt32(nowServing) });
+        }
+
+        public ActionResult ClearClientView()
+        {
+            return RedirectToAction("ClearClientView", "Client");
+        }
         
         public ActionResult SpecialReferral()
         {
