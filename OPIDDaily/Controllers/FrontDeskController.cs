@@ -42,7 +42,27 @@ namespace OPIDDaily.Controllers
 
             return View("Clients");
         }
-        
+
+        public ActionResult GetClientHistory()
+        {
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
+
+            string nowServing = SessionHelper.Get("NowServing");
+
+            DailyHub.GetClientHistory(Convert.ToInt32(nowServing));
+
+            return View("History", rsvm);
+        }
+
+        public ActionResult ClearClientHistory()
+        {
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
+
+            DailyHub.GetClientHistory(0);
+
+            return View("History", rsvm);
+        }
+
         public ActionResult SpecialReferral()
         {
             SpecialReferralViewModel srvm = new SpecialReferralViewModel();

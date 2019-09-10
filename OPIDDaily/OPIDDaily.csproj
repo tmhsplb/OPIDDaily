@@ -531,6 +531,7 @@
     <Content Include="Views\Shared\_EnvironmentPartial.cshtml" />
     <Content Include="Views\Shared\_Client.cshtml" />
     <Content Include="Views\Client\NowServing.cshtml" />
+    <Content Include="Views\Client\History.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,5 +1,6 @@
 ﻿using OpidDaily.Models;
 using OPIDDaily.DAL;
+using OPIDDaily.Models;
 using OPIDDaily.Utils;
 using System;
 using System.Collections.Generic;
@@ -11,67 +12,83 @@ namespace OPIDDaily.Controllers
 {
     public class ClientController : Controller
     {
-        public ActionResult Init()
+        public ActionResult InitNowServing()
         {
             return View("NowServing");
+        }
+
+        public ActionResult InitNowServingHistory()
+        {
+            return View("History");
         }
 
         public ActionResult ClearClientView()
         {
             return View("NowServing");
         }
-
-       
-        public ActionResult GetNowServing(int page, int rows)
+               
+        public JsonResult GetEmptyGrid(int page, int rows)
         {
-            DateTime today = Extras.DateTimeToday();
-            List<ClientViewModel> clients = Clients.GetClients(today);
-           
-            clients = clients.Where(c => c.Id == 0).ToList();
-
-            int pageIndex = page - 1;
-            int pageSize = (int)rows;
-
-            int totalRecords = clients.Count;
-            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-
-            clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            List<ClientViewModel> clients = new List<ClientViewModel>();
 
             var jsonData = new
             {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
+                total = 1,  
+                page = 1,  
+                records = 0,  
                 rows = clients
             };
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetNowServingSignalR(int nowServing)
+        public JsonResult GetNowServing(int nowServing)
         {
             DateTime today = Extras.DateTimeToday();
             List<ClientViewModel> clients = Clients.GetClients(today);
 
             clients = clients.Where(c => c.Id == nowServing).ToList();
+ 
+            var jsonData = new
+            {
+                total = 1,  
+                page = 1,
+                records = 1,  
+                rows = clients
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+ 
+        public JsonResult GetClientHistory(int nowServing)
+        {
+            if (nowServing == 0)
+            {
+                return GetEmptyGrid(1, 20);
+            }
+
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+
+            List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             int pageIndex = 0;
-            int pageSize = 1;
+            int pageSize = 20;
+            int totalRecords = visits.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)20);
 
-            int totalRecords = clients.Count;
-            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-
-            clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            visits = visits.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            visits = visits.OrderBy(v => v.Date).ToList();
 
             var jsonData = new
             {
                 total = totalPages,
                 page = 1,
                 records = totalRecords,
-                rows = clients
+                rows = visits
             };
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
+
     }
 }
