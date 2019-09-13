@@ -12,6 +12,10 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
+    @* Uncomment to get original default grasycale jqGrid theme 
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" />
+    *@
+
     <style>
         /* https://stackoverflow.com/questions/24127521/change-bootstrap-navbar-background-color-and-font-color */
         .navbar-custom {
@@ -22,9 +26,9 @@
             color: black;
         }
 
-        .navbar-inverse .navbar-nav > li > a:hover {
+         .navbar-inverse .navbar-nav > li > a:hover {
             color: blue;
-        }
+         }
     </style>
 
 </head>
