@@ -13,5 +13,17 @@ namespace OPIDDaily.DAL
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<DailyHub>();
             hubContext.Clients.All.refreshPage();
         }
+
+        public static void RefreshClient(int nowServing)
+        {
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<DailyHub>();
+            hubContext.Clients.All.refreshClientPage(nowServing);
+        }
+
+        public static void GetClientHistory(int nowServing)
+        {
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<DailyHub>();
+            hubContext.Clients.All.getClientHistory(nowServing);
+        }
     }
 }

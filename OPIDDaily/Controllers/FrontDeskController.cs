@@ -20,7 +20,49 @@ namespace OPIDDaily.Controllers
             SpecialReferralBackButtonHelper("Reset", null);
             return View();
         } 
-        
+
+        public ActionResult UpdateClientView()
+        {
+            string nowServing = SessionHelper.Get("NowServing");
+
+            if (nowServing.Equals("0"))
+            {
+                ViewBag.Warning = "Please select a client from the Clients Table before selecting Update Client View.";
+                return View("Warning");
+            }
+
+            DailyHub.RefreshClient(Convert.ToInt32(nowServing));
+
+            return View("Clients");
+        }
+
+        public ActionResult ClearClientView()
+        {
+            DailyHub.RefreshClient(0);
+
+            return View("Clients");
+        }
+
+        public ActionResult GetClientHistory()
+        {
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
+
+            string nowServing = SessionHelper.Get("NowServing");
+
+            DailyHub.GetClientHistory(Convert.ToInt32(nowServing));
+
+            return View("History", rsvm);
+        }
+
+        public ActionResult ClearClientHistory()
+        {
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
+
+            DailyHub.GetClientHistory(0);
+
+            return View("History", rsvm);
+        }
+
         public ActionResult SpecialReferral()
         {
             SpecialReferralViewModel srvm = new SpecialReferralViewModel();

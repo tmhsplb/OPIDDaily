@@ -87,6 +87,20 @@ namespace OPIDDaily.Controllers
                     return RedirectToAction("Home", "BackOffice");
                 }
 
+                else if (IsInRole("Client"))
+                {
+                    string userName = User.Identity.Name;
+                    if (userName.Equals("Client1"))
+                    {
+                        return RedirectToAction("InitNowServing", "Client");
+                    }
+                    else if (userName.Equals("Client2"))
+                    {
+                        return RedirectToAction("InitNowServingHistory", "Client");
+                    }
+                   
+                }
+
                 ViewBag.Warning = "User in unrecognized role.";
             }
             else

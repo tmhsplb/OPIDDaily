@@ -111,6 +111,15 @@
     });
 </script>
 
+<br /><br /><br />
+<table>
+    <tr>
+        <td><a class="button" href="@Url.Action("GetClientHistory", "Frontdesk")">Show Client History</a></td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td><a class="button" href="@Url.Action("ClearClientHistory", "Frontdesk")">Clear Client History</a></td>
+    </tr>
+</table>
+
 <style>
     input[type="checkbox"] {
         transform: scale(0.75,0.75);
@@ -128,7 +137,7 @@
             @using (Html.BeginForm("PrepareExistingClient", "FrontDesk", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                 <div class="form-group">
+                <div class="form-group">
                     <div class="col-md-4">
                         @Html.DropDownListFor(model => model.Agency, Model.Agencies, "Select Agency", new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "text-danger" })

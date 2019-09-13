@@ -106,7 +106,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void AddClient(ClientViewModel cvm)
+        public static Client AddClient(ClientViewModel cvm)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
@@ -137,6 +137,8 @@ namespace OPIDDaily.DAL
 
                 opidcontext.Clients.Add(client);
                 opidcontext.SaveChanges();
+
+                return client;
             }
         }
 
