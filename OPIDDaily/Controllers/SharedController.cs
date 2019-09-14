@@ -60,12 +60,12 @@ namespace OPIDDaily.Controllers
 
         public string AddClient(ClientViewModel cvm)
         {
-            Client client = Clients.AddClient(cvm);
+            int id = Clients.AddClient(cvm);
 
             // Newly added client becomes the client being served.
             // Entity Framework will set client.Id to the Id of the inserted client.
             // See: https://stackoverflow.com/questions/5212751/how-can-i-get-id-of-inserted-entity-in-entity-framework
-            SessionHelper.Set("NowServing", client.Id.ToString());
+            SessionHelper.Set("NowServing", id.ToString());
 
             DailyHub.Refresh();
             return "Success";
@@ -73,13 +73,13 @@ namespace OPIDDaily.Controllers
 
         public string EditClient(ClientViewModel cvm)
         {
-            string status = Clients.EditClient(cvm);
+            int id = Clients.EditClient(cvm);
 
-            if (status.Equals("Success"))
-            {
-                DailyHub.Refresh();
-            }
-            return status;
+            // Edited client becomes the client being served.
+            SessionHelper.Set("NowServing", id.ToString());
+
+            DailyHub.Refresh();      
+            return "Success";
         }
 
         public string DeleteClient(int id)

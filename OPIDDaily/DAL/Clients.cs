@@ -12,8 +12,7 @@ using System.Data.Entity;
 namespace OPIDDaily.DAL
 {
     public class Clients
-    {
-
+    { 
         public static Client GetClient(int nowServing)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
@@ -106,7 +105,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static Client AddClient(ClientViewModel cvm)
+        public static int AddClient(ClientViewModel cvm)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
@@ -138,7 +137,7 @@ namespace OPIDDaily.DAL
                 opidcontext.Clients.Add(client);
                 opidcontext.SaveChanges();
 
-                return client;
+                return client.Id;
             }
         }
 
@@ -177,7 +176,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static string EditClient(ClientViewModel cvm)
+        public static int EditClient(ClientViewModel cvm)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
@@ -189,10 +188,10 @@ namespace OPIDDaily.DAL
 
                     ClientViewModelToClientEntity(cvm, client);
                     opidcontext.SaveChanges();
-                    return "Success";
+                    return client.Id;
                 }
 
-                return "Failure";
+                return 0;
             }
         }
 
