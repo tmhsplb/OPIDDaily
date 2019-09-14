@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace OPIDDaily.Controllers
 {
+    [Authorize(Roles = "Client")]
     public class ClientController : Controller
     {
         public ActionResult InitNowServing()

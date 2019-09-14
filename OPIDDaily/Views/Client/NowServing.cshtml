@@ -4,13 +4,20 @@
     Layout = "~/Views/Shared/_Client.cshtml";
 }
 
-<br/><br/><br/>
+<br/>
+    <table>
+       <tr>
+          <td><img style="height:150px;" src="@Url.Content("~/Content/images/msmlogo.png")"></img></td>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+          <td><h4>OPERATION ID</h4></td>
+       </tr>
+    </table>
+<br/>
 
 <div>
     <table id="clientGrid"></table>
     <div id="clientPager"></div>
 </div>
-
 
 <link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
 
