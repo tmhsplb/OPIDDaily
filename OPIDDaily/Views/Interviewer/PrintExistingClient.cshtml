@@ -29,7 +29,6 @@
             }
         </style>
 
-        <br /><br /><br />
         <h3>Service Ticket: @ViewBag.ServiceTicket</h3>
         <br/>
         <h3>Existing Client: @ViewBag.ClientName</h3>
@@ -51,13 +50,12 @@
             }
         </table>
 
-        <br /><br /><br />
+        <br />
         @Html.Partial("_RequestedServices", Model.Item2)
-
-        <br/><br/>
+              
         @Html.Partial("_SignatureBlock")
-        <br/><br/>
-
+     </div> 
+     <br/>
     <center>
        <button class="btn btn-primary hidden-print" onclick="printTable()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
      </center>

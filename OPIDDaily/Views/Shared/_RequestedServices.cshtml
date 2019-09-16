@@ -135,12 +135,14 @@
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDTDL)</td>
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDTDL)</td>
         </tr>
+        @*
         <tr>
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDOSID)</td>
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDOSID)</td>
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDOSDL)</td>
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDOSDL)</td>
         </tr>
+        *@
         <tr>
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDML)</td>
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDML)</td>
@@ -170,6 +172,10 @@
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDPassport)</td>
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDJobOffer)</td>
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDJobOffer)</td>
+        </tr>
+        <tr>
+            <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.SDOther)</td>
+            <td class="noborder" colspan="3" width="320">@Html.LabelFor(m => m.SDOther)</td>
         </tr>
     </table>
     

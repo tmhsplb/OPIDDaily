@@ -115,7 +115,7 @@ namespace OPIDDaily.Models
         [Display(Name = "Job Offer Letter")]
         public bool SDJobOffer { get; set; }
 
-       
-
+        [Display(Name = "Other _____________________________________________")]
+        public bool SDOther { get; set; }
     }
 }
