@@ -46,12 +46,12 @@
 
         /* https://stackoverflow.com/questions/5684144/how-to-completely-remove-borders-from-html-table */
         .noborder {
-          border:none !important
+            border: none !important
         }
     </style>
 
     <h4>Requested Services</h4>
-    <hr/>
+    <hr />
     <table id="requestedServices" width="100%">
         <tr><th>Item</th><th>Check</th><th>Notes</th></tr>
         @if (Model.BC && Model.HCC == false)
@@ -119,15 +119,21 @@
             </tr>
         }
     </table>
-    <br/>
+    <br />
     <h4>Supporting Documents</h4>
-    <hr/>
+    <hr />
     <table id="supportingDocuments" style="border-collapse: collapse; border: none;" width="60%">
         <tr>
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDBC)</td>
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDBC)</td>
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDSSC)</td>
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDSSC)</td>
+            @*
+                <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDTID)</td>
+                <td class="noborder" width="120">@Html.LabelFor(m => m.SDTID)</td>
+                <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDTDL)</td>
+                <td class="noborder" width="120">@Html.LabelFor(m => m.SDTDL)</td>
+            *@
         </tr>
         <tr>
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDTID)</td>
@@ -136,12 +142,12 @@
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDTDL)</td>
         </tr>
         @*
-        <tr>
-            <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDOSID)</td>
-            <td class="noborder" width="120">@Html.LabelFor(m => m.SDOSID)</td>
-            <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDOSDL)</td>
-            <td class="noborder" width="120">@Html.LabelFor(m => m.SDOSDL)</td>
-        </tr>
+            <tr>
+                <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDOSID)</td>
+                <td class="noborder" width="120">@Html.LabelFor(m => m.SDOSID)</td>
+                <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDOSDL)</td>
+                <td class="noborder" width="120">@Html.LabelFor(m => m.SDOSDL)</td>
+            </tr>
         *@
         <tr>
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDML)</td>
@@ -173,11 +179,12 @@
             <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDJobOffer)</td>
             <td class="noborder" width="120">@Html.LabelFor(m => m.SDJobOffer)</td>
         </tr>
-        <tr>
-            <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.SDOther)</td>
-            <td class="noborder" colspan="3" width="320">@Html.LabelFor(m => m.SDOther)</td>
-        </tr>
     </table>
-    
-</div>
+    @if (Model.SDOther)
+    {
+        <div style="margin-left:50px">
+            @Html.CheckBoxFor(m => m.SDOther)&nbsp;&nbsp;@Model.SDOthersd 
+        </div>
+    }
+    </div>
 <br/><br/>

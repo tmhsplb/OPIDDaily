@@ -174,6 +174,8 @@ namespace OPIDDaily.Controllers
                     rsvm.SDSchoolRecords = (SessionHelper.Get("SDSRECS").Equals("Requested") ? true : false);
                     rsvm.SDPassport = (SessionHelper.Get("SDPassport").Equals("Requested") ? true : false);
                     rsvm.SDJobOffer = (SessionHelper.Get("SDJobOffer").Equals("Requested") ? true : false);
+                    rsvm.SDOther = (SessionHelper.Get("SDOTHER").Equals("Requested") ? true : false);
+                    rsvm.SDOthersd = (SessionHelper.Get("OTHERSD").Equals("0") ? string.Empty : SessionHelper.Get("OTHERSD"));
                     break;
                     
                 case "Set":
@@ -188,6 +190,7 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("NTDL", (rsvm.NewTDL ? "Requested" : string.Empty));
                     SessionHelper.Set("RTDL", (rsvm.ReplacementTDL ? "Requested" : string.Empty));
                     SessionHelper.Set("Numident", (rsvm.Numident ? "Requested" : string.Empty));
+                  
 
                     // Supporting documents
                     SessionHelper.Set("SDBC", (rsvm.SDBC ? "Requested" : string.Empty));
@@ -206,6 +209,8 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("SDSRECS", (rsvm.SDSchoolRecords ? "Requested" : string.Empty));
                     SessionHelper.Set("SDPassport", (rsvm.SDPassport ? "Requested" : string.Empty));
                     SessionHelper.Set("SDJobOffer", (rsvm.SDJobOffer ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDOTHER", (rsvm.SDOther ? "Requested" : string.Empty));
+                    SessionHelper.Set("OTHERSD", rsvm.SDOthersd);
                     break;
 
                 case "Reset":
@@ -237,7 +242,9 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("SDHOTID", string.Empty);
                     SessionHelper.Set("SDSRECS", string.Empty);
                     SessionHelper.Set("SDPassport", string.Empty);
-                    SessionHelper.Set("SDJobOffer", string.Empty);         
+                    SessionHelper.Set("SDJobOffer", string.Empty);
+                    SessionHelper.Set("SDOTHER", string.Empty);
+                    SessionHelper.Set("OTHERSD", string.Empty);
                     break;
             }
         }
