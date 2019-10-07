@@ -64,7 +64,7 @@
     var rowsToColor = [];
 
     $("#clientsGrid").jqGrid({
-        url: "@Url.Action("GetClients", "Superadmin")",
+        url: "@Url.Action("GetServiceDateClients", "Superadmin")",
         datatype: "json",
         pageable: true,
         mtype: "Get",
@@ -148,7 +148,7 @@
 <br /><br />
 <div class="row">
     <div class="col-md-8">
-        @using (Html.BeginForm("RemoveClients", "Superadmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("RemoveServiceDateClients", "Superadmin", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
 

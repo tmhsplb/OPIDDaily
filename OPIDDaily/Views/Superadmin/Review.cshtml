@@ -13,7 +13,7 @@
     <div id="reviewPager"></div>
 </div>
 <br/>
-<a class="button" href="@Url.Action("PrepareTable", "Superadmin")">Prepare Table</a>
+<a class="button" href="@Url.Action("PrepareServiceDateTable", "Superadmin")">Prepare Table</a>
  
 <link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
 
@@ -24,7 +24,7 @@
     var lastServed = 0;
 
     $("#reviewGrid").jqGrid({
-        url: "@Url.Action("GetReviewClients", "Superadmin")",
+        url: "@Url.Action("GetServiceDateReviewClients", "Superadmin")",
         datatype: "json",
         mtype: "Get",
         colNames: ['Id', 'ST', 'Stage', 'CheckedIn', 'Last Name', 'First Name', 'Active', 'Notes'],

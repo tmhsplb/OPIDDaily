@@ -282,42 +282,14 @@ namespace OPIDDaily.Controllers
             }
         }
 
-        // Called only by user in role "Interviewer" 
-        public ActionResult ServiceTicket()
-        {
-            int nowServing = NowServing();
-        
-            if (nowServing == 0)
-            {
-                ViewBag.Warning = "Please select a client from the Clients Table before selecting Service Ticket.";
-                return View("Warning");
-            }
-
-            Client client = Clients.GetClient(nowServing);
-
-            if (client == null)
-            {
-                ViewBag.Warning = "Could not find selected client.";
-                return View("Warning");
-            }
-
-            if (client.EXP == true)
-            {
-                return RedirectToAction("ExpressClient");
-            }
-   
-            return RedirectToAction("History");
-        }
-
         public ActionResult ExpressClient()
         {
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
 
-
             if (nowServing == 0)
             {
-                ViewBag.Warning = "Please select a client from the Clients Table before selecting Express Client.";
+                ViewBag.Warning = "Please first select a client from the Clients Table.";
                 return View("Warning");
             }
 
@@ -365,13 +337,18 @@ namespace OPIDDaily.Controllers
 
         public ActionResult History()
         {
+            return RedirectToAction("ExistingClient");
+        }
+
+        public ActionResult ExistingClient()
+        {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
 
             int nowServing = NowServing();
 
             if (nowServing == 0)
             {
-                ViewBag.Warning = "Please select a client from the Clients Table before viewing History.";
+                ViewBag.Warning = "Please first select a client from the Clients Table.";
                 return View("Warning");
             }
 
