@@ -51,7 +51,7 @@ namespace OPIDDaily.Controllers
 
             DailyHub.GetClientHistory(Convert.ToInt32(nowServing));
 
-            return View("History", rsvm);
+            return View("ExistingClient", rsvm);
         }
 
         public ActionResult ClearClientHistory()
@@ -60,7 +60,7 @@ namespace OPIDDaily.Controllers
 
             DailyHub.GetClientHistory(0);
 
-            return View("History", rsvm);
+            return View("ExistingClient", rsvm);
         }
 
         public ActionResult SpecialReferral()

@@ -90,6 +90,5 @@ namespace OPIDDaily.Controllers
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
     }
 }

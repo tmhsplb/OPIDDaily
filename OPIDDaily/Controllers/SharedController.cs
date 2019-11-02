@@ -376,8 +376,6 @@ namespace OPIDDaily.Controllers
             rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;
             rsvm.XID = client.XID == true ? "XID" : string.Empty;
 
-            //   Clients.StoreRequestedServices(nowServing, rsvm);
-
             ServiceTicketBackButtonHelper("Set", rsvm);
 
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
@@ -392,7 +390,7 @@ namespace OPIDDaily.Controllers
         public ActionResult Review()
         {
             DateTime today = Extras.DateTimeToday();
-            ViewBag.ServiceDate = today.ToString("ddd  MMM d");
+            ViewBag.ServiceDate = today.ToString("ddd  MMM d, yyyy");
             return View("Review");
         }
 
