@@ -6,6 +6,7 @@
 }
 
     <div id="printerDiv">
+        <br/>
         <h3>Service Ticket: @ViewBag.ServiceTicket</h3>
         <br />
         <h3>Express Client: @ViewBag.ClientName</h3>
@@ -16,9 +17,8 @@
         @Html.Partial("_RequestedServices")
         <br /><br />
         @Html.Partial("_SignatureBlock")
-        <br /><br />
     </div>
-
+<br/>
 <center>
-    <button class="btn btn-primary hidden-print" onclick="printTable()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+    <button class="btn btn-primary hidden-print" onclick="printServiceTicket()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
 </center>

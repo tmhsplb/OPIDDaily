@@ -1,65 +1,31 @@
 ﻿@model List<OPIDDaily.Models.ClientServedViewModel>
 
-    <script type="text/javascript">
-    // https://stackoverflow.com/questions/19028419/how-to-adjust-print-options-through-code
-    function printTable() {
-        var win = window.open('', '', 'left=0,top=0,width=552,height=477,toolbar=0,scrollbars=0,status =0');
+<link rel="stylesheet" href="@Url.Content("~/Content/clientsServed.css")" type="text/css" />
+<script type="text/javascript" src="@Url.Content("~/Scripts/clientsServed.js")"></script>
 
-        var comments = document.getElementById("comments");
-        if (comments != null && comments.value.trim() != '') {
-            $('#comments').replaceWith(comments.value);
+<div id="printerDiv">
+    <br /><br /><br />
+    <h2>@ViewBag.ServiceDate</h2>
+    <br />
+
+    <table id="clientsServed" width="100%">
+        <tr><th>ST</th><th>Last Name</th><th>First Name</th><th>Middle Name</th><th>Notes</th></tr>
+        @foreach (var client in Model)
+        {
+            <tr>
+                <td align="center" width="50">@client.ServiceTicket</td>
+                <td width="120">&nbsp;&nbsp; @client.LastName</td>
+                <td width="120">&nbsp;&nbsp; @client.FirstName</td>
+                <td width="120">&nbsp;&nbsp; @client.MiddleName</td>
+                <td>&nbsp;&nbsp;@client.Notes</td>
+            </tr>
         }
+    </table>
+</div>
 
-        var content = "<html>";
-        content += "<body onload=\"window.print(); window.close();\">";
-        content += document.getElementById("printerDiv").innerHTML;
-        content += "</body>";
-        content += "</html>";
-        win.document.write(content);
-        win.document.close();
-    }
-    </script>
- 
-    <div id="printerDiv">
-        <!-- Must include stylesheet inside of <div> to apply styles to printing -->
-        <style>
-            /* https://stackoverflow.com/questions/1664049/can-i-force-a-page-jump-in-html-printing/1664058 */
-            .pagebreak {
-                page-break-before: always;
-            }
-
-            th {
-                text-align: center;
-            }
-
-            table, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-            }            
-        </style>
-
-        <br /><br /><br />
-        <h2>@ViewBag.ServiceDate</h2>
-        <br />
-
-        <table id="clientsServed" width="100%">
-            <tr><th>ST</th><th>Last Name</th><th>First Name</th><th>Middle Name</th><th>Notes</th></tr>
-            @foreach (var client in Model)
-            {
-                <tr>
-                    <td align ="center" width="50">@client.ServiceTicket</td>
-                    <td width="120">&nbsp;&nbsp; @client.LastName</td>
-                    <td width="120">&nbsp;&nbsp; @client.FirstName</td>
-                    <td width="120">&nbsp;&nbsp; @client.MiddleName</td>
-                    <td>&nbsp;&nbsp;@client.Notes</td>
-                </tr>
-            }
-        </table>
-    </div>
-
-    <br/><br/>
-    <center>
-        <button class="btn btn-primary hidden-print" onclick="printTable()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
-    </center>
+<br /><br />
+<center>
+    <button class="btn btn-primary hidden-print" onclick="printClientsServed()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+</center>
 
 

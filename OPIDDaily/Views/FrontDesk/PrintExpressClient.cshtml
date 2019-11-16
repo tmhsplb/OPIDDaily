@@ -14,9 +14,11 @@
 <h4>@ViewBag.Agency</h4>
 <br/>
 
-@Html.Partial("_RequestedServicesOnly")
+@Html.Partial("_RequestedServices")
+<br /><br />
+@Html.Partial("_SignatureBlock")
 </div>
-
+<br/>
 <center>
-    <button class="btn btn-primary hidden-print" onclick="printTable()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+    <button class="btn btn-primary hidden-print" onclick="printServiceTicket()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
 </center>

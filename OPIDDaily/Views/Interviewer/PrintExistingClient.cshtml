@@ -7,28 +7,7 @@
 }
 
     <div id="printerDiv">
-        <!-- Must include stylesheet inside of <div> to apply styles to printing -->
-        <style>
-            /* https://stackoverflow.com/questions/1664049/can-i-force-a-page-jump-in-html-printing/1664058 */
-            .pagebreak {
-                page-break-before: always;
-            }
-
-            th {
-                text-align: center;
-            }
-
-            table {
-                border: 1px solid black;
-                border-collapse: collapse;
-            }
-
-            th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-            }
-        </style>
-
+        <br/>
         <h3>Service Ticket: @ViewBag.ServiceTicket</h3>
         <br/>
         <h3>Existing Client: @ViewBag.ClientName</h3>
@@ -52,10 +31,10 @@
 
         <br />
         @Html.Partial("_RequestedServices", Model.Item2)
-              
+        <br/><br/>     
         @Html.Partial("_SignatureBlock")
      </div> 
      <br/>
     <center>
-       <button class="btn btn-primary hidden-print" onclick="printTable()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+       <button class="btn btn-primary hidden-print" onclick="printServiceTicket()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
      </center>

@@ -436,7 +436,7 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareTable()
         {
             DateTime today = Extras.DateTimeToday();
-            ViewBag.ServiceDate = today.ToString("ddd  MMM d");
+            ViewBag.ServiceDate = today.ToString("ddd  MMM d, yyyy");
 
             List<ClientServedViewModel> clientsServed = Clients.ClientsServed(today);
 

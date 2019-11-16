@@ -1,55 +1,10 @@
 ﻿
 @model OPIDDaily.Models.RequestedServicesViewModel
 
-<script type="text/javascript">
-    // https://stackoverflow.com/questions/19028419/how-to-adjust-print-options-through-code
-    function printTable() {
-        var win = window.open('', '', 'left=0,top=0,width=552,height=477,toolbar=0,scrollbars=0,status =0');
-
-        var comments = document.getElementById("comments");
-        if (comments != null && comments.value.trim() != '') {
-            $('#comments').replaceWith(comments.value);
-        }
-
-        var content = "<html>";
-        content += "<body onload=\"window.print(); window.close();\">";
-        content += document.getElementById("printerDiv").innerHTML;
-        content += "</body>";
-        content += "</html>";
-        win.document.write(content);
-        win.document.close();
-    }
-</script>
+<link rel="stylesheet" href="@Url.Content("~/Content/serviceTicket.css")" type="text/css" />
+<script type="text/javascript" src="@Url.Content("~/Scripts/serviceTicket.js")"></script>
 
 <div id="requestedServicesTable">
-    <!-- Must include stylesheet inside of <div> to apply styles to printing -->
-    <style>
-        /* https://stackoverflow.com/questions/1664049/can-i-force-a-page-jump-in-html-printing/1664058 */
-        .pagebreak {
-            page-break-before: always;
-        }
-
-        th {
-            text-align: center;
-        }
-
-        table {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            height: 30px;
-        }
-
-        /* https://stackoverflow.com/questions/5684144/how-to-completely-remove-borders-from-html-table */
-        .noborder {
-            border: none !important
-        }
-    </style>
-
     <h4>Requested Services</h4>
     <hr />
     <table id="requestedServices" width="100%">
@@ -183,8 +138,8 @@
     @if (Model.SDOther)
     {
         <div style="margin-left:50px">
-            @Html.CheckBoxFor(m => m.SDOther)&nbsp;&nbsp;@Model.SDOthersd 
+            @Html.CheckBoxFor(m => m.SDOther)&nbsp;&nbsp;@Model.SDOthersd
         </div>
     }
-    </div>
-<br/><br/>
+</div>
+
