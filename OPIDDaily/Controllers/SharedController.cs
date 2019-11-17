@@ -320,7 +320,10 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing);
-          
+            
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
+
             ViewBag.ServiceTicket = client.ServiceTicket;
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.BirthName = client.BirthName;
@@ -329,9 +332,6 @@ namespace OPIDDaily.Controllers
             ViewBag.Agency =  Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
 
             ServiceTicketBackButtonHelper("Set", rsvm);
-
-            //  Clients.StoreRequestedServices(nowServing, rsvm);
-
             return View("PrintExpressClient", rsvm);
         }
 
@@ -365,6 +365,10 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing);
+
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
+
             ViewBag.ServiceTicket = client.ServiceTicket;
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.BirthName = client.BirthName;
@@ -377,7 +381,6 @@ namespace OPIDDaily.Controllers
             rsvm.XID = client.XID == true ? "XID" : string.Empty;
 
             ServiceTicketBackButtonHelper("Set", rsvm);
-
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClient", objTuple);
         }

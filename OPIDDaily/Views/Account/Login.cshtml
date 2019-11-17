@@ -11,7 +11,12 @@
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                <h4>Use a local account to log in.</h4>
+                <h4>Front Desk Accounts:</h4>
+                <ul>
+                    <li>Greeter, Password: Daily!0</li>
+                    <li>Screener, Password: Daily!0</li>
+                    <li>TicketMaster, Password: Daily!3</li>
+                </ul>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
