@@ -5,51 +5,19 @@
     Layout = "~/Views/Shared/_FrontDesk.cshtml";
 }
 
-  <script type="text/javascript">
-    // https://stackoverflow.com/questions/19028419/how-to-adjust-print-options-through-code
-    function printSpecialReferral() {
-        var win = window.open('', '', 'left=0,top=0,width=552,height=477,toolbar=0,scrollbars=0,status =0');
-
-        var comments = document.getElementById("comments");
-        if (comments != null && comments.value.trim() != '') {
-            $('#comments').replaceWith(comments.value);
-        }
-
-        var content = "<html>";
-        content += "<body onload=\"window.print(); window.close();\">";
-        content += document.getElementById("printerDiv").innerHTML;
-        content += "</body>";
-        content += "</html>";
-        win.document.write(content);
-        win.document.close();
-    }
-  </script>
+  <script type="text/javascript" src="@Url.Content("~/Scripts/specialReferral.js")"></script>
 
   <div id="printerDiv">
-      <style>
-          .pagebreak {
-              page-break-before: always;
-          }
+      <link rel="stylesheet" href="@Url.Content("~/Content/specialReferral.css")" type="text/css" />
 
-          input[type="checkbox"] {
-              width: 20px;
-              height: 20px;
-          }
-
-          /* https://stackoverflow.com/questions/5684144/how-to-completely-remove-borders-from-html-table */
-          .noborder {
-              border: none !important
-          }
-      </style>
-     
       <table>
-        <tr>
-            <td><img style="height:150px;" src= "@Url.Content("~/Content/images/msmlogo.png")"></img></td>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td><h4>SPECIAL CASE - REFERRAL</h4></td>
-        </tr>
+          <tr>
+              <td><img style="height:150px;" src="@Url.Content("~/Content/images/msmlogo.png")"></img></td>
+              <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              <td><h4>SPECIAL CASE - REFERRAL</h4></td>
+          </tr>
       </table>
-     
+
       <div align="right"><span style="width: 30px; border-bottom: 1px solid black;">@ViewBag.SpecialReferralDate</span></div>
       <div>
           Please assist <span style="width: 100px; border-bottom: 1px solid black;">@Model.FirstName @Model.MiddleName  @Model.LastName</span> in obtaining his/her identification document(s):
@@ -118,7 +86,7 @@
       <div>
           We are requesting your assistance in obtaining the following ID documents:
       </div>
-      <br/>
+      <br />
 
       <table>
           <tr>
@@ -137,7 +105,7 @@
               <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.RTDL)</td>
               <td class="noborder" width="145">@Html.LabelFor(m => m.RTID)</td>
           </tr>
-       
+
           <tr>
               <td class="noborder" align="center" width="30"> @Html.CheckBoxFor(m => m.BC)</td>
               <td class="noborder" width="145">@Html.LabelFor(m => m.BC)</td>
@@ -145,10 +113,10 @@
               <td colspan="3" class="noborder" width="180">@Html.LabelFor(m => m.MBVD)</td>
           </tr>
       </table>
-      <br/>
+      <br />
       <div>Notes:</div>
       <div style="box-sizing: border-box; width: 800px; height: 80px; padding: 10px; border: 1px solid black">@Model.Notes</div>
-      <br /><br/>
+      <br /><br />
       <div>_____________________________</div>
       <div>&nbsp;&nbsp;Margrit McCray</div>
 

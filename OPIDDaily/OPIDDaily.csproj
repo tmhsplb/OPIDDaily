@@ -302,6 +302,7 @@
     <Content Include="Content\jquery.jqGrid\ellipsis-xbl.xml" />
     <Content Include="Content\jquery.jqGrid\ui.jqgrid.css" />
     <Content Include="Content\clientsServed.css" />
+    <Content Include="Content\specialReferral.css" />
     <Content Include="Content\serviceTicket.css" />
     <Content Include="Content\themes\base\images-old\animated-overlay.gif" />
     <Content Include="Content\themes\base\images-old\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -459,6 +460,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\clientsServed.js" />
     <Content Include="Scripts\serviceTicket.js" />
+    <Content Include="Scripts\specialReferral.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

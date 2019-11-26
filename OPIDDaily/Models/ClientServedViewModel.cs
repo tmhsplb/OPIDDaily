@@ -14,6 +14,8 @@ namespace OPIDDaily.Models
 
         public string MiddleName { get; set; }
 
+        public string DOB { get; set; }
+
         public string Notes { get; set; }
     }
 }

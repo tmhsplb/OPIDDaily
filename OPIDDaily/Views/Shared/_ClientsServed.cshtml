@@ -1,22 +1,23 @@
 ﻿@model List<OPIDDaily.Models.ClientServedViewModel>
-
-<link rel="stylesheet" href="@Url.Content("~/Content/clientsServed.css")" type="text/css" />
+    
 <script type="text/javascript" src="@Url.Content("~/Scripts/clientsServed.js")"></script>
 
 <div id="printerDiv">
+    <link rel="stylesheet" href="@Url.Content("~/Content/clientsServed.css")" type="text/css" />
     <br /><br /><br />
     <h2>@ViewBag.ServiceDate</h2>
     <br />
 
     <table id="clientsServed" width="100%">
-        <tr><th>ST</th><th>Last Name</th><th>First Name</th><th>Middle Name</th><th>Notes</th></tr>
+        <tr><th>ST</th><th>Last Name</th><th>First Name</th><th>DOB</th><th>Notes</th></tr>
         @foreach (var client in Model)
         {
             <tr>
                 <td align="center" width="50">@client.ServiceTicket</td>
                 <td width="120">&nbsp;&nbsp; @client.LastName</td>
                 <td width="120">&nbsp;&nbsp; @client.FirstName</td>
-                <td width="120">&nbsp;&nbsp; @client.MiddleName</td>
+               @* <td width="120">&nbsp;&nbsp; @client.MiddleName</td>*@
+                <td width="90">&nbsp;&nbsp;@client.DOB</td>
                 <td>&nbsp;&nbsp;@client.Notes</td>
             </tr>
         }

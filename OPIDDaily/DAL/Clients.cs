@@ -245,6 +245,7 @@ namespace OPIDDaily.DAL
                 Stage = client.Stage,
                 LastName = client.LastName,
                 FirstName = client.FirstName,
+                DOB = client.DOB.ToString("MM/dd/yyyy"),
                 Active = (client.Active ? "Y" : string.Empty),
                 CheckedIn = client.CheckedIn,
                 Notes = client.Notes
@@ -300,7 +301,7 @@ namespace OPIDDaily.DAL
                 ServiceTicket = client.ServiceTicket,
                 LastName = client.LastName,
                 FirstName = client.FirstName,
-                MiddleName = client.MiddleName,
+                DOB = client.DOB.ToString("MM/dd/yyyy"),
                 Notes = client.Notes
             };
         }

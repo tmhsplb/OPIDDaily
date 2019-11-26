@@ -18,6 +18,8 @@ namespace OpidDaily.Models
 
         public string FirstName { get; set; }
 
+        public string DOB { get; set; }
+
         public string Active { get; set; }
  
         public DateTime CheckedIn { get; set; }

@@ -1,0 +1,21 @@
+﻿    body { 
+    }
+
+    /* https://stackoverflow.com/questions/1664049/can-i-force-a-page-jump-in-html-printing/1664058 */
+    @media print {
+      .pagebreak {
+        page-break-before: always;
+       }
+    }
+
+    input[type="checkbox"] {
+       width: 20px;
+       height: 20px;
+    }
+
+    /* https://stackoverflow.com/questions/5684144/how-to-completely-remove-borders-from-html-table */
+      .noborder {
+       border: none !important
+    }
+
+
