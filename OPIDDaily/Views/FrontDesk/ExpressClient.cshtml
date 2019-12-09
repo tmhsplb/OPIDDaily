@@ -13,6 +13,7 @@
 
 
 <h3>Express Client: @ViewBag.ClientName</h3>
+<h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
 <br />
 
 <h4>Requested Services</h4>
@@ -23,7 +24,7 @@
             @using (Html.BeginForm("PrepareExpressClient", "FrontDesk", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-               
+
                 <div class="form-group">
                     <div class="col-md-4">
                         @Html.DropDownListFor(model => model.Agency, Model.Agencies, "Select Agency", new { @class = "form-control" })
@@ -98,8 +99,9 @@
                         @Html.LabelFor(m => m.Numident, new { @class = "control-label" })
                     </div>
                 </div>
-                <br />
-               
+                
+                <br /><br/>
+
                 <div class="form-group">
                     <div class="col-md-10">
                         <input type="submit" value="Prepare Service Ticket" class="btn btn-default" />

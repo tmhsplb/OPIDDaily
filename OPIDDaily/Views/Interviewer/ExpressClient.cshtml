@@ -13,6 +13,7 @@
 
 <br /><br /><br />
 <h3>Express Client: @ViewBag.ClientName</h3>
+<h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
 <br />
 
 <div class="row">
@@ -209,6 +210,14 @@
                     </div>
                     <div class="col-md-2">
                         @Html.LabelFor(m => m.SDJobOffer, new { @class = "control-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.CheckBoxFor(m => m.SDOther, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.SDOthersd, new { placeholder = "Other", @class = "form-control" })
                     </div>
                 </div>
                 <br /><br />

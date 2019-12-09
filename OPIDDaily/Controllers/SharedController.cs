@@ -308,6 +308,8 @@ namespace OPIDDaily.Controllers
             }
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
 
             ServiceTicketBackButtonHelper("Get", rsvm);
 
@@ -345,6 +347,7 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
 
             int nowServing = NowServing();
+          
 
             if (nowServing == 0)
             {
@@ -352,7 +355,10 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
 
+            Client client = Clients.GetClient(nowServing);
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
 
             ServiceTicketBackButtonHelper("Get", rsvm);
 
@@ -383,6 +389,32 @@ namespace OPIDDaily.Controllers
             ServiceTicketBackButtonHelper("Set", rsvm);
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClient", objTuple);
+        }
+
+        public ActionResult ServiceTicket()
+        {
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please first select a client from the Clients Table.";
+                return View("Warning");
+            }
+
+            Client client = Clients.GetClient(nowServing);
+
+            if (client == null)
+            {
+                ViewBag.Warning = "Could not find selected client.";
+                return View("Warning");
+            }
+
+            if (client.EXP == true)
+            {
+                return RedirectToAction("ExpressClient");
+            }
+
+            return RedirectToAction("ExistingClient");
         }
 
         public ActionResult _RequestedServices()
