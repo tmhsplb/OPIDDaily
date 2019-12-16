@@ -8,6 +8,13 @@ namespace OPIDDaily
 {
     public class Config
     {
+        public static int CaseManagerVoucherDuration
+        {
+            get
+            {
+                return Convert.ToInt32(ConfigurationManager.AppSettings["CaseManagerVoucherDuration"]);
+            }
+        }
         public static string ConnectionString
         {
             get

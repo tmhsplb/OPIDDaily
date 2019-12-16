@@ -87,8 +87,34 @@ namespace OPIDDaily.DAL
             //  SendEmailInvitation(invitation);
         }
 
+        private static string GetAgencyById(int agencyId)
+        {
+
+            if (agencyId == 0)
+            {
+                return "OpID";
+            }
+            else
+            {
+                using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+                {
+                    foreach (Agency agency in opiddailycontext.Agencies)
+                    {
+                        if (agency.AgencyId == agencyId)
+                        {
+                            return agency.AgencyName;
+                        }
+                    }
+
+                    return "Unknown agency";
+                }
+            }
+        }
+
         private static InvitationViewModel InviteToInvitationViewModel(Invitation invite)
         {
+            string agency = GetAgencyById(invite.AgencyId); ;
+                       
             return new InvitationViewModel
             {
                 Id = invite.Id,
@@ -98,6 +124,8 @@ namespace OPIDDaily.DAL
                 FullName = invite.FullName,
                 Email = invite.Email,
                 Role = invite.Role,
+                Agency = agency,
+                AgencyId = invite.AgencyId.ToString()
             };
         }
 
@@ -110,7 +138,8 @@ namespace OPIDDaily.DAL
                 UserName = ivm.UserName,
                 FullName = ivm.FullName,
                 Email = ivm.Email,
-                Role = ivm.Role
+                Role = ivm.Role,
+                AgencyId = Convert.ToInt32(ivm.AgencyId )    
             };
         }
 

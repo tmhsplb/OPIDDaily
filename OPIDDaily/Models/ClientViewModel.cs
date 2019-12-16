@@ -9,6 +9,10 @@ namespace OpidDaily.Models
     {
         public int Id { get; set; }
 
+        public string ServiceDate { get; set; }
+
+        public string Expiry { get; set; }
+
         public string ServiceTicket { get; set; }
 
         public int WaitTime { get; set; }

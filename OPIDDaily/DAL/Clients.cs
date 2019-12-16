@@ -27,6 +27,8 @@ namespace OPIDDaily.DAL
             return new ClientViewModel
             {
                 Id = client.Id,
+                ServiceDate = client.ServiceDate.ToString("MM/dd/yyyy"),
+                Expiry = client.Expiry.ToString("MM/dd/yyyy"),
                 ServiceTicket = client.ServiceTicket,
                 Stage = client.Stage,
                 WaitTime = client.WaitTime,
@@ -85,7 +87,7 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date && c.Active == true).ToList();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.Expiry >= date && c.Active == true).ToList();
 
                 foreach (Client client in clients)
                 {
@@ -105,13 +107,38 @@ namespace OPIDDaily.DAL
             }
         }
 
+        public static List<ClientViewModel> GetMyUnexpiredClients(int referringAgency)
+        {
+            DateTime today = Extras.DateTimeToday();
+
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId == referringAgency && c.Expiry >= today && c.Active == true).ToList();
+
+                foreach (Client client in clients)
+                {
+                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+
+                    bool hasHistory = client.Visits.Count > 0;
+
+                    clientCVMS.Add(ClientEntityToClientViewModel(client, hasHistory));
+                }
+
+                return clientCVMS;
+            }
+        }
+
         public static int AddClient(ClientViewModel cvm)
         {
+            DateTime today = Extras.DateTimeToday();
+            DateTime now = Extras.DateTimeNow();
+
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
                 Client client = new Client
                 {
-                    ServiceDate = Extras.DateTimeToday(),
+                    ServiceDate = today,
                     ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
                     Stage = cvm.Stage,
                     FirstName = cvm.FirstName,
@@ -125,12 +152,91 @@ namespace OPIDDaily.DAL
                     XID = (cvm.XID.Equals("Y") ? true : false),
                     XBC = (cvm.XBC.Equals("Y") ? true : false),
                     Notes = cvm.Notes,
-                    Screened = Extras.DateTimeNow(),
-                    CheckedIn = Extras.DateTimeNow(),
-                    Interviewing = Extras.DateTimeNow(),
-                    Interviewed = Extras.DateTimeNow(),
-                    BackOffice = Extras.DateTimeNow(),
-                    Done = Extras.DateTimeNow(),
+                    Screened = now,
+                    CheckedIn = now,
+                    Interviewing = now,
+                    Interviewed = now,
+                    BackOffice = now,
+                    Done = now,
+                    Expiry = today,
+                    Active = true
+                };
+
+                opidcontext.Clients.Add(client);
+                opidcontext.SaveChanges();
+
+                return client.Id;
+            }
+        }
+
+        private static DateTime ExtendedExpiry(DateTime expiry)
+        {
+            string weekday = expiry.ToString("ddd");
+            TimeSpan extension = new TimeSpan(0, 0, 0, 0);
+
+            switch (weekday)
+            {
+                case "MON":
+                    // extend until Friday
+                    extension = new TimeSpan(4, 0, 0, 0);
+                    break;
+                case "TUE":
+                    // extend until Friday
+                    extension = new TimeSpan(3, 0, 0, 0);
+                    break;
+                case "WED":
+                    // extend until Friday
+                    extension = new TimeSpan(2, 0, 0, 0);
+                    break;
+                case "THU":
+                    // extend until Friday
+                    extension = new TimeSpan(1, 0, 0, 0);
+                    break;
+            }
+
+            return expiry.Add(extension);
+        }
+
+        public static DateTime CalculateExpiry()
+        {
+            DateTime today = Extras.DateTimeToday();
+            int days = Config.CaseManagerVoucherDuration;
+            TimeSpan duration = new TimeSpan(days, 0, 0, 0);
+            DateTime expiry = today.Add(duration);
+
+            return ExtendedExpiry(expiry);
+        }
+
+        public static int AddMyClient(ClientViewModel cvm, int agencyId)
+        {
+            DateTime now = Extras.DateTimeNow();
+
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                Client client = new Client
+                {
+                    ServiceDate = Extras.DateTimeToday(),
+                    ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
+                    Stage = "Screened",
+                    FirstName = cvm.FirstName,
+                    MiddleName = cvm.MiddleName,
+                    LastName = cvm.LastName,
+                    BirthName = cvm.BirthName,
+                    DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday() : DateTime.Parse(cvm.DOB)),
+                    Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
+                    EXP = (cvm.EXP.Equals("Y") ? true : false),
+                    PND = (cvm.PND.Equals("Y") ? true : false),
+                    XID = (cvm.XID.Equals("Y") ? true : false),
+                    XBC = (cvm.XBC.Equals("Y") ? true : false),
+                    Notes = cvm.Notes,
+                    Screened = now,
+                    CheckedIn = now,
+                    Interviewing = now,
+                    Interviewed = now,
+                    BackOffice = now,
+                    Done = now,
+                    Expiry = CalculateExpiry(),
+                    AgencyId = agencyId,
                     Active = true
                 };
 
@@ -182,6 +288,11 @@ namespace OPIDDaily.DAL
             {
                 Client client = opidcontext.Clients.Find(cvm.Id);
 
+                if (string.IsNullOrEmpty(cvm.Stage))
+                {
+                    cvm.Stage = "Screened";  // needed for case manager clients
+                }
+
                 if (client != null)
                 {
                     StageTransition(cvm, client);
@@ -195,7 +306,21 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void DeleteClient(int id)
+        public static void UpdateExpiry(int nowServing, DateTime expiryDate)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                Client client = opidcontext.Clients.Find(nowServing);
+
+                if (client != null)
+                {
+                    client.Expiry = expiryDate;
+                    opidcontext.SaveChanges();
+                }
+            }
+        }
+
+            public static void DeleteClient(int id)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
@@ -228,7 +353,17 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    string clientName = string.Format("{0}, {1} {2} (Birth name: {3})", client.LastName, client.FirstName, client.MiddleName, client.BirthName);
+                    string clientName;
+
+                    if (string.IsNullOrEmpty(client.BirthName))
+                    {
+                        clientName = string.Format("{0}, {1} {2}", client.LastName, client.FirstName, client.MiddleName);
+                    }
+                    else
+                    {
+                       clientName = string.Format("{0}, {1} {2} (Birth name: {3})", client.LastName, client.FirstName, client.MiddleName, client.BirthName);
+                    }
+                   
                     return clientName;
                 }
 
@@ -326,16 +461,20 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
+                DateTime today = Extras.DateTimeToday();
                 List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date).ToList();
 
                 foreach (Client client in clients)
-                {
-                    // Manually perform cascade delete on the related (by a foreign key) Visits table.
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-                    opiddailycontext.Visits.RemoveRange(client.Visits);
+                { 
+                    if (client.Expiry <= today)  // if client.Expiry > today then client's voucher is still valid, so don't remove
+                    {
+                        // Manually perform cascade delete on the related (by a foreign key) Visits table.
+                        opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+                        opiddailycontext.Visits.RemoveRange(client.Visits);
 
-                    // Physically remove client from table
-                    opiddailycontext.Clients.Remove(client);
+                        // Physically remove client from table
+                        opiddailycontext.Clients.Remove(client);
+                    }
                 }
 
                 opiddailycontext.SaveChanges();

@@ -24,6 +24,38 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static AgencyViewModel AgencyEntityToAgencyViewModel(Agency agency)
+        {
+            return new AgencyViewModel
+            {
+                AgencyId = agency.AgencyId,
+                AgencyName = agency.AgencyName,
+                ContactPerson = agency.ContactPerson,
+                Phone = agency.Phone,
+                Email = agency.Email,
+                IsActive = (agency.IsActive ? "Yes" : "No")
+            };
+        }
+
+        public static List<AgencyViewModel> GetAgencies()
+        {
+            List<AgencyViewModel> agenciesAVMS = new List<AgencyViewModel>();
+
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                List<Agency> agencies = opiddailycontext.Agencies.ToList();
+
+                agencies = agencies.OrderBy(a => a.AgencyId).ToList();
+
+                foreach (Agency agency in agencies)
+                {
+                    agenciesAVMS.Add(AgencyEntityToAgencyViewModel(agency));
+                }
+
+                return agenciesAVMS;
+            }
+        }
+
         public static string GetAgencyName(int agencyId)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())

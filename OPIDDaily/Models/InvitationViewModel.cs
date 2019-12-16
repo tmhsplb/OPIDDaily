@@ -20,5 +20,9 @@ namespace OPIDDaily.Models
         public string Email { get; set; }
 
         public string Role { get; set; }
+
+        public string Agency { get; set; }
+
+        public string AgencyId { get; set; }
     }
 }

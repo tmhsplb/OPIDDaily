@@ -25,6 +25,7 @@ namespace OPIDDaily.DAL
                 invitation.FullName = invite.FullName;
                 invitation.Email = invite.Email;
                 invitation.Role = invite.Role;
+                invitation.AgencyId = Convert.ToInt32(invite.AgencyId);
 
                 opiddailycontext.SaveChanges();
                 return "Success";

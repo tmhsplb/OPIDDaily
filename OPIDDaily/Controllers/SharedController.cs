@@ -249,6 +249,11 @@ namespace OPIDDaily.Controllers
             }
         }
 
+        protected void VoucherBackButtonHelper(string mode, RequestedServicesViewModel rsvm)
+        {
+            ServiceTicketBackButtonHelper(mode, rsvm);
+        }
+
         protected static void SpecialReferralBackButtonHelper(string mode, SpecialReferralViewModel srvm)
         {
             switch (mode)
@@ -286,26 +291,7 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
-
-            if (nowServing == 0)
-            {
-                ViewBag.Warning = "Please first select a client from the Clients Table.";
-                return View("Warning");
-            }
-
             Client client = Clients.GetClient(nowServing);
-
-            if (client == null)
-            {
-                ViewBag.Warning = "Could not find selected client.";
-                return View("Warning");
-            }
-
-            if (client.EXP == false)
-            {
-                ViewBag.Warning = "The selected client is not marked as an Express Client.";
-                return View("Warning");
-            }
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
@@ -345,17 +331,9 @@ namespace OPIDDaily.Controllers
         public ActionResult ExistingClient()
         {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
-
             int nowServing = NowServing();
-          
-
-            if (nowServing == 0)
-            {
-                ViewBag.Warning = "Please first select a client from the Clients Table.";
-                return View("Warning");
-            }
-
             Client client = Clients.GetClient(nowServing);
+
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;

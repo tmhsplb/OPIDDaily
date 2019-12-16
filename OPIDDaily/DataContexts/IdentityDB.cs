@@ -33,6 +33,5 @@ namespace OPIDDaily.DataContexts
                 return new ApplicationDbContext();
             }
         }
-
     }
 }

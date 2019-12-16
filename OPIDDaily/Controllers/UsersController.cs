@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using static OPIDDaily.DataContexts.IdentityDB;
 
 namespace OPIDDaily.Controllers
 {
@@ -101,6 +102,11 @@ namespace OPIDDaily.Controllers
                    
                 }
 
+                else if (IsInRole("CaseManager"))
+                {
+                    return RedirectToAction("Home", "CaseManager");
+                }
+
                 ViewBag.Warning = "User in unrecognized role.";
             }
             else
@@ -115,6 +121,18 @@ namespace OPIDDaily.Controllers
         {
             return View("Users");
         }
+
+        // https://stackoverflow.com/questions/4101116/asp-net-mvc-post-call-returning-string-need-help-with-format-for-jqgrid/4102155#4102155
+        public ActionResult GetAgencies()
+        {
+            List<AgencyViewModel> agencies = Agencies.GetAgencies(); 
+            List<AgencyViewModel> activeAgencies = agencies.Where(a => a.IsActive == "Yes").ToList();
+
+            var ls = activeAgencies.ToDictionary(a => a.AgencyId, a => a.AgencyName);
+
+            return PartialView("_SelectAgency", ls);
+        }
+
 
         public string ExtendInvitation(InvitationViewModel invite)
         {

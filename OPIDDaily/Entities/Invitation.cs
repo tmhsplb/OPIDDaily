@@ -20,5 +20,7 @@ namespace OpidDailyEntities
         public string Email { get; set; }
 
         public string Role { get; set; }
+
+        public int AgencyId { get; set; }
     }
 }

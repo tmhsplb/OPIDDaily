@@ -1,0 +1,10 @@
+﻿@model Dictionary<int, string>
+
+<select>
+    <option value="-1">--</option>
+    @foreach (var val in Model)
+    {
+        <option value="@val.Key.ToString()">@val.Value</option>
+    }
+</select>
+

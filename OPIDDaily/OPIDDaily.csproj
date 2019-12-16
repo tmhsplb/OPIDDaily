@@ -183,6 +183,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AgencyController.cs" />
     <Compile Include="Controllers\BackOfficeController.cs" />
+    <Compile Include="Controllers\CaseManagerController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\FrontDeskController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -204,6 +205,10 @@
     <Compile Include="DataContexts\IdentityMigrations\201906051504117_InitialCreate.cs" />
     <Compile Include="DataContexts\IdentityMigrations\201906051504117_InitialCreate.Designer.cs">
       <DependentUpon>201906051504117_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\IdentityMigrations\201912092144030_AgencyId.cs" />
+    <Compile Include="DataContexts\IdentityMigrations\201912092144030_AgencyId.Designer.cs">
+      <DependentUpon>201912092144030_AgencyId.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\IdentityMigrations\Configuration.cs" />
     <Compile Include="DataContexts\OpidDailyDB.cs" />
@@ -242,6 +247,18 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\201908191518448_Agencies.cs" />
     <Compile Include="DataContexts\OPIDDailyMigrations\201908191518448_Agencies.Designer.cs">
       <DependentUpon>201908191518448_Agencies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201912091811159_ClientAgencyId.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201912091811159_ClientAgencyId.Designer.cs">
+      <DependentUpon>201912091811159_ClientAgencyId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201912091933079_Expiry.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201912091933079_Expiry.Designer.cs">
+      <DependentUpon>201912091933079_Expiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\201912092218024_AgencyId.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\201912092218024_AgencyId.Designer.cs">
+      <DependentUpon>201912092218024_AgencyId.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
@@ -539,6 +556,19 @@
     <Content Include="Views\BackOffice\ExistingClient.cshtml" />
     <Content Include="Views\Superadmin\ExistingClient.cshtml" />
     <Content Include="Views\Interviewer\ExistingClient.cshtml" />
+    <Content Include="Views\CaseManager\Home.cshtml" />
+    <Content Include="Views\Shared\_CaseManager.cshtml" />
+    <Content Include="Views\CaseManager\Clients.cshtml" />
+    <Content Include="Views\Users\_SelectAgency.cshtml" />
+    <Content Include="Views\CaseManager\Warning.cshtml" />
+    <Content Include="Views\CaseManager\Voucher.cshtml" />
+    <Content Include="Views\CaseManager\PrintVoucher.cshtml" />
+    <Content Include="Views\Shared\_CaseManagerSignatureBlock.cshtml" />
+    <Content Include="Views\FrontDesk\ExpressClientOverflowVoucher.cshtml" />
+    <Content Include="Views\FrontDesk\ExistingClientOverflowVoucher.cshtml" />
+    <Content Include="Views\FrontDesk\PrintExpressClientOverflowVoucher.cshtml" />
+    <Content Include="Views\FrontDesk\PrintExistingClientOverflowVoucher.cshtml" />
+    <Content Include="Views\Shared\_OverflowSignatureBlock.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -563,6 +593,9 @@
   <ItemGroup>
     <EmbeddedResource Include="DataContexts\IdentityMigrations\201906051504117_InitialCreate.resx">
       <DependentUpon>201906051504117_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\IdentityMigrations\201912092144030_AgencyId.resx">
+      <DependentUpon>201912092144030_AgencyId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201906152111225_Clients.resx">
       <DependentUpon>201906152111225_Clients.cs</DependentUpon>
@@ -590,6 +623,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201908191518448_Agencies.resx">
       <DependentUpon>201908191518448_Agencies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201912091811159_ClientAgencyId.resx">
+      <DependentUpon>201912091811159_ClientAgencyId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201912091933079_Expiry.resx">
+      <DependentUpon>201912091933079_Expiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201912092218024_AgencyId.resx">
+      <DependentUpon>201912092218024_AgencyId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

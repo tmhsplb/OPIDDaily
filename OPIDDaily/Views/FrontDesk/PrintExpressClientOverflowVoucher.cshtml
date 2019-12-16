@@ -1,0 +1,30 @@
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
+@{
+    ViewBag.Title = "Print Express Client Overflow Voucher";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+}
+    <table class="noborder">
+        <tr>
+            <td class="noborder"><img style="height:150px;" src="@Url.Content("~/Content/images/msmlogo.png")"></td>
+            <td class="noborder">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td class="noborder"><h4>Operation ID Overflow Voucher</h4></td>
+        </tr>
+    </table>
+
+    <div id="printerDiv">
+        <h3>Client: @ViewBag.ClientName</h3>
+        <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+        <h4>@ViewBag.Agency</h4>
+        <h4>Voucher good only before 9AM on Operation ID business days. Expires: @ViewBag.Expiry</h4>
+        <br />
+        <h4><strong>DISCLAIMER:</strong> Previous visits to Operation ID may make client ineligible for requested services.</h4>
+        <br />
+        @Html.Partial("_RequestedServices")
+        <br /><br />
+        @Html.Partial("_OverflowSignatureBlock")
+    </div>
+<br/>
+<center>
+    <button class="btn btn-primary hidden-print" onclick="printServiceTicket()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+</center>

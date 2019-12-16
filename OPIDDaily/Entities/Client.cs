@@ -52,9 +52,11 @@ namespace OpidDailyEntities
 
         public bool XBC { get; set; }
 
-        public bool Active { get; set; }
+        public int AgencyId { get; set; }
 
-      //  public string Agency { get; set; }
+        public DateTime Expiry { get; set; }
+
+        public bool Active { get; set; }
 
         public ICollection<Visit> Visits { get; set; }
     }

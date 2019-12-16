@@ -24,15 +24,16 @@
         url: "@Url.Action("GetUsers", "Users")",
         datatype: "json",
         mtype: "Get",
-        colNames: ['Id', 'Extended', 'Accepted', 'User Name', 'Full Name', 'Email', 'Role'],
+        colNames: ['Id', 'Extended', 'Accepted', 'User Name', 'Full Name', 'Email', 'Role', 'Agency'],
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
-        { key: false, align: 'center', name: 'Extended', index: 'Extended', width: 150, editable: false, sortable: true, search: false },
-        { key: false, align: 'center', name: 'Accepted', index: 'Accepted', width: 150, editable: false, sortable: true, search: false },
-        { key: false, name: 'UserName', index: 'UserName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'FullName', index: 'FullName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'Email', index: 'Email', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'Role', index: 'Role', width: 150, editable: true, edittype: 'select', editoptions: { value: { '--': '--', 'FrontDesk': 'FrontDesk', 'Interviewer': 'Interviewer', 'BackOffice': 'BackOffice', 'Client': 'Client' } }, sortable: false, search: false }
+        { key: false, align: 'center', name: 'Extended', index: 'Extended', width: 80, editable: false, sortable: true, search: false },
+        { key: false, align: 'center', name: 'Accepted', index: 'Accepted', width: 80, editable: false, sortable: true, search: false },
+        { key: false, name: 'UserName', index: 'UserName', width: 50, editable: true, sortable: false, search: false },
+        { key: false, name: 'FullName', index: 'FullName', width: 80, editable: true, sortable: false, search: false },
+        { key: false, name: 'Email', index: 'Email', width: 100, editable: true, sortable: false, search: false },
+        { key: false, name: 'Role', index: 'Role', width: 80, editable: true, edittype: 'select', editoptions: { value: { '--': '--', 'FrontDesk': 'FrontDesk', 'Interviewer': 'Interviewer', 'BackOffice': 'BackOffice', 'Client': 'Client', 'CaseManager': 'CaseManager' } }, sortable: false, search: false },
+        { key: false, name: 'Agency', index: 'Agency', width: 80, editable: true, edittype: 'select', editoptions: { dataUrl: '@Url.Action("GetAgencies", "Users")' }, sortable: false, search: false }
         ],
         pager: '#invitationsPager',
         rowNum: 25,
