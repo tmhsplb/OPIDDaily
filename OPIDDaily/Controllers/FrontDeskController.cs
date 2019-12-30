@@ -146,7 +146,7 @@ namespace OPIDDaily.Controllers
             DateTime today = Extras.DateTimeToday();
             DateTime expiryDate = Clients.CalculateExpiry();
 
-            Clients.UpdateExpiry(nowServing, expiryDate);
+            Clients.UpdateOverflowExpiry(nowServing, expiryDate);
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.BirthName = client.BirthName;
@@ -184,7 +184,7 @@ namespace OPIDDaily.Controllers
             DateTime today = Extras.DateTimeToday();
             DateTime expiryDate = Clients.CalculateExpiry();
 
-            Clients.UpdateExpiry(nowServing, expiryDate);
+            Clients.UpdateOverflowExpiry(nowServing, expiryDate);
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.BirthName = client.BirthName;

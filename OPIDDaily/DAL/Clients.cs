@@ -306,7 +306,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void UpdateExpiry(int nowServing, DateTime expiryDate)
+        public static void UpdateOverflowExpiry(int nowServing, DateTime expiryDate)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {

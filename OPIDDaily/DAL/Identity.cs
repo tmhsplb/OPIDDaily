@@ -139,7 +139,7 @@ namespace OPIDDaily.DAL
                 FullName = ivm.FullName,
                 Email = ivm.Email,
                 Role = ivm.Role,
-                AgencyId = Convert.ToInt32(ivm.AgencyId )    
+                AgencyId = Convert.ToInt32(ivm.Agency)    
             };
         }
 
