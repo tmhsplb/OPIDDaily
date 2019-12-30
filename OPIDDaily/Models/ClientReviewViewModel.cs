@@ -11,7 +11,8 @@ namespace OpidDaily.Models
 
         public string ServiceTicket { get; set; }
 
-       
+        public string Expiry { get; set; }
+
         public string Stage { get; set; }
 
         public string LastName { get; set; }

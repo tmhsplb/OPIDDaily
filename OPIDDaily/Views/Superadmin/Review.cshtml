@@ -27,16 +27,15 @@
         url: "@Url.Action("GetServiceDateReviewClients", "Superadmin")",
         datatype: "json",
         mtype: "Get",
-        colNames: ['Id', 'ST', 'Stage', 'CheckedIn', 'Last Name', 'First Name', 'DOB', 'Active', 'Notes'],
+        colNames: ['Id', 'ST', 'Expiry', 'Stage', 'Last Name', 'First Name', 'DOB', 'Notes'],
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: false, sortable: true, search: false },
+        { key: false, align: 'center', name: 'Expiry', index: 'Expiry', width: 120, editable: false, sortable: true, search: false },
         { key: false, name: 'Stage', index: 'Stage', width: 100, editable: false, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing' : 'Interviewing', 'Interviewed' : 'Interviewed', 'BackOffice' : 'BackOffice', 'Done' : 'Done' } }, sortable: false, search: false },
-        { key: false, hidden: true, name: 'CheckedIn', index: 'CheckedIn', width: 150, editable: false, sortable: false, search: false },
         { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
         { key: false, align: 'center', name: 'DOB', index: 'DOB', width: 80, editable: true, sortable: false, search: false },
-        { name: 'Active', index: 'Active', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' }  }
         ],
         pager: '#reviewPager',

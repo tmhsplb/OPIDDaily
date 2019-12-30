@@ -385,12 +385,12 @@ namespace OPIDDaily.DAL
             {
                 Id = client.Id,
                 ServiceTicket = client.ServiceTicket,
+                Expiry = client.Expiry.ToString("MM/dd/yyyy"),
                 Stage = client.Stage,
                 LastName = client.LastName,
                 FirstName = client.FirstName,
                 DOB = client.DOB.ToString("MM/dd/yyyy"),
-                Active = (client.Active ? "Y" : string.Empty),
-                CheckedIn = client.CheckedIn,
+                Active = (client.Active ? "Y" : "N"),
                 Notes = client.Notes
             };
         }
@@ -400,7 +400,7 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 List<ClientReviewViewModel> clientRVMS = new List<ClientReviewViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date).ToList();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date || c.Expiry >= date).ToList();
 
                 foreach (Client client in clients)
                 {
@@ -442,6 +442,7 @@ namespace OPIDDaily.DAL
             return new ClientServedViewModel
             {
                 ServiceTicket = client.ServiceTicket,
+                Expiry = client.Expiry.ToString("MM/dd/yyyy"),
                 LastName = client.LastName,
                 FirstName = client.FirstName,
                 DOB = client.DOB.ToString("MM/dd/yyyy"),
@@ -454,7 +455,7 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 List<ClientServedViewModel> clientsServed = new List<ClientServedViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date).ToList();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date || c.Expiry >= date).ToList();
 
                 foreach (Client client in clients)
                 {
