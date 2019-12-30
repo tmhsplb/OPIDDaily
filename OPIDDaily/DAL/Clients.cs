@@ -82,24 +82,32 @@ namespace OPIDDaily.DAL
             return 0;
         }
 
-        public static List<ClientViewModel> GetClients(DateTime date, bool? updateWaittimes = true)
+        public static List<ClientViewModel> GetClients(DateTime date, bool? superadmin = false, bool? updateWaittimes = true)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.Expiry >= date && c.Active == true).ToList();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date || c.Expiry >= date).ToList();
 
                 foreach (Client client in clients)
                 {
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-
-                    bool hasHistory = client.Visits.Count > 0;
-
-                    if (updateWaittimes == true)
+                    if (client.Active == false && superadmin == false)
                     {
-                        client.WaitTime = GetUpdatedWaitTime(client);
+                        // If superadmin == true, then this call is coming from SuperadminController.
+                        // In this case return both active and inactive clients. Otherwise return only active clients.
                     }
-                    clientCVMS.Add(ClientEntityToClientViewModel(client, hasHistory));
+                    else
+                    {
+                        opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+
+                        bool hasHistory = client.Visits.Count > 0;
+
+                        if (updateWaittimes == true)
+                        {
+                            client.WaitTime = GetUpdatedWaitTime(client);
+                        }
+                        clientCVMS.Add(ClientEntityToClientViewModel(client, hasHistory));
+                    }
                 }
 
                 opiddailycontext.SaveChanges();
