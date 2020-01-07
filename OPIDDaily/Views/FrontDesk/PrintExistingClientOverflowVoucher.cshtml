@@ -6,41 +6,38 @@
     Layout = "~/Views/Shared/_FrontDesk.cshtml";
 }
 
-<table class="noborder">
-    <tr>
-        <td class="noborder"><img style="height:150px;" src="@Url.Content("~/Content/images/msmlogo.png")"></td>
-        <td class="noborder">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td class="noborder"><h4>Operation ID Overflow Voucher</h4></td>
-    </tr>
-</table>
-
-<div id="printerDiv">
-    <h3>Existing Client: @ViewBag.ClientName</h3>
-    <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
-    <h4>@ViewBag.Agency</h4>
-    <h4>Voucher good only before 9AM on Operation ID business days. Expires: @ViewBag.Expiry</h4>
-    <br />
-    <h4><strong>DISCLAIMER:</strong> Previous visits to Operation ID may make client ineligible for requested services.</h4>
-    <br />
-    <table id="visitHistory" width="100%">
-        <tr><th>Date</th><th>Item</th><th>Check</th><th>Status</th><th>Notes</th></tr>
-        @foreach (VisitViewModel vvm in Model.Item1)
-        {
+    <div id="printerDiv">
+        <table class="noborder">
             <tr>
-                <td align="center" width="80">@vvm.Date.ToString("MM/dd/yyyy")</td>
-                <td width="50">&nbsp;&nbsp; @vvm.Item</td>
-                <td width="70" align="center">@vvm.Check</td>
-                <td width="100">&nbsp;&nbsp; @vvm.Status</td>
-                <td width="150">&nbsp;&nbsp; @vvm.Notes</td>
+                <td class="noborder"><img style="height:150px;" src="@Url.Content("~/Content/images/msmlogo.png")"></td>
+                <td class="noborder">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class="noborder"><h4>Operation ID Overflow Voucher</h4></td>
             </tr>
-        }
-    </table>
-
-    <br />
-    @Html.Partial("_RequestedServices", Model.Item2)
-    <br /><br />
-    @Html.Partial("_OverflowSignatureBlock")
-</div>
+        </table>
+        <h4>Existing Client: @ViewBag.ClientName -- DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+        <h4>Voucher issued by Operation ID on @ViewBag.VoucherDate.</h4>
+        <h4>Voucher good only before 9AM on Operation ID business days. Expires: @ViewBag.Expiry.</h4>
+        <br />
+        <h4><strong>DISCLAIMER:</strong> Previous visits to Operation ID may make client ineligible for requested services.</h4>
+        <br />
+        <table id="visitHistory" width="100%">
+            <tr><th>Date</th><th>Item</th><th>Check</th><th>Status</th><th>Notes</th></tr>
+            @foreach (VisitViewModel vvm in Model.Item1)
+            {
+                <tr>
+                    <td align="center" width="80">@vvm.Date.ToString("MM/dd/yyyy")</td>
+                    <td width="50">&nbsp;&nbsp; @vvm.Item</td>
+                    <td width="70" align="center">@vvm.Check</td>
+                    <td width="100">&nbsp;&nbsp; @vvm.Status</td>
+                    <td width="150">&nbsp;&nbsp; @vvm.Notes</td>
+                </tr>
+            }
+        </table>
+        <br />
+        @Html.Partial("_RequestedServicesOnly", Model.Item2)
+        <br /><br/>
+        @Html.Partial("_OverflowSignatureBlock")
+    </div>
 <br />
 <center>
     <button class="btn btn-primary hidden-print" onclick="printServiceTicket()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
