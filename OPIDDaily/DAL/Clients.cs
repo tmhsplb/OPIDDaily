@@ -184,19 +184,19 @@ namespace OPIDDaily.DAL
 
             switch (weekday)
             {
-                case "MON":
+                case "Mon":
                     // extend until Friday
                     extension = new TimeSpan(4, 0, 0, 0);
                     break;
-                case "TUE":
+                case "Tue":
                     // extend until Friday
                     extension = new TimeSpan(3, 0, 0, 0);
                     break;
-                case "WED":
+                case "Wed":
                     // extend until Friday
                     extension = new TimeSpan(2, 0, 0, 0);
                     break;
-                case "THU":
+                case "Thu":
                     // extend until Friday
                     extension = new TimeSpan(1, 0, 0, 0);
                     break;
