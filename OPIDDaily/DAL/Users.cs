@@ -1,4 +1,6 @@
-﻿using OPIDDaily.DataContexts;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using OPIDDaily.DataContexts;
 using OPIDDaily.Models;
 using OpidDailyEntities;
 using System;
@@ -29,6 +31,30 @@ namespace OPIDDaily.DAL
 
                 opiddailycontext.SaveChanges();
                 return "Success";
+            }
+        }
+
+        public static void EditUserAgencyId(int oldAgencyId, int newAgencyId)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                List<Invitation> invitations = opiddailycontext.Invitations.Where(i => i.AgencyId == oldAgencyId).ToList();
+
+                using (IdentityDB identitycontext = new IdentityDB())
+                {
+                    var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(identitycontext));
+                   
+                    foreach (Invitation invite in invitations)
+                    {
+                        // The UserName in the Invitations table is the same as the UserName in table AspNetUsers. 
+                        ApplicationUser user = UserManager.FindByName(invite.UserName);
+                        user.AgencyId = newAgencyId;
+                        UserManager.Update(user);
+                        invite.AgencyId = newAgencyId;
+                    }
+                }
+
+                opiddailycontext.SaveChanges();
             }
         }
     }

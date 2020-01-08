@@ -147,6 +147,14 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
                 Agency agency = opiddailycontext.Agencies.Find(avm.Id);
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId == agency.AgencyId).ToList();
+
+                foreach (Client c in clients)
+                {
+                    c.AgencyId = avm.AgencyId;
+                }
+
+                Users.EditUserAgencyId(agency.AgencyId, avm.AgencyId);
 
                 agency.AgencyId = avm.AgencyId;
                 agency.AgencyName = avm.AgencyName;
