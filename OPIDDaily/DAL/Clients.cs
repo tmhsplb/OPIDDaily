@@ -86,8 +86,9 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
+                DateTime today = Extras.DateTimeToday();
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date || c.Expiry >= date).ToList();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date || c.Expiry >= today).ToList();
 
                 foreach (Client client in clients)
                 {
