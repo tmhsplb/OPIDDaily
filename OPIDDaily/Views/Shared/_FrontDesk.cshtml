@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - OPID Daily</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/DataTables/css")
+
     @Scripts.Render("~/bundles/modernizr")
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/mvc5datatables")
     @RenderSection("scripts", required: false)
 
     <style>
@@ -22,9 +25,9 @@
             color: black;
         }
 
-        .navbar-inverse .navbar-nav > li > a:hover {
-            color: blue;
-        }
+            .navbar-inverse .navbar-nav > li > a:hover {
+                color: blue;
+            }
     </style>
 
 </head>
