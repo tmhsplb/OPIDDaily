@@ -7,13 +7,13 @@ namespace OPIDDaily.DataContexts.OPIDDailyMigrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class DOB : IMigrationMetadata
+    public sealed partial class RChecks : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DOB));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(RChecks));
         
         string IMigrationMetadata.Id
         {
-            get { return "202001252320367_DOB"; }
+            get { return "202001312118188_RChecks"; }
         }
         
         string IMigrationMetadata.Source

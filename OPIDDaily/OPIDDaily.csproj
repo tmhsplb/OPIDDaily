@@ -83,7 +83,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Linq.Dynamic, Version=1.0.6132.35681, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Linq.Dynamic.1.0.7\lib\net40\System.Linq.Dynamic.dll</HintPath>
     </Reference>
@@ -281,17 +280,9 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\201912092218024_AgencyId.Designer.cs">
       <DependentUpon>201912092218024_AgencyId.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataContexts\OPIDDailyMigrations\202001251853181_RChecks.cs" />
-    <Compile Include="DataContexts\OPIDDailyMigrations\202001251853181_RChecks.Designer.cs">
-      <DependentUpon>202001251853181_RChecks.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DataContexts\OPIDDailyMigrations\202001252320367_DOB.cs" />
-    <Compile Include="DataContexts\OPIDDailyMigrations\202001252320367_DOB.Designer.cs">
-      <DependentUpon>202001252320367_DOB.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DataContexts\OPIDDailyMigrations\202001262106164_Nullable_RCheck_DOB.cs" />
-    <Compile Include="DataContexts\OPIDDailyMigrations\202001262106164_Nullable_RCheck_DOB.Designer.cs">
-      <DependentUpon>202001262106164_Nullable_RCheck_DOB.cs</DependentUpon>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202001312118188_RChecks.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202001312118188_RChecks.Designer.cs">
+      <DependentUpon>202001312118188_RChecks.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
@@ -918,14 +909,8 @@
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\201912092218024_AgencyId.resx">
       <DependentUpon>201912092218024_AgencyId.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202001251853181_RChecks.resx">
-      <DependentUpon>202001251853181_RChecks.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202001252320367_DOB.resx">
-      <DependentUpon>202001252320367_DOB.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202001262106164_Nullable_RCheck_DOB.resx">
-      <DependentUpon>202001262106164_Nullable_RCheck_DOB.cs</DependentUpon>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202001312118188_RChecks.resx">
+      <DependentUpon>202001312118188_RChecks.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

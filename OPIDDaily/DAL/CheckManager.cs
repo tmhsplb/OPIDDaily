@@ -66,7 +66,7 @@ namespace OPIDDaily.DAL
             AppendToResearchChecks(rChecks);
         }
 
-        public static void NewResearchCheck(DispositionRow row, string service, DateTime serviceDate, string disposition)
+        public static void NewResearchCheck(DispositionRow row, string service, DateTime? serviceDate, string disposition)
         {
             int checkNum;
 
@@ -110,6 +110,7 @@ namespace OPIDDaily.DAL
                     break;
 
                 // Supporting Documents
+                /*
                 case "SD1":
                     checkNum = row.SDCheckNum1;
                     break;
@@ -139,6 +140,7 @@ namespace OPIDDaily.DAL
                 case "SD33":
                     checkNum = row.SDCheckNum33;
                     break;
+                */
 
                 default:
                     checkNum = -1;
@@ -225,6 +227,8 @@ namespace OPIDDaily.DAL
                     NewResearchCheck(row, "MBVD3", row.MBVDOrderDateThree, row.MBVDCheck3Disposition);
                 }
 
+                // Supporting documents
+                /*
                 // row.Date
                 if (row.SDCheckNum1 != 0)
                 {
@@ -266,6 +270,7 @@ namespace OPIDDaily.DAL
                 {
                     NewResearchCheck(row, "SD33", row.SDOrderDate3, row.SDCheckDisposition33);
                 }
+                */
 
                 // Slow down adding of checks to the Research Table a little bit so we can see the progress bar
                 Thread.Sleep(100);
@@ -289,6 +294,19 @@ namespace OPIDDaily.DAL
 
                         if (existing == null) 
                         {
+                            DateTime checkDate = new DateTime(1900, 1, 1);
+                            DateTime checkDOB = new DateTime(1900, 1, 1);
+
+                            if (check.Date != null)
+                            {
+                                checkDate = (DateTime)check.Date;
+                            }
+
+                            if (check.DOB != null)
+                            {
+                                checkDOB = (DateTime)check.DOB;
+                            }
+
                             RCheck rcheck = new RCheck
                             {
                                 RecordID = check.RecordID,
@@ -298,8 +316,10 @@ namespace OPIDDaily.DAL
                                 Num = check.Num,
                                 sNum = check.Num.ToString(),
                                 Name = check.Name,
+                                DOB = check.DOB,
+                                sDOB = (check.DOB == null ? string.Empty : checkDOB.ToString("MM/dd/yyyy")),
                                 Date = check.Date,
-                                sDate = check.Date.ToString("MM/dd/yyyy"),
+                                sDate = (check.Date == null ? string.Empty : checkDate.ToString("MM/dd/yyyy")),
                                 Service = check.Service,
                                 Disposition = check.Disposition,
                             };
@@ -322,6 +342,8 @@ namespace OPIDDaily.DAL
             }
             catch (Exception e)
             {
+                int z;
+                z = 2;
             }
         }
 
@@ -473,8 +495,9 @@ namespace OPIDDaily.DAL
 
         public static List<DispositionRow> GetResearchRows(string uploadedFileName)
         {
-            string pathToResearchReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", uploadedFileName));
-            List<DispositionRow> resRows = MyExcelDataReader.GetResearchRows(pathToResearchReportFile);
+           // string pathToResearchReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", uploadedFileName));
+          //  List<DispositionRow> resRows = MyExcelDataReader.GetResearchRows(pathToResearchReportFile);
+            List<DispositionRow> resRows = MyExcelDataReader.GetResearchRows(uploadedFileName);
             return resRows;
         }
 
@@ -505,6 +528,12 @@ namespace OPIDDaily.DAL
             // This fxed the problem that Bill reported in an email dated 1/21/2019.
             CheckViewModel alreadyResolved = resolvedChecks.Where(r => (r.RecordID == check.RecordID && (r.Num == check.Num || r.Num == -check.Num))).FirstOrDefault();
             CheckViewModel cvm = null;
+            DateTime checkDate = new DateTime(1900, 1, 1);
+
+            if (check.Date != null)
+            {
+                checkDate = (DateTime)check.Date;
+            }
 
             if (alreadyResolved == null)
             {
@@ -518,7 +547,7 @@ namespace OPIDDaily.DAL
                     Num = check.Num,
                     sNum = check.Num.ToString(),
                     Date = check.Date,
-                    sDate = check.Date.ToString("MM/dd/yyyy"),
+                    sDate = (check.Date == null ? "" : checkDate.ToString("MM/dd/yyyy")),
                     Service = check.Service,
                     Disposition = disposition
                 };

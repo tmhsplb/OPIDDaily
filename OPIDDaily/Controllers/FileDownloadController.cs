@@ -147,6 +147,9 @@ namespace OPIDChecks.Controllers
                     importRow.MBVDCheck3Disposition = resolvedCheck.Disposition;
                     break;
 
+
+                // Supporting documents
+                /*
                 case "SD1":
                     importRow.SDCheckNum1 = resolvedCheck.Num;
                     importRow.SDCheckDisposition = resolvedCheck.Disposition;
@@ -161,6 +164,7 @@ namespace OPIDChecks.Controllers
                     importRow.SDCheckNum3 = resolvedCheck.Num;
                     importRow.SDCheckDisposition3 = resolvedCheck.Disposition;
                     break;
+                */
             }
         }
 
@@ -271,6 +275,7 @@ namespace OPIDChecks.Controllers
                     break;
 
                 // Supporting Documents
+                /*
                 case "SD1":
                     if (irow.SDCheckNum1 == 0)
                     {
@@ -292,6 +297,7 @@ namespace OPIDChecks.Controllers
                         irow.SDCheckDisposition3 = disposition;
                     }
                     break;
+                */
                 default:
                     break;
             }
@@ -323,7 +329,8 @@ namespace OPIDChecks.Controllers
                                                    || irow.MBVDCheckNum2 == resolvedCheck.Num
                                                    || irow.MBVDCheckNum3 == resolvedCheck.Num
 
-                                                   // Supporting Document Checks
+                                                   // Supporting documenta checks
+                                                   /*
                                                    || irow.SDCheckNum1 == resolvedCheck.Num
                                                    || irow.SDCheckNum2 == resolvedCheck.Num
                                                    || irow.SDCheckNum3 == resolvedCheck.Num
@@ -335,6 +342,7 @@ namespace OPIDChecks.Controllers
                                                    || irow.SDCheckNum13 == resolvedCheck.Num
                                                    || irow.SDCheckNum23 == resolvedCheck.Num
                                                    || irow.SDCheckNum33 == resolvedCheck.Num
+                                                   */
 
                                                    // Does resolvedCheck match an existing importRow by ID?
                                                    // This is the case where there is more than one check on an import row, IR, 
@@ -408,8 +416,8 @@ namespace OPIDChecks.Controllers
                 if (d.LBVDCheckNum > 0 || d.LBVDCheckNum2 > 0 || d.LBVDCheckNum3 > 0
                     || d.TIDCheckNum > 0 || d.TIDCheckNum2 > 0 || d.TIDCheckNum3 > 0
                     || d.TDLCheckNum > 0 || d.TDLCheckNum2 > 0 || d.TDLCheckNum3 > 0
-                    || d.MBVDCheckNum > 0 || d.MBVDCheckNum2 > 0 || d.MBVDCheckNum3 > 0
-                    || d.SDCheckNum1 > 0 || d.SDCheckNum2 > 0 || d.SDCheckNum3 > 0)
+                    || d.MBVDCheckNum > 0 || d.MBVDCheckNum2 > 0 || d.MBVDCheckNum3 > 0)
+                  //  || d.SDCheckNum1 > 0 || d.SDCheckNum2 > 0 || d.SDCheckNum3 > 0)
                 {
                     // Only create a row if it contains a modified check number.
                     string csvRow = string.Format(",{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24}", // ,{9},{10}",
@@ -440,9 +448,10 @@ namespace OPIDChecks.Controllers
                         (d.MBVDCheckNum2 > 0 ? d.MBVDCheckNum2 : 0),
                         (d.MBVDCheckNum2 > 0 ? d.MBVDCheck2Disposition : string.Empty),
                         (d.MBVDCheckNum3 > 0 ? d.MBVDCheckNum3 : 0),
-                        (d.MBVDCheckNum3 > 0 ? d.MBVDCheck3Disposition : string.Empty),
+                        (d.MBVDCheckNum3 > 0 ? d.MBVDCheck3Disposition : string.Empty));
 
                         // Supporting Documents
+                        /*
                         (d.SDCheckNum1 > 0 ? d.SDCheckNum1 : 0),
                         (d.SDCheckNum1 > 0 ? d.SDCheckDisposition : string.Empty),
 
@@ -451,6 +460,7 @@ namespace OPIDChecks.Controllers
 
                         (d.SDCheckNum3 > 0 ? d.SDCheckNum3 : 0),
                         (d.SDCheckNum3 > 0 ? d.SDCheckDisposition3 : string.Empty));
+                        */
 
                     csv.AppendLine(csvRow);
                 }

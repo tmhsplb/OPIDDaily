@@ -35,6 +35,7 @@ namespace OPIDDaily.Controllers
                 {
                     var value = requestModel.Search.Value.Trim();
                     query = query.Where(p => p.Name.Contains(value) ||
+                                             p.sDOB.Contains(value) ||
                                              p.sRecordID.Contains(value) ||
                                              p.sInterviewRecordID.Contains(value) ||
                                              p.sNum.Contains(value) ||
@@ -56,6 +57,7 @@ namespace OPIDDaily.Controllers
                     sRecordID = rcheck.sRecordID,
                     sInterviewRecordID = rcheck.sInterviewRecordID,
                     Name = rcheck.Name,
+                    sDOB = rcheck.sDOB,
                     sNum = rcheck.sNum,
                     sDate = rcheck.sDate,
                     Service = rcheck.Service,

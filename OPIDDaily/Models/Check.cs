@@ -8,13 +8,15 @@ namespace OPIDDaily.Models
 
     public class Check
     {
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         public int Num { get; set; }
 
         public string Name { get; set; }
 
-        public DateTime DOB { get; set; }
+        public DateTime? DOB { get; set; }
+
+        public string sDOB { get; set; }
 
         public string Service { get; set; }
 

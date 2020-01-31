@@ -114,7 +114,10 @@ namespace OPIDDaily.Controllers
                 return View("Merge");
             }
 
-            Merger.PerformMerge(uploadedFile, fileType);
+            string filePath = string.Format("~/Uploads/{0}", uploadedFile);
+            string mappedPath = HttpContext.Server.MapPath(filePath);
+
+            Merger.PerformMerge(mappedPath, fileType);
 
             ViewData["MergeStatus"] = "Merge Complete";
             return View("Merge");
