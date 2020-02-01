@@ -844,6 +844,7 @@
     <Content Include="Views\Merge\Merge.cshtml" />
     <Content Include="Views\ResearchTable\ResearchTable.cshtml" />
     <Content Include="Views\Shared\_ModalProgressBar.cshtml" />
+    <Content Include="Views\FrontDesk\ResearchTable.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

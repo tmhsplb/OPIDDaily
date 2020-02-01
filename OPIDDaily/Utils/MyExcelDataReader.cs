@@ -29,8 +29,67 @@ namespace OPIDDaily.Utils
             return rchecks;
         }
 
+        private static void InsertNulls(List<DispositionRow> resRows)
+        {
+            DateTime epochAsDateTime = new DateTime(1900, 1, 1);
+            DateTime dt;
+
+            foreach (DispositionRow dr in resRows)
+            {
+                dt = (DateTime)dr.LBVDOrderDateTwo;
+                if (dt.CompareTo(epochAsDateTime) == 0)
+                {
+                    dr.LBVDOrderDateTwo = null;
+                }
+
+                dt = (DateTime)dr.LBVDOrderDateThree;
+                if (dt.CompareTo(epochAsDateTime) == 0)
+                {
+                    dr.LBVDOrderDateThree = null;
+                }
+
+                dt = (DateTime)dr.MBVDOrderDateTwo;
+                if (dt.CompareTo(epochAsDateTime) == 0)
+                {
+                    dr.MBVDOrderDateTwo = null;
+                }
+
+                dt = (DateTime)dr.MBVDOrderDateThree;
+                if (dt.CompareTo(epochAsDateTime) == 0)
+                {
+                    dr.MBVDOrderDateThree = null;
+                }
+
+                dt = (DateTime)dr.TIDOrderDateTwo;
+                if (dt.CompareTo(epochAsDateTime) == 0)
+                {
+                    dr.TIDOrderDateTwo = null;
+                }
+
+                dt = (DateTime)dr.TIDOrderDateThree;
+                if (dt.CompareTo(epochAsDateTime) == 0)
+                {
+                    dr.TIDOrderDateThree = null;
+                }
+
+                dt = (DateTime)dr.TDLOrderDateTwo;
+                if (dt.CompareTo(epochAsDateTime) == 0)
+                {
+                    dr.TDLOrderDateTwo = null;
+                }
+
+                dt = (DateTime)dr.TDLOrderDateThree;
+                if (dt.CompareTo(epochAsDateTime) == 0)
+                {
+                    dr.TDLOrderDateThree = null;
+                }
+            }
+        }
+
         public static List<DispositionRow> GetResearchRows(string filePath)
-        { 
+        {
+            string epoch = "01/01/1900"; // Use this in place of a null value, becuase I couldn't make null work
+           
             try
             {
                 List<DispositionRow> resRows = new ExcelData(filePath).GetData().Select(dataRow => new DispositionRow
@@ -46,44 +105,44 @@ namespace OPIDDaily.Utils
                     LBVDCheckDisposition = dataRow["LBVD Check Disposition"].ToString(),
 
                     LBVDCheckNum2 = Convert.ToInt32(dataRow["LBVD Check Number Two"].ToString()),
-                    LBVDOrderDateTwo = DBNull.Value.Equals(dataRow["LBVD Order Date Two"]) ? (DateTime?)null : Convert.ToDateTime(dataRow["LBVD Order Date Two"].ToString()),
+                    LBVDOrderDateTwo = DBNull.Value.Equals(dataRow["LBVD Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["LBVD Order Date Two"].ToString()),
                     LBVDCheck2Disposition = dataRow["LBVD Check Two Disposition"].ToString(),
                     
                     LBVDCheckNum3 = Convert.ToInt32(dataRow["LBVD Check Number Three"].ToString()),
-                    LBVDOrderDateThree = DBNull.Value.Equals(dataRow["LBVD Order Date Three"]) ? (DateTime?)null : Convert.ToDateTime(dataRow["LBVD Order Date Three"].ToString()),
+                    LBVDOrderDateThree = DBNull.Value.Equals(dataRow["LBVD Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["LBVD Order Date Three"].ToString()),
                     LBVDCheck3Disposition = dataRow["LBVD Check Three Disposition"].ToString(),
                     
                     TIDCheckNum = Convert.ToInt32(dataRow["TID Check Number"].ToString()),
                     TIDCheckDisposition = dataRow["TID Check Disposition"].ToString(),
 
                     TIDCheckNum2 = Convert.ToInt32(dataRow["TID Check Number Two"].ToString()),
-                    TIDOrderDateTwo = DBNull.Value.Equals(dataRow["TID Order Date Two"]) ? (DateTime?)null : Convert.ToDateTime(dataRow["TID Order Date Two"].ToString()),
+                    TIDOrderDateTwo = DBNull.Value.Equals(dataRow["TID Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TID Order Date Two"].ToString()),
                     TIDCheck2Disposition = dataRow["TID Check Two Disposition"].ToString(),
 
                     TIDCheckNum3 = Convert.ToInt32(dataRow["TID Check Number Three"].ToString()),
-                    TIDOrderDateThree = DBNull.Value.Equals(dataRow["TID Order Date Three"]) ? (DateTime?)null : Convert.ToDateTime(dataRow["TID Order Date Three"].ToString()),
+                    TIDOrderDateThree = DBNull.Value.Equals(dataRow["TID Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TID Order Date Three"].ToString()),
                     TIDCheck3Disposition = dataRow["TID Check Three Disposition"].ToString(),
 
                     TDLCheckNum = Convert.ToInt32(dataRow["TDL Check Number"].ToString()),
                     TDLCheckDisposition = dataRow["TDL Check Disposition"].ToString(),
 
                     TDLCheckNum2 = Convert.ToInt32(dataRow["TDL Check Number Two"].ToString()),
-                    TDLOrderDateTwo = DBNull.Value.Equals(dataRow["TDL Order Date Two"]) ? (DateTime?)null : Convert.ToDateTime(dataRow["TDL Order Date Two"].ToString()),  
+                    TDLOrderDateTwo = DBNull.Value.Equals(dataRow["TDL Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TDL Order Date Two"].ToString()),  
                     TDLCheck2Disposition = dataRow["TDL Check Two Disposition"].ToString(),
 
                     TDLCheckNum3 = Convert.ToInt32(dataRow["TDL Check Number Three"].ToString()),
-                    TDLOrderDateThree = DBNull.Value.Equals(dataRow["TDL Order Date Three"]) ? (DateTime?)null : Convert.ToDateTime(dataRow["TDL Order Date Three"].ToString()),
+                    TDLOrderDateThree = DBNull.Value.Equals(dataRow["TDL Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TDL Order Date Three"].ToString()),
                     TDLCheck3Disposition = dataRow["TDL Check Three Disposition"].ToString(),
 
                     MBVDCheckNum = Convert.ToInt32(dataRow["MBVD Check Number"].ToString()),
                     MBVDCheckDisposition = dataRow["MBVD Check Disposition"].ToString(),
 
                     MBVDCheckNum2 = Convert.ToInt32(dataRow["MBVD Check Number Two"].ToString()),
-                    MBVDOrderDateTwo = DBNull.Value.Equals(dataRow["MBVD Order Date Two"]) ? (DateTime?)null : Convert.ToDateTime(dataRow["MBVD Order Date Two"].ToString()),
+                    MBVDOrderDateTwo = DBNull.Value.Equals(dataRow["MBVD Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["MBVD Order Date Two"].ToString()),
                     MBVDCheck2Disposition = dataRow["MBVD Check Two Disposition"].ToString(),
 
                     MBVDCheckNum3 = Convert.ToInt32(dataRow["MBVD Check Number Three"].ToString()),
-                    MBVDOrderDateThree = DBNull.Value.Equals(dataRow["MBVD Order Date Three"]) ? (DateTime?)null : Convert.ToDateTime(dataRow["MBVD Order Date Three"].ToString()),
+                    MBVDOrderDateThree = DBNull.Value.Equals(dataRow["MBVD Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["MBVD Order Date Three"].ToString()),
                     MBVDCheck3Disposition = dataRow["MBVD Check Three Disposition"].ToString()
 
                     // Supporting documents
@@ -111,8 +170,10 @@ namespace OPIDDaily.Utils
                     SDCheckNum33 = Convert.ToInt32(dataRow["SD Check Number 3, Three"].ToString()),
                     SDCheckDisposition33 = dataRow["SD Check Disposition No 3, Three"].ToString()
                     */
-                }).ToList(); 
+                }).ToList();
 
+                InsertNulls(resRows);
+ 
                 return resRows;
             }
             catch (Exception e)

@@ -23,6 +23,31 @@ namespace OPIDDaily.DAL
             };
         }
 
+        private static VisitViewModel RCheckToVisitViewModel(RCheck rcheck)
+        {
+            DateTime? rdate = rcheck.Date;
+            DateTime date;
+
+            if (rdate == null)
+            {
+                date = new DateTime(1900, 1, 1);
+            }
+            else
+            {
+                date = (DateTime)rdate;
+            }
+
+            return new VisitViewModel
+            {
+                Id = rcheck.Id,
+                Date = date,
+                Item = rcheck.Service,
+                Check = rcheck.Num.ToString(),
+                Status = rcheck.Disposition,
+                Notes = string.Empty
+            };
+        }
+
         private static Visit VisitViewModelToVisit(VisitViewModel vvm)
         {
             return new Visit
@@ -35,7 +60,7 @@ namespace OPIDDaily.DAL
             };
         }
 
-        public static List<VisitViewModel> GetVisits(int nowServing)
+        public static bool HasVisits(int nowServing)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
@@ -45,11 +70,36 @@ namespace OPIDDaily.DAL
                 {
                     opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
 
+                    return client.Visits.Count > 0;
+                }
+
+                return false;
+            }
+        }
+
+        public static List<VisitViewModel> GetVisits(int nowServing)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Where(c => c.Id == nowServing).FirstOrDefault();
+                DateTime DOB = client.DOB;
+                string lastName = client.LastName;
+
+                if (client != null)
+                {
+                    List<RCheck> rchecks = opiddailycontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.StartsWith(lastName)).ToList();
+                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+
                     List<VisitViewModel> visits = new List<VisitViewModel>();
 
                     foreach (Visit visit in client.Visits)
                     {
                         visits.Add(VisitToVisitViewModel(visit));
+                    }
+
+                    foreach (RCheck rcheck in rchecks)
+                    {
+                        visits.Add(RCheckToVisitViewModel(rcheck));
                     }
 
                     // Make sure that visits are listed by ascending referral date

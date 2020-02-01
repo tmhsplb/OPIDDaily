@@ -202,5 +202,10 @@ namespace OPIDDaily.Controllers
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClientOverflowVoucher", objTuple);
         }
+
+        public ActionResult ResearchTable()
+        {
+            return View();
+        }
     }
 }

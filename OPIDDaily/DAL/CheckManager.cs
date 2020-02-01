@@ -273,7 +273,7 @@ namespace OPIDDaily.DAL
                 */
 
                 // Slow down adding of checks to the Research Table a little bit so we can see the progress bar
-                Thread.Sleep(100);
+                //Thread.Sleep(100);
 
                 i += 1;
                 DailyHub.SendProgress("Adding checks to Research Table...", i, checkCount);
@@ -342,8 +342,6 @@ namespace OPIDDaily.DAL
             }
             catch (Exception e)
             {
-                int z;
-                z = 2;
             }
         }
 
@@ -398,6 +396,21 @@ namespace OPIDDaily.DAL
             }
 
             return researchChecks;
+        }
+
+        public static bool HasHistory(Client client)
+        {
+            DateTime DOB = client.DOB;
+            string lastName = client.LastName;
+
+            List<Check> researchChecks = new List<Check>();
+
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                List<RCheck> rchecks = opidcontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.StartsWith(lastName)).ToList();
+
+                return rchecks.Count > 0; 
+            }
         }
 
         public static void ResolveResearchChecks()
