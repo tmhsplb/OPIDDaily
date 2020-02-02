@@ -22,8 +22,6 @@ namespace OPIDDaily.Models
 
         public string Disposition { get; set; }
 
-        public string Amount { get; set; }
-
         public int RecordID { get; set; }
 
         public int InterviewRecordID { get; set; }

@@ -18,6 +18,14 @@ namespace OPIDDaily.DAL
                     UpdateResearchTableFromOpidDailyFile(uploadedFile);
                     break;
 
+                case "BirthCertificates":
+                    UpdateResearchTableFromBirthCertificatesFile(uploadedFile);
+                    break;
+
+                case "IDs":
+                    UpdateResearchTableFromIDsFile(uploadedFile);
+                    break;
+
                 case "VoidedChecks":
                     UpdateResearchTableFromExcelChecksFile(uploadedFile, "Voided");
                     break;
@@ -136,6 +144,22 @@ namespace OPIDDaily.DAL
             CheckManager.PersistResearchChecks(researchRows);
             //  PLB 12/14/2018 Don't call RemoveTypoChecks
             // CheckManager.RemoveTypoChecks();
+        }
+
+        public static void UpdateResearchTableFromBirthCertificatesFile(string uploadedFile)
+        {
+            List<DispositionRow> birthCertificateRows = CheckManager.GetBirthCertificateRows(uploadedFile);
+
+            CheckManager.Init();            
+            CheckManager.PersistResearchChecks(birthCertificateRows);
+        }
+
+        public static void UpdateResearchTableFromIDsFile(string uploadedFile)
+        {
+            List<DispositionRow> birthCertificateRows = CheckManager.GetIDRows(uploadedFile);
+
+            CheckManager.Init();
+            CheckManager.PersistResearchChecks(birthCertificateRows);
         }
 
         public static void UpdateResearchTableFromExcelChecksFile(string uploadedFile, string disposition)

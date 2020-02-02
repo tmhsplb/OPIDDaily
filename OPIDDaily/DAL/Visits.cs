@@ -83,11 +83,11 @@ namespace OPIDDaily.DAL
             {
                 Client client = opiddailycontext.Clients.Where(c => c.Id == nowServing).FirstOrDefault();
                 DateTime DOB = client.DOB;
-                string lastName = client.LastName;
+                string lastName = client.LastName.ToUpper();
 
                 if (client != null)
                 {
-                    List<RCheck> rchecks = opiddailycontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.StartsWith(lastName)).ToList();
+                    List<RCheck> rchecks = opiddailycontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.ToUpper().StartsWith(lastName)).ToList();
                     opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
 
                     List<VisitViewModel> visits = new List<VisitViewModel>();

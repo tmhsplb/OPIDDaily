@@ -48,6 +48,60 @@ namespace OPIDDaily.Controllers
         }
 
         [HttpPost]
+        public ActionResult UploadBirthCertificatesFile(FileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var postedFile = Request.Files["File"];
+
+                string fname = postedFile.FileName;
+
+                if (!fname.EndsWith("xlsx"))
+                {
+                    ModelState.AddModelError("BirthCertificatesError", "This is not an Excel xlsx file.");
+                    return View("Merge", model);
+                }
+
+                List<string> docfiles = FileUploader.UploadFile(postedFile);
+                TempData["UploadedFile"] = fname;
+                TempData["FileType"] = "BirthCertificates";
+                ViewData["UploadedBirthCertificatesFile"] = string.Format("Uploaded File: {0}", fname);
+
+                return View("Merge", model);
+            }
+
+            ModelState.AddModelError("BirthCertificatesError", "Please supply a file name.");
+            return View("Merge", model);
+        }
+
+        [HttpPost]
+        public ActionResult UploadIDsFile(FileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var postedFile = Request.Files["File"];
+
+                string fname = postedFile.FileName;
+
+                if (!fname.EndsWith("xlsx"))
+                {
+                    ModelState.AddModelError("IDsError", "This is not an Excel xlsx file.");
+                    return View("Merge", model);
+                }
+
+                List<string> docfiles = FileUploader.UploadFile(postedFile);
+                TempData["UploadedFile"] = fname;
+                TempData["FileType"] = "IDs";
+                ViewData["UploadedIDsFile"] = string.Format("Uploaded File: {0}", fname);
+
+                return View("Merge", model);
+            }
+
+            ModelState.AddModelError("IDsError", "Please supply a file name.");
+            return View("Merge", model);
+        }
+
+        [HttpPost]
         public ActionResult UploadVoidedChecksFile(FileViewModel model)
         {
             if (ModelState.IsValid)
