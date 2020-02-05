@@ -17,7 +17,7 @@ namespace OPIDDaily.DataContexts.OPIDDailyMigrations
                         InterviewRecordID = c.Int(nullable: false),
                         sInterviewRecordID = c.String(),
                         Name = c.String(),
-                        DOB = c.DateTime(),
+                        DOB = c.DateTime(nullable: false),
                         sDOB = c.String(),
                         Num = c.Int(nullable: false),
                         sNum = c.String(),

@@ -55,16 +55,17 @@ namespace OPIDDaily.DAL
             var csv = new StringBuilder();
 
             // N.B. No spaces between column names in the header row!
-            string header = "Date,Record ID,Interview Record ID,Name,Check Number,Service,Disposition";
+            string header = "Date,Record ID,Interview Record ID,Name,DOB,Check Number,Service,Disposition";
             csv.AppendLine(header);
 
             foreach (CheckViewModel check in checks)
             {
-                string csvrow = string.Format("{0},{1},{2},{3},{4},{5},{6}",
+                string csvrow = string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
                     check.Date,
                     check.RecordID,
                     check.InterviewRecordID,
                     string.Format("\"{0}\"", check.Name),
+                    check.DOB.ToString("MM/dd/yyyy"),
                     check.Num,
                     check.Service,
                     check.Disposition);

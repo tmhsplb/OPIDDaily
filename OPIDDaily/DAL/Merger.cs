@@ -15,9 +15,10 @@ namespace OPIDDaily.DAL
             switch (fileType)
             {
                 case "OPIDDaily":
+                case "BoundedResearchTableFile":
                     UpdateResearchTableFromOpidDailyFile(uploadedFile);
                     break;
-
+                /*
                 case "BirthCertificates":
                     UpdateResearchTableFromBirthCertificatesFile(uploadedFile);
                     break;
@@ -25,6 +26,7 @@ namespace OPIDDaily.DAL
                 case "IDs":
                     UpdateResearchTableFromIDsFile(uploadedFile);
                     break;
+                */
 
                 case "VoidedChecks":
                     UpdateResearchTableFromExcelChecksFile(uploadedFile, "Voided");
@@ -146,6 +148,7 @@ namespace OPIDDaily.DAL
             // CheckManager.RemoveTypoChecks();
         }
 
+        /*
         public static void UpdateResearchTableFromBirthCertificatesFile(string uploadedFile)
         {
             List<DispositionRow> birthCertificateRows = CheckManager.GetBirthCertificateRows(uploadedFile);
@@ -161,6 +164,7 @@ namespace OPIDDaily.DAL
             CheckManager.Init();
             CheckManager.PersistResearchChecks(birthCertificateRows);
         }
+        */
 
         public static void UpdateResearchTableFromExcelChecksFile(string uploadedFile, string disposition)
         {

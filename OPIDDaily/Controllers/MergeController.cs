@@ -48,6 +48,34 @@ namespace OPIDDaily.Controllers
         }
 
         [HttpPost]
+        public ActionResult UploadBoundedResearchTableFile(FileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var postedFile = Request.Files["File"];
+
+                string fname = postedFile.FileName;
+
+                if (!fname.EndsWith("xlsx"))
+                {
+                    ModelState.AddModelError("OPIDDailyError", "This is not an Excel xlsx file.");
+                    return View("Merge", model);
+                }
+
+                List<string> docfiles = FileUploader.UploadFile(postedFile);
+                TempData["UploadedFile"] = fname;
+                TempData["FileType"] = "BoundedResearchTableFile";
+                ViewData["UploadedBoundedResearchTableFile"] = string.Format("Uploaded File: {0}", fname);
+
+                return View("Merge", model);
+            }
+
+            ModelState.AddModelError("BoundedResearchTableFileError", "Please supply a file name.");
+            return View("Merge", model);
+        }
+
+        /*
+        [HttpPost]
         public ActionResult UploadBirthCertificatesFile(FileViewModel model)
         {
             if (ModelState.IsValid)
@@ -100,6 +128,7 @@ namespace OPIDDaily.Controllers
             ModelState.AddModelError("IDsError", "Please supply a file name.");
             return View("Merge", model);
         }
+        */
 
         [HttpPost]
         public ActionResult UploadVoidedChecksFile(FileViewModel model)

@@ -9,23 +9,52 @@ namespace OPIDDaily.Utils
 {
     public class MyExcelDataReader
     {
-        public static List<CheckViewModel> GetCVMS(string filePath)
+        private static CheckViewModel NewCheckViewModel(System.Data.DataRow dataRow)
         {
-            List<CheckViewModel> rchecks = new ExcelData(filePath).GetData().Select(dataRow => new CheckViewModel
+            try
             {
-                Date = Convert.ToDateTime(dataRow["Date"].ToString()), //dataRow["Date"].ToString(),
-                sDate = Convert.ToDateTime(dataRow["Date"].ToString()).ToString("MM/dd/yyyy"),
-                RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
-                sRecordID = dataRow["Record ID"].ToString(),
-                InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
-                sInterviewRecordID = dataRow["Interview Record ID"].ToString(),
-                Name = dataRow["Name"].ToString(),
-                Num = Convert.ToInt32(dataRow["Check Number"].ToString()),
-                sNum = dataRow["Check Number"].ToString(),
-                Service = dataRow["Service"].ToString(),
-                Disposition = dataRow["Disposition"].ToString()
-            }).ToList();
+               // string epoch = "01/01/1900"; // Use this in place of a null value, because I couldn't make null work
+               
+                CheckViewModel cvm = new CheckViewModel
+                {
+                   // Date = Convert.ToDateTime(dataRow["Date"].ToString()), //dataRow["Date"].ToString(),
+                    Date = DBNull.Value.Equals(dataRow["Date"]) ? string.Empty : dataRow["Date"].ToString(),
+                    sDate = Convert.ToDateTime(dataRow["Date"].ToString()).ToString("MM/dd/yyyy"),
+                    RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
+                    sRecordID = dataRow["Record ID"].ToString(),
+                    InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
+                    sInterviewRecordID = dataRow["Interview Record ID"].ToString(),
+                    Name = dataRow["Name"].ToString(),
+                    DOB = Convert.ToDateTime(dataRow["DOB"]),
+                    Num = Convert.ToInt32(dataRow["Check Number"].ToString()),
+                    sNum = dataRow["Check Number"].ToString(),
+                    Service = dataRow["Service"].ToString(),
+                    Disposition = dataRow["Disposition"].ToString()
+                };
 
+                /*
+                DateTime epochAsDateTime = new DateTime(1900, 1, 1);
+                DateTime dt;
+
+                dt = (DateTime)cvm.Date;
+                if (dt.CompareTo(epochAsDateTime) == 0)
+                {
+                    cvm.Date= null;
+                }
+                */
+                return cvm;
+            }
+            catch (Exception e)
+            {
+                // log the dataRow that failed
+                return null;
+            }
+        }
+
+        public static List<CheckViewModel> GetCVMS(string filePath)
+        {      
+            List<CheckViewModel> rchecks = new ExcelData(filePath).GetData().Select(dataRow => NewCheckViewModel(dataRow)).ToList();
+         //   List<DispositionRow> dispositionRows = new ExcelData(filePath).GetData().Select(dataRow => NewDispositionRow(dataRow, epoch)).ToList();
             return rchecks;
         }
 
@@ -86,13 +115,11 @@ namespace OPIDDaily.Utils
             }
         }
 
-        public static List<DispositionRow> GetResearchRows(string filePath)
+        private static DispositionRow NewDispositionRow(System.Data.DataRow dataRow, string epoch)
         {
-            string epoch = "01/01/1900"; // Use this in place of a null value, becuase I couldn't make null work
-           
             try
             {
-                List<DispositionRow> resRows = new ExcelData(filePath).GetData().Select(dataRow => new DispositionRow
+                DispositionRow dr = new DispositionRow
                 {
                     RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
                     InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
@@ -107,18 +134,18 @@ namespace OPIDDaily.Utils
                     LBVDOrderDateTwo = DBNull.Value.Equals(dataRow["LBVD Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["LBVD Order Date Two"].ToString()),
                     LBVDCheckNum2 = Convert.ToInt32(dataRow["LBVD Check Number Two"].ToString()),
                     LBVDCheck2Disposition = dataRow["LBVD Check Two Disposition"].ToString(),
-                                       
+
                     LBVDOrderDateThree = DBNull.Value.Equals(dataRow["LBVD Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["LBVD Order Date Three"].ToString()),
                     LBVDCheckNum3 = Convert.ToInt32(dataRow["LBVD Check Number Three"].ToString()),
                     LBVDCheck3Disposition = dataRow["LBVD Check Three Disposition"].ToString(),
-                    
+
                     TIDCheckNum = Convert.ToInt32(dataRow["TID Check Number"].ToString()),
                     TIDCheckDisposition = dataRow["TID Check Disposition"].ToString(),
-  
+
                     TIDOrderDateTwo = DBNull.Value.Equals(dataRow["TID Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TID Order Date Two"].ToString()),
                     TIDCheckNum2 = Convert.ToInt32(dataRow["TID Check Number Two"].ToString()),
                     TIDCheck2Disposition = dataRow["TID Check Two Disposition"].ToString(),
-                   
+
                     TIDOrderDateThree = DBNull.Value.Equals(dataRow["TID Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TID Order Date Three"].ToString()),
                     TIDCheckNum3 = Convert.ToInt32(dataRow["TID Check Number Three"].ToString()),
                     TIDCheck3Disposition = dataRow["TID Check Three Disposition"].ToString(),
@@ -136,7 +163,7 @@ namespace OPIDDaily.Utils
 
                     MBVDCheckNum = Convert.ToInt32(dataRow["MBVD Check Number"].ToString()),
                     MBVDCheckDisposition = dataRow["MBVD Check Disposition"].ToString(),
-                                      
+
                     MBVDOrderDateTwo = DBNull.Value.Equals(dataRow["MBVD Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["MBVD Order Date Two"].ToString()),
                     MBVDCheckNum2 = Convert.ToInt32(dataRow["MBVD Check Number Two"].ToString()),
                     MBVDCheck2Disposition = dataRow["MBVD Check Two Disposition"].ToString(),
@@ -170,18 +197,27 @@ namespace OPIDDaily.Utils
                     SDCheckNum33 = Convert.ToInt32(dataRow["SD Check Number 3, Three"].ToString()),
                     SDCheckDisposition33 = dataRow["SD Check Disposition No 3, Three"].ToString()
                     */
-                }).ToList();
+                };
 
-                InsertNulls(resRows);
- 
-                return resRows;
+                return dr;
             }
             catch (Exception e)
             {
+                // log the dataRow that failed
                 return null;
-            }
+            }           
         }
 
+        public static List<DispositionRow> GetResearchRows(string filePath)
+        {
+            string epoch = "01/01/1900"; // Use this in place of a null value, because I couldn't make null work
+            List<DispositionRow> dispositionRows = new ExcelData(filePath).GetData().Select(dataRow => NewDispositionRow(dataRow, epoch)).ToList();
+
+            InsertNulls(dispositionRows);
+            return dispositionRows;
+        }
+
+        /*
         public static List<DispositionRow> GetBirthCertificateRows(string filePath)
         {
             string epoch = "01/01/1900"; // Use this in place of a null value, becuase I couldn't make null work
@@ -278,7 +314,8 @@ namespace OPIDDaily.Utils
                 return null;
             }
         }
-        
+        */
+
         private static DateTime GetDateValue(System.Data.DataRow row)
         {
             string dvalue;

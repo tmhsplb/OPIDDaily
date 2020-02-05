@@ -13,7 +13,7 @@ namespace OpidDailyEntities
         public int InterviewRecordID { get; set; }
         public string sInterviewRecordID { get; set; }
         public string Name { get; set; }
-        public DateTime? DOB { get; set; }
+        public DateTime DOB { get; set; }
         public string sDOB { get; set; }
         public int Num { get; set; }
         public string sNum { get; set; }

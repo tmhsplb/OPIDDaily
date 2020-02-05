@@ -23,25 +23,25 @@ namespace OPIDDaily.DAL
     public class CheckManager
     {
         private static bool firstCall = true;
-        private static List<int> incidentals;
+      //  private static List<int> incidentals;
 
         private static List<Check> newResearchChecks;
         private static List<CheckViewModel> resolvedChecks;
         private static List<int> mistakenlyResolved;
-        private static List<Check> typoChecks;
+       // private static List<Check> typoChecks;
 
         public static void Init()
         {
             if (firstCall)
             {
-                typoChecks = new List<Check>();
+             //   typoChecks = new List<Check>();
                 resolvedChecks = new List<CheckViewModel>();
                 mistakenlyResolved = new List<int>();
                 firstCall = false;
             }
 
             newResearchChecks = new List<Check>();
-            incidentals = new List<int>();
+          //  incidentals = new List<int>();
         }
 
         public static IQueryable<CheckViewModel> GetResolvedChecksAsQueryable()
@@ -273,7 +273,7 @@ namespace OPIDDaily.DAL
                 */
 
                 // Slow down adding of checks to the Research Table a little bit so we can see the progress bar
-                //Thread.Sleep(100);
+               // Thread.Sleep(10);
 
                 i += 1;
                 DailyHub.SendProgress("Adding checks to Research Table...", i, checkCount);
@@ -284,64 +284,77 @@ namespace OPIDDaily.DAL
 
         private static void AppendToResearchChecks(List<Check> checks)
         {
+            bool saveIndividualChecks = false;
+            RCheck problemCheck;
+
             try
-            {
+            { 
                 using (OpidDailyDB opidcontext = new OpidDailyDB())
                 {
                     foreach (Check check in checks)
                     {
-                        RCheck existing = opidcontext.RChecks.Where(u => u.Num == check.Num).FirstOrDefault();
-
-                        if (existing == null) 
+                        if (check.Num > 0)  // Don't process "empty" checks. This applies to checks before record keeping of check numbers started.
                         {
-                            DateTime checkDate = new DateTime(1900, 1, 1);
-                            DateTime checkDOB = new DateTime(1900, 1, 1);
+                            RCheck existing = opidcontext.RChecks.Where(u => u.Num == check.Num).FirstOrDefault();
 
-                            if (check.Date != null)
+                            if (existing == null)
                             {
-                                checkDate = (DateTime)check.Date;
+                                DateTime checkDate = new DateTime(1900, 1, 1);
+
+                                if (check.Date != null)
+                                {
+                                    checkDate = (DateTime)check.Date;
+                                }
+
+                                RCheck rcheck = new RCheck
+                                {
+                                    RecordID = check.RecordID,
+                                    sRecordID = check.RecordID.ToString(),
+                                    InterviewRecordID = check.InterviewRecordID,
+                                    sInterviewRecordID = check.InterviewRecordID.ToString(),
+                                    Num = check.Num,
+                                    sNum = check.Num.ToString(),
+                                    Name = check.Name,
+                                    DOB = check.DOB,
+                                    sDOB = check.DOB.ToString("MM/dd/yyyy"),
+                                    Date = check.Date,
+                                    sDate = (check.Date == null ? string.Empty : checkDate.ToString("MM/dd/yyyy")),
+                                    Service = check.Service,
+                                    Disposition = check.Disposition,
+                                };
+
+                                opidcontext.RChecks.Add(rcheck);
+
+                                if (saveIndividualChecks)
+                                {
+                                    // Only save individual checks if trying to isolate a check saving problem
+                                    problemCheck = rcheck;
+                                    opidcontext.SaveChanges();
+                                }
                             }
-
-                            if (check.DOB != null)
+                            else if (!string.IsNullOrEmpty(check.Disposition))
                             {
-                                checkDOB = (DateTime)check.DOB;
+                                // The existing check may have its disposition
+                                // changed to, for example, Voided/Replaced.
+                                // If a file of voided checks contains a check with number existing.Num
+                                // then this change of disposition will protect this check from having its status
+                                // in Apricot changed from Voided/Replaced to Voided
+                                existing.Disposition = check.Disposition;
                             }
-
-                            RCheck rcheck = new RCheck
-                            {
-                                RecordID = check.RecordID,
-                                sRecordID = check.RecordID.ToString(),
-                                InterviewRecordID = check.InterviewRecordID,
-                                sInterviewRecordID = check.InterviewRecordID.ToString(),
-                                Num = check.Num,
-                                sNum = check.Num.ToString(),
-                                Name = check.Name,
-                                DOB = check.DOB,
-                                sDOB = (check.DOB == null ? string.Empty : checkDOB.ToString("MM/dd/yyyy")),
-                                Date = check.Date,
-                                sDate = (check.Date == null ? string.Empty : checkDate.ToString("MM/dd/yyyy")),
-                                Service = check.Service,
-                                Disposition = check.Disposition,
-                            };
-
-                            opidcontext.RChecks.Add(rcheck);
-                        }
-                        else if (!string.IsNullOrEmpty(check.Disposition))
-                        {
-                            // The existing check may have its disposition
-                            // changed to, for example, Voided/Replaced.
-                            // If a file of voided checks contains a check with number existing.Num
-                            // then this change of disposition will protect this check from having its status
-                            // in Apricot changed from Voided/Replaced to Voided
-                            existing.Disposition = check.Disposition;
                         }
                     }
 
-                    opidcontext.SaveChanges();
+                    if (!saveIndividualChecks)
+                    {
+                        opidcontext.SaveChanges();
+                    }
                 }
             }
             catch (Exception e)
             {
+                // Check the value of problemCheck;
+                int z;
+                z = 2;
             }
         }
 
@@ -362,7 +375,9 @@ namespace OPIDDaily.DAL
                         InterviewRecordID = rc.InterviewRecordID,
                         Num = rc.Num,
                         Name = rc.Name,
-                        Date = rc.Date, //rc.Date.ToShortDateString(),
+                        DOB = rc.DOB,
+                       // Date = rc.Date, 
+                        Date = string.IsNullOrEmpty(rc.Date.ToString()) ? string.Empty : ((DateTime)rc.Date).ToShortDateString(),
                         Service = rc.Service,
                         Disposition = rc.Disposition
                     });
@@ -479,22 +494,42 @@ namespace OPIDDaily.DAL
 
                 if (checks.Count() == 0) // Is the table empty for rebuild?
                 {
-                    foreach (CheckViewModel rc in rChecks)
+                    DateTime epoch = new DateTime(1900, 1, 1);
+
+                    foreach (CheckViewModel cvm in rChecks)
                     {
-                        checks.Add(new RCheck
+                        try
                         {
-                            RecordID = rc.RecordID,
-                            sRecordID = rc.sRecordID,
-                            InterviewRecordID = rc.InterviewRecordID,
-                            sInterviewRecordID = rc.sInterviewRecordID,
-                            Num = rc.Num,
-                            sNum = rc.sNum,
-                            Name = rc.Name,
-                            Date = Convert.ToDateTime(rc.Date),
-                            sDate = Convert.ToDateTime(rc.Date).ToString("MM/dd/yyyy"),
-                            Service = rc.Service,
-                            Disposition = rc.Disposition
-                        });
+                            RCheck rcheck = new RCheck
+                            {
+                                RecordID = cvm.RecordID,
+                                sRecordID = cvm.sRecordID,
+                                InterviewRecordID = cvm.InterviewRecordID,
+                                sInterviewRecordID = cvm.sInterviewRecordID,
+                               
+                                Num = cvm.Num,
+                                sNum = cvm.sNum,
+                                Name = cvm.Name,
+                                DOB = cvm.DOB,
+                                sDOB = cvm.DOB.ToString("MM/dd/yyyy"),
+                                Date = string.IsNullOrEmpty(cvm.Date) ? epoch : Convert.ToDateTime(cvm.Date),
+                                sDate = string.IsNullOrEmpty(cvm.Date) ? string.Empty : cvm.Date,
+                                Service = cvm.Service,
+                                Disposition = cvm.Disposition
+                            };
+
+                            if (string.IsNullOrEmpty(rcheck.sDate))
+                            {
+                                rcheck.Date = null;
+                            }
+
+                            checks.Add(rcheck);
+                        }
+                        catch (Exception e)
+                        {
+                            int z;
+                            z = 2;
+                        }
 
                         i += 1;
                         DailyHub.SendProgress("Restore in progress...", i, checkCount);
@@ -514,6 +549,7 @@ namespace OPIDDaily.DAL
             return resRows;
         }
 
+        /*
         public static List<DispositionRow> GetBirthCertificateRows(string uploadedFileName)
         {
             // string pathToResearchReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", uploadedFileName));
@@ -529,6 +565,7 @@ namespace OPIDDaily.DAL
             List<DispositionRow> resRows = MyExcelDataReader.GetIDRows(uploadedFileName);
             return resRows;
         }
+        */
 
         public static List<Check> GetExcelChecks(string uploadedFileName, string disposition)
         {
@@ -575,7 +612,7 @@ namespace OPIDDaily.DAL
                     Name = check.Name,
                     Num = check.Num,
                     sNum = check.Num.ToString(),
-                    Date = check.Date,
+                    Date = ((DateTime)check.Date).ToShortDateString(),
                     sDate = (check.Date == null ? "" : checkDate.ToString("MM/dd/yyyy")),
                     Service = check.Service,
                     Disposition = disposition

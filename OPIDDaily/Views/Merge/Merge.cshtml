@@ -43,8 +43,38 @@
     <br /><br /><br />
 
                 <fieldset>
-                    <legend>Rebuild Research Table Files</legend>
+                    <legend>Bounded Research Table File</legend>
 
+                    @using (Html.BeginForm("UploadBoundedResearchTableFile", "Merge", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                    {
+                        // Idea for
+                        //   TextxboxFor(m => m.File, new { type = "file"})
+                        // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationMessage("BoundedResearchTableFileError", new { @class = "text-danger" })
+
+                        <table style="width:100%;">
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(m => m.File, new { type = "file" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="submit" value="Upload" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @ViewData["UploadedBoundedResearchTableFile"]
+                                </td>
+                            </tr>
+                        </table>
+                    }
+
+                    @*
                     @using (Html.BeginForm("UploadBirthCertificatesFile", "Merge", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
                     {
                         // Idea for
@@ -106,6 +136,7 @@
                             </tr>
                         </table>
                     }
+                        *@
                 </fieldset>
 
     <br/><br/><br/>
