@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - OPID Daily</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/DataTables/css")
+
     @Scripts.Render("~/bundles/modernizr")
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/mvc5datatables")
     @RenderSection("scripts", required: false)
 
     <style>
@@ -34,11 +37,13 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Home", "Superadmin")</li>
+                    <li>@Html.ActionLink("Merge", "Merge", "Merge")</li>
                     <li>@Html.ActionLink("Users", "ManageUsers", "Users")</li>
                     <li>@Html.ActionLink("Roles", "ManageRoles", "Role")</li>
                     <li>@Html.ActionLink("Agencies", "ManageAgencies", "Agency")</li>
                     <li>@Html.ActionLink("Clients", "ManageServiceDateClients", "Superadmin")</li>
                     <li>@Html.ActionLink("History", "History", "Superadmin")</li>
+                    <li>@Html.ActionLink("Research Table", "ResearchTable", "ResearchTable")</li>
                     <li>@Html.ActionLink("Review", "ServiceDateReview", "Superadmin")</li>
                     <li>@Html.ActionLink("Version", "Version", "Superadmin")</li>
                 </ul>

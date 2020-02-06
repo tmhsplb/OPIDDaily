@@ -1,0 +1,71 @@
+﻿@*MODAL PROGRESS BAR*@
+<div class="modal fade in" id="mod-progress" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="i-circle warning"><i class="fa fa-info"></i></div>
+                    <div id="result" style="font-size: 1.1em; padding-bottom: 5px">
+                        <p id="progressBarParagraph"></p>
+                    </div>
+                    <div style="width: 30%; margin: 0 auto; display:none;">
+                        <div id="progressbar" style="width: 300px; height: 15px"></div>
+                        <br />
+                    </div>
+                    <div id="ProgressStripe" class="progress progress-striped active" style="position:relative; top:10px; width:100%;">
+                        <div id="ProgressMessage" class="progress-bar progress-bar-info" style="width: 100%; border:none;"></div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Helper.js")"></script>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.signalR-2.4.1.min.js")"></script>
+
+<script type="text/javascript" src="~/signalr/hubs"></script>
+
+<script>
+    $(function () {
+
+        // Reference the auto-generated proxy for the hub.
+        var progress = $.connection.dailyHub;
+        // alert(progress);
+
+        // Create a function that the hub can call back to display messages.
+        progress.client.addProgress = function (message, percentage) {
+            //at this point server side has sent message and percentage back to the client
+            //and then we handle progress bar any way we want it
+
+            //Using a function in Helper.js file we show modal and display text and percentage
+            ProgressBarModal("show", message + " " + percentage);
+
+            //We're filling blue progress indicator by setting the width property to the variable
+            //that was returned from the server
+            $('#ProgressMessage').width(percentage);
+
+            //closing modal when the progress gets to 100%
+            if (percentage == "100%") {
+                ProgressBarModal();
+            }
+        };
+
+        //Before doing anything with our hub we must start it
+        $.connection.hub.start().done(function () {
+
+            //getting the connection ID in case you want to display progress to the specific user
+            //that started the process in the first place.
+            var connectionId = $.connection.hub.id;
+            /*  alert("connection id = " + connectionId); */
+        });
+
+    });
+</script>

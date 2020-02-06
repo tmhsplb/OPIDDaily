@@ -1,0 +1,1 @@
+﻿This is a dummy file. It forces the Downloads folder to be built at AppHarbor.
