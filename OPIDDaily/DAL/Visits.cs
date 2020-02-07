@@ -40,7 +40,7 @@ namespace OPIDDaily.DAL
             return new VisitViewModel
             {
                 Id = rcheck.Id,
-                Date = date,
+                Date = date.AddHours(12),  // make the time be 12 noon
                 Item = rcheck.Service,
                 Check = rcheck.Num.ToString(),
                 Status = rcheck.Disposition,
