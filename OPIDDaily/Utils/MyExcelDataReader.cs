@@ -13,11 +13,8 @@ namespace OPIDDaily.Utils
         {
             try
             {
-               // string epoch = "01/01/1900"; // Use this in place of a null value, because I couldn't make null work
-               
                 CheckViewModel cvm = new CheckViewModel
                 {
-                   // Date = Convert.ToDateTime(dataRow["Date"].ToString()), //dataRow["Date"].ToString(),
                     Date = DBNull.Value.Equals(dataRow["Date"]) ? string.Empty : dataRow["Date"].ToString(),
                     sDate = Convert.ToDateTime(dataRow["Date"].ToString()).ToString("MM/dd/yyyy"),
                     RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
@@ -32,16 +29,6 @@ namespace OPIDDaily.Utils
                     Disposition = dataRow["Disposition"].ToString()
                 };
 
-                /*
-                DateTime epochAsDateTime = new DateTime(1900, 1, 1);
-                DateTime dt;
-
-                dt = (DateTime)cvm.Date;
-                if (dt.CompareTo(epochAsDateTime) == 0)
-                {
-                    cvm.Date= null;
-                }
-                */
                 return cvm;
             }
             catch (Exception e)

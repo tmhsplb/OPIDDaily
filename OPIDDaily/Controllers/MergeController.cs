@@ -1,14 +1,16 @@
 ﻿using OPIDDaily.Models;
+using DataTables.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
 using OPIDDaily.DAL;
 
 namespace OPIDDaily.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(Roles = "BackOffice")]
     public class MergeController : Controller
     {
 
@@ -73,62 +75,6 @@ namespace OPIDDaily.Controllers
             ModelState.AddModelError("BoundedResearchTableFileError", "Please supply a file name.");
             return View("Merge", model);
         }
-
-        /*
-        [HttpPost]
-        public ActionResult UploadBirthCertificatesFile(FileViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var postedFile = Request.Files["File"];
-
-                string fname = postedFile.FileName;
-
-                if (!fname.EndsWith("xlsx"))
-                {
-                    ModelState.AddModelError("BirthCertificatesError", "This is not an Excel xlsx file.");
-                    return View("Merge", model);
-                }
-
-                List<string> docfiles = FileUploader.UploadFile(postedFile);
-                TempData["UploadedFile"] = fname;
-                TempData["FileType"] = "BirthCertificates";
-                ViewData["UploadedBirthCertificatesFile"] = string.Format("Uploaded File: {0}", fname);
-
-                return View("Merge", model);
-            }
-
-            ModelState.AddModelError("BirthCertificatesError", "Please supply a file name.");
-            return View("Merge", model);
-        }
-
-        [HttpPost]
-        public ActionResult UploadIDsFile(FileViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var postedFile = Request.Files["File"];
-
-                string fname = postedFile.FileName;
-
-                if (!fname.EndsWith("xlsx"))
-                {
-                    ModelState.AddModelError("IDsError", "This is not an Excel xlsx file.");
-                    return View("Merge", model);
-                }
-
-                List<string> docfiles = FileUploader.UploadFile(postedFile);
-                TempData["UploadedFile"] = fname;
-                TempData["FileType"] = "IDs";
-                ViewData["UploadedIDsFile"] = string.Format("Uploaded File: {0}", fname);
-
-                return View("Merge", model);
-            }
-
-            ModelState.AddModelError("IDsError", "Please supply a file name.");
-            return View("Merge", model);
-        }
-        */
 
         [HttpPost]
         public ActionResult UploadVoidedChecksFile(FileViewModel model)
@@ -204,6 +150,52 @@ namespace OPIDDaily.Controllers
 
             ViewData["MergeStatus"] = "Merge Complete";
             return View("Merge");
+        }
+
+        public ActionResult Resolved()
+        {
+            return View();
+        }
+
+        public JsonResult GetResolvedChecks([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
+        {
+            IQueryable<CheckViewModel> query = CheckManager.GetResolvedChecksAsQueryable();
+            var totalCount = query.Count();
+
+            // Apply filters for searching
+            if (requestModel.Search.Value != string.Empty)
+            {
+                var value = requestModel.Search.Value.Trim();
+                query = query.Where(p => p.Name.Contains(value) ||
+                                         p.sRecordID.Contains(value) ||
+                                         p.sInterviewRecordID.Contains(value) ||
+                                         p.sNum.Contains(value) ||
+                                         p.sDate.Contains(value) ||
+                                         p.Service.Contains(value) ||
+                                         p.Disposition.Contains(value)
+                                   );
+            }
+
+            var filteredCount = query.Count();
+
+            query = query.OrderBy("Name asc");
+
+            // Paging
+            query = query.Skip(requestModel.Start).Take(requestModel.Length);
+
+            var data = query.Select(rcheck => new
+            {
+                sRecordID = rcheck.sRecordID,
+                sInterviewRecordID = rcheck.sInterviewRecordID,
+                Name = rcheck.Name,
+                sNum = rcheck.sNum,
+                //  Date = rcheck.Date,
+                sDate = rcheck.sDate,
+                Service = rcheck.Service,
+                Disposition = rcheck.Disposition
+            }).ToList();
+
+            return Json(new DataTablesResponse(requestModel.Draw, data, filteredCount, totalCount), JsonRequestBehavior.AllowGet);
         }
     }
 }

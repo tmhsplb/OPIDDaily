@@ -549,24 +549,6 @@ namespace OPIDDaily.DAL
             return resRows;
         }
 
-        /*
-        public static List<DispositionRow> GetBirthCertificateRows(string uploadedFileName)
-        {
-            // string pathToResearchReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", uploadedFileName));
-            //  List<DispositionRow> resRows = MyExcelDataReader.GetResearchRows(pathToResearchReportFile);
-            List<DispositionRow> resRows = MyExcelDataReader.GetBirthCertificateRows(uploadedFileName);
-            return resRows;
-        }
-
-        public static List<DispositionRow> GetIDRows(string uploadedFileName)
-        {
-            // string pathToResearchReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", uploadedFileName));
-            //  List<DispositionRow> resRows = MyExcelDataReader.GetResearchRows(pathToResearchReportFile);
-            List<DispositionRow> resRows = MyExcelDataReader.GetIDRows(uploadedFileName);
-            return resRows;
-        }
-        */
-
         public static List<Check> GetExcelChecks(string uploadedFileName, string disposition)
         {
             if (uploadedFileName.Equals("unknown"))
@@ -575,13 +557,10 @@ namespace OPIDDaily.DAL
                 return new List<Check>();
             }
 
-            string pathToUploadedChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", uploadedFileName));
-
-            List<Check> excelChecks = MyExcelDataReader.GetExcelChecks(pathToUploadedChecksFile);
+            List<Check> excelChecks = MyExcelDataReader.GetExcelChecks(uploadedFileName);
 
             foreach (Check check in excelChecks)
             {
-                // Implicit status of voided checks is "Voided"
                 check.Disposition = disposition;
             }
 

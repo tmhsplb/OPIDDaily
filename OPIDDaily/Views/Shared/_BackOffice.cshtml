@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - OPID Daily</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/DataTables/css")
+
     @Scripts.Render("~/bundles/modernizr")
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/mvc5datatables")
     @RenderSection("scripts", required: false)
 
     <style>
@@ -36,6 +39,9 @@
                     <li>@Html.ActionLink("Home", "Home", "BackOffice")</li>
                     <li>@Html.ActionLink("Clients", "ManageClients", "BackOffice")</li>
                     <li>@Html.ActionLink("History", "History", "BackOffice")</li>
+                    <li>@Html.ActionLink("Merge", "Merge", "Merge")</li>
+                    <li>@Html.ActionLink("Resolved", "Resolved", "BackOffice")</li>
+                    <li>@Html.ActionLink("Research Table", "ResearchTable", "BackOffice")</li>
                     <li>@Html.ActionLink("Review", "Review", "BackOffice")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")

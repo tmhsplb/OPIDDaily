@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Merge";
-    Layout = "~/Views/Shared/_Superadmin.cshtml";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
 }
 
 <br /><br /><br />
@@ -73,70 +73,6 @@
                             </tr>
                         </table>
                     }
-
-                    @*
-                    @using (Html.BeginForm("UploadBirthCertificatesFile", "Merge", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
-                    {
-                        // Idea for
-                        //   TextxboxFor(m => m.File, new { type = "file"})
-                        // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationMessage("BirthCertificatesError", new { @class = "text-danger" })
-
-                        <table style="width:100%;">
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label class="control-label">Birth Certificates File</label>
-                                        @Html.TextBoxFor(m => m.File, new { type = "file" })
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="submit" value="Upload" />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    @ViewData["UploadedBirthCertificatesFile"]
-                                </td>
-                            </tr>
-                        </table>
-                    }
-
-                    <br />
-
-                    @using (Html.BeginForm("UploadIDsFile", "Merge", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
-                    {
-                        // Idea for
-                        //   TextxboxFor(m => m.File, new { type = "file"})
-                        // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationMessage("IDsError", new { @class = "text-danger" })
-
-                        <table style="width:100%;">
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label class="control-label">IDs File</label>
-                                        @Html.TextBoxFor(m => m.File, new { type = "file" })
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="submit" value="Upload" />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    @ViewData["UploadedIDsFile"]
-                                </td>
-                            </tr>
-                        </table>
-                    }
-                        *@
                 </fieldset>
 
     <br/><br/><br/>

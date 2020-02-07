@@ -609,6 +609,7 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
+    <Content Include="App_Data\Interview Import Me Header.csv" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -845,12 +846,13 @@
     <Content Include="Views\ResearchTable\ResearchTable.cshtml" />
     <Content Include="Views\Shared\_ModalProgressBar.cshtml" />
     <Content Include="Views\FrontDesk\ResearchTable.cshtml" />
+    <Content Include="Views\BackOffice\Resolved.cshtml" />
+    <Content Include="Views\BackOffice\ResearchTable.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Views\FileDownload\" />
     <Folder Include="Views\Home\" />
   </ItemGroup>

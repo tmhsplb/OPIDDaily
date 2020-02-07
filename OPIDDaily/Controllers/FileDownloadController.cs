@@ -397,7 +397,6 @@ namespace OPIDChecks.Controllers
             return importRows;
         }
 
-
         public static string GetImportMeFileCSV()
         {
             var csv = new StringBuilder();
@@ -409,6 +408,17 @@ namespace OPIDChecks.Controllers
                 string header = reader.ReadToEnd();
                 csv.Append(header);
             }
+
+            /*
+            string filePath = string.Format("~/App_Data/Interview Import Me Header.csv");
+            string mappedPath = HttpContext.Server.MapPath(filePath);
+
+            using (StreamReader reader = new StreamReader(mappedPath))
+            {
+                string header = reader.ReadToEnd();
+                csv.Append(header);
+            }
+            */
 
             List<ImportRow> importRows = GetImportRows();
 
