@@ -156,7 +156,7 @@ namespace OPIDDaily.DAL
                     BirthName = cvm.BirthName,
                     DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday() : DateTime.Parse(cvm.DOB)),
                     Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
-                    EXP = (cvm.EXP.Equals("Y") ? true : false),
+                 //   EXP = (cvm.EXP.Equals("Y") ? true : false),
                     PND = (cvm.PND.Equals("Y") ? true : false),
                     XID = (cvm.XID.Equals("Y") ? true : false),
                     XBC = (cvm.XBC.Equals("Y") ? true : false),
