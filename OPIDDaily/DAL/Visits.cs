@@ -15,7 +15,7 @@ namespace OPIDDaily.DAL
             return new VisitViewModel
             {
                 Id = visit.Id,
-                Date = visit.Date,
+                Date = visit.Date.AddHours(2),  // make the time be 12 noon
                 Item = visit.Item,
                 Check = visit.Check,
                 Status = visit.Status,
