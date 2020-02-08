@@ -60,22 +60,28 @@ namespace OPIDDaily.DAL
             };
         }
 
+        /*
         public static bool HasVisits(int nowServing)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
+                bool hasVisits;
+
                 Client client = opiddailycontext.Clients.Where(c => c.Id == nowServing).FirstOrDefault();
 
                 if (client != null)
                 {
                     opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
 
-                    return client.Visits.Count > 0;
+                    hasVisits = client.Visits.Count() > 0;
+
+                    return hasVisits;
                 }
 
                 return false;
             }
         }
+        */
 
         public static List<VisitViewModel> GetVisits(int nowServing)
         {

@@ -387,10 +387,10 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
 
-            bool hasVisits = Visits.HasVisits(nowServing);
+           // bool hasVisits = Visits.HasVisits(nowServing);
             bool hasHistory = CheckManager.HasHistory(client);
 
-            if (hasVisits || hasHistory)
+            if (hasHistory)
             {
                 client.EXP = false;
                 return RedirectToAction("ExistingClient");

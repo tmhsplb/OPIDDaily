@@ -162,9 +162,6 @@ namespace OPIDDaily.DAL
 
         private static List<Check> DetermineResearchChecks(List<DispositionRow> researchRows)
         {
-            int i = 0;
-            int checkCount = researchRows.Count;
-
             foreach (DispositionRow row in researchRows)
             {
                 if (row.LBVDCheckNum != 0)
@@ -271,12 +268,6 @@ namespace OPIDDaily.DAL
                     NewResearchCheck(row, "SD33", row.SDOrderDate3, row.SDCheckDisposition33);
                 }
                 */
-
-                // Slow down adding of checks to the Research Table a little bit so we can see the progress bar
-               // Thread.Sleep(10);
-
-                i += 1;
-                DailyHub.SendProgress("Adding checks to Research Table...", i, checkCount);
             }
 
             return newResearchChecks;
@@ -286,6 +277,8 @@ namespace OPIDDaily.DAL
         {
             bool saveIndividualChecks = false;
             RCheck problemCheck;
+            int i = 0;
+            int checkCount = checks.Count;
 
             try
             { 
@@ -324,6 +317,12 @@ namespace OPIDDaily.DAL
                                 };
 
                                 opidcontext.RChecks.Add(rcheck);
+
+                                // Slow down adding of checks to the Research Table a little bit so we can see the progress bar
+                                // Thread.Sleep(10);
+
+                                i += 1;
+                                DailyHub.SendProgress("Adding checks to  Research Table...", i, checkCount);
 
                                 if (saveIndividualChecks)
                                 {

@@ -99,9 +99,7 @@ namespace OPIDDaily.DAL
                     }
                     else
                     {
-                        opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-
-                        bool hasHistory = client.Visits.Count > 0;
+                        bool hasHistory = CheckManager.HasHistory(client);
 
                         if (updateWaittimes == true)
                         {
