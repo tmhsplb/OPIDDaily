@@ -283,20 +283,38 @@ namespace OPIDDaily.DAL
             try
             { 
                 using (OpidDailyDB opidcontext = new OpidDailyDB())
-                {
+                { 
                     foreach (Check check in checks)
                     {
                         if (check.Num > 0)  // Don't process "empty" checks. This applies to checks before record keeping of check numbers started.
                         {
-                            RCheck existing = opidcontext.RChecks.Where(u => u.Num == check.Num).FirstOrDefault();
+                            int recordID = check.RecordID;
+                            bool found = false;
 
-                            if (existing == null)
+                            List<RCheck> rchecks = opidcontext.RChecks.Where(u => u.Num == check.Num).ToList();
+
+                            // There may be multiple exisitng checks that share the same check number.
+                            // For example, members of the same household using a single check number
+                            // to cover the cost of a birth certificate for each. They all get resolved
+                            // with the same disposition as the disposition of check.
+                            foreach (RCheck rcheck in rchecks)
                             {
-                                DateTime checkDate = new DateTime(1900, 1, 1);
+                                if (rcheck.RecordID == recordID)
+                                {
+                                    found = true;
+                                    rcheck.Disposition = check.Disposition;
+                                }                               
+                            }
+
+                            if (!found)
+                            {
+                                // This resolved check represents a new RCheck
+                                string checkDate = "01/01/1900";
 
                                 if (check.Date != null)
                                 {
-                                    checkDate = (DateTime)check.Date;
+                                    // Coerce from DateTime? to DateTime, then get date string
+                                    checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
                                 }
 
                                 RCheck rcheck = new RCheck
@@ -311,18 +329,12 @@ namespace OPIDDaily.DAL
                                     DOB = check.DOB,
                                     sDOB = check.DOB.ToString("MM/dd/yyyy"),
                                     Date = check.Date,
-                                    sDate = (check.Date == null ? string.Empty : checkDate.ToString("MM/dd/yyyy")),
+                                    sDate = (check.Date == null ? string.Empty : checkDate),
                                     Service = check.Service,
                                     Disposition = check.Disposition,
                                 };
 
                                 opidcontext.RChecks.Add(rcheck);
-
-                                // Slow down adding of checks to the Research Table a little bit so we can see the progress bar
-                                // Thread.Sleep(10);
-
-                                i += 1;
-                                DailyHub.SendProgress("Adding checks to  Research Table...", i, checkCount);
 
                                 if (saveIndividualChecks)
                                 {
@@ -331,16 +343,13 @@ namespace OPIDDaily.DAL
                                     opidcontext.SaveChanges();
                                 }
                             }
-                            else if (!string.IsNullOrEmpty(check.Disposition))
-                            {
-                                // The existing check may have its disposition
-                                // changed to, for example, Voided/Replaced.
-                                // If a file of voided checks contains a check with number existing.Num
-                                // then this change of disposition will protect this check from having its status
-                                // in Apricot changed from Voided/Replaced to Voided
-                                existing.Disposition = check.Disposition;
-                            }
                         }
+
+                        // Slow down updating/adding a little bit so we can see the progress bar
+                        // Thread.Sleep(10);
+
+                        i += 1;
+                        DailyHub.SendProgress("Updating Research Table...", i, checkCount);
                     }
 
                     if (!saveIndividualChecks)
