@@ -57,7 +57,7 @@ namespace OPIDDaily.DAL
             client.BirthName = cvm.BirthName;
             client.DOB = DateTime.Parse(cvm.DOB);
             client.Age = CalculateAge(DateTime.Parse(cvm.DOB));
-            client.EXP = (cvm.EXP.Equals("Y") ? true : false);
+           // client.EXP = (cvm.EXP.Equals("Y") ? true : false);
             client.PND = (cvm.PND.Equals("Y") ? true : false);
             client.XID = (cvm.XID.Equals("Y") ? true : false);
             client.XBC = (cvm.XBC.Equals("Y") ? true : false);

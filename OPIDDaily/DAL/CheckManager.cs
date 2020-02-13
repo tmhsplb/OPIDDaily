@@ -293,10 +293,10 @@ namespace OPIDDaily.DAL
 
                             List<RCheck> rchecks = opidcontext.RChecks.Where(u => u.Num == check.Num).ToList();
 
-                            // There may be multiple exisitng checks that share the same check number.
+                            // There may be multiple existing checks that share the same check number.
                             // For example, members of the same household using a single check number
                             // to cover the cost of a birth certificate for each. They all get resolved
-                            // with the same disposition as the disposition of check.
+                            // with the same disposition as the disposition of this check.
                             foreach (RCheck rcheck in rchecks)
                             {
                                 if (rcheck.RecordID == recordID)

@@ -43,6 +43,15 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
+        public ActionResult InvisibleHistory()
+        {
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
+
+            // Treat a client with invisible hitory like a client with existing history
+            // that is not yet visible, i.e. must be added to any actual existing history.
+            return View("ExistingClient", rsvm);
+        }
+
         public ActionResult GetClientHistory()
         {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };

@@ -24,7 +24,6 @@ namespace OPIDDaily
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
-            // In Startup I am creating first SuperAdmin Role and creating a default Admin User 
             if (!roleManager.RoleExists("SuperAdmin"))
             {
                 // First create SuperAdmin role
