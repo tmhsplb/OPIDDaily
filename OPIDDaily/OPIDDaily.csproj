@@ -842,12 +842,14 @@
     <Content Include="Views\FrontDesk\PrintExpressClientOverflowVoucher.cshtml" />
     <Content Include="Views\FrontDesk\PrintExistingClientOverflowVoucher.cshtml" />
     <Content Include="Views\Shared\_OverflowSignatureBlock.cshtml" />
-    <Content Include="Views\Merge\Merge.cshtml" />
+    <Content Include="Views\Merge\OldMerge.cshtml" />
     <Content Include="Views\ResearchTable\ResearchTable.cshtml" />
     <Content Include="Views\Shared\_ModalProgressBar.cshtml" />
     <Content Include="Views\FrontDesk\ResearchTable.cshtml" />
     <Content Include="Views\BackOffice\Resolved.cshtml" />
     <Content Include="Views\BackOffice\ResearchTable.cshtml" />
+    <Content Include="Views\BackOffice\Merge.cshtml" />
+    <Content Include="Views\Superadmin\Merge.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

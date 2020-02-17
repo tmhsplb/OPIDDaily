@@ -41,7 +41,6 @@ namespace OPIDDaily.Utils
         public static List<CheckViewModel> GetCVMS(string filePath)
         {      
             List<CheckViewModel> rchecks = new ExcelData(filePath).GetData().Select(dataRow => NewCheckViewModel(dataRow)).ToList();
-         //   List<DispositionRow> dispositionRows = new ExcelData(filePath).GetData().Select(dataRow => NewDispositionRow(dataRow, epoch)).ToList();
             return rchecks;
         }
 
@@ -114,6 +113,7 @@ namespace OPIDDaily.Utils
                     Fname = dataRow["First Name"].ToString(),
                     DOB = Convert.ToDateTime(dataRow["Date of Birth"].ToString()),
                     Date = Convert.ToDateTime(dataRow["OPID Interview Date"].ToString()),
+                    RequestedItem = dataRow["Requested Item"].ToString(),
 
                     LBVDCheckNum = Convert.ToInt32(dataRow["LBVD Check Number"].ToString()),
                     LBVDCheckDisposition = dataRow["LBVD Check Disposition"].ToString(),
@@ -204,105 +204,7 @@ namespace OPIDDaily.Utils
             return dispositionRows;
         }
 
-        /*
-        public static List<DispositionRow> GetBirthCertificateRows(string filePath)
-        {
-            string epoch = "01/01/1900"; // Use this in place of a null value, becuase I couldn't make null work
-
-            try
-            {
-                List<DispositionRow> resRows = new ExcelData(filePath).GetData().Select(dataRow => new DispositionRow
-                {
-                    RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
-                    InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
-                    Lname = dataRow["Last Name"].ToString(),
-                    Fname = dataRow["First Name"].ToString(),
-                    DOB = Convert.ToDateTime(dataRow["Date of Birth"].ToString()),
-                    Date = Convert.ToDateTime(dataRow["OPID Interview Date"].ToString()),
-
-                    LBVDCheckNum = Convert.ToInt32(dataRow["LBVD Check Number"].ToString()),
-                    LBVDCheckDisposition = dataRow["LBVD Check Disposition"].ToString(),
-                                       
-                    LBVDOrderDateTwo = DBNull.Value.Equals(dataRow["LBVD Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["LBVD Order Date Two"].ToString()),
-                    LBVDCheckNum2 = Convert.ToInt32(dataRow["LBVD Check Number Two"].ToString()),
-                    LBVDCheck2Disposition = dataRow["LBVD Check Two Disposition"].ToString(),
-                   
-                    LBVDOrderDateThree = DBNull.Value.Equals(dataRow["LBVD Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["LBVD Order Date Three"].ToString()),
-                    LBVDCheckNum3 = Convert.ToInt32(dataRow["LBVD Check Number Three"].ToString()),
-                    LBVDCheck3Disposition = dataRow["LBVD Check Three Disposition"].ToString(),
-
-                    MBVDCheckNum = Convert.ToInt32(dataRow["MBVD Check Number"].ToString()),
-                    MBVDCheckDisposition = dataRow["MBVD Check Disposition"].ToString(),
-
-                    MBVDOrderDateTwo = DBNull.Value.Equals(dataRow["MBVD Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["MBVD Order Date Two"].ToString()),
-                    MBVDCheckNum2 = Convert.ToInt32(dataRow["MBVD Check Number Two"].ToString()),
-                    MBVDCheck2Disposition = dataRow["MBVD Check Two Disposition"].ToString(),
-
-                    MBVDOrderDateThree = DBNull.Value.Equals(dataRow["MBVD Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["MBVD Order Date Three"].ToString()),
-                    MBVDCheckNum3 = Convert.ToInt32(dataRow["MBVD Check Number Three"].ToString()),
-                    MBVDCheck3Disposition = dataRow["MBVD Check Three Disposition"].ToString()
-                }).ToList();
-
-                InsertNulls(resRows);
-
-                return resRows;
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
-
-        public static List<DispositionRow> GetIDRows(string filePath)
-        {
-            string epoch = "01/01/1900"; // Use this in place of a null value, becuase I couldn't make null work
-
-            try
-            {
-                List<DispositionRow> resRows = new ExcelData(filePath).GetData().Select(dataRow => new DispositionRow
-                {
-                    RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
-                    InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
-                    Lname = dataRow["Last Name"].ToString(),
-                    Fname = dataRow["First Name"].ToString(),
-                    DOB = Convert.ToDateTime(dataRow["Date of Birth"].ToString()),
-                    Date = Convert.ToDateTime(dataRow["OPID Interview Date"].ToString()),
-                                      
-                    TIDCheckNum = Convert.ToInt32(dataRow["TID Check Number"].ToString()),
-                    TIDCheckDisposition = dataRow["TID Check Disposition"].ToString(),
-
-                    TIDOrderDateTwo = DBNull.Value.Equals(dataRow["TID Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TID Order Date Two"].ToString()),
-                    TIDCheckNum2 = Convert.ToInt32(dataRow["TID Check Number Two"].ToString()),
-                    TIDCheck2Disposition = dataRow["TID Check Two Disposition"].ToString(),
-
-                   
-                    TIDOrderDateThree = DBNull.Value.Equals(dataRow["TID Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TID Order Date Three"].ToString()),
-                    TIDCheckNum3 = Convert.ToInt32(dataRow["TID Check Number Three"].ToString()),
-                    TIDCheck3Disposition = dataRow["TID Check Three Disposition"].ToString(),
-
-                    TDLCheckNum = Convert.ToInt32(dataRow["TDL Check Number"].ToString()),
-                    TDLCheckDisposition = dataRow["TDL Check Disposition"].ToString(),
-
-                    TDLOrderDateTwo = DBNull.Value.Equals(dataRow["TDL Order Date Two"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TDL Order Date Two"].ToString()),
-                    TDLCheckNum2 = Convert.ToInt32(dataRow["TDL Check Number Two"].ToString()),
-                    TDLCheck2Disposition = dataRow["TDL Check Two Disposition"].ToString(),
-                                       
-                    TDLOrderDateThree = DBNull.Value.Equals(dataRow["TDL Order Date Three"]) ? Convert.ToDateTime(epoch) : Convert.ToDateTime(dataRow["TDL Order Date Three"].ToString()),
-                    TDLCheckNum3 = Convert.ToInt32(dataRow["TDL Check Number Three"].ToString()),
-                    TDLCheck3Disposition = dataRow["TDL Check Three Disposition"].ToString()                 
-                }).ToList();
-
-                InsertNulls(resRows);
-
-                return resRows;
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
-        */
-
+       
         private static DateTime GetDateValue(System.Data.DataRow row)
         {
             string dvalue;

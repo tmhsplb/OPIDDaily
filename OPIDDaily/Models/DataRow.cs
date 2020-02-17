@@ -20,6 +20,8 @@ namespace OPIDDaily.Models
 
         public DateTime Date { get; set; }
 
+        public string RequestedItem { get; set; }
+
         public int LBVDCheckNum { get; set; }
         public string LBVDCheckDisposition { get; set; }
 

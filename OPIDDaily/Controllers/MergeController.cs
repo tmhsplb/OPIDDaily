@@ -10,17 +10,18 @@ using OPIDDaily.DAL;
 
 namespace OPIDDaily.Controllers
 {
-    [Authorize(Roles = "BackOffice")]
+    [Authorize(Roles = "BackOffice, SuperAdmin")]
     public class MergeController : Controller
     {
 
-        // GET: Merge
+        /*
         public ActionResult Merge()
         {
             TempData["UploadedFile"] = "";
             // ViewData["MergeStatus"] = "Wait for the Merge Complete message after clicking the Merge button";
             return View();
         }
+        */
 
         [HttpPost]
         public ActionResult UploadOpidDailyFile(FileViewModel model)

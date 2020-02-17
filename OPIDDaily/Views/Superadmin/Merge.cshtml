@@ -1,0 +1,63 @@
+﻿@model OPIDDaily.Models.FileViewModel
+
+@{
+    ViewBag.Title = "Merge";
+    Layout = "~/Views/Shared/_Superadmin.cshtml";
+}
+
+<br /><br /><br />
+<div>
+                <fieldset>
+                    <legend>Bounded Research Table File</legend>
+
+                    @using (Html.BeginForm("UploadBoundedResearchTableFile", "Superadmin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                    {
+                        // Idea for
+                        //   TextxboxFor(m => m.File, new { type = "file"})
+                        // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationMessage("BoundedResearchTableFileError", new { @class = "text-danger" })
+
+                        <table style="width:100%;">
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(m => m.File, new { type = "file" })
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="submit" value="Upload" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @ViewData["UploadedBoundedResearchTableFile"]
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                </fieldset>
+
+    <br /><br /><br />
+
+    @using (Html.BeginForm("PerformMerge", "Superadmin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+    {
+        <table width="100%">
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="submit" value="Merge" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>@ViewData["MergeStatus"]</td>
+            </tr>
+        </table>
+    }
+</div>
+
+@Html.Partial("_ModalProgressBar")
+

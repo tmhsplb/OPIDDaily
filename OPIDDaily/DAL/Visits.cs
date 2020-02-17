@@ -17,7 +17,7 @@ namespace OPIDDaily.DAL
                 Id = visit.Id,
                 Date = visit.Date.AddHours(2),  // make the time be 12 noon
                 Item = visit.Item,
-                Check = visit.Check,
+                Check = (visit.Check.Equals("0") ? string.Empty : visit.Check),
                 Status = visit.Status,
                 Notes = visit.Notes
             };
@@ -42,7 +42,7 @@ namespace OPIDDaily.DAL
                 Id = rcheck.Id,
                 Date = date.AddHours(12),  // make the time be 12 noon
                 Item = rcheck.Service,
-                Check = rcheck.Num.ToString(),
+                Check = (rcheck.Num == 0 ? string.Empty: rcheck.Num.ToString()),
                 Status = rcheck.Disposition,
                 Notes = string.Empty
             };

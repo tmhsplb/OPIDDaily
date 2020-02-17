@@ -164,7 +164,18 @@ namespace OPIDDaily.DAL
         {
             foreach (DispositionRow row in researchRows)
             {
-                if (row.LBVDCheckNum != 0)
+                bool lbvd = false, tid = false, tdl = false, mbvd = false;
+
+                if (!string.IsNullOrEmpty(row.RequestedItem))
+                {
+                    string[] services = row.RequestedItem.Split('|');
+                    lbvd = services.Contains("LBVD");
+                    tid = services.Contains("TID");
+                    tdl = services.Contains("TDL");
+                    mbvd = services.Contains("MBVD");
+                }
+
+                if (row.LBVDCheckNum != 0 || (lbvd && row.LBVDCheckNum == 0))
                 {
                     NewResearchCheck(row, "LBVD", row.Date, row.LBVDCheckDisposition);
                 }
@@ -179,7 +190,7 @@ namespace OPIDDaily.DAL
                     NewResearchCheck(row, "LBVD3", row.LBVDOrderDateThree, row.LBVDCheck3Disposition);
                 }
 
-                if (row.TIDCheckNum != 0)
+                if (row.TIDCheckNum != 0 || (tid && row.TIDCheckNum == 0))
                 {
                     NewResearchCheck(row, "TID", row.Date, row.TIDCheckDisposition);
                 }
@@ -194,7 +205,7 @@ namespace OPIDDaily.DAL
                     NewResearchCheck(row, "TID3", row.TIDOrderDateThree, row.TIDCheck3Disposition);
                 }
 
-                if (row.TDLCheckNum != 0)
+                if (row.TDLCheckNum != 0 || (tdl && row.TDLCheckNum == 0))
                 {
                     NewResearchCheck(row, "TDL", row.Date, row.TDLCheckDisposition);
                 }
@@ -209,7 +220,7 @@ namespace OPIDDaily.DAL
                     NewResearchCheck(row, "TDL3", row.TDLOrderDateThree, row.TDLCheck3Disposition);
                 }
 
-                if (row.MBVDCheckNum != 0)
+                if (row.MBVDCheckNum != 0 || (mbvd && row.MBVDCheckNum == 0))
                 {
                     NewResearchCheck(row, "MBVD", row.Date, row.MBVDCheckDisposition);
                 }
@@ -286,8 +297,6 @@ namespace OPIDDaily.DAL
                 { 
                     foreach (Check check in checks)
                     {
-                        if (check.Num > 0)  // Don't process "empty" checks. This applies to checks before record keeping of check numbers started.
-                        {
                             int recordID = check.RecordID;
                             bool found = false;
 
@@ -306,42 +315,41 @@ namespace OPIDDaily.DAL
                                 }                               
                             }
 
-                            if (!found)
+                        if (!found)
+                        {
+                            // This resolved check represents a new RCheck
+                            string checkDate = "01/01/1900";
+
+                            if (check.Date != null)
                             {
-                                // This resolved check represents a new RCheck
-                                string checkDate = "01/01/1900";
+                                // Coerce from DateTime? to DateTime, then get date string
+                                checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
+                            }
 
-                                if (check.Date != null)
-                                {
-                                    // Coerce from DateTime? to DateTime, then get date string
-                                    checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
-                                }
+                            RCheck rcheck = new RCheck
+                            {
+                                RecordID = check.RecordID,
+                                sRecordID = check.RecordID.ToString(),
+                                InterviewRecordID = check.InterviewRecordID,
+                                sInterviewRecordID = check.InterviewRecordID.ToString(),
+                                Num = check.Num,
+                                sNum = check.Num.ToString(),
+                                Name = check.Name,
+                                DOB = check.DOB,
+                                sDOB = check.DOB.ToString("MM/dd/yyyy"),
+                                Date = check.Date,
+                                sDate = (check.Date == null ? string.Empty : checkDate),
+                                Service = check.Service,
+                                Disposition = check.Disposition,
+                            };
 
-                                RCheck rcheck = new RCheck
-                                {
-                                    RecordID = check.RecordID,
-                                    sRecordID = check.RecordID.ToString(),
-                                    InterviewRecordID = check.InterviewRecordID,
-                                    sInterviewRecordID = check.InterviewRecordID.ToString(),
-                                    Num = check.Num,
-                                    sNum = check.Num.ToString(),
-                                    Name = check.Name,
-                                    DOB = check.DOB,
-                                    sDOB = check.DOB.ToString("MM/dd/yyyy"),
-                                    Date = check.Date,
-                                    sDate = (check.Date == null ? string.Empty : checkDate),
-                                    Service = check.Service,
-                                    Disposition = check.Disposition,
-                                };
+                            opidcontext.RChecks.Add(rcheck);
 
-                                opidcontext.RChecks.Add(rcheck);
-
-                                if (saveIndividualChecks)
-                                {
-                                    // Only save individual checks if trying to isolate a check saving problem
-                                    problemCheck = rcheck;
-                                    opidcontext.SaveChanges();
-                                }
+                            if (saveIndividualChecks)
+                            {
+                                // Only save individual checks if trying to isolate a check saving problem
+                                problemCheck = rcheck;
+                                opidcontext.SaveChanges();
                             }
                         }
 
