@@ -294,19 +294,23 @@ namespace OPIDDaily.DAL
             try
             { 
                 using (OpidDailyDB opidcontext = new OpidDailyDB())
-                { 
+                {
+                    // Using context.AddRange as described in: https://entityframework.net/improve-ef-add-performance
+                    opidcontext.Configuration.AutoDetectChangesEnabled = false;
+                    List<RCheck> rchecks = new List<RCheck>();
+                    
                     foreach (Check check in checks)
                     {
                             int recordID = check.RecordID;
                             bool found = false;
 
-                            List<RCheck> rchecks = opidcontext.RChecks.Where(u => u.Num == check.Num).ToList();
+                            List<RCheck> matches = opidcontext.RChecks.Where(u => u.Num == check.Num).ToList();
 
                             // There may be multiple existing checks that share the same check number.
                             // For example, members of the same household using a single check number
                             // to cover the cost of a birth certificate for each. They all get resolved
                             // with the same disposition as the disposition of this check.
-                            foreach (RCheck rcheck in rchecks)
+                            foreach (RCheck rcheck in matches)
                             {
                                 if (rcheck.RecordID == recordID)
                                 {
@@ -343,12 +347,13 @@ namespace OPIDDaily.DAL
                                 Disposition = check.Disposition,
                             };
 
-                            opidcontext.RChecks.Add(rcheck);
-
+                            rchecks.Add(rcheck);
+                          
                             if (saveIndividualChecks)
                             {
                                 // Only save individual checks if trying to isolate a check saving problem
                                 problemCheck = rcheck;
+                                opidcontext.RChecks.Add(rcheck);
                                 opidcontext.SaveChanges();
                             }
                         }
@@ -362,6 +367,8 @@ namespace OPIDDaily.DAL
 
                     if (!saveIndividualChecks)
                     {
+                        opidcontext.RChecks.AddRange(rchecks);
+                        opidcontext.ChangeTracker.DetectChanges();
                         opidcontext.SaveChanges();
                     }
                 }
@@ -503,7 +510,11 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
+                // Using context.AddRange as described in: https://entityframework.net/improve-ef-add-performance
+                opidcontext.Configuration.AutoDetectChangesEnabled = false;
+
                 var checks = opidcontext.RChecks;
+                List<RCheck> listRChecks = new List<RCheck>();
 
                 int checkCount = rChecks.Count;
                 int i = 0;
@@ -539,7 +550,7 @@ namespace OPIDDaily.DAL
                                 rcheck.Date = null;
                             }
 
-                            checks.Add(rcheck);
+                            listRChecks.Add(rcheck);
                         }
                         catch (Exception e)
                         {
@@ -551,6 +562,8 @@ namespace OPIDDaily.DAL
                         DailyHub.SendProgress("Restore in progress...", i, checkCount);
                     }
 
+                    checks.AddRange(listRChecks);
+                    opidcontext.ChangeTracker.DetectChanges();
                     opidcontext.SaveChanges();
                     return;
                 }
@@ -559,8 +572,6 @@ namespace OPIDDaily.DAL
 
         public static List<DispositionRow> GetResearchRows(string uploadedFileName)
         {
-           // string pathToResearchReportFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", uploadedFileName));
-          //  List<DispositionRow> resRows = MyExcelDataReader.GetResearchRows(pathToResearchReportFile);
             List<DispositionRow> resRows = MyExcelDataReader.GetResearchRows(uploadedFileName);
             return resRows;
         }
@@ -586,7 +597,7 @@ namespace OPIDDaily.DAL
         public static void NewResolvedCheck(Check check, string disposition)
         {
             // PLB 1/23/2019 Added r.RecordID == check.RecordID.
-            // This fxed the problem that Bill reported in an email dated 1/21/2019.
+            // This fixed the problem that Bill reported in an email dated 1/21/2019.
             CheckViewModel alreadyResolved = resolvedChecks.Where(r => (r.RecordID == check.RecordID && (r.Num == check.Num || r.Num == -check.Num))).FirstOrDefault();
             CheckViewModel cvm = null;
             DateTime checkDate = new DateTime(1900, 1, 1);

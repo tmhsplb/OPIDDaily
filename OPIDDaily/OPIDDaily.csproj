@@ -203,7 +203,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InterviewerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\MergeController.cs" />
     <Compile Include="Controllers\ResearchTableController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
@@ -842,7 +841,6 @@
     <Content Include="Views\FrontDesk\PrintExpressClientOverflowVoucher.cshtml" />
     <Content Include="Views\FrontDesk\PrintExistingClientOverflowVoucher.cshtml" />
     <Content Include="Views\Shared\_OverflowSignatureBlock.cshtml" />
-    <Content Include="Views\Merge\OldMerge.cshtml" />
     <Content Include="Views\ResearchTable\ResearchTable.cshtml" />
     <Content Include="Views\Shared\_ModalProgressBar.cshtml" />
     <Content Include="Views\FrontDesk\ResearchTable.cshtml" />

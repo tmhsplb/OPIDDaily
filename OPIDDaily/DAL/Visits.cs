@@ -17,7 +17,7 @@ namespace OPIDDaily.DAL
                 Id = visit.Id,
                 Date = visit.Date.AddHours(2),  // make the time be 12 noon
                 Item = visit.Item,
-                Check = (visit.Check.Equals("0") ? string.Empty : visit.Check),
+                Check = (string.IsNullOrEmpty(visit.Check) || visit.Check.Equals("0") ? string.Empty : visit.Check),
                 Status = visit.Status,
                 Notes = visit.Notes
             };
@@ -59,29 +59,6 @@ namespace OPIDDaily.DAL
                 Notes = vvm.Notes
             };
         }
-
-        /*
-        public static bool HasVisits(int nowServing)
-        {
-            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
-            {
-                bool hasVisits;
-
-                Client client = opiddailycontext.Clients.Where(c => c.Id == nowServing).FirstOrDefault();
-
-                if (client != null)
-                {
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-
-                    hasVisits = client.Visits.Count() > 0;
-
-                    return hasVisits;
-                }
-
-                return false;
-            }
-        }
-        */
 
         public static List<VisitViewModel> GetVisits(int nowServing)
         {
