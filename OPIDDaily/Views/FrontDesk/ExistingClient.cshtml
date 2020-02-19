@@ -111,7 +111,8 @@
     });
 </script>
 
-<br /><br /><br />
+<br />
+@*
 <table>
     <tr>
         <td><a class="button" href="@Url.Action("GetClientHistory", "Frontdesk")">Show Client History</a></td>
@@ -119,6 +120,22 @@
         <td><a class="button" href="@Url.Action("ClearClientHistory", "Frontdesk")">Clear Client History</a></td>
     </tr>
 </table>
+*@
+
+<div class="col-md-12">
+    <section id="existingclientServicesForm">
+        @using (Html.BeginForm("PrepareExistingClientVisits", "FrontDesk", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Prepare Visits Only" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </section>
+</div>
+<br/>
 
 <style>
     input[type="checkbox"] {
@@ -131,7 +148,6 @@
 <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
 <br />
 
-<br /><br />
 <div class="row">
     <div class="col-md-12">
         <section id="existingclientForm">

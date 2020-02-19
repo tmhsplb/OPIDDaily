@@ -848,6 +848,7 @@
     <Content Include="Views\BackOffice\ResearchTable.cshtml" />
     <Content Include="Views\BackOffice\Merge.cshtml" />
     <Content Include="Views\Superadmin\Merge.cshtml" />
+    <Content Include="Views\FrontDesk\PrintExistingClientVisits.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

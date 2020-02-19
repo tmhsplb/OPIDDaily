@@ -345,6 +345,26 @@ namespace OPIDDaily.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult PrepareExistingClientVisits()
+        {
+            int nowServing = NowServing();
+            Client client = Clients.GetClient(nowServing);
+
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
+
+            ViewBag.ServiceTicket = client.ServiceTicket;
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.BirthName = client.BirthName;
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            List<VisitViewModel> visits = Visits.GetVisits(nowServing);
+ 
+            return View("PrintExistingClientVisits", visits);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();

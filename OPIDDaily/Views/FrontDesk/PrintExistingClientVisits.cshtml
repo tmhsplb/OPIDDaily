@@ -1,0 +1,36 @@
+﻿@model List<VisitViewModel>
+@using OPIDDaily.Models
+
+@{
+    ViewBag.Title = "Print Existing Client Visits";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+}
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/serviceTicket.js")"></script>
+
+    <div id="printerDiv">
+        <link rel="stylesheet" href="@Url.Content("~/Content/serviceTicket.css")" type="text/css" />
+        <br />
+        <h3>Existing Client: @ViewBag.ClientName</h3>
+        <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+
+        <br />
+
+        <table id="visitHistory" width="100%">
+            <tr><th>Date</th><th>Item</th><th>Check</th><th>Status</th><th>Notes</th></tr>
+            @foreach (VisitViewModel vvm in Model)
+            {
+                <tr>
+                    <td align="center" width="80">@vvm.Date.ToString("MM/dd/yyyy")</td>
+                    <td width="50">&nbsp;&nbsp; @vvm.Item</td>
+                    <td width="70" align="center">@vvm.Check</td>
+                    <td width="100">&nbsp;&nbsp; @vvm.Status</td>
+                    <td width="150">&nbsp;&nbsp; @vvm.Notes</td>
+                </tr>
+            }
+        </table>
+    </div>
+    <br/>
+    <center>
+        <button class="btn btn-primary hidden-print" onclick="printServiceTicket()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+    </center>
