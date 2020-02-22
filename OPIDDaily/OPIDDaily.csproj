@@ -283,10 +283,15 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202002031635213_RChecks.Designer.cs">
       <DependentUpon>202002031635213_RChecks.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202002211750212_AncientChecks.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202002211750212_AncientChecks.Designer.cs">
+      <DependentUpon>202002211750212_AncientChecks.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
     <Compile Include="Entities\Invitation.cs" />
+    <Compile Include="Entities\AncientCheck.cs" />
     <Compile Include="Entities\RCheck.cs" />
     <Compile Include="Entities\Visit.cs" />
     <Compile Include="Global.asax.cs">
@@ -847,8 +852,9 @@
     <Content Include="Views\BackOffice\Resolved.cshtml" />
     <Content Include="Views\BackOffice\ResearchTable.cshtml" />
     <Content Include="Views\BackOffice\Merge.cshtml" />
-    <Content Include="Views\Superadmin\Merge.cshtml" />
+    <Content Include="Views\Superadmin\Rebuild.cshtml" />
     <Content Include="Views\FrontDesk\PrintExistingClientVisits.cshtml" />
+    <Content Include="Views\Superadmin\AncientChecks.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -915,6 +921,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202002031635213_RChecks.resx">
       <DependentUpon>202002031635213_RChecks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202002211750212_AncientChecks.resx">
+      <DependentUpon>202002211750212_AncientChecks.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

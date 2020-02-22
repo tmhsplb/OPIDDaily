@@ -11,5 +11,7 @@ namespace OPIDDaily.Models
     {
         [Required]
         public HttpPostedFileBase File { get; set; }
+
+        public string Year { get; set; }
     }
 }

@@ -89,7 +89,7 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
-        public JsonResult GetHistory(int page, int rows)
+        public JsonResult GetVisitHistory(int page, int rows)
         {
             int nowServing = NowServing();
 

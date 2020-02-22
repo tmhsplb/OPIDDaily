@@ -68,6 +68,8 @@ namespace OPIDDaily.Controllers
             }
         }
 
+        
+
         [HttpPost]
         public ActionResult DeleteResearchTable()
         {
@@ -76,7 +78,7 @@ namespace OPIDDaily.Controllers
         }
 
         [HttpPost]
-        public ActionResult Restore(FileViewModel model)
+        public ActionResult RestoreResearchTable(FileViewModel model)
         {
             if (!CheckManager.ResearchTableIsEmpty())
             {
@@ -102,6 +104,14 @@ namespace OPIDDaily.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteAncientResearchChecks(FileViewModel model)
+        {
+            CheckManager.DeleteAncientResearchChecks(Convert.ToInt32(model.Year));
+            ViewData["DeletedAncientChecks"] = string.Format("Deleted checks for year {0}", model.Year);
+            return View("ResearchTable");
         }
     }
 }

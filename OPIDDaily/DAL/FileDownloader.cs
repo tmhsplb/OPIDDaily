@@ -20,13 +20,26 @@ namespace OPIDDaily.DAL
 
             if (checks != null)
             {
-                //  string timestamp = Extras.GetTimestamp();
-                //  string fname = string.Format("Research {0}", timestamp);
-
-                string fname = Extras.GetResearchTableName();
+                string fname = Extras.GetResearchTableFileName();
                 string pathToResearchTableFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", fname));
 
-                WriteResearchTable(pathToResearchTableFile, checks);
+                WriteChecksFile(pathToResearchTableFile, checks);
+                return fname;
+            }
+
+            return "NoChecks";
+        }
+
+        public static string DownloadAncientChecks(int year)
+        {
+            List<CheckViewModel> checks = CheckManager.GetAncientChecks(year);
+
+            if (checks != null)
+            {
+                string fname = Extras.GetAncientChecksFileName(year);
+                string pathToAncientHistoryFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", fname));
+
+                WriteChecksFile(pathToAncientHistoryFile, checks);
                 return fname;
             }
 
@@ -50,7 +63,7 @@ namespace OPIDDaily.DAL
             return content;
         }
 
-        public static void WriteResearchTable(string pathToResearchTableFile, List<CheckViewModel> checks)
+        public static void WriteChecksFile(string pathToChecksFile, List<CheckViewModel> checks)
         {
             var csv = new StringBuilder();
 
@@ -73,7 +86,7 @@ namespace OPIDDaily.DAL
                 csv.AppendLine(csvrow);
             }
 
-            File.WriteAllText(pathToResearchTableFile, csv.ToString());
+            File.WriteAllText(pathToChecksFile, csv.ToString());
         }
     }
 }

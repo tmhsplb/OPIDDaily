@@ -23,6 +23,31 @@ namespace OPIDDaily.DAL
             };
         }
 
+        private static VisitViewModel AncientCheckToVisitViewModel(AncientCheck ancientCheck)
+        {
+            DateTime? adate = ancientCheck.Date;
+            DateTime date;
+
+            if (adate == null)
+            {
+                date = new DateTime(1900, 1, 1);
+            }
+            else
+            {
+                date = (DateTime)adate;
+            }
+
+            return new VisitViewModel
+            {
+                Id = ancientCheck.Id,
+                Date = date.AddHours(12),  // make the time be 12 noon
+                Item = ancientCheck.Service,
+                Check = (ancientCheck.Num == 0 ? string.Empty : ancientCheck.Num.ToString()),
+                Status = ancientCheck.Disposition,
+                Notes = string.Empty
+            };
+        }
+
         private static VisitViewModel RCheckToVisitViewModel(RCheck rcheck)
         {
             DateTime? rdate = rcheck.Date;
@@ -70,7 +95,9 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
+                    List<AncientCheck> ancientChecks = opiddailycontext.AncientChecks.Where(ac => ac.DOB == DOB && ac.Name.ToUpper().StartsWith(lastName)).ToList();
                     List<RCheck> rchecks = opiddailycontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.ToUpper().StartsWith(lastName)).ToList();
+
                     opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
 
                     List<VisitViewModel> visits = new List<VisitViewModel>();
@@ -78,6 +105,11 @@ namespace OPIDDaily.DAL
                     foreach (Visit visit in client.Visits)
                     {
                         visits.Add(VisitToVisitViewModel(visit));
+                    }
+
+                    foreach (AncientCheck ancientCheck in ancientChecks)
+                    {
+                        visits.Add(AncientCheckToVisitViewModel(ancientCheck));
                     }
 
                     foreach (RCheck rcheck in rchecks)

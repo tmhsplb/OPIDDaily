@@ -63,7 +63,13 @@ namespace OPIDDaily.DAL
         public static void PersistResearchChecks(List<DispositionRow> researchRows)
         {
             List<Check> rChecks = DetermineResearchChecks(researchRows);
-            AppendToResearchChecks(rChecks);
+            UpdateCheckTables(rChecks);
+        }
+
+        public static void PersistAncientChecks(List<DispositionRow> researchRows)
+        {
+            List<Check> ancientChecks = DetermineResearchChecks(researchRows);
+            UpdateAncientChecksTable(ancientChecks);
         }
 
         public static void NewResearchCheck(DispositionRow row, string service, DateTime? serviceDate, string disposition)
@@ -284,7 +290,7 @@ namespace OPIDDaily.DAL
             return newResearchChecks;
         }
 
-        private static void AppendToResearchChecks(List<Check> checks)
+        private static void UpdateCheckTables(List<Check> checks)
         {
             bool saveIndividualChecks = false;
             RCheck problemCheck;
@@ -298,30 +304,42 @@ namespace OPIDDaily.DAL
                     // Using context.AddRange as described in: https://entityframework.net/improve-ef-add-performance
                     opidcontext.Configuration.AutoDetectChangesEnabled = false;
                     List<RCheck> rchecks = new List<RCheck>();
+                    List<AncientCheck> acecks = new List<AncientCheck>();
                     
                     foreach (Check check in checks)
                     {
-                            int recordID = check.RecordID;
-                            bool found = false;
+                        int recordID = check.RecordID;
+                        bool cfound = false;
+                        bool afound = false;
 
-                            List<RCheck> matches = opidcontext.RChecks.Where(u => u.Num == check.Num).ToList();
+                        List<RCheck> currentMatches = opidcontext.RChecks.Where(u => u.Num == check.Num).ToList();
+                        List<AncientCheck> ancientMatches = opidcontext.AncientChecks.Where(u => u.Num == check.Num).ToList();
 
-                            // There may be multiple existing checks that share the same check number.
-                            // For example, members of the same household using a single check number
-                            // to cover the cost of a birth certificate for each. They all get resolved
-                            // with the same disposition as the disposition of this check.
-                            foreach (RCheck rcheck in matches)
-                            {
-                                if (rcheck.RecordID == recordID)
-                                {
-                                    found = true;
-                                    rcheck.Disposition = check.Disposition;
-                                }                               
-                            }
-
-                        if (!found)
+                        // There may be multiple existing checks that share the same check number.
+                        // For example, members of the same household using a single check number
+                        // to cover the cost of a birth certificate for each. They all get resolved
+                        // with the same disposition as the disposition of this check.
+                        foreach (RCheck rcheck in currentMatches)
                         {
-                            // This resolved check represents a new RCheck
+                            if (rcheck.RecordID == recordID)
+                            {
+                                cfound = true;
+                                rcheck.Disposition = check.Disposition;
+                            }
+                        }
+
+                        foreach (AncientCheck acheck in ancientMatches)
+                        {
+                            if (acheck.RecordID == recordID)
+                            {
+                                afound = true;
+                                acheck.Disposition = check.Disposition;
+                            }
+                        }
+
+                        if (!cfound && !afound)
+                        {
+                            // This check will become a new RCheck (even if it is ancient)
                             string checkDate = "01/01/1900";
 
                             if (check.Date != null)
@@ -381,16 +399,114 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static void UpdateAncientChecksTable(List<Check> ancientChecks)
+        {
+            bool saveIndividualChecks = false;
+            AncientCheck problemCheck;
+            int i = 0;
+            int checkCount = ancientChecks.Count;
+
+            try
+            {
+                using (OpidDailyDB opidcontext = new OpidDailyDB())
+                {
+                    // Using context.AddRange as described in: https://entityframework.net/improve-ef-add-performance
+                    opidcontext.Configuration.AutoDetectChangesEnabled = false;
+                   
+                    List<AncientCheck> achecks = new List<AncientCheck>();
+
+                    foreach (Check check in ancientChecks)
+                    {
+                        int recordID = check.RecordID;
+                        bool found = false;
+                        
+                        List<AncientCheck> ancientMatches = opidcontext.AncientChecks.Where(u => u.Num == check.Num).ToList();
+
+                        // There may be multiple existing checks that share the same check number.
+                        // For example, members of the same household using a single check number
+                        // to cover the cost of a birth certificate for each. They all get resolved
+                        // with the same disposition as the disposition of this check.
+                        foreach (AncientCheck acheck in ancientMatches)
+                        {
+                            if (acheck.RecordID == recordID)
+                            {
+                                found = true;
+                                acheck.Disposition = check.Disposition;
+                            }
+                        }
+
+                        if (!found)
+                        {
+                            // This check represents a new AncientCheck
+                            string checkDate = "01/01/1900";
+
+                            if (check.Date != null)
+                            {
+                                // Coerce from DateTime? to DateTime, then get date string
+                                checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
+                            }
+
+                            AncientCheck acheck = new AncientCheck
+                            {
+                                RecordID = check.RecordID,
+                                sRecordID = check.RecordID.ToString(),
+                                InterviewRecordID = check.InterviewRecordID,
+                                sInterviewRecordID = check.InterviewRecordID.ToString(),
+                                Num = check.Num,
+                                sNum = check.Num.ToString(),
+                                Name = check.Name,
+                                DOB = check.DOB,
+                                sDOB = check.DOB.ToString("MM/dd/yyyy"),
+                                Date = check.Date,
+                                sDate = (check.Date == null ? string.Empty : checkDate),
+                                Service = check.Service,
+                                Disposition = check.Disposition,
+                            };
+
+                            achecks.Add(acheck);
+
+                            if (saveIndividualChecks)
+                            {
+                                // Only save individual checks if trying to isolate a check saving problem
+                                problemCheck = acheck;
+                                opidcontext.AncientChecks.Add(acheck);
+                                opidcontext.SaveChanges();
+                            }
+                        }
+
+                        // Slow down updating/adding a little bit so we can see the progress bar
+                        // Thread.Sleep(10);
+
+                        i += 1;
+                        DailyHub.SendProgress("Updating Research Table...", i, checkCount);
+                    }
+
+                    if (!saveIndividualChecks)
+                    {
+                        opidcontext.AncientChecks.AddRange(achecks);
+                        opidcontext.ChangeTracker.DetectChanges();
+                        opidcontext.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // Check the value of problemCheck;
+                int z;
+                z = 2;
+            }
+        }
+
 
         public static List<CheckViewModel> GetChecks()
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
-                var pchecks = (from check in opidcontext.RChecks select check).ToList();
+                var rchecks = (from check in opidcontext.RChecks select check).ToList();
 
                 List<CheckViewModel> checks = new List<CheckViewModel>();
 
-                foreach (RCheck rc in pchecks)
+                foreach (RCheck rc in rchecks)
                 {
                     checks.Add(new CheckViewModel
                     {
@@ -399,11 +515,74 @@ namespace OPIDDaily.DAL
                         Num = rc.Num,
                         Name = rc.Name,
                         DOB = rc.DOB,
-                       // Date = rc.Date, 
                         Date = string.IsNullOrEmpty(rc.Date.ToString()) ? string.Empty : ((DateTime)rc.Date).ToShortDateString(),
                         Service = rc.Service,
                         Disposition = rc.Disposition
                     });
+                }
+
+                return checks;
+            }
+        }
+ 
+        public static void DeleteAncientResearchChecks(int year)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                // Using RemoveRange as described in: https://stackoverflow.com/questions/21568479/how-can-i-delete-1-000-rows-with-ef6
+                var checksToDelete = opidcontext.RChecks.Where(c => c.Date != null & c.Date.Value.Year == year);
+                opidcontext.RChecks.RemoveRange(checksToDelete);
+                opidcontext.SaveChanges();
+            }
+        }
+
+        public static void DeleteAncientAncientChecks(int year)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                // Using RemoveRange as described in: https://stackoverflow.com/questions/21568479/how-can-i-delete-1-000-rows-with-ef6
+                var checksToDelete = opidcontext.AncientChecks.Where(c => c.Date != null & c.Date.Value.Year == year);
+                opidcontext.AncientChecks.RemoveRange(checksToDelete);
+                opidcontext.SaveChanges();
+            }
+        }
+
+        public static List<CheckViewModel> GetAncientChecks(int year)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                var rchecks = (from check in opidcontext.RChecks select check).ToList();
+
+                List<CheckViewModel> checks = new List<CheckViewModel>();
+
+                foreach (RCheck rc in rchecks)
+                {
+                    bool ancient;
+                  
+                    if (string.IsNullOrEmpty(rc.Date.ToString()))
+                    {
+                        ancient = false;
+                    }
+                    else
+                    {
+                        DateTime checkDate = (DateTime)rc.Date;
+                        ancient = (checkDate.Year == year ? true : false);
+                    }
+                                        
+                    if (ancient)
+                    {
+                        checks.Add(new CheckViewModel
+                        {
+                            RecordID = rc.RecordID,
+                            InterviewRecordID = rc.InterviewRecordID,
+                            Num = rc.Num,
+                            Name = rc.Name,
+                            DOB = rc.DOB,
+                            Date = string.IsNullOrEmpty(rc.Date.ToString()) ? string.Empty : ((DateTime)rc.Date).ToShortDateString(),
+                            Service = rc.Service,
+                            Disposition = rc.Disposition
+                        });
+                    }
                 }
 
                 return checks;
@@ -416,19 +595,34 @@ namespace OPIDDaily.DAL
 
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
-                List<RCheck> rchecks = opidcontext.RChecks.Select(u => u).ToList();
+                List<RCheck> rchecks = opidcontext.RChecks.Select(c => c).ToList();
+                List<AncientCheck> ancientChecks = opidcontext.AncientChecks.Select(a => a).ToList();
 
-                foreach (var lu in rchecks)
+                foreach (var rc in rchecks)
                 {
                     researchChecks.Add(new Check
                     {
-                        RecordID = lu.RecordID,
-                        InterviewRecordID = lu.InterviewRecordID,
-                        Num = lu.Num,
-                        Name = lu.Name,
-                        Date = lu.Date,
-                        Service = lu.Service,
-                        Disposition = lu.Disposition,
+                        RecordID = rc.RecordID,
+                        InterviewRecordID = rc.InterviewRecordID,
+                        Num = rc.Num,
+                        Name = rc.Name,
+                        Date = rc.Date,
+                        Service = rc.Service,
+                        Disposition = rc.Disposition,
+                    });
+                }
+
+                foreach (var ac in ancientChecks)
+                {
+                    researchChecks.Add(new Check
+                    {
+                        RecordID = ac.RecordID,
+                        InterviewRecordID = ac.InterviewRecordID,
+                        Num = ac.Num,
+                        Name = ac.Name,
+                        Date = ac.Date,
+                        Service = ac.Service,
+                        Disposition = ac.Disposition,
                     });
                 }
             }
@@ -447,7 +641,19 @@ namespace OPIDDaily.DAL
             {
                 List<RCheck> rchecks = opidcontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.StartsWith(lastName)).ToList();
 
-                return rchecks.Count > 0; 
+                if (rchecks.Count > 0)
+                {
+                    return true;
+                }
+
+                List<AncientCheck> ancientChecks = opidcontext.AncientChecks.Where(ac => ac.DOB == DOB && ac.Name.StartsWith(lastName)).ToList();
+
+                if (ancientChecks.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
             }
         }
 
@@ -459,7 +665,7 @@ namespace OPIDDaily.DAL
 
                 foreach (CheckViewModel check in resolvedChecks)
                 {
-                    List<RCheck> rchecks = researchChecks.Where(u => u.Num == check.Num || u.Num == -check.Num).ToList();
+                    List<RCheck> rchecks = researchChecks.Where(u => u.Num == check.Num).ToList();
 
                     foreach (RCheck rcheck in rchecks)
                     {
@@ -496,6 +702,79 @@ namespace OPIDDaily.DAL
             }
         }
 
+        public static void InsertAncientChecks(string acFileName)
+        {
+            string pathToAncientChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", acFileName));
+
+            List<Check> ancientChecks = MyExcelDataReader.GetChecks(pathToAncientChecksFile);
+
+            UpdateAncientChecksTable(ancientChecks);
+        }
+
+
+        private static void RestoreAncientChecksTable(List<CheckViewModel> ancientChecks)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                // Using context.AddRange as described in: https://entityframework.net/improve-ef-add-performance
+                opidcontext.Configuration.AutoDetectChangesEnabled = false;
+
+                var checks = opidcontext.AncientChecks;
+                List<AncientCheck> listAncientChecks = new List<AncientCheck>();
+
+                int checkCount = ancientChecks.Count;
+                int i = 0;
+
+                if (checks.Count() == 0) // Is the table empty for rebuild?
+                {
+                    DateTime epoch = new DateTime(1900, 1, 1);
+
+                    foreach (CheckViewModel cvm in ancientChecks)
+                    {
+                        try
+                        {
+                            AncientCheck ancientCheck = new AncientCheck
+                            {
+                                RecordID = cvm.RecordID,
+                                sRecordID = cvm.sRecordID,
+                                InterviewRecordID = cvm.InterviewRecordID,
+                                sInterviewRecordID = cvm.sInterviewRecordID,
+
+                                Num = cvm.Num,
+                                sNum = cvm.sNum,
+                                Name = cvm.Name,
+                                DOB = cvm.DOB,
+                                sDOB = cvm.DOB.ToString("MM/dd/yyyy"),
+                                Date = string.IsNullOrEmpty(cvm.Date) ? epoch : Convert.ToDateTime(cvm.Date),
+                                sDate = string.IsNullOrEmpty(cvm.Date) ? string.Empty : cvm.Date,
+                                Service = cvm.Service,
+                                Disposition = cvm.Disposition
+                            };
+
+                            if (string.IsNullOrEmpty(ancientCheck.sDate))
+                            {
+                                ancientCheck.Date = null;
+                            }
+
+                            listAncientChecks.Add(ancientCheck);
+                        }
+                        catch (Exception e)
+                        {
+                            int z;
+                            z = 2;
+                        }
+
+                        i += 1;
+                        DailyHub.SendProgress("Restore in progress...", i, checkCount);
+                    }
+
+                    checks.AddRange(listAncientChecks);
+                    opidcontext.ChangeTracker.DetectChanges();
+                    opidcontext.SaveChanges();
+                    return;
+                }
+            }
+        }
 
         public static void RestoreResearchTable(string rtFileName)
         {

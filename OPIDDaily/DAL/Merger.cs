@@ -16,7 +16,11 @@ namespace OPIDDaily.DAL
             {
                 case "OPIDDaily":
                 case "BoundedResearchTableFile":
-                    UpdateResearchTableFromOpidDailyFile(uploadedFile);
+                    UpdateResearchTableFromFile(uploadedFile);
+                    break;
+
+                case "AncientChecksFile":
+                    UpdateAncientChecksTableFromFile(uploadedFile);
                     break;
 
                 case "VoidedChecks":
@@ -65,7 +69,7 @@ namespace OPIDDaily.DAL
 
             foreach (Check check in checks)
             {
-                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == check.Num || c.Num == -check.Num);
+                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == check.Num);
 
                 // Normally, matchedChecks.Count() == 0 or matchedChecks.Count == 1 
                 // But in the case of a birth certificate, a single check number may cover
@@ -115,7 +119,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void UpdateResearchTableFromOpidDailyFile(string uploadedFile)
+        public static void UpdateResearchTableFromFile(string uploadedFile)
         {
             List<DispositionRow> researchRows = CheckManager.GetResearchRows(uploadedFile);
 
@@ -135,6 +139,30 @@ namespace OPIDDaily.DAL
             // for Mark Justice was a typo.
             // PLB 12/14/2018 CheckManager.HandleIncidentalChecks(researchRows);
             CheckManager.PersistResearchChecks(researchRows);
+            //  PLB 12/14/2018 Don't call RemoveTypoChecks
+            // CheckManager.RemoveTypoChecks();
+        }
+
+        public static void UpdateAncientChecksTableFromFile(string uploadedFile)
+        {
+            List<DispositionRow> researchRows = CheckManager.GetResearchRows(uploadedFile);
+
+            CheckManager.Init();
+
+            // Handle incidental checks before persisting unmatched checks.
+            // This way an Interview Research file cannot add to the set
+            // of resolved checks by mistake.
+            // For example, the Interview Research File may contain both
+            //    Estes, Jason  TID = 74726, TID Disposition = Voided/Replaced
+            //    Justice, Mark TID = 74726, TID Disposition = ?
+            // In this case, check number 74726 was mistakenly assigned to both
+            // the TID for Jason Estes and the TID for Mark Justice.
+            // If incidental checks are handled after unmatched checks are persisted,
+            // then the check for Jason Estes will resolve the check for Mark Justice.
+            // We don't want this to happen! Most likely, the check number 74726
+            // for Mark Justice was a typo.
+            // PLB 12/14/2018 CheckManager.HandleIncidentalChecks(researchRows);
+            CheckManager.PersistAncientChecks(researchRows);
             //  PLB 12/14/2018 Don't call RemoveTypoChecks
             // CheckManager.RemoveTypoChecks();
         }

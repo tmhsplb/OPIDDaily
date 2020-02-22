@@ -43,7 +43,7 @@ namespace OPIDChecks.Controllers
         [HttpPost]
         public JsonResult GetResearchTable()
         {
-            string researchTableFileName = Extras.GetResearchTableName();
+            string researchTableFileName = Extras.GetResearchTableFileName();
             string content = GetResearchTableCSV();
 
             return Json(new
@@ -72,6 +72,15 @@ namespace OPIDChecks.Controllers
         {
             string researchTableFileName = FileDownloader.DownloadResearchTable();
             string filenameAndExtension = string.Format("{0}.csv", researchTableFileName);
+            string path = AppDomain.CurrentDomain.BaseDirectory + "Downloads/";
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path + filenameAndExtension);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filenameAndExtension);
+        }
+
+        public ActionResult DownloadAncientChecks(FileViewModel model)
+        {
+            string ancientChecksFileName = FileDownloader.DownloadAncientChecks(Convert.ToInt32(model.Year));
+            string filenameAndExtension = string.Format("{0}.csv", ancientChecksFileName);
             string path = AppDomain.CurrentDomain.BaseDirectory + "Downloads/";
             byte[] fileBytes = System.IO.File.ReadAllBytes(path + filenameAndExtension);
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filenameAndExtension);

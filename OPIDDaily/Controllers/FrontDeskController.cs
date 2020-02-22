@@ -43,7 +43,7 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
-        public ActionResult InvisibleHistory()
+        public ActionResult AncientHistory()
         {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
             int nowServing = NowServing();
@@ -53,7 +53,7 @@ namespace OPIDDaily.Controllers
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            // Treat a client with invisible history like a client with existing history
+            // Treat a client with ancient history like a client with existing history
             // that is not yet visible, i.e. must be added to any actual existing history.
             return View("ExistingClient", rsvm);
         }

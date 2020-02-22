@@ -19,7 +19,7 @@
 
 <script type="text/javascript">
     $("#historyGrid").jqGrid({
-        url: "@Url.Action("GetHistory", "FrontDesk")",
+        url: "@Url.Action("GetVisitHistory", "FrontDesk")",
         datatype: "json",
         mtype: "Get",
         colNames: ['Id', 'Date', 'Item', 'Check', 'Status', 'Notes'],

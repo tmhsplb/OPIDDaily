@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
+using DataTables.Mvc;
 using OpidDaily.Models;
 using OPIDDaily.DAL;
+using OPIDDaily.DataContexts;
 using OPIDDaily.Models;
 using OPIDDaily.Utils;
+using OpidDailyEntities;
 
 namespace OPIDDaily.Controllers
 {
@@ -146,14 +150,91 @@ namespace OPIDDaily.Controllers
             return RedirectToAction("ManageServiceDateClients");
         }
 
-        public ActionResult Merge()
+        public ActionResult Rebuild()
         {
             TempData["UploadedFile"] = "";
             return View();
         }
 
+        public ActionResult AncientChecks()
+        {
+            return View();
+        }
+
+        // Don't know how to move this to the CheckManager where it belongs because of return type issues.
+        // Just leave it here for now.
+        public JsonResult GetAncientChecks([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                IQueryable<AncientCheck> query = opidcontext.AncientChecks;
+
+                var totalCount = query.Count();
+
+                // Apply filters for searching
+                if (requestModel.Search.Value != string.Empty)
+                {
+                    var value = requestModel.Search.Value.Trim();
+                    query = query.Where(p => p.Name.Contains(value) ||
+                                             p.sDOB.Contains(value) ||
+                                             p.sRecordID.Contains(value) ||
+                                             p.sInterviewRecordID.Contains(value) ||
+                                             p.sNum.Contains(value) ||
+                                             p.sDate.Contains(value) ||
+                                             p.Service.Contains(value) ||
+                                             p.Disposition.Contains(value)
+                                       );
+                }
+
+                var filteredCount = query.Count();
+
+                var fqo = query.OrderBy("Id asc");  // Order by the primary key for speed. Ordering by Name times out, because Name is not an indexed field.
+
+                // Paging
+                var fqop = fqo.Skip(requestModel.Start).Take(requestModel.Length);
+
+                var data = fqop.Select(ancientCheck => new
+                {
+                    sRecordID = ancientCheck.sRecordID,
+                    sInterviewRecordID = ancientCheck.sInterviewRecordID,
+                    Name = ancientCheck.Name,
+                    sDOB = ancientCheck.sDOB,
+                    sNum = ancientCheck.sNum,
+                    sDate = ancientCheck.sDate,
+                    Service = ancientCheck.Service,
+                    Disposition = ancientCheck.Disposition
+                }).ToList();
+
+                return Json(new DataTablesResponse(requestModel.Draw, data, filteredCount, totalCount), JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpPost]
-        public ActionResult UploadBoundedResearchTableFile(FileViewModel model)
+        public ActionResult InsertAncientChecks(FileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var postedFile = Request.Files["File"];
+
+                if (!postedFile.FileName.EndsWith("xlsx"))
+                {
+                    ModelState.AddModelError("", "This is not an Excel xlsx file.");
+                    return View("AncientChecks", model);
+                }
+
+                List<string> docfiles = FileUploader.UploadFile(postedFile);
+
+                CheckManager.InsertAncientChecks(postedFile.FileName);
+                ViewData["InsertedAncientChecks"] = string.Format("Inserted File: {0}", postedFile.FileName);
+
+                return View("AncientChecks", model);
+            }
+
+            return View("AncientChecks", model);
+        }
+        
+        [HttpPost]
+        public ActionResult MergeBoundedResearchTableFile(FileViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -163,41 +244,59 @@ namespace OPIDDaily.Controllers
 
                 if (!fname.EndsWith("xlsx"))
                 {
-                    ModelState.AddModelError("OPIDDailyError", "This is not an Excel xlsx file.");
-                    return View("Merge", model);
+                    ModelState.AddModelError("BoundedResearchTableFileError", "This is not an Excel xlsx file.");
+                    return View("Rebuild", model);
                 }
 
                 List<string> docfiles = FileUploader.UploadFile(postedFile);
-                TempData["UploadedFile"] = fname;
-                TempData["FileType"] = "BoundedResearchTableFile";
-                ViewData["UploadedBoundedResearchTableFile"] = string.Format("Uploaded File: {0}", fname);
+                string pathToBoundedResearchFile = string.Format("~/Uploads/{0}", fname);
+                string mappedPath = HttpContext.Server.MapPath(pathToBoundedResearchFile);
 
-                return View("Merge", model);
+                Merger.PerformMerge(mappedPath, "BoundedResearchTableFile");
+
+                ViewData["MergedBoundedResearchTableFile"] = string.Format("Merged File: {0}", fname);
+                return View("Rebuild", model);
             }
 
             ModelState.AddModelError("BoundedResearchTableFileError", "Please supply a file name.");
-            return View("Merge", model);
+            return View("Rebuild", model);
         }
 
         [HttpPost]
-        public ActionResult PerformMerge()
+        public ActionResult MergeAncientChecksFile(FileViewModel model)
         {
-            string uploadedFile = TempData["UploadedFile"] as string;
-            string fileType = TempData["FileType"] as string;
-
-            if (string.IsNullOrEmpty(uploadedFile))
+            if (ModelState.IsValid)
             {
-                ViewData["MergeStatus"] = "Please choose a file to merge";
-                return View("Merge");
+                var postedFile = Request.Files["File"];
+
+                string fname = postedFile.FileName;
+
+                if (!fname.EndsWith("xlsx"))
+                {
+                    ModelState.AddModelError("AncientChecksFileError", "This is not an Excel xlsx file.");
+                    return View("Rebuild", model);
+                }
+
+                List<string> docfiles = FileUploader.UploadFile(postedFile);
+                string pathToAncientChecksFile = string.Format("~/Uploads/{0}", fname);
+                string mappedPath = HttpContext.Server.MapPath(pathToAncientChecksFile);
+
+                Merger.PerformMerge(mappedPath, "AncientChecksFile");
+
+                ViewData["MergedAncientChecksFile"] = string.Format("Merged File: {0}", fname);
+                return View("Rebuild", model);
             }
 
-            string filePath = string.Format("~/Uploads/{0}", uploadedFile);
-            string mappedPath = HttpContext.Server.MapPath(filePath);
+            ModelState.AddModelError("AncientChecksFileError", "Please supply a file name.");
+            return View("Rebuild", model);
+        }
 
-            Merger.PerformMerge(mappedPath, fileType);
-
-            ViewData["MergeStatus"] = "Merge Complete";
-            return View("Merge");
+        [HttpPost]
+        public ActionResult DeleteAncientAncientChecks(FileViewModel model)
+        {
+            CheckManager.DeleteAncientAncientChecks(Convert.ToInt32(model.Year));
+            ViewData["DeletedAncientAncientChecks"] = string.Format("Deleted checks for year {0}", model.Year);
+            return View("AncientChecks");
         }
 
         public ActionResult Version()

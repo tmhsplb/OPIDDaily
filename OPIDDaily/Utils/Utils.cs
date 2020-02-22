@@ -45,10 +45,17 @@ namespace OPIDDaily.Utils
             return timestamp;
         }
 
-        public static string GetResearchTableName()
+        public static string GetResearchTableFileName()
         {
             string timestamp = GetTimestamp();
             string fname = string.Format("Research {0}", timestamp);
+            return fname;
+        }
+
+        public static string GetAncientChecksFileName(int year)
+        {
+            string timestamp = GetTimestamp();
+            string fname = string.Format("AncientChecks {0} {1}", year, timestamp);
             return fname;
         }
 

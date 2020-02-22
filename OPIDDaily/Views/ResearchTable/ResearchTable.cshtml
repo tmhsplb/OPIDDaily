@@ -56,103 +56,6 @@
     </script>
 }
 
-<br />
-
-@using (Html.BeginForm("DownloadResearchTable", "FileDownload", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
-{
-    <table width="100%">
-        <tr>
-            <td>
-                <div class="form-group">
-                    <input type="submit" value="Download Research Table" />
-                </div>
-            </td>
-        </tr>
-    </table>
-}
-
-@* Downloading through the browser stopped working when the Research Table became large. Now just dump the RT to the ~/Downloads/ folder.
-    <form id="backupForm">
-        <h4>Backup Research Table</h4>
-        <hr />
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button class="btn btn-default" type="submit">Download Research Table Backup File</button>
-            </div>
-        </div>
-    </form>
-    <br /><br />
-    <div class="text-danger">
-        The download button might not work the first time. Keep trying and be patient.
-    </div>
-*@
-
-@*
-    <form id="downloadForm">
-        <h4>Backup Research Table</h4>
-        <hr />
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button class="btn btn-default" type="submit">Create Research Table Backup File in ~/Downloads/ folder</button>
-            </div>
-        </div>
-    </form>
-*@
-
-@*
-    <script type="text/javascript">
-        /* https://stackoverflow.com/questions/11534690/how-to-do-a-jquery-callback-after-form-submit */
-        /* https://www.airpair.com/js/jquery-ajax-post-tutorial */
-        $("#backupForm").submit(function () {
-            $.ajax({
-                url: "@Url.Action("GetResearchTable", "FileDownload")",
-                dataType: 'json',
-                type: "POST",
-                contentType: 'application/x-www-form-urlencoded',
-                data: $(this).serialize(),
-                success: function (data, textStatus, jQxhr) {
-                    // alert("Inside backupForm callback: data.rtFileName = " + data.rtFileName);
-                    var textFileAsBlob = new Blob([data.content], { type: 'text/plain' });
-
-                    var downloadLink = document.createElement("a");
-                    downloadLink.download = data.rtFileName + ".csv";
-
-                    downloadLink.innerHtml = "Download Research Table";
-                    downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-                    downloadLink.click();
-                },
-                error: function (jqXhr, textStatus, errorThrown) {
-                    alert("error thrown: " + errorThrown);
-                }
-            })
-        })
-    </script>
-*@
-
-@*
-    <script type="text/javascript">
-        /* https://stackoverflow.com/questions/11534690/how-to-do-a-jquery-callback-after-form-submit */
-        /* https://www.airpair.com/js/jquery-ajax-post-tutorial */
-        $("#downloadForm").submit(function () {
-            $.ajax({
-                url: "@Url.Action("DownloadResearchTable", "FileDownload")",
-                dataType: 'json',
-                type: "POST",
-                contentType: 'application/x-www-form-urlencoded',
-                data: $(this).serialize(),
-                success: function (data, textStatus, jQxhr) {
-                    // alert("Inside backupForm callback: data.rtFileName = " + data.rtFileName);
-
-                    alert("Downloaded " + data.rtFileName + " to ~/Downloads/ folder");
-                },
-                error: function (jqXhr, textStatus, errorThrown) {
-                    alert("error thrown: " + errorThrown);
-                }
-            })
-        })
-    </script>
-*@
-
 @*
     @using (Html.BeginForm("DeleteResearchTable", "ResearchTable", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
     {
@@ -167,14 +70,26 @@
     }
 *@
 
+<br/>
+
+@using (Html.BeginForm("DownloadResearchTable", "FileDownload", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+{
+    <div class="form-group">
+        <div class="col-md-10">
+            <input type="submit" value="Download Research Table" class="btn btn-default" />
+        </div>
+    </div>
+}
+
 <br />
-@using (Html.BeginForm("Restore", "ResearchTable", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+
+@using (Html.BeginForm("RestoreResearchTable", "ResearchTable", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
 {
     // Idea for
     //   TextxboxFor(m => m.File, new { type = "file"})
     // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
     @Html.AntiForgeryToken()
-    <h4>Restore from backup.</h4>
+    <h4>Restore Research Table from backup</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="form-group">
@@ -183,12 +98,75 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
+        <div class="col-md-10">
             <input type="submit" class="btn btn-default" value="Restore from backup" />
         </div>
     </div>
 }
 
-<br />
+<br/>
+
+<div class="row">
+    <div class="col-md-12">
+        <section id="DownloadAncientChecksForm">
+            @using (Html.BeginForm("DownloadAncientChecks", "FileDownload", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+            {
+                <h4>Download Ancient Checks from Research Table</h4>
+                <hr />
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.Year, new { placeholder = "Year", @class = "form-control" })
+                    </div>
+                    @*
+                        <div class="col-md-2">
+                            @Html.CheckBoxFor(m => m.JustZeroValued, new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.JustZeroValued, new { @class = "control-label" })
+                        </div>
+                    *@
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Download Ancient Checks" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+<br/>
+
+<div class="row">
+    <div class="col-md-12">
+        <section id="DeleteAncientChecksForm">
+            @using (Html.BeginForm("DeleteAncientResearchChecks", "ResearchTable", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+            {
+                <h4>Delete Ancient Checks from Research Table</h4>
+                <hr />
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.Year, new { placeholder = "Year", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Delete Ancient Checks" class="btn btn-default" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @ViewData["DeletedAncientChecks"]
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
 @Html.Partial("_ModalProgressBar")
 
