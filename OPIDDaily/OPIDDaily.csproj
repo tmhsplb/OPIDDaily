@@ -855,6 +855,7 @@
     <Content Include="Views\Superadmin\Rebuild.cshtml" />
     <Content Include="Views\FrontDesk\PrintExistingClientVisits.cshtml" />
     <Content Include="Views\Superadmin\AncientChecks.cshtml" />
+    <Content Include="Views\BackOffice\AncientChecks.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

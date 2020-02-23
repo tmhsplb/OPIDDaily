@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Ancient Checks Table";
-    Layout = "~/Views/Shared/_Superadmin.cshtml";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
 }
 
 <br /><br /><br />
@@ -33,7 +33,7 @@
                         "serverSide": true,
                         "processing": true,
                         "ajax": {
-                            "url": "@Url.Action("GetAncientChecks","Superadmin")"
+                            "url": "@Url.Action("GetAncientChecks","BackOffice")"
                         },
                         "columns": [
                             { "title": "Record ID", "data": "sRecordID", "searchable": true },
@@ -55,38 +55,6 @@
         });
     </script>
 }
-
-<br />
-
-<div class="row">
-    <div class="col-md-12">
-        <section id="DeleteAncientChecksForm">
-            @using (Html.BeginForm("DeleteAncientAncientChecks", "Superadmin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
-            {
-                <h4>Delete Ancient Checks from Ancient Checks Table</h4>
-                <hr />
-                <div class="form-group">
-                    <div class="col-md-4">
-                        @Html.TextBoxFor(m => m.Year, new { placeholder = "Year", @class = "form-control" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-10">
-                        <input type="submit" value="Delete Ancient Checks" class="btn btn-default" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-10">
-                        @ViewData["DeletedAncientAncientChecks"]
-                    </div>
-                </div>
-            }
-        </section>
-    </div>
-</div>
-
 
 
 

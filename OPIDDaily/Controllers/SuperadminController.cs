@@ -209,6 +209,7 @@ namespace OPIDDaily.Controllers
             }
         }
 
+        /*
         [HttpPost]
         public ActionResult InsertAncientChecks(FileViewModel model)
         {
@@ -232,6 +233,7 @@ namespace OPIDDaily.Controllers
 
             return View("AncientChecks", model);
         }
+        */
         
         [HttpPost]
         public ActionResult MergeBoundedResearchTableFile(FileViewModel model)

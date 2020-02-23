@@ -547,6 +547,7 @@ namespace OPIDDaily.DAL
             }
         }
 
+        /*
         public static List<CheckViewModel> GetAncientChecks(int year)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
@@ -588,6 +589,7 @@ namespace OPIDDaily.DAL
                 return checks;
             }
         }
+        */
 
         public static List<Check> GetResearchChecks()
         {
@@ -702,6 +704,7 @@ namespace OPIDDaily.DAL
             }
         }
 
+        /*
         public static void InsertAncientChecks(string acFileName)
         {
             string pathToAncientChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", acFileName));
@@ -710,7 +713,7 @@ namespace OPIDDaily.DAL
 
             UpdateAncientChecksTable(ancientChecks);
         }
-
+        */
 
         private static void RestoreAncientChecksTable(List<CheckViewModel> ancientChecks)
         {

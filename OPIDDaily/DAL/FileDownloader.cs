@@ -30,6 +30,7 @@ namespace OPIDDaily.DAL
             return "NoChecks";
         }
 
+        /*
         public static string DownloadAncientChecks(int year)
         {
             List<CheckViewModel> checks = CheckManager.GetAncientChecks(year);
@@ -45,7 +46,7 @@ namespace OPIDDaily.DAL
 
             return "NoChecks";
         }
-
+        */
         public static string GetContentAsString(string fname)
         {
 

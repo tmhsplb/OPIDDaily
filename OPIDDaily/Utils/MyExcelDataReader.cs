@@ -44,6 +44,7 @@ namespace OPIDDaily.Utils
             return rchecks;
         }
 
+        /*
         private static Check NewCheck(System.Data.DataRow dataRow)
         {
             try
@@ -74,6 +75,7 @@ namespace OPIDDaily.Utils
             List<Check> rchecks = new ExcelData(filePath).GetData().Select(dataRow => NewCheck(dataRow)).ToList();
             return rchecks;
         }
+        */
 
         private static void InsertNulls(List<DispositionRow> resRows)
         {
