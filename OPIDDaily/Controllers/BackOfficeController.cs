@@ -67,11 +67,6 @@ namespace OPIDDaily.Controllers
             return Json(new DataTablesResponse(requestModel.Draw, data, filteredCount, totalCount), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ResearchTable()
-        {
-            return View();
-        }
-
         public ActionResult Merge()
         {
             TempData["UploadedFile"] = "";
@@ -180,57 +175,18 @@ namespace OPIDDaily.Controllers
             return View("Merge");
         }
 
-        public ActionResult AncientChecks()
+
+        public ActionResult RecentChecks()
         {
+            ViewBag.RecentYears = Config.RecentYears;
             return View();
         }
 
-        // Don't know how to move this to the CheckManager where it belongs because of return type issues.
-        // Just leave it here for now.
-        public JsonResult GetAncientChecks([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
+
+        public ActionResult AncientChecks()
         {
-            using (OpidDailyDB opidcontext = new OpidDailyDB())
-            {
-                IQueryable<AncientCheck> query = opidcontext.AncientChecks;
-
-                var totalCount = query.Count();
-
-                // Apply filters for searching
-                if (requestModel.Search.Value != string.Empty)
-                {
-                    var value = requestModel.Search.Value.Trim();
-                    query = query.Where(p => p.Name.Contains(value) ||
-                                             p.sDOB.Contains(value) ||
-                                             p.sRecordID.Contains(value) ||
-                                             p.sInterviewRecordID.Contains(value) ||
-                                             p.sNum.Contains(value) ||
-                                             p.sDate.Contains(value) ||
-                                             p.Service.Contains(value) ||
-                                             p.Disposition.Contains(value)
-                                       );
-                }
-
-                var filteredCount = query.Count();
-
-                var fqo = query.OrderBy("Id asc");  // Order by the primary key for speed. Ordering by Name times out, because Name is not an indexed field.
-
-                // Paging
-                var fqop = fqo.Skip(requestModel.Start).Take(requestModel.Length);
-
-                var data = fqop.Select(ancientCheck => new
-                {
-                    sRecordID = ancientCheck.sRecordID,
-                    sInterviewRecordID = ancientCheck.sInterviewRecordID,
-                    Name = ancientCheck.Name,
-                    sDOB = ancientCheck.sDOB,
-                    sNum = ancientCheck.sNum,
-                    sDate = ancientCheck.sDate,
-                    Service = ancientCheck.Service,
-                    Disposition = ancientCheck.Disposition
-                }).ToList();
-
-                return Json(new DataTablesResponse(requestModel.Draw, data, filteredCount, totalCount), JsonRequestBehavior.AllowGet);
-            }
+            ViewBag.AncientYears = Config.AncientYears;
+            return View();
         }
     }
 }

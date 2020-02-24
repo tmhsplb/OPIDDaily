@@ -44,39 +44,6 @@ namespace OPIDDaily.Utils
             return rchecks;
         }
 
-        /*
-        private static Check NewCheck(System.Data.DataRow dataRow)
-        {
-            try
-            {
-                Check check = new Check
-                {
-                    Date = Convert.ToDateTime(dataRow["Date"]),
-                    RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
-                    InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
-                    Name = dataRow["Name"].ToString(),
-                    DOB = Convert.ToDateTime(dataRow["DOB"]),
-                    Num = Convert.ToInt32(dataRow["Check Number"].ToString()),
-                    Service = dataRow["Service"].ToString(),
-                    Disposition = dataRow["Disposition"].ToString()
-                };
-
-                return check;
-            }
-            catch (Exception e)
-            {
-                // log the dataRow that failed
-                return null;
-            }
-        }
-
-        public static List<Check> GetChecks(string filePath)
-        {
-            List<Check> rchecks = new ExcelData(filePath).GetData().Select(dataRow => NewCheck(dataRow)).ToList();
-            return rchecks;
-        }
-        */
-
         private static void InsertNulls(List<DispositionRow> resRows)
         {
             DateTime epochAsDateTime = new DateTime(1900, 1, 1);

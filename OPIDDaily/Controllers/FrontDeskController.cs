@@ -43,7 +43,7 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
-        public ActionResult AncientHistory()
+        public ActionResult PrehistoricChecks()
         {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
             int nowServing = NowServing();
@@ -220,8 +220,15 @@ namespace OPIDDaily.Controllers
             return View("PrintExistingClientOverflowVoucher", objTuple);
         }
 
-        public ActionResult ResearchTable()
+        public ActionResult RecentChecks()
         {
+            ViewBag.RecentYears = Config.RecentYears;
+            return View();
+        }
+
+        public ActionResult AncientChecks()
+        {
+            ViewBag.AncientYears = Config.AncientYears;
             return View();
         }
     }

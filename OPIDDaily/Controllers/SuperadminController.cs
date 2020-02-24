@@ -156,85 +156,7 @@ namespace OPIDDaily.Controllers
             return View();
         }
 
-        public ActionResult AncientChecks()
-        {
-            return View();
-        }
 
-        // Don't know how to move this to the CheckManager where it belongs because of return type issues.
-        // Just leave it here for now.
-        public JsonResult GetAncientChecks([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
-        {
-            using (OpidDailyDB opidcontext = new OpidDailyDB())
-            {
-                IQueryable<AncientCheck> query = opidcontext.AncientChecks;
-
-                var totalCount = query.Count();
-
-                // Apply filters for searching
-                if (requestModel.Search.Value != string.Empty)
-                {
-                    var value = requestModel.Search.Value.Trim();
-                    query = query.Where(p => p.Name.Contains(value) ||
-                                             p.sDOB.Contains(value) ||
-                                             p.sRecordID.Contains(value) ||
-                                             p.sInterviewRecordID.Contains(value) ||
-                                             p.sNum.Contains(value) ||
-                                             p.sDate.Contains(value) ||
-                                             p.Service.Contains(value) ||
-                                             p.Disposition.Contains(value)
-                                       );
-                }
-
-                var filteredCount = query.Count();
-
-                var fqo = query.OrderBy("Id asc");  // Order by the primary key for speed. Ordering by Name times out, because Name is not an indexed field.
-
-                // Paging
-                var fqop = fqo.Skip(requestModel.Start).Take(requestModel.Length);
-
-                var data = fqop.Select(ancientCheck => new
-                {
-                    sRecordID = ancientCheck.sRecordID,
-                    sInterviewRecordID = ancientCheck.sInterviewRecordID,
-                    Name = ancientCheck.Name,
-                    sDOB = ancientCheck.sDOB,
-                    sNum = ancientCheck.sNum,
-                    sDate = ancientCheck.sDate,
-                    Service = ancientCheck.Service,
-                    Disposition = ancientCheck.Disposition
-                }).ToList();
-
-                return Json(new DataTablesResponse(requestModel.Draw, data, filteredCount, totalCount), JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        /*
-        [HttpPost]
-        public ActionResult InsertAncientChecks(FileViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var postedFile = Request.Files["File"];
-
-                if (!postedFile.FileName.EndsWith("xlsx"))
-                {
-                    ModelState.AddModelError("", "This is not an Excel xlsx file.");
-                    return View("AncientChecks", model);
-                }
-
-                List<string> docfiles = FileUploader.UploadFile(postedFile);
-
-                CheckManager.InsertAncientChecks(postedFile.FileName);
-                ViewData["InsertedAncientChecks"] = string.Format("Inserted File: {0}", postedFile.FileName);
-
-                return View("AncientChecks", model);
-            }
-
-            return View("AncientChecks", model);
-        }
-        */
-        
         [HttpPost]
         public ActionResult MergeBoundedResearchTableFile(FileViewModel model)
         {
@@ -299,6 +221,62 @@ namespace OPIDDaily.Controllers
             CheckManager.DeleteAncientAncientChecks(Convert.ToInt32(model.Year));
             ViewData["DeletedAncientAncientChecks"] = string.Format("Deleted checks for year {0}", model.Year);
             return View("AncientChecks");
+        }
+
+        public ActionResult RecentChecks()
+        {
+            ViewBag.RecentYears = Config.RecentYears;
+            return View();
+        }
+
+        public ActionResult AncientChecks()
+        {
+            ViewBag.AncientYears = Config.AncientYears;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult RestoreResearchTable(FileViewModel model)
+        {
+            if (!CheckManager.ResearchTableIsEmpty())
+            {
+                ModelState.AddModelError("", "The Research Table must be empty before a restore is performed.");
+                return View("ResearchTable", model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                var postedFile = Request.Files["File"];
+
+                if (!postedFile.FileName.EndsWith("xlsx"))
+                {
+                    ModelState.AddModelError("", "This is not an Excel xlsx file.");
+                    return View("ResearchTable", model);
+                }
+
+                List<string> docfiles = FileUploader.UploadFile(postedFile);
+
+                CheckManager.RestoreResearchTable(postedFile.FileName);
+
+                return View("RecentChecks", model);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteAncientResearchChecks(FileViewModel model)
+        {
+            CheckManager.DeleteAncientResearchChecks(Convert.ToInt32(model.Year));
+            ViewData["DeletedAncientChecks"] = string.Format("Deleted checks for year {0}", model.Year);
+            return View("RecentChecks");
+        }
+
+        [HttpPost]
+        public ActionResult DeleteResearchTable()
+        {
+            CheckManager.DeleteResearchTable();
+            return View("RecentChecks");
         }
 
         public ActionResult Version()

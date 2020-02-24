@@ -92,5 +92,21 @@ namespace OPIDDaily
                 return "Production";
             }
         }
+
+        public static string  RecentYears
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["RecentYears"];
+            }
+        }
+
+        public static string AncientYears
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["AncientYears"];
+            }
+        }
     }
 }

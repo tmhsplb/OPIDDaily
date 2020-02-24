@@ -1,13 +1,13 @@
 ﻿@model OPIDDaily.Models.FileViewModel
 
 @{
-    ViewBag.Title = "Ancient Checks";
-    Layout = "~/Views/Shared/_Superadmin.cshtml";
+    ViewBag.Title = "Recent Checks";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
 }
 
 <br /><br /><br />
 
-<h4>Checks for years: @ViewBag.AncientYears</h4>
+<h4>Checks for years: @ViewBag.RecentYears</h4>
 
 <br />
 
@@ -15,7 +15,7 @@
     <div class="col-md-12">
         <div class="panel panel-primary list-panel" id="list-panel">
             <div class="panel-heading list-panel-heading">
-                <h1 class="panel-title list-panel-title">Ancient Checks</h1>
+                <h1 class="panel-title list-panel-title">Recent Checks</h1>
             </div>
             <div class="panel-body">
                 <table id="checks-data-table" class="table table-striped table-bordered" style="width:100%;"></table>
@@ -37,7 +37,7 @@
                         "serverSide": true,
                         "processing": true,
                         "ajax": {
-                            "url": "@Url.Action("GetAncientChecks","ResearchTable")"
+                            "url": "@Url.Action("GetRecentChecks","ResearchTable")"
                         },
                         "columns": [
                             { "title": "Record ID", "data": "sRecordID", "searchable": true },
@@ -54,43 +54,11 @@
                 }
             }
 
-            // initialize the datatable
+            // initialize the datatables
             checksListVM.init();
         });
     </script>
 }
-
-<br />
-
-<div class="row">
-    <div class="col-md-12">
-        <section id="DeleteAncientChecksForm">
-            @using (Html.BeginForm("DeleteAncientAncientChecks", "Superadmin", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
-            {
-                <h4>Delete Ancient Checks from Ancient Checks Table</h4>
-                <hr />
-                <div class="form-group">
-                    <div class="col-md-4">
-                        @Html.TextBoxFor(m => m.Year, new { placeholder = "Year", @class = "form-control" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-10">
-                        <input type="submit" value="Delete Ancient Checks" class="btn btn-default" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-10">
-                        @ViewData["DeletedAncientAncientChecks"]
-                    </div>
-                </div>
-            }
-        </section>
-    </div>
-</div>
-
 
 
 

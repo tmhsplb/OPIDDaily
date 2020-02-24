@@ -497,7 +497,6 @@ namespace OPIDDaily.DAL
             }
         }
 
-
         public static List<CheckViewModel> GetChecks()
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
@@ -546,50 +545,6 @@ namespace OPIDDaily.DAL
                 opidcontext.SaveChanges();
             }
         }
-
-        /*
-        public static List<CheckViewModel> GetAncientChecks(int year)
-        {
-            using (OpidDailyDB opidcontext = new OpidDailyDB())
-            {
-                var rchecks = (from check in opidcontext.RChecks select check).ToList();
-
-                List<CheckViewModel> checks = new List<CheckViewModel>();
-
-                foreach (RCheck rc in rchecks)
-                {
-                    bool ancient;
-                  
-                    if (string.IsNullOrEmpty(rc.Date.ToString()))
-                    {
-                        ancient = false;
-                    }
-                    else
-                    {
-                        DateTime checkDate = (DateTime)rc.Date;
-                        ancient = (checkDate.Year == year ? true : false);
-                    }
-                                        
-                    if (ancient)
-                    {
-                        checks.Add(new CheckViewModel
-                        {
-                            RecordID = rc.RecordID,
-                            InterviewRecordID = rc.InterviewRecordID,
-                            Num = rc.Num,
-                            Name = rc.Name,
-                            DOB = rc.DOB,
-                            Date = string.IsNullOrEmpty(rc.Date.ToString()) ? string.Empty : ((DateTime)rc.Date).ToShortDateString(),
-                            Service = rc.Service,
-                            Disposition = rc.Disposition
-                        });
-                    }
-                }
-
-                return checks;
-            }
-        }
-        */
 
         public static List<Check> GetResearchChecks()
         {
@@ -663,15 +618,22 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
-                var researchChecks = opidcontext.RChecks;
+                var recentChecks = opidcontext.RChecks;
+                var ancientChecks = opidcontext.AncientChecks;
 
                 foreach (CheckViewModel check in resolvedChecks)
                 {
-                    List<RCheck> rchecks = researchChecks.Where(u => u.Num == check.Num).ToList();
+                    List<RCheck> rchecks = recentChecks.Where(u => u.Num == check.Num).ToList();
+                    List<AncientCheck> achecks = ancientChecks.Where(u => u.Num == check.Num).ToList();
 
                     foreach (RCheck rcheck in rchecks)
                     {
                         rcheck.Disposition = check.Disposition;
+                    }
+
+                    foreach (AncientCheck acheck in achecks)
+                    {
+                        acheck.Disposition = check.Disposition;
                     }
                 }
 
@@ -703,17 +665,6 @@ namespace OPIDDaily.DAL
                 return;
             }
         }
-
-        /*
-        public static void InsertAncientChecks(string acFileName)
-        {
-            string pathToAncientChecksFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Uploads/{0}", acFileName));
-
-            List<Check> ancientChecks = MyExcelDataReader.GetChecks(pathToAncientChecksFile);
-
-            UpdateAncientChecksTable(ancientChecks);
-        }
-        */
 
         private static void RestoreAncientChecksTable(List<CheckViewModel> ancientChecks)
         {

@@ -30,23 +30,6 @@ namespace OPIDDaily.DAL
             return "NoChecks";
         }
 
-        /*
-        public static string DownloadAncientChecks(int year)
-        {
-            List<CheckViewModel> checks = CheckManager.GetAncientChecks(year);
-
-            if (checks != null)
-            {
-                string fname = Extras.GetAncientChecksFileName(year);
-                string pathToAncientHistoryFile = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/Downloads/{0}.csv", fname));
-
-                WriteChecksFile(pathToAncientHistoryFile, checks);
-                return fname;
-            }
-
-            return "NoChecks";
-        }
-        */
         public static string GetContentAsString(string fname)
         {
 

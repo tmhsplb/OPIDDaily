@@ -1,17 +1,21 @@
 ﻿@model OPIDDaily.Models.FileViewModel
 
 @{
-    ViewBag.Title = "Research Table";
-    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+    ViewBag.Title = "Recent Checks";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
 }
 
 <br /><br /><br />
+
+<h4>Checks for years: @ViewBag.RecentYears</h4>
+
+<br />
 
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary list-panel" id="list-panel">
             <div class="panel-heading list-panel-heading">
-                <h1 class="panel-title list-panel-title">Research Table</h1>
+                <h1 class="panel-title list-panel-title">Recent Checks</h1>
             </div>
             <div class="panel-body">
                 <table id="checks-data-table" class="table table-striped table-bordered" style="width:100%;"></table>
@@ -33,7 +37,7 @@
                         "serverSide": true,
                         "processing": true,
                         "ajax": {
-                            "url": "@Url.Action("GetChecks","ResearchTable")"
+                            "url": "@Url.Action("GetRecentChecks","ResearchTable")"
                         },
                         "columns": [
                             { "title": "Record ID", "data": "sRecordID", "searchable": true },
@@ -56,6 +60,21 @@
     </script>
 }
 
+<br />
 
- 
+@using (Html.BeginForm("DownloadResearchTable", "FileDownload", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+{
+    <table width="100%">
+        <tr>
+            <td>
+                <div class="form-group">
+                    <input type="submit" value="Download Recent Checks" />
+                </div>
+            </td>
+        </tr>
+    </table>
+}
+
+
+@Html.Partial("_ModalProgressBar")
 

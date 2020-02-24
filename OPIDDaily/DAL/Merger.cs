@@ -173,7 +173,7 @@ namespace OPIDDaily.DAL
 
             List<Check> excelChecks = CheckManager.GetExcelChecks(uploadedFile, disposition);
             List<Check> researchChecks = CheckManager.GetResearchChecks();
-
+           
             DetermineResolvedChecks(excelChecks, disposition, researchChecks);
             CheckManager.ResolveResearchChecks();
         }

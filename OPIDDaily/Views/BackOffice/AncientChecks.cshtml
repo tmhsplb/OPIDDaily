@@ -1,11 +1,15 @@
 ﻿@model OPIDDaily.Models.FileViewModel
 
 @{
-    ViewBag.Title = "Ancient Checks Table";
+    ViewBag.Title = "Ancient Checks";
     Layout = "~/Views/Shared/_BackOffice.cshtml";
 }
 
 <br /><br /><br />
+
+<h4>Checks for years: @ViewBag.AncientYears</h4>
+
+<br />
 
 <div class="row">
     <div class="col-md-12">
@@ -33,7 +37,7 @@
                         "serverSide": true,
                         "processing": true,
                         "ajax": {
-                            "url": "@Url.Action("GetAncientChecks","BackOffice")"
+                            "url": "@Url.Action("GetAncientChecks","ResearchTable")"
                         },
                         "columns": [
                             { "title": "Record ID", "data": "sRecordID", "searchable": true },

@@ -77,17 +77,6 @@ namespace OPIDChecks.Controllers
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filenameAndExtension);
         }
 
-        /*
-        public ActionResult DownloadAncientChecks(FileViewModel model)
-        {
-            string ancientChecksFileName = FileDownloader.DownloadAncientChecks(Convert.ToInt32(model.Year));
-            string filenameAndExtension = string.Format("{0}.csv", ancientChecksFileName);
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Downloads/";
-            byte[] fileBytes = System.IO.File.ReadAllBytes(path + filenameAndExtension);
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filenameAndExtension);
-        }
-        */
-
         private static void PrepopulateImportRow(List<Check> researchChecks, ImportRow importRow)
         {
             List<Check> rChecks = researchChecks.FindAll(r => r.RecordID == importRow.RecordID && r.InterviewRecordID == importRow.InterviewRecordID).ToList();
