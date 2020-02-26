@@ -1,5 +1,6 @@
 ﻿using OPIDDaily.DataContexts;
 using OPIDDaily.Models;
+using OPIDDaily.Utils;
 using OpidDailyEntities;
 using System;
 using System.Collections.Generic;
@@ -85,13 +86,14 @@ namespace OPIDDaily.DAL
             };
         }
 
+
         public static List<VisitViewModel> GetVisits(int nowServing)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 Client client = opiddailycontext.Clients.Where(c => c.Id == nowServing).FirstOrDefault();
                 DateTime DOB = client.DOB;
-                string lastName = client.LastName.ToUpper();
+                string lastName = Extras.StripSuffix(client.LastName.ToUpper());
 
                 if (client != null)
                 {

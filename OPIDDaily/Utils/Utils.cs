@@ -66,5 +66,21 @@ namespace OPIDDaily.Utils
             return fname;
         }
 
+        public static string StripSuffix(string lastName)
+        {
+            // Examples:
+            //   lastName = "Crow" --> prefix = "Crow"
+            //   lastName = "Crow " --> prefix = "Crow"
+            //   lastName = " Crow" --> prefix = "Crow"
+            //   lastName = "Crow, Jr." --> prefix = "Crow"
+            //   lastName = "Crow , Jr" --> prefix = "Crow"
+            //   lastName = "Crow III" --> prefix = "Crow"
+            lastName = lastName.Trim();
+            string[] parts = lastName.Split(' ');
+            string[] firstParts = parts[0].Split(',');
+            string prefix = firstParts[0].Trim();
+            return prefix;
+        }
+
     }
 }

@@ -22,7 +22,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        private static ClientViewModel ClientEntityToClientViewModel(Client client, bool hasHistory)
+        private static ClientViewModel ClientEntityToClientViewModel(Client client)
         {
             return new ClientViewModel
             {
@@ -42,7 +42,7 @@ namespace OPIDDaily.DAL
                 PND = (client.PND == true ? "Y" : string.Empty),
                 XID = (client.XID == true ? "Y" : string.Empty),
                 XBC = (client.XBC == true ? "Y" : string.Empty),
-                History = (hasHistory ? "Y" : string.Empty),
+             //   History = (hasHistory ? "Y" : string.Empty),
                 Notes = client.Notes
             };
         }
@@ -99,13 +99,14 @@ namespace OPIDDaily.DAL
                     }
                     else
                     {
-                        bool hasHistory = CheckManager.HasHistory(client);
+                        //  bool hasHistory = CheckManager.HasHistory(client);
 
                         if (updateWaittimes == true)
                         {
                             client.WaitTime = GetUpdatedWaitTime(client);
                         }
-                        clientCVMS.Add(ClientEntityToClientViewModel(client, hasHistory));
+
+                        clientCVMS.Add(ClientEntityToClientViewModel(client));
                     }
                 }
 
@@ -127,9 +128,9 @@ namespace OPIDDaily.DAL
                 {
                     opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
 
-                    bool hasHistory = client.Visits.Count > 0;
-
-                    clientCVMS.Add(ClientEntityToClientViewModel(client, hasHistory));
+                    client.EXP = client.Visits.Count == 0;
+                    
+                    clientCVMS.Add(ClientEntityToClientViewModel(client));
                 }
 
                 return clientCVMS;

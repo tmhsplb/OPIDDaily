@@ -590,7 +590,7 @@ namespace OPIDDaily.DAL
         public static bool HasHistory(Client client)
         {
             DateTime DOB = client.DOB;
-            string lastName = client.LastName;
+            string lastName = Extras.StripSuffix(client.LastName.ToUpper());
 
             List<Check> researchChecks = new List<Check>();
 

@@ -27,7 +27,7 @@
         datatype: "json",
         pageable: true,
         mtype: "Get",
-        colNames: ['Id', 'ST', 'WT', 'Stage','Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', @*'EXP',*@ 'HIS', 'PND', 'XID', 'XBC', 'Notes'],
+        colNames: ['Id', 'ST', 'WT', 'Stage','Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', @*'EXP', 'HIS'*@, 'PND', 'XID', 'XBC', 'Notes'],
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
@@ -40,7 +40,7 @@
         { key: false, align: 'center', name: 'DOB', index: 'DOB', width: 100, editable: true, sortable: true, search: false },
         { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: true, search: false },
        @* { name: 'EXP', index: 'EXP', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, }, *@
-        { name: 'History', index: 'History', align: 'center', width: 50, editable: false, sortable: false, search: false }, 
+       @* { name: 'History', index: 'History', align: 'center', width: 50, editable: false, sortable: false, search: false }, *@
         { name: 'PND', index: 'PND', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
         { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
