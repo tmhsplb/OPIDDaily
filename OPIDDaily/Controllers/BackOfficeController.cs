@@ -15,8 +15,6 @@ using log4net;
 
 namespace OPIDDaily.Controllers
 {
-   
-
     [Authorize(Roles = "BackOffice")]
     public class BackOfficeController : SharedController
     {
