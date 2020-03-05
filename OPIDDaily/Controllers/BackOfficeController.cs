@@ -11,12 +11,17 @@ using System.Web.Mvc;
 using OPIDDaily.Utils;
 using OPIDDaily.DataContexts;
 using OpidDailyEntities;
+using log4net;
 
 namespace OPIDDaily.Controllers
 {
+   
+
     [Authorize(Roles = "BackOffice")]
     public class BackOfficeController : SharedController
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(BackOfficeController));
+       
         public ActionResult Home()
         {
             return View();

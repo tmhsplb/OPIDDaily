@@ -4,11 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using log4net;
+using OPIDDaily.Controllers;
 
 namespace OPIDDaily.Utils
 {
     public class MyExcelDataReader
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(MyExcelDataReader));
+     
         private static CheckViewModel NewCheckViewModel(System.Data.DataRow dataRow)
         {
             try
@@ -34,6 +38,7 @@ namespace OPIDDaily.Utils
             catch (Exception e)
             {
                 // log the dataRow that failed
+                Log.Error(e.Message);
                 return null;
             }
         }
@@ -191,6 +196,7 @@ namespace OPIDDaily.Utils
             catch (Exception e)
             {
                 // log the dataRow that failed
+                Log.Error(e.Message);
                 return null;
             }           
         }
@@ -228,6 +234,7 @@ namespace OPIDDaily.Utils
             }
             catch (Exception e)
             {
+                Log.Error(e.Message);
                 throw new Exception("Bad date value");
             }
 
@@ -260,6 +267,7 @@ namespace OPIDDaily.Utils
             }
             catch (Exception e)
             {
+                Log.Error(e.Message);
                 throw new Exception("Bad number value");
             }
 

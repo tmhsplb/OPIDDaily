@@ -22,6 +22,8 @@ namespace OPIDDaily.DAL
 {
     public class CheckManager
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(CheckManager));
+
         private static bool firstCall = true;
       //  private static List<int> incidentals;
 
@@ -394,8 +396,7 @@ namespace OPIDDaily.DAL
             catch (Exception e)
             {
                 // Check the value of problemCheck;
-                int z;
-                z = 2;
+                Log.Error(e.Message);
             }
         }
 
@@ -492,8 +493,7 @@ namespace OPIDDaily.DAL
             catch (Exception e)
             {
                 // Check the value of problemCheck;
-                int z;
-                z = 2;
+                Log.Error(e.Message);
             }
         }
 
@@ -714,8 +714,7 @@ namespace OPIDDaily.DAL
                         }
                         catch (Exception e)
                         {
-                            int z;
-                            z = 2;
+                            Log.Error(e.Message);
                         }
 
                         i += 1;
@@ -787,8 +786,7 @@ namespace OPIDDaily.DAL
                         }
                         catch (Exception e)
                         {
-                            int z;
-                            z = 2;
+                            Log.Error(e.Message);
                         }
 
                         i += 1;
