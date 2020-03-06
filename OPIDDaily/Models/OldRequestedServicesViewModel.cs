@@ -8,100 +8,60 @@ using System.Web.Mvc;
 
 namespace OPIDDaily.Models
 {
-    public class RequestedServicesViewModel
+    public class OldRequestedServicesViewModel
     {
         public string XID { get; set; }
 
         public string XBC { get; set; }
 
         [Required(ErrorMessage = "Please select an agency from the list.")]
+       // public Agency Agency { get; set; }
         public string Agency { get; set; }
 
         public SelectList Agencies { get; set; }
  
-        /*
         [Display(Name = "Use Birth Name?")]
         public bool UseBirthName { get; set; }
-        */
 
         [Display(Name = "Texas BC")]
         public bool BC { get; set; }
 
-        public string BCNotes { get; set; }
-
-        /*
         [Display(Name = "Eligible?")]
         public bool BCEligible { get; set; }
-        */
 
         [Display(Name = "Harris County Clerk")]
         public bool HCC { get; set; }
 
-        [Display(Name = "Pre-approved")]
-        public bool PreApprovedBC { get; set; }
-
         [Display(Name = "MBVD")]
         public bool MBVD { get; set; }
 
-        [Display(Name = "Pre-approved")]
-        public bool PreApprovedMBVD { get; set; }
-
-        public string MBVDNotes { get; set; }
-
-        /*
         [Display(Name = "Eligible?")]
         public bool MBVDEligible { get; set; }
-        */
 
         public string State { get; set; }
-
-        public string TIDNotes { get; set; }
 
         [Display(Name = "New/Dup ID")]
         public bool NewTID { get; set; }
 
-        [Display(Name = "Pre-approved")]
-        public bool PreApprovedNewTID { get; set; }
-
-        /*
         [Display(Name = "Eligible?")]
         public bool NewTIDEligible { get; set; }
-        */
 
         [Display(Name = "Replacement ID")]
         public bool ReplacementTID { get; set; }
 
-        [Display(Name = "Pre-approved")]
-        public bool PreApprovedReplacementTID { get; set; }
-
-        /*
         [Display(Name = "Eligible?")]
         public bool ReplacementTIDEligible { get; set; }
-        */
 
+        [Display(Name = "Eligible?")]
+        public bool NewTDLEligible { get; set; }
         [Display(Name = "New/Dup DL")]
         public bool NewTDL { get; set; }
 
-        /*
         [Display(Name = "Eligible?")]
-        public bool NewTDLEligible { get; set; }
-        */
-
-        public string TDLNotes { get; set; }
+        public bool ReplacementTDLEligible { get; set; }
 
         [Display(Name = "Replacement DL")]
         public bool ReplacementTDL { get; set; }
-
-        [Display(Name = "Pre-approved")]
-        public bool PreApprovedNewTDL { get; set; }
-
-        [Display(Name = "Pre-approved")]
-        public bool PreApprovedReplacementTDL { get; set; }
-
-        /*
-        [Display(Name = "Eligible?")]
-        public bool ReplacementTDLEligible { get; set; }
-        */
 
         [Display(Name = "Numident")]
         public bool Numident { get; set; }

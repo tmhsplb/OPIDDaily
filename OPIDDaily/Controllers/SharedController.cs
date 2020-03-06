@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -149,15 +150,21 @@ namespace OPIDDaily.Controllers
             {
                 case "Get":
                     rsvm.Agency = SessionHelper.Get("Agency");
-                    rsvm.UseBirthName = (SessionHelper.Get("UseBirthName").Equals("Requested") ? true : false);
+                  //  rsvm.UseBirthName = (SessionHelper.Get("UseBirthName").Equals("Requested") ? true : false);
                     rsvm.BC = (SessionHelper.Get("BC").Equals("Requested") ? true : false);
+                    rsvm.PreApprovedBC = (SessionHelper.Get("PreApprovedBC").Equals("Requested") ? true : false);
                     rsvm.HCC = (SessionHelper.Get("HCC").Equals("Requested") ? true : false);
                     rsvm.MBVD = (SessionHelper.Get("MBVD").Equals("Requested") ? true : false);
+                    rsvm.PreApprovedMBVD = (SessionHelper.Get("PreApprovedMBVD").Equals("Requested") ? true : false);
                     rsvm.State = (SessionHelper.Get("State").Equals("0") ? string.Empty : SessionHelper.Get("State"));
                     rsvm.NewTID = (SessionHelper.Get("NTID").Equals("Requested") ? true : false);
+                    rsvm.PreApprovedNewTID = (SessionHelper.Get("PreApprovedNewTID").Equals("Requested") ? true : false);
                     rsvm.ReplacementTID = (SessionHelper.Get("RTID").Equals("Requested") ? true : false);
+                    rsvm.PreApprovedReplacementTID = (SessionHelper.Get("PreApprovedReplacementTID").Equals("Requested") ? true : false);
                     rsvm.NewTDL = (SessionHelper.Get("NTDL").Equals("Requested") ? true : false);
+                    rsvm.PreApprovedNewTDL = (SessionHelper.Get("PreApprovedNewTDL").Equals("Requested") ? true : false);
                     rsvm.ReplacementTDL = (SessionHelper.Get("RTDL").Equals("Requested") ? true : false);
+                    rsvm.PreApprovedReplacementTDL = (SessionHelper.Get("PreApprovedReplacementTDL").Equals("Requested") ? true : false);
                     rsvm.Numident = (SessionHelper.Get("Numident").Equals("Requested") ? true : false);
 
                     // Supporting documents
@@ -183,18 +190,23 @@ namespace OPIDDaily.Controllers
                     
                 case "Set":
                     SessionHelper.Set("Agency", rsvm.Agency);
-                    SessionHelper.Set("UseBirthName", (rsvm.UseBirthName ? "Requested" : string.Empty));
+                  //  SessionHelper.Set("UseBirthName", (rsvm.UseBirthName ? "Requested" : string.Empty));
                     SessionHelper.Set("BC", (rsvm.BC ? "Requested" : string.Empty));
+                    SessionHelper.Set("PreApprovedBC", (rsvm.PreApprovedBC ? "Requested" : string.Empty));
                     SessionHelper.Set("HCC", (rsvm.HCC ? "Requested" : string.Empty));
                     SessionHelper.Set("MBVD", (rsvm.MBVD ? "Requested" : string.Empty));
+                    SessionHelper.Set("PreApprovedMBVD", (rsvm.PreApprovedMBVD ? "Requested" : string.Empty));
                     SessionHelper.Set("State", rsvm.State);
                     SessionHelper.Set("NTID", (rsvm.NewTID ? "Requested" : string.Empty));
+                    SessionHelper.Set("PreApprovedNewTID", (rsvm.PreApprovedNewTID ? "Requested" : string.Empty));
                     SessionHelper.Set("RTID", (rsvm.ReplacementTID ? "Requested" : string.Empty));
+                    SessionHelper.Set("PreApprovedReplacementTID", (rsvm.PreApprovedReplacementTID ? "Requested" : string.Empty));
                     SessionHelper.Set("NTDL", (rsvm.NewTDL ? "Requested" : string.Empty));
+                    SessionHelper.Set("PreApprovedNewTDL", (rsvm.PreApprovedNewTDL ? "Requested" : string.Empty));
                     SessionHelper.Set("RTDL", (rsvm.ReplacementTDL ? "Requested" : string.Empty));
+                    SessionHelper.Set("PreApprovedReplacementTDL", (rsvm.PreApprovedReplacementTDL ? "Requested" : string.Empty));
                     SessionHelper.Set("Numident", (rsvm.Numident ? "Requested" : string.Empty));
-                  
-
+                 
                     // Supporting documents
                     SessionHelper.Set("SDBC", (rsvm.SDBC ? "Requested" : string.Empty));
                     SessionHelper.Set("SDSSC", (rsvm.SDSSC ? "Requested" : string.Empty));
@@ -302,7 +314,82 @@ namespace OPIDDaily.Controllers
 
             ServiceTicketBackButtonHelper("Get", rsvm);
 
-            return View(rsvm);
+            return View("ExpressClient", rsvm);
+        }
+
+        private static void PrepareBCNotes(Client client, RequestedServicesViewModel rsvm)
+        {
+            StringBuilder notes = new StringBuilder();
+
+            if (client.XBC)
+            {
+                notes.Append(" XBC ");
+            }
+
+            if (rsvm.PreApprovedBC)
+            {
+                notes.Append(" pre-approved ");
+            }
+
+            if (rsvm.HCC)
+            {
+                notes.Append(" (Harris County Clerk) ");
+            }
+            
+            rsvm.BCNotes = notes.ToString();
+        }
+
+        private static void PrepareMBVDNotes(Client client, RequestedServicesViewModel rsvm)
+        {
+            StringBuilder notes = new StringBuilder();
+
+            if (client.XBC)
+            {
+                notes.Append(" XBC ");
+            }
+
+            notes.Append(string.Format(" {0}", rsvm.State));
+
+            if (rsvm.PreApprovedMBVD)
+            {
+                notes.Append(", pre-approved ");
+            }
+
+            rsvm.MBVDNotes = notes.ToString();
+        }
+
+        private static void PrepareTIDNotes(Client client, RequestedServicesViewModel rsvm)
+        {
+            StringBuilder notes = new StringBuilder();
+
+            if (client.XID)
+            {
+                notes.Append(" XID ");
+            }
+
+            if (rsvm.PreApprovedNewTID || rsvm.PreApprovedReplacementTID)
+            {
+                notes.Append(" pre-approved ");
+            }
+
+            rsvm.TIDNotes = notes.ToString();
+        }
+
+        private static void PrepareTDLNotes(Client client, RequestedServicesViewModel rsvm)
+        {
+            StringBuilder notes = new StringBuilder();
+
+            if (client.XID)
+            {
+                notes.Append(" XID ");
+            }
+
+            if (rsvm.PreApprovedNewTDL || rsvm.PreApprovedReplacementTDL)
+            {
+                notes.Append(" pre-approved ");
+            }
+
+            rsvm.TDLNotes = notes.ToString();
         }
 
         [HttpPost]
@@ -311,7 +398,13 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing);
-            
+
+            PrepareBCNotes(client, rsvm);
+            PrepareMBVDNotes(client, rsvm);
+
+            PrepareTIDNotes(client, rsvm);
+            PrepareTDLNotes(client, rsvm);
+
             DateTime today = Extras.DateTimeToday();
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
 
@@ -372,6 +465,12 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing);
+
+            PrepareBCNotes(client, rsvm);
+            PrepareMBVDNotes(client, rsvm);
+
+            PrepareTIDNotes(client, rsvm);
+            PrepareTDLNotes(client, rsvm);
 
             DateTime today = Extras.DateTimeToday();
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
