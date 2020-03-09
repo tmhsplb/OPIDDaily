@@ -315,7 +315,6 @@
     <Compile Include="Models\ImportRow.cs" />
     <Compile Include="Models\InvitationViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\OldRequestedServicesViewModel.cs" />
     <Compile Include="Models\RequestedServicesViewModel.cs" />
     <Compile Include="Models\RoleViewModel.cs" />
     <Compile Include="Models\SpecialReferralViewModel.cs" />
@@ -818,7 +817,6 @@
     <Content Include="Views\FrontDesk\ClientsServed.cshtml" />
     <Content Include="Views\Shared\_ClientsServed.cshtml" />
     <Content Include="Views\Superadmin\ClientsServed.cshtml" />
-    <Content Include="Views\FrontDesk\OldExpressClient.cshtml" />
     <Content Include="Views\FrontDesk\PrintExpressClient.cshtml" />
     <Content Include="Views\Shared\_OldRequestedServices.cshtml" />
     <Content Include="Views\FrontDesk\PrintExistingClient.cshtml" />
@@ -865,7 +863,6 @@
     <Content Include="Views\Shared\_RequestedServices.cshtml" />
     <Content Include="Views\FrontDesk\ExpressClient.cshtml" />
     <Content Include="Views\Shared\_OldRequestedServicesOnly.cshtml" />
-    <Content Include="Views\FrontDesk\OldExistingClient.cshtml" />
     <Content Include="Views\Superadmin\PreApprovalForm.cshtml" />
     <Content Include="Views\Shared\_SupportingDocuments.cshtml" />
     <None Include="Web.Staging.config">
