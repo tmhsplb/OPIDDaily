@@ -2,7 +2,7 @@
     // https://stackoverflow.com/questions/19028419/how-to-adjust-print-options-through-code
     // See also:
     // https://stackoverflow.com/questions/21379605/printing-div-content-with-css-applied
-    function printApprovalForm() {
+    function printPreApprovalForm() {
         var win = window.open('', '', 'left=0,top=0,width=552,height=477,toolbar=0,scrollbars=0,status=0');
 
         var comments = document.getElementById("comments");

@@ -149,6 +149,8 @@ namespace OPIDDaily.Controllers
             switch (mode)
             {
                 case "Get":
+                    rsvm.NeedsDocs = SessionHelper.Get("NeedsDocs").Equals("Requested") ? true : false;
+                    rsvm.HasDocs = SessionHelper.Get("HasDocs").Equals("Requested") ? true : false;
                     rsvm.Agency = SessionHelper.Get("Agency");
                   //  rsvm.UseBirthName = (SessionHelper.Get("UseBirthName").Equals("Requested") ? true : false);
                     rsvm.BC = (SessionHelper.Get("BC").Equals("Requested") ? true : false);
@@ -189,6 +191,8 @@ namespace OPIDDaily.Controllers
                     break;
                     
                 case "Set":
+                    SessionHelper.Set("NeedsDocs", (rsvm.NeedsDocs ? "Requested" : string.Empty));
+                    SessionHelper.Set("HasDocs", (rsvm.HasDocs ? "Requested" : string.Empty));
                     SessionHelper.Set("Agency", rsvm.Agency);
                   //  SessionHelper.Set("UseBirthName", (rsvm.UseBirthName ? "Requested" : string.Empty));
                     SessionHelper.Set("BC", (rsvm.BC ? "Requested" : string.Empty));
@@ -230,15 +234,23 @@ namespace OPIDDaily.Controllers
 
                 case "Reset":
                     SessionHelper.Set("Agency", "0");
-                    SessionHelper.Set("UseBirthName", string.Empty);
+                    //   SessionHelper.Set("UseBirthName", string.Empty);
+                    SessionHelper.Set("NeedsDocs", string.Empty);
+                    SessionHelper.Set("HasDocs", string.Empty);
                     SessionHelper.Set("BC", string.Empty);
+                    SessionHelper.Set("PreApprovedBC", string.Empty);
                     SessionHelper.Set("HCC", string.Empty);
                     SessionHelper.Set("MBVD", string.Empty);
+                    SessionHelper.Set("PreApprovedMBVD", string.Empty);
                     SessionHelper.Set("State", string.Empty);
                     SessionHelper.Set("NTID", string.Empty);
+                    SessionHelper.Set("PreApprovedNewTID", string.Empty);
                     SessionHelper.Set("RTID", string.Empty);
+                    SessionHelper.Set("PreApprovedReplacementTID", string.Empty);
                     SessionHelper.Set("NTDL", string.Empty);
+                    SessionHelper.Set("PreApprovedNewTDL", string.Empty);
                     SessionHelper.Set("RTDL", string.Empty);
+                    SessionHelper.Set("PreApprovedReplacementTDL", string.Empty);
                     SessionHelper.Set("Numident", string.Empty);
 
                     // Supporting documents
@@ -510,9 +522,8 @@ namespace OPIDDaily.Controllers
             }
 
            // bool hasVisits = Visits.HasVisits(nowServing);
-            bool hasHistory = CheckManager.HasHistory(client);
-
-            if (hasHistory)
+            
+            if (CheckManager.HasHistory(client))
             {
                 client.EXP = false;
                 return RedirectToAction("ExistingClient");

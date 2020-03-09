@@ -235,6 +235,12 @@ namespace OPIDDaily.Controllers
             return View();
         }
 
+        public ActionResult PreApprovalForm()
+        {
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            return View("PreApprovalForm", rsvm);
+        }
+
         [HttpPost]
         public ActionResult RestoreResearchTable(FileViewModel model)
         {

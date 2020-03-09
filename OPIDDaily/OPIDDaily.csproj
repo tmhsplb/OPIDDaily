@@ -756,6 +756,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\clientsServed.js" />
+    <Content Include="Scripts\preApprovalForm.js" />
     <Content Include="Scripts\serviceTicket.js" />
     <Content Include="Scripts\specialReferral.js" />
     <Content Include="Uploads\DummyUploadFile.txt" />
@@ -865,6 +866,8 @@
     <Content Include="Views\FrontDesk\ExpressClient.cshtml" />
     <Content Include="Views\Shared\_OldRequestedServicesOnly.cshtml" />
     <Content Include="Views\FrontDesk\OldExistingClient.cshtml" />
+    <Content Include="Views\Superadmin\PreApprovalForm.cshtml" />
+    <Content Include="Views\Shared\_SupportingDocuments.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

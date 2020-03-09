@@ -14,6 +14,12 @@ namespace OPIDDaily.Models
 
         public string XBC { get; set; }
 
+        [Display(Name = "Client will return with requested documents")]
+        public bool NeedsDocs { get; set; }
+
+        [Display(Name = "Client has returned with requested documents")]
+        public bool HasDocs { get; set; }
+
         [Required(ErrorMessage = "Please select an agency from the list.")]
         public string Agency { get; set; }
 

@@ -131,12 +131,14 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
 
-            if (client.EXP == true)
+            if (CheckManager.HasHistory(client))
             {
-                return RedirectToAction("ExpressClientOverflowVoucher");
+                client.EXP = false;
+                return RedirectToAction("ExistingClientOverflowVoucher");
             }
 
-            return RedirectToAction("ExistingClientOverflowVoucher");
+            client.EXP = true;
+            return RedirectToAction("ExpressClientOverflowVoucher");
         }
 
         public ActionResult ExpressClientOverflowVoucher()
