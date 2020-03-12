@@ -329,7 +329,7 @@ namespace OPIDDaily.Controllers
             return View("ExpressClient", rsvm);
         }
 
-        private static void PrepareBCNotes(Client client, RequestedServicesViewModel rsvm)
+        protected static void PrepareBCNotes(Client client, RequestedServicesViewModel rsvm)
         {
             StringBuilder notes = new StringBuilder();
 
@@ -351,7 +351,7 @@ namespace OPIDDaily.Controllers
             rsvm.BCNotes = notes.ToString();
         }
 
-        private static void PrepareMBVDNotes(Client client, RequestedServicesViewModel rsvm)
+        protected static void PrepareMBVDNotes(Client client, RequestedServicesViewModel rsvm)
         {
             StringBuilder notes = new StringBuilder();
 
@@ -370,7 +370,7 @@ namespace OPIDDaily.Controllers
             rsvm.MBVDNotes = notes.ToString();
         }
 
-        private static void PrepareTIDNotes(Client client, RequestedServicesViewModel rsvm)
+        protected static void PrepareTIDNotes(Client client, RequestedServicesViewModel rsvm)
         {
             StringBuilder notes = new StringBuilder();
 
@@ -386,8 +386,7 @@ namespace OPIDDaily.Controllers
 
             rsvm.TIDNotes = notes.ToString();
         }
-
-        private static void PrepareTDLNotes(Client client, RequestedServicesViewModel rsvm)
+        protected static void PrepareTDLNotes(Client client, RequestedServicesViewModel rsvm)
         {
             StringBuilder notes = new StringBuilder();
 
@@ -431,6 +430,34 @@ namespace OPIDDaily.Controllers
             return View("PrintExpressClient", rsvm);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
+        {
+            int nowServing = NowServing();
+            Client client = Clients.GetClient(nowServing);
+
+            PrepareBCNotes(client, rsvm);
+            PrepareMBVDNotes(client, rsvm);
+
+            PrepareTIDNotes(client, rsvm);
+            PrepareTDLNotes(client, rsvm);
+            
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
+
+            ViewBag.ServiceTicket = client.ServiceTicket;
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.BirthName = client.BirthName;
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            //   ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+            List<VisitViewModel> visits = Visits.GetVisits(nowServing);
+
+            var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
+            return View("PrintExistingClient", objTuple);
+        }
+
         public ActionResult History()
         {
             return RedirectToAction("ExistingClient");
@@ -471,38 +498,6 @@ namespace OPIDDaily.Controllers
             return View("PrintExistingClientVisits", visits);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
-        {
-            int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
-
-            PrepareBCNotes(client, rsvm);
-            PrepareMBVDNotes(client, rsvm);
-
-            PrepareTIDNotes(client, rsvm);
-            PrepareTDLNotes(client, rsvm);
-
-            DateTime today = Extras.DateTimeToday();
-            ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
-
-            ViewBag.ServiceTicket = client.ServiceTicket;
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
-            ViewBag.BirthName = client.BirthName;
-            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
-            ViewBag.Age = client.Age;
-            ViewBag.Agency =  Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
-            List<VisitViewModel> visits = Visits.GetVisits(nowServing);
-
-            rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;
-            rsvm.XID = client.XID == true ? "XID" : string.Empty;
-
-            ServiceTicketBackButtonHelper("Set", rsvm);
-            var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
-            return View("PrintExistingClient", objTuple);
-        }
-
         public ActionResult ServiceTicket()
         {
             int nowServing = NowServing();
@@ -520,8 +515,6 @@ namespace OPIDDaily.Controllers
                 ViewBag.Warning = "Could not find selected client.";
                 return View("Warning");
             }
-
-           // bool hasVisits = Visits.HasVisits(nowServing);
             
             if (CheckManager.HasHistory(client))
             {

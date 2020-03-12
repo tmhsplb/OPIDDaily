@@ -3,7 +3,7 @@
 
 @{
     ViewBag.Title = "Print Existing Client";
-    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
 }
 
     <div id="printerDiv">
@@ -30,19 +30,6 @@
         </table>
 
         <br />
-
-        @*
-        @if (Model.Item2.NeedsDocs)
-        {
-            <h3>Client will return with requested documents.</h3>
-            <br />
-        }
-        @if (Model.Item2.HasDocs)
-        {
-            <h3>Client has returned with requested documents.</h3>
-            <br />
-        }
-        *@
 
         @Html.Partial("_RequestedServices", Model.Item2)
         <br />

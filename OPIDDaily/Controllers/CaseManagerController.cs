@@ -39,8 +39,7 @@ namespace OPIDDaily.Controllers
             int referringAgency = ReferringAgency();
             List<ClientViewModel> clients = Clients.GetMyUnexpiredClients(referringAgency);
 
-          //  ServiceTicketBackButtonHelper("Reset", null);
-          //  SpecialReferralBackButtonHelper("Reset", null);
+            VoucherBackButtonHelper("Reset", null);
 
             int pageIndex = page - 1;
             int pageSize = (int)rows;
@@ -75,7 +74,7 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
  
-        public ActionResult Voucher()
+        public ActionResult CaseManagerServiceTicket()
         {
             int nowServing = NowServing();
 
@@ -85,7 +84,6 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
             
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing);
 
             if (client == null)
@@ -93,6 +91,37 @@ namespace OPIDDaily.Controllers
                 ViewBag.Warning = "Could not find selected client.";
                 return View("Warning");
             }
+ 
+            if (CheckManager.HasHistory(client))
+            {
+                client.EXP = false;
+                return RedirectToAction("ExistingClientServiceTicket");
+            }
+
+            client.EXP = true;
+            return RedirectToAction("ExpressClientServiceTicket");
+        }
+
+        public ActionResult ExpressClientServiceTicket()
+        {
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing);
+
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+
+            VoucherBackButtonHelper("Get", rsvm);
+
+            return View(rsvm);
+        }
+
+        public ActionResult ExistingClientServiceTicket()
+        {
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            int nowServing = NowServing();
+            Client client = Clients.GetClient(nowServing);
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
@@ -107,6 +136,12 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing);
+
+            PrepareBCNotes(client, rsvm);
+            PrepareMBVDNotes(client, rsvm);
+
+            PrepareTIDNotes(client, rsvm);
+            PrepareTDLNotes(client, rsvm);
 
             DateTime today = Extras.DateTimeToday();
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");

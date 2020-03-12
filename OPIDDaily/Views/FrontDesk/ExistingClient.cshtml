@@ -155,23 +155,8 @@
             {
                 @Html.AntiForgeryToken()
 
-                <div class="form-group">
-                    <div class="col-md-2">
-                        @Html.CheckBoxFor(m => m.NeedsDocs, new { @class = "form-control" })
-                    </div>
-                    <div class="col-md-10">
-                        @Html.LabelFor(m => m.NeedsDocs, new { @class = "control-label" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-2">
-                        @Html.CheckBoxFor(m => m.HasDocs, new { @class = "form-control" })
-                    </div>
-                    <div class="col-md-10">
-                        @Html.LabelFor(m => m.HasDocs, new { @class = "control-label" })
-                    </div>
-                </div>
-
+                @* @Html.Partial("_PreApproval", Model) *@
+ 
                 <h4>Requested Services</h4>
                 <hr />
 

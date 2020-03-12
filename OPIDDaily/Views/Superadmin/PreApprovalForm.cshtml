@@ -13,6 +13,7 @@
     <br/>
     <h3>Client (will be) pre-approved for requested services</h3>
     <br/>
+    @*
     <div class="row">
         <div class="col-md-12">
             <div class="form-horizontal">
@@ -36,6 +37,12 @@
             </div>
         </div>
     </div>
+    *@
+
+    <table class="noborder">
+        <tr><td>@Html.CheckBoxFor(m => m.NeedsDocs)</td><td>&nbsp;&nbsp;@Html.LabelFor(m => m.NeedsDocs)</td></tr>
+        <tr><td>@Html.CheckBoxFor(m => m.HasDocs)</td><td>&nbsp;&nbsp;@Html.LabelFor(m => m.HasDocs)</td></tr>
+    </table>
 
     @Html.Partial("_SupportingDocuments")
 

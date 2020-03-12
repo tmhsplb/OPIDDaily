@@ -14,6 +14,7 @@
         <h4>Agency: @ViewBag.Agency</h4>
         <br />
 
+        @*
         @if (Model.NeedsDocs)
         {
             <h3>Client will return with requested documents.</h3>
@@ -24,6 +25,7 @@
             <h3>Client has returned with requested documents.</h3>
             <br />
         }
+        *@
 
         @Html.Partial("_RequestedServices")
         <br />

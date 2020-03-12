@@ -1,6 +1,7 @@
-﻿
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
 @{
-    ViewBag.Title = "History";
+    ViewBag.Title = "Service Ticket";
     Layout = "~/Views/Shared/_BackOffice.cshtml";
 }
 
@@ -109,3 +110,33 @@
         bExit: "Cancel"
     });
 </script>
+
+<style>
+    input[type="checkbox"] {
+        transform: scale(0.75,0.75);
+    }
+</style>
+
+<br />
+<h3>Existing Client: @ViewBag.ClientName</h3>
+<h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <section id="existingClientForm">
+            @using (Html.BeginForm("PrepareStaticExistingClient", "BackOffice", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.Partial("_ReadOnlyRequestedServices", Model)
+                <br />
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Prepare Service Ticket" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>

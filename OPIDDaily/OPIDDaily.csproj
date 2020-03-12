@@ -840,7 +840,7 @@
     <Content Include="Views\CaseManager\Clients.cshtml" />
     <Content Include="Views\Users\_SelectAgency.cshtml" />
     <Content Include="Views\CaseManager\Warning.cshtml" />
-    <Content Include="Views\CaseManager\Voucher.cshtml" />
+    <Content Include="Views\CaseManager\ExpressClientServiceTicket.cshtml" />
     <Content Include="Views\CaseManager\PrintVoucher.cshtml" />
     <Content Include="Views\Shared\_CaseManagerSignatureBlock.cshtml" />
     <Content Include="Views\FrontDesk\ExpressClientOverflowVoucher.cshtml" />
@@ -863,6 +863,12 @@
     <Content Include="Views\FrontDesk\ExpressClient.cshtml" />
     <Content Include="Views\Superadmin\PreApprovalForm.cshtml" />
     <Content Include="Views\Shared\_SupportingDocuments.cshtml" />
+    <Content Include="Views\Shared\_PreApproval.cshtml" />
+    <Content Include="Views\Shared\_BootstrapSupportingDocuments.cshtml" />
+    <Content Include="Views\CaseManager\ExistingClientServiceTicket.cshtml" />
+    <Content Include="Views\Shared\_ReadOnlyRequestedServices.cshtml" />
+    <Content Include="Views\BackOffice\ExpressClient.cshtml" />
+    <Content Include="Views\BackOffice\PrintExistingClient.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

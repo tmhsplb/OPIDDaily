@@ -232,10 +232,10 @@ namespace OPIDDaily.DAL
                     BirthName = cvm.BirthName,
                     DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday() : DateTime.Parse(cvm.DOB)),
                     Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
-                    EXP = (cvm.EXP.Equals("Y") ? true : false),
-                    PND = (cvm.PND.Equals("Y") ? true : false),
-                    XID = (cvm.XID.Equals("Y") ? true : false),
-                    XBC = (cvm.XBC.Equals("Y") ? true : false),
+                  //  EXP = (cvm.EXP.Equals("Y") ? true : false),
+                  //  PND = (cvm.PND.Equals("Y") ? true : false),
+                  //  XID = (cvm.XID.Equals("Y") ? true : false),
+                  //  XBC = (cvm.XBC.Equals("Y") ? true : false),
                     Notes = cvm.Notes,
                     Screened = now,
                     CheckedIn = now,
@@ -296,9 +296,13 @@ namespace OPIDDaily.DAL
             {
                 Client client = opidcontext.Clients.Find(cvm.Id);
 
+                // needed for case manager clients
                 if (string.IsNullOrEmpty(cvm.Stage))
                 {
-                    cvm.Stage = "Screened";  // needed for case manager clients
+                    cvm.Stage = "Screened"; 
+                    cvm.PND = (client.PND ? "Y" : string.Empty);
+                    cvm.XID = (client.XID ? "Y" : string.Empty);
+                    cvm.XBC = (client.XBC ? "Y" : string.Empty);
                 }
 
                 if (client != null)

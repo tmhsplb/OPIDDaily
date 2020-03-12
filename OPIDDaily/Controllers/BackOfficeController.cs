@@ -25,6 +25,40 @@ namespace OPIDDaily.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PrepareStaticExistingClient(RequestedServicesViewModel rsvm)
+        {
+            int nowServing = NowServing();
+            Client client = Clients.GetClient(nowServing);
+
+            /*
+            PrepareBCNotes(client, rsvm);
+            PrepareMBVDNotes(client, rsvm);
+
+            PrepareTIDNotes(client, rsvm);
+            PrepareTDLNotes(client, rsvm);
+            */
+
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
+
+            ViewBag.ServiceTicket = client.ServiceTicket;
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.BirthName = client.BirthName;
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+            List<VisitViewModel> visits = Visits.GetVisits(nowServing);
+
+            rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;
+            rsvm.XID = client.XID == true ? "XID" : string.Empty;
+
+            ServiceTicketBackButtonHelper("Set", rsvm);
+            var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
+            return View("PrintExistingClient", objTuple);
+        }
+
         public ActionResult Resolved()
         {
             return View();

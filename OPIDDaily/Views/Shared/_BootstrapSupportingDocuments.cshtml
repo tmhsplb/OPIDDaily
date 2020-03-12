@@ -1,0 +1,124 @@
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
+<h4>Supporting Documents</h4>
+<hr />
+<div class="form-group">
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDBC, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDBC, new { @class = "control-label" })
+    </div>
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDSSC, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDSSC, new { @class = "control-label" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDTID, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDTID, new { @class = "control-label" })
+    </div>
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDTDL, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDTDL, new { @class = "control-label" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDOSID, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDOSID, new { @class = "control-label" })
+    </div>
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDOSDL, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDOSDL, new { @class = "control-label" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDML, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDML, new { @class = "control-label" })
+    </div>
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDDD, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDDD, new { @class = "control-label" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDSL, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDSL, new { @class = "control-label" })
+    </div>
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDDD214, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDDD214, new { @class = "control-label" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDGC, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDGC, new { @class = "control-label" })
+    </div>
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDEBT, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDEBT, new { @class = "control-label" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDHOTID, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDHOTID, new { @class = "control-label" })
+    </div>
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDSchoolRecords, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDSchoolRecords, new { @class = "control-label" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDPassport, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDPassport, new { @class = "control-label" })
+    </div>
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDJobOffer, new { @class = "form-control" })
+    </div>
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.SDJobOffer, new { @class = "control-label" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-2">
+        @Html.CheckBoxFor(m => m.SDOther, new { @class = "form-control" })
+    </div>
+    <div class="col-md-10">
+        @Html.TextBoxFor(m => m.SDOthersd, new { placeholder = "Other", @class = "form-control" })
+    </div>
+</div>
