@@ -46,7 +46,7 @@ namespace OPIDDaily.Controllers
         public JsonResult GetNowServing(int nowServing)
         {
             DateTime today = Extras.DateTimeToday();
-            List<ClientViewModel> clients = Clients.GetClients(today);
+            List<ClientViewModel> clients = Clients.GetClients(today, null);
 
             clients = clients.Where(c => c.Id == nowServing).ToList();
  

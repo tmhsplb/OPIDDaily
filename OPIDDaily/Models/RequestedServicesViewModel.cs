@@ -125,11 +125,11 @@ namespace OPIDDaily.Models
         [Display(Name = "Texas DL")]
         public bool SDTDL { get; set; }
 
-        [Display(Name = "Other State ID")]
-        public bool SDOSID { get; set; }
+        [Display(Name = "TDCJ Card")]
+        public bool SDTDCJ { get; set; }
 
-        [Display(Name = "Other State DL")]
-        public bool SDOSDL { get; set; }
+        [Display(Name = "Voter's Registration Card")]
+        public bool SDVREG { get; set; }
 
         [Display(Name = "Marriage License")]
         public bool SDML { get; set; }

@@ -13,11 +13,45 @@ namespace OPIDDaily.DAL
 {
     public class Clients
     { 
-        public static Client GetClient(int nowServing)
+        public static Client GetClient(int nowServing, RequestedServicesViewModel rsvm)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
                 Client client = opidcontext.Clients.Find(nowServing);
+
+                if (rsvm != null)
+                {
+                    // Requested Services
+                    rsvm.BC = client.BC;
+                    rsvm.HCC = client.HCC;
+                    rsvm.MBVD = client.MBVD;
+                    rsvm.State = client.State;
+                    rsvm.NewTID = client.NewTID;
+                    rsvm.ReplacementTID = client.ReplacementTID;
+                    rsvm.NewTDL = client.NewTDL;
+                    rsvm.ReplacementTDL = client.ReplacementTDL;
+                    rsvm.Numident = client.Numident;
+
+                    // Supporting documents
+                    rsvm.SDBC = client.SDBC;
+                    rsvm.SDSSC = client.SDSSC;
+                    rsvm.SDTID = client.SDTID;
+                    rsvm.SDTDL = client.SDTDL;
+                    rsvm.SDTDCJ = client.SDTDCJ;
+                    rsvm.SDVREG = client.SDVREG;
+                    rsvm.SDML = client.SDML;
+                    rsvm.SDDD = client.SDDD;
+                    rsvm.SDSL = client.SDSL;
+                    rsvm.SDDD214 = client.SDDD214;
+                    rsvm.SDEBT = client.SDEBT;
+                    rsvm.SDHOTID = client.SDHOTID;
+                    rsvm.SDSchoolRecords = client.SDSchoolRecords;
+                    rsvm.SDPassport = client.SDPassport;
+                    rsvm.SDJobOffer = client.SDJobOffer;
+                    rsvm.SDOther = client.SDOther;
+                    rsvm.SDOthersd = client.SDOthersd;
+                }
+
                 return client;
             }
         }
@@ -38,7 +72,8 @@ namespace OPIDDaily.DAL
                 BirthName = client.BirthName,
                 DOB = client.DOB.ToString("MM/dd/yyyy"),
                 Age = client.Age,
-                EXP = (client.EXP == true ? "Y" : string.Empty),
+
+              //  EXP = (client.EXP == true ? "Y" : string.Empty),
                 PND = (client.PND == true ? "Y" : string.Empty),
                 XID = (client.XID == true ? "Y" : string.Empty),
                 XBC = (client.XBC == true ? "Y" : string.Empty),
@@ -57,6 +92,37 @@ namespace OPIDDaily.DAL
             client.BirthName = cvm.BirthName;
             client.DOB = DateTime.Parse(cvm.DOB);
             client.Age = CalculateAge(DateTime.Parse(cvm.DOB));
+
+            /*
+            // Requested Services
+            client.BC = cvm.BC;
+            client.HCC = cvm.HCC;
+            client.MBVD = cvm.MBVD;
+            client.NewTID = cvm.NewTID;
+            client.ReplacementTID = cvm.ReplacementTID;
+            client.NewTDL = cvm.NewTDL;
+            client.ReplacementTDL = cvm.ReplacementTDL;
+            client.Numident = cvm.Numident;
+
+            // Supporting documents
+            client.SDBC = cvm.SDBC;
+            client.SDSCC = cvm.SDSCC;
+            client.SDTID = cvm.SDTID;
+            client.SDTDL = cvm.SDTDL;
+            client.SDOSDL = cvm.SDOSDL;
+            client.SDML = cvm.SDML;
+            client.SDDD = cvm.SDDD;
+            client.SDSL = cvm.SDSL;
+            client.SDDD214 = cvm.SDDD214;
+            client.SDEBT = cvm.SDEBT;
+            client.SDHOTID = cvm.SDHOTID;
+            client.SDSchoolRecords = cvm.SDSchoolRecords;
+            client.SDPassport = cvm.SDPassport;
+            client.SDJobOffer = cvm.SDJobOffer;
+            client.SDOther = cvm.SDOther;
+            client.SDOthersd = cvm.SDOthersd;
+            */
+
            // client.EXP = (cvm.EXP.Equals("Y") ? true : false);
             client.PND = (cvm.PND.Equals("Y") ? true : false);
             client.XID = (cvm.XID.Equals("Y") ? true : false);
@@ -103,7 +169,8 @@ namespace OPIDDaily.DAL
 
                         if (updateWaittimes == true)
                         {
-                            client.WaitTime = GetUpdatedWaitTime(client);
+                            // Disable WaitTime processing
+                           // client.WaitTime = GetUpdatedWaitTime(client);
                         }
 
                         clientCVMS.Add(ClientEntityToClientViewModel(client));
@@ -296,7 +363,7 @@ namespace OPIDDaily.DAL
             {
                 Client client = opidcontext.Clients.Find(cvm.Id);
 
-                // needed for case manager clients
+                // cvm.Stage == null for case manager clients
                 if (string.IsNullOrEmpty(cvm.Stage))
                 {
                     cvm.Stage = "Screened"; 
@@ -307,7 +374,8 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    StageTransition(cvm, client);
+                    // Disable automatic stage transitioning
+                    // StageTransition(cvm, client);
 
                     ClientViewModelToClientEntity(cvm, client);
                     opidcontext.SaveChanges();
@@ -494,16 +562,41 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void StoreRequestedServices(int nowServing, RequestedServicesViewModel rsvm)
+        public static void StoreRequestedServices(int id, RequestedServicesViewModel rsvm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                Client client = opiddailycontext.Clients.Find(nowServing);
+                Client client = opiddailycontext.Clients.Find(id);
 
-                if (client != null)
-                {
-                //    client.Agency = rsvm.Agency;
-                }
+                // Requested Services
+                client.BC = rsvm.BC;
+                client.HCC = rsvm.HCC;
+                client.MBVD = rsvm.MBVD;
+                client.State = rsvm.State;
+                client.NewTID = rsvm.NewTID;
+                client.ReplacementTID = rsvm.ReplacementTID;
+                client.NewTDL = rsvm.NewTDL;
+                client.ReplacementTDL = rsvm.ReplacementTDL;
+                client.Numident = rsvm.Numident;
+
+                // Supporting documents
+                client.SDBC = rsvm.SDBC;
+                client.SDSSC = rsvm.SDSSC;
+                client.SDTID = rsvm.SDTID;
+                client.SDTDL = rsvm.SDTDL;
+                client.SDTDCJ = rsvm.SDTDCJ;
+                client.SDVREG = rsvm.SDVREG;
+                client.SDML = rsvm.SDML;
+                client.SDDD = rsvm.SDDD;
+                client.SDSL = rsvm.SDSL;
+                client.SDDD214 = rsvm.SDDD214;
+                client.SDEBT = rsvm.SDEBT;
+                client.SDHOTID = rsvm.SDHOTID;
+                client.SDSchoolRecords = rsvm.SDSchoolRecords;
+                client.SDPassport = rsvm.SDPassport;
+                client.SDJobOffer = rsvm.SDJobOffer;
+                client.SDOther = rsvm.SDOther;
+                client.SDOthersd = rsvm.SDOthersd;
 
                 opiddailycontext.SaveChanges();   
             }

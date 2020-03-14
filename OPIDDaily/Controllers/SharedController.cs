@@ -174,8 +174,8 @@ namespace OPIDDaily.Controllers
                     rsvm.SDSSC = (SessionHelper.Get("SDSSC").Equals("Requested") ? true : false);
                     rsvm.SDTID = (SessionHelper.Get("SDTID").Equals("Requested") ? true : false);
                     rsvm.SDTDL = (SessionHelper.Get("SDTDL").Equals("Requested") ? true : false);
-                    rsvm.SDOSID = (SessionHelper.Get("SDOSID").Equals("Requested") ? true : false);
-                    rsvm.SDOSDL = (SessionHelper.Get("SDOSDL").Equals("Requested") ? true : false);
+                    rsvm.SDTDCJ = (SessionHelper.Get("SDTDCJ").Equals("Requested") ? true : false);
+                    rsvm.SDVREG = (SessionHelper.Get("SDVREG").Equals("Requested") ? true : false);
                     rsvm.SDML = (SessionHelper.Get("SDML").Equals("Requested") ? true : false);
                     rsvm.SDDD = (SessionHelper.Get("SDDD").Equals("Requested") ? true : false);
                     rsvm.SDSL = (SessionHelper.Get("SDSL").Equals("Requested") ? true : false);
@@ -216,8 +216,8 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("SDSSC", (rsvm.SDSSC ? "Requested" : string.Empty));
                     SessionHelper.Set("SDTID", (rsvm.SDTID ? "Requested" : string.Empty));
                     SessionHelper.Set("SDTDL", (rsvm.SDTDL ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDOSID", (rsvm.SDOSID ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDOSDL", (rsvm.SDOSDL ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDTDCJ", (rsvm.SDTDCJ ? "Requested" : string.Empty));
+                    SessionHelper.Set("SDVREG", (rsvm.SDVREG ? "Requested" : string.Empty));
                     SessionHelper.Set("SDML", (rsvm.SDML ? "Requested" : string.Empty));
                     SessionHelper.Set("SDDD", (rsvm.SDDD ? "Requested" : string.Empty));
                     SessionHelper.Set("SDSL", (rsvm.SDSL ? "Requested" : string.Empty));
@@ -258,8 +258,8 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("SDSSC", string.Empty);
                     SessionHelper.Set("SDTID", string.Empty);
                     SessionHelper.Set("SDTDL", string.Empty);
-                    SessionHelper.Set("SDOSID", string.Empty);
-                    SessionHelper.Set("SDOSDL", string.Empty);
+                    SessionHelper.Set("SDTDCJ", string.Empty);
+                    SessionHelper.Set("SDVREG", string.Empty);
                     SessionHelper.Set("SDML", string.Empty);
                     SessionHelper.Set("SDDD", string.Empty);
                     SessionHelper.Set("SDSL", string.Empty);
@@ -318,13 +318,13 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            ServiceTicketBackButtonHelper("Get", rsvm);
+            // ServiceTicketBackButtonHelper("Get", rsvm);
 
             return View("ExpressClient", rsvm);
         }
@@ -408,7 +408,7 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareExpressClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             PrepareBCNotes(client, rsvm);
             PrepareMBVDNotes(client, rsvm);
@@ -426,7 +426,7 @@ namespace OPIDDaily.Controllers
             ViewBag.Age = client.Age;
             ViewBag.Agency =  Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
 
-            ServiceTicketBackButtonHelper("Set", rsvm);
+            // ServiceTicketBackButtonHelper("Set", rsvm);
             return View("PrintExpressClient", rsvm);
         }
 
@@ -435,7 +435,7 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             PrepareBCNotes(client, rsvm);
             PrepareMBVDNotes(client, rsvm);
@@ -467,15 +467,15 @@ namespace OPIDDaily.Controllers
         {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            ServiceTicketBackButtonHelper("Get", rsvm);
+           // ServiceTicketBackButtonHelper("Get", rsvm);
 
-            return View(rsvm);
+            return View("ExistingClient", rsvm);
         }
 
         [HttpPost]
@@ -483,7 +483,7 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareExistingClientVisits()
         {
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, null);
 
             DateTime today = Extras.DateTimeToday();
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
@@ -508,7 +508,7 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
 
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, null);
 
             if (client == null)
             {

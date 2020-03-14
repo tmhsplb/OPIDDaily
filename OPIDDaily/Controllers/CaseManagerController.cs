@@ -83,15 +83,15 @@ namespace OPIDDaily.Controllers
                 ViewBag.Warning = "Please first select a client from the Clients Table.";
                 return View("Warning");
             }
-            
-            Client client = Clients.GetClient(nowServing);
+                      
+            Client client = Clients.GetClient(nowServing, null);
 
             if (client == null)
             {
                 ViewBag.Warning = "Could not find selected client.";
                 return View("Warning");
             }
- 
+
             if (CheckManager.HasHistory(client))
             {
                 client.EXP = false;
@@ -106,36 +106,40 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            VoucherBackButtonHelper("Get", rsvm);
+          //  VoucherBackButtonHelper("Get", rsvm);
 
-            return View(rsvm);
+            return View("TestExpressClientServiceTicket", rsvm);
         }
 
         public ActionResult ExistingClientServiceTicket()
-        {
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+        { 
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            VoucherBackButtonHelper("Get", rsvm);
+            // VoucherBackButtonHelper("Get", rsvm);
 
-            return View(rsvm);
+            return View("ExistingClientServiceTicket", rsvm);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PrepareVoucher(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, null);
+
+            Clients.StoreRequestedServices(client.Id, rsvm);
 
             PrepareBCNotes(client, rsvm);
             PrepareMBVDNotes(client, rsvm);
@@ -153,7 +157,7 @@ namespace OPIDDaily.Controllers
             ViewBag.Age = client.Age;
             ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);  // rsvm.Agency will be the Id of an Agency as a string
 
-            VoucherBackButtonHelper("Set", rsvm);
+          //  VoucherBackButtonHelper("Set", rsvm);
             return View("PrintVoucher", rsvm);
         }
     }

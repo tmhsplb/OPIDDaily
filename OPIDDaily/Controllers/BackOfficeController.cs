@@ -25,21 +25,72 @@ namespace OPIDDaily.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult PrepareStaticExistingClient(RequestedServicesViewModel rsvm)
+        public ActionResult BackOfficeServiceTicket()
         {
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
 
-            /*
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please first select a client from the Clients Table.";
+                return View("Warning");
+            }
+
+            Client client = Clients.GetClient(nowServing, null);
+
+            if (client == null)
+            {
+                ViewBag.Warning = "Could not find selected client.";
+                return View("Warning");
+            }
+
+            if (CheckManager.HasHistory(client))
+            {
+                client.EXP = false;
+                return RedirectToAction("PrepareBackOfficeExistingClient");
+            }
+
+            client.EXP = true;
+            return RedirectToAction("PrepareBackOfficeExpressClient");
+        }
+                
+        public ActionResult PrepareBackOfficeExpressClient()
+        {
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+
             PrepareBCNotes(client, rsvm);
             PrepareMBVDNotes(client, rsvm);
 
             PrepareTIDNotes(client, rsvm);
             PrepareTDLNotes(client, rsvm);
-            */
 
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
+
+            ViewBag.ServiceTicket = client.ServiceTicket;
+            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.BirthName = client.BirthName;
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+
+            // ServiceTicketBackButtonHelper("Set", rsvm);
+            return View("PrintExpressClient", rsvm);
+        }
+               
+        public ActionResult PrepareBackOfficeExistingClient()
+        {
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+           
+            PrepareBCNotes(client, rsvm);
+            PrepareMBVDNotes(client, rsvm);
+
+            PrepareTIDNotes(client, rsvm);
+            PrepareTDLNotes(client, rsvm);
+            
             DateTime today = Extras.DateTimeToday();
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
 
@@ -54,7 +105,7 @@ namespace OPIDDaily.Controllers
             rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;
             rsvm.XID = client.XID == true ? "XID" : string.Empty;
 
-            ServiceTicketBackButtonHelper("Set", rsvm);
+            // ServiceTicketBackButtonHelper("Set", rsvm);
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClient", objTuple);
         }
@@ -212,13 +263,11 @@ namespace OPIDDaily.Controllers
             return View("Merge");
         }
 
-
         public ActionResult RecentChecks()
         {
             ViewBag.RecentYears = Config.RecentYears;
             return View();
         }
-
 
         public ActionResult AncientChecks()
         {

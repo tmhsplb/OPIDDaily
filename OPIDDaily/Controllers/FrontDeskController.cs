@@ -47,7 +47,7 @@ namespace OPIDDaily.Controllers
         {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
@@ -123,7 +123,7 @@ namespace OPIDDaily.Controllers
             }
 
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             if (client == null)
             {
@@ -145,7 +145,7 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
              
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
@@ -159,7 +159,7 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareExpressClientOverflowVoucher(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
             DateTime today = Extras.DateTimeToday();
             DateTime expiryDate = Clients.CalculateExpiry();
 
@@ -175,14 +175,14 @@ namespace OPIDDaily.Controllers
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");  // for _OverflowSignatureBlock.cshtml
 
             VoucherBackButtonHelper("Set", rsvm);
-            return View("PrintExpressCLientOverflowVoucher", rsvm);
+            return View("PrintExpressClientOverflowVoucher", rsvm);
         }
 
         public ActionResult ExistingClientOverflowVoucher()
         {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
@@ -198,7 +198,7 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareExistingClientOVerflowVoucher(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing);
+            Client client = Clients.GetClient(nowServing, rsvm);
             DateTime today = Extras.DateTimeToday();
             DateTime expiryDate = Clients.CalculateExpiry();
 

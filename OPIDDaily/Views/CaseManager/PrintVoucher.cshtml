@@ -6,17 +6,19 @@
 }
 
     <div id="printerDiv">
-        <br/>
+        <br />
         <h1 align="center">Case Manager Voucher</h1>
-        <br/>
+        <br />
         <h4>Client: @ViewBag.ClientName -- DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
         <h4>@ViewBag.Agency</h4>
         <h4>Voucher good only before 9AM on Operation ID business days. Expires: @ViewBag.Expiry.</h4>
         <h4>Client must be accompanied by a case manager.</h4>
         <h4><strong>DISCLAIMER:</strong> Previous visits to Operation ID may make client ineligible for requested services.</h4>
-        <br/>
-        @Html.Partial("_RequestedServices")
         <br />
+        @Html.Partial("_RequestedServices", Model)
+        <br />
+        @Html.Partial("_SupportingDocuments", Model)
+        <br/><br/>
         @Html.Partial("_CaseManagerSignatureBlock")
     </div>
 <br/>

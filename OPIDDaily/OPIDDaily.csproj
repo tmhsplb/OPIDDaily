@@ -290,6 +290,18 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202002211750212_AncientChecks.Designer.cs">
       <DependentUpon>202002211750212_AncientChecks.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003121638374_RequestedServices.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003121638374_RequestedServices.Designer.cs">
+      <DependentUpon>202003121638374_RequestedServices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003131933580_RequestedServices2.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003131933580_RequestedServices2.Designer.cs">
+      <DependentUpon>202003131933580_RequestedServices2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003141800241_TDCJ.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003141800241_TDCJ.Designer.cs">
+      <DependentUpon>202003141800241_TDCJ.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -869,6 +881,7 @@
     <Content Include="Views\Shared\_ReadOnlyRequestedServices.cshtml" />
     <Content Include="Views\BackOffice\ExpressClient.cshtml" />
     <Content Include="Views\BackOffice\PrintExistingClient.cshtml" />
+    <Content Include="Views\Shared\_ExistingClientServiceTicket.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -939,6 +952,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202002211750212_AncientChecks.resx">
       <DependentUpon>202002211750212_AncientChecks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003121638374_RequestedServices.resx">
+      <DependentUpon>202003121638374_RequestedServices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003131933580_RequestedServices2.resx">
+      <DependentUpon>202003131933580_RequestedServices2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003141800241_TDCJ.resx">
+      <DependentUpon>202003141800241_TDCJ.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
