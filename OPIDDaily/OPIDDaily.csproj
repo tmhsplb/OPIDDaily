@@ -844,7 +844,6 @@
     <Content Include="Views\Superadmin\Version.cshtml" />
     <Content Include="Views\Shared\_Client.cshtml" />
     <Content Include="Views\FrontDesk\ExistingClient.cshtml" />
-    <Content Include="Views\BackOffice\ExistingClient.cshtml" />
     <Content Include="Views\Superadmin\ExistingClient.cshtml" />
     <Content Include="Views\Interviewer\ExistingClient.cshtml" />
     <Content Include="Views\CaseManager\Home.cshtml" />
@@ -878,10 +877,10 @@
     <Content Include="Views\Shared\_PreApproval.cshtml" />
     <Content Include="Views\Shared\_BootstrapSupportingDocuments.cshtml" />
     <Content Include="Views\CaseManager\ExistingClientServiceTicket.cshtml" />
-    <Content Include="Views\Shared\_ReadOnlyRequestedServices.cshtml" />
-    <Content Include="Views\BackOffice\ExpressClient.cshtml" />
     <Content Include="Views\BackOffice\PrintExistingClient.cshtml" />
     <Content Include="Views\Shared\_ExistingClientServiceTicket.cshtml" />
+    <Content Include="Views\BackOffice\PrintExpressClient.cshtml" />
+    <Content Include="Views\Shared\_ReadOnlySupportingDocuments.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

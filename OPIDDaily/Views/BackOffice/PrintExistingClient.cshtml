@@ -8,7 +8,7 @@
 
     <div id="printerDiv">
         <br />
-        <h3>Service Ticket: @ViewBag.ServiceTicket</h3>
+        <h3>Remote Service Ticket: @ViewBag.ServiceTicket</h3>
         <br />
         <h3>Existing Client: @ViewBag.ClientName</h3>
         <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
@@ -33,7 +33,7 @@
 
         @Html.Partial("_RequestedServices", Model.Item2)
         <br />
-        @Html.Partial("_SupportingDocuments", Model.Item2)
+        @Html.Partial("_ReadOnlySupportingDocuments", Model.Item2)
         <br /><br />
         @Html.Partial("_SignatureBlock")
     </div>

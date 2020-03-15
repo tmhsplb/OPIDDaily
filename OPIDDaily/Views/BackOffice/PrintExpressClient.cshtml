@@ -1,0 +1,39 @@
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
+@{
+    ViewBag.Title = "Print Express Client";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
+}
+
+    <div id="printerDiv">
+        <br />
+        <h3>Remote Service Ticket: @ViewBag.ServiceTicket</h3>
+        <br />
+        <h3>Express Client: @ViewBag.ClientName</h3>
+        <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+        <h4>Agency: @ViewBag.Agency</h4>
+        <br />
+
+        @*
+        @if (Model.NeedsDocs)
+        {
+            <h3>Client will return with requested documents.</h3>
+            <br />
+        }
+        @if (Model.HasDocs)
+        {
+            <h3>Client has returned with requested documents.</h3>
+            <br />
+        }
+        *@
+
+        @Html.Partial("_RequestedServices", Model)
+        <br />
+        @Html.Partial("_ReadOnlySupportingDocuments", Model)
+        <br /><br />
+        @Html.Partial("_SignatureBlock")
+    </div>
+<br/>
+<center>
+    <button class="btn btn-primary hidden-print" onclick="printServiceTicket()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+</center>

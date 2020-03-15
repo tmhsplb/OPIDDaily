@@ -1,0 +1,62 @@
+﻿
+@model OPIDDaily.Models.RequestedServicesViewModel
+
+<br />
+<h4>Supporting Documents</h4>
+<hr />
+<table id="supportingDocuments" style="border-collapse: collapse; border: none;" width="60%">
+    <tr>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDBC, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDBC)</td>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDSSC, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDSSC)</td>
+    </tr>
+    <tr>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDTID, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDTID)</td>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDTDL, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDTDL)</td>
+    </tr>
+    <tr>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDTDCJ, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDTDCJ)</td>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDVREG, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDVREG)</td>
+    </tr>
+    <tr>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDML, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDML)</td>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDDD, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDDD)</td>
+    </tr>
+    <tr>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDSL, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDSL)</td>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDDD214, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDDD214)</td>
+    </tr>
+    <tr>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDGC, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDGC)</td>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDEBT, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDEBT)</td>
+    </tr>
+    <tr>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDHOTID, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDHOTID)</td>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDSchoolRecords, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDSchoolRecords)</td>
+    </tr>
+    <tr>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDPassport, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDPassport)</td>
+        <td class="noborder" align="center" width="80"> @Html.CheckBoxFor(m => m.SDJobOffer, new { disabled = "disabled" })</td>
+        <td class="noborder" width="120">@Html.LabelFor(m => m.SDJobOffer)</td>
+    </tr>
+</table>
+@if (Model.SDOther)
+{
+    <div style="margin-left:50px">
+        @Html.CheckBoxFor(m => m.SDOther, new { disabled = "disabled" })&nbsp;&nbsp;@Model.SDOthersd
+    </div>
+}
