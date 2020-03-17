@@ -92,7 +92,7 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
 
-            if (CheckManager.HasHistory(client))
+            if (CheckManager.HasHistory(client.Id))
             {
                 client.EXP = false;
                 return RedirectToAction("ExistingClientServiceTicket");

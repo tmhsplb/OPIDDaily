@@ -587,27 +587,39 @@ namespace OPIDDaily.DAL
             return researchChecks;
         }
 
-        public static bool HasHistory(Client client)
+        public static bool HasHistory(int nowServing)
         {
-            DateTime DOB = client.DOB;
-            string lastName = Extras.StripSuffix(client.LastName.ToUpper());
-
             List<Check> researchChecks = new List<Check>();
 
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
-                List<RCheck> rchecks = opidcontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.StartsWith(lastName)).ToList();
+                Client client = opidcontext.Clients.Where(c => c.Id == nowServing).FirstOrDefault();
 
-                if (rchecks.Count > 0)
+                if (client != null)
                 {
-                    return true;
-                }
+                    opidcontext.Entry(client).Collection(c => c.Visits).Load();
 
-                List<AncientCheck> ancientChecks = opidcontext.AncientChecks.Where(ac => ac.DOB == DOB && ac.Name.StartsWith(lastName)).ToList();
+                    if (client.Visits.Count > 0)
+                    {
+                        return true;
+                    }
 
-                if (ancientChecks.Count > 0)
-                {
-                    return true;
+                    DateTime DOB = client.DOB;
+                    string lastName = Extras.StripSuffix(client.LastName.ToUpper());
+
+                    List<RCheck> rchecks = opidcontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.StartsWith(lastName)).ToList();
+
+                    if (rchecks.Count > 0)
+                    {
+                        return true;
+                    }
+
+                    List<AncientCheck> ancientChecks = opidcontext.AncientChecks.Where(ac => ac.DOB == DOB && ac.Name.StartsWith(lastName)).ToList();
+
+                    if (ancientChecks.Count > 0)
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
