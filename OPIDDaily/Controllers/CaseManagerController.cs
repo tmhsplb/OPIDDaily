@@ -108,7 +108,7 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
 
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
@@ -123,7 +123,7 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
 
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
@@ -151,7 +151,7 @@ namespace OPIDDaily.Controllers
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");
             ViewBag.Expiry = client.Expiry.ToString("ddd MMM d, yyyy");
                          
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;

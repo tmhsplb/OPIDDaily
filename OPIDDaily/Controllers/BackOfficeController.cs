@@ -69,7 +69,7 @@ namespace OPIDDaily.Controllers
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
 
             ViewBag.ServiceTicket = client.ServiceTicket;
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
@@ -95,7 +95,7 @@ namespace OPIDDaily.Controllers
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
 
             ViewBag.ServiceTicket = client.ServiceTicket;
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;

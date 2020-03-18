@@ -68,8 +68,6 @@ namespace OPIDDaily.Controllers
                 return GetEmptyGrid(1, 20);
             }
 
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
-
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             int pageIndex = 0;

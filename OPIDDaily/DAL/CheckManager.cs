@@ -589,11 +589,9 @@ namespace OPIDDaily.DAL
 
         public static bool HasHistory(int nowServing)
         {
-            List<Check> researchChecks = new List<Check>();
-
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
-                Client client = opidcontext.Clients.Where(c => c.Id == nowServing).FirstOrDefault();
+                Client client = opidcontext.Clients.Find(nowServing);
 
                 if (client != null)
                 {

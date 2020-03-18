@@ -72,6 +72,7 @@ namespace OPIDDaily.DAL
                 BirthName = client.BirthName,
                 DOB = client.DOB.ToString("MM/dd/yyyy"),
                 Age = client.Age,
+                AgencyName = Agencies.GetAgencyName(client.AgencyId),
 
               //  EXP = (client.EXP == true ? "Y" : string.Empty),
                 PND = (client.PND == true ? "Y" : string.Empty),
@@ -93,37 +94,7 @@ namespace OPIDDaily.DAL
             client.DOB = DateTime.Parse(cvm.DOB);
             client.Age = CalculateAge(DateTime.Parse(cvm.DOB));
 
-            /*
-            // Requested Services
-            client.BC = cvm.BC;
-            client.HCC = cvm.HCC;
-            client.MBVD = cvm.MBVD;
-            client.NewTID = cvm.NewTID;
-            client.ReplacementTID = cvm.ReplacementTID;
-            client.NewTDL = cvm.NewTDL;
-            client.ReplacementTDL = cvm.ReplacementTDL;
-            client.Numident = cvm.Numident;
-
-            // Supporting documents
-            client.SDBC = cvm.SDBC;
-            client.SDSCC = cvm.SDSCC;
-            client.SDTID = cvm.SDTID;
-            client.SDTDL = cvm.SDTDL;
-            client.SDOSDL = cvm.SDOSDL;
-            client.SDML = cvm.SDML;
-            client.SDDD = cvm.SDDD;
-            client.SDSL = cvm.SDSL;
-            client.SDDD214 = cvm.SDDD214;
-            client.SDEBT = cvm.SDEBT;
-            client.SDHOTID = cvm.SDHOTID;
-            client.SDSchoolRecords = cvm.SDSchoolRecords;
-            client.SDPassport = cvm.SDPassport;
-            client.SDJobOffer = cvm.SDJobOffer;
-            client.SDOther = cvm.SDOther;
-            client.SDOthersd = cvm.SDOthersd;
-            */
-
-           // client.EXP = (cvm.EXP.Equals("Y") ? true : false);
+            // client.EXP = (cvm.EXP.Equals("Y") ? true : false);
             client.PND = (cvm.PND.Equals("Y") ? true : false);
             client.XID = (cvm.XID.Equals("Y") ? true : false);
             client.XBC = (cvm.XBC.Equals("Y") ? true : false);
@@ -170,7 +141,7 @@ namespace OPIDDaily.DAL
                         if (updateWaittimes == true)
                         {
                             // Disable WaitTime processing
-                           // client.WaitTime = GetUpdatedWaitTime(client);
+                            // client.WaitTime = GetUpdatedWaitTime(client);
                         }
 
                         clientCVMS.Add(ClientEntityToClientViewModel(client));
@@ -376,7 +347,6 @@ namespace OPIDDaily.DAL
                 {
                     // Disable automatic stage transitioning
                     // StageTransition(cvm, client);
-
                     ClientViewModelToClientEntity(cvm, client);
                     opidcontext.SaveChanges();
                     return client.Id;
@@ -400,7 +370,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-            public static void DeleteClient(int id)
+        public static void DeleteClient(int id)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
@@ -425,30 +395,25 @@ namespace OPIDDaily.DAL
             return age;
         }
 
-        public static string ClientBeingServed(int nowServing)
+        public static string ClientBeingServed(Client client)
         {
-            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            if (client != null)
             {
-                Client client = opidcontext.Clients.Find(nowServing);
+                string clientName;
 
-                if (client != null)
+                if (string.IsNullOrEmpty(client.BirthName))
                 {
-                    string clientName;
-
-                    if (string.IsNullOrEmpty(client.BirthName))
-                    {
-                        clientName = string.Format("{0}, {1} {2}", client.LastName, client.FirstName, client.MiddleName);
-                    }
-                    else
-                    {
-                       clientName = string.Format("{0}, {1} {2} (Birth name: {3})", client.LastName, client.FirstName, client.MiddleName, client.BirthName);
-                    }
-                   
-                    return clientName;
+                    clientName = string.Format("{0}, {1} {2}", client.LastName, client.FirstName, client.MiddleName);
+                }
+                else
+                {
+                    clientName = string.Format("{0}, {1} {2} (Birth name: {3})", client.LastName, client.FirstName, client.MiddleName, client.BirthName);
                 }
 
-                return "Unknown";
+                return clientName;
             }
+
+            return "Unknown";
         }
 
         private static ClientReviewViewModel ClientEntityToClientReviewViewModel(Client client)

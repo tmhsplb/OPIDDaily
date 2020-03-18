@@ -86,7 +86,6 @@ namespace OPIDDaily.DAL
             };
         }
 
-
         public static List<VisitViewModel> GetVisits(int nowServing)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())

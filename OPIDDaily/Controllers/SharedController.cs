@@ -96,9 +96,6 @@ namespace OPIDDaily.Controllers
         public JsonResult GetVisitHistory(int page, int rows)
         {
             int nowServing = NowServing();
-
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
-
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             int pageIndex = page - 1;
@@ -320,7 +317,7 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
             Client client = Clients.GetClient(nowServing, rsvm);
 
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
@@ -420,7 +417,7 @@ namespace OPIDDaily.Controllers
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
 
             ViewBag.ServiceTicket = client.ServiceTicket;
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
@@ -447,7 +444,7 @@ namespace OPIDDaily.Controllers
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
 
             ViewBag.ServiceTicket = client.ServiceTicket;
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
@@ -469,7 +466,7 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, rsvm);
 
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
@@ -489,7 +486,7 @@ namespace OPIDDaily.Controllers
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
 
             ViewBag.ServiceTicket = client.ServiceTicket;
-            ViewBag.ClientName = Clients.ClientBeingServed(nowServing);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
