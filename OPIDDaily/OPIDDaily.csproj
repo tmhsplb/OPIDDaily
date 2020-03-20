@@ -302,6 +302,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202003141800241_TDCJ.Designer.cs">
       <DependentUpon>202003141800241_TDCJ.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003201500453_ContactInfo.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003201500453_ContactInfo.Designer.cs">
+      <DependentUpon>202003201500453_ContactInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -319,6 +323,7 @@
     <Compile Include="Models\ClientReviewViewModel.cs" />
     <Compile Include="Models\ClientServedViewModel.cs" />
     <Compile Include="Models\ClientViewModel.cs" />
+    <Compile Include="Models\ContactInfoViewModel.cs" />
     <Compile Include="Models\DataRow.cs" />
     <Compile Include="Models\DatePickerViewModel.cs" />
     <Compile Include="Models\DispositionRow.cs" />
@@ -881,6 +886,8 @@
     <Content Include="Views\Shared\_ExistingClientServiceTicket.cshtml" />
     <Content Include="Views\BackOffice\PrintExpressClient.cshtml" />
     <Content Include="Views\Shared\_ReadOnlySupportingDocuments.cshtml" />
+    <Content Include="Views\CaseManager\ContactInfo.cshtml" />
+    <Content Include="Views\BackOffice\ContactInfo.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -960,6 +967,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003141800241_TDCJ.resx">
       <DependentUpon>202003141800241_TDCJ.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003201500453_ContactInfo.resx">
+      <DependentUpon>202003201500453_ContactInfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

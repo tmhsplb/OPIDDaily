@@ -30,6 +30,24 @@ namespace OpidDailyEntities
 
         public int Age { get; set; }
 
+        public string AKA { get; set; }
+
+        public string Email { get; set; }
+
+        public string BirthCity { get; set; }
+
+        public string BirthState { get; set; }
+
+        public string Phone { get; set; }
+
+        public string CurrentAddress { get; set; }
+
+        public string City { get; set; }
+
+        public string Staat { get; set; }
+
+        public string Zip { get; set; }
+
         public string Notes { get; set; }
 
         public DateTime Screened { get; set; }

@@ -62,6 +62,21 @@ namespace OPIDDaily.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetContactInfo()
+        {
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please first select a client from the Clients Table.";
+                return View("Warning");
+            }
+
+            ContactInfoViewModel civm = Clients.GetContactInfoViewModel(nowServing);
+
+            return View("ContactInfo", civm);
+        }
+
         public string AddClient(ClientViewModel cvm)
         {
             int id = Clients.AddClient(cvm);

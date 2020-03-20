@@ -566,5 +566,113 @@ namespace OPIDDaily.DAL
                 opiddailycontext.SaveChanges();   
             }
         }
+
+        private static ContactInfoViewModel ClientToClientContactInfoViewModel(Client client)
+        {
+            return new ContactInfoViewModel
+            {
+                LastName = client.LastName,
+                FirstName = client.FirstName,
+                MiddleName = client.MiddleName,
+                BirthName = client.BirthName,
+                AKA = client.AKA,
+                Email = client.Email,
+                DOB = client.DOB.ToShortDateString(),
+                BirthCity = client.BirthCity,
+                BirthState = client.BirthState,
+                Phone = client.Phone,
+                CurrentAddress = client.CurrentAddress,
+                City = client.City,
+                State = client.Staat,
+                Zip = client.Zip
+            };
+        }
+
+        public static ContactInfoViewModel GetContactInfoViewModel(int nowServing)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+
+                if (client != null)
+                {
+                    return ClientToClientContactInfoViewModel(client);
+                }
+            }
+
+            return null;
+        }
+
+        public static void StoreContactInfo(int nowServing, ContactInfoViewModel civm)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+
+                if (client != null)
+                {
+                    client.AKA = civm.AKA;
+                    client.Email = civm.Email;
+                    client.BirthCity = civm.BirthCity;
+                    client.BirthState = civm.BirthState;
+                    client.Phone = civm.Phone;
+                    client.CurrentAddress = civm.CurrentAddress;
+                    client.City = civm.City;
+                    client.Staat = civm.State;
+                    client.Zip = civm.Zip;
+
+                    opiddailycontext.SaveChanges();
+                }
+            }
+        }
+
+        public static string ClientAddress(Client client)
+        {
+            string currrentAddress = string.Empty;
+
+            if (string.IsNullOrEmpty(client.CurrentAddress))
+            {
+                return "none provided";
+            }
+            else if (!string.IsNullOrEmpty(client.City))
+            {
+                if (!string.IsNullOrEmpty(client.Staat))
+                {
+                    return string.Format("{0}, {1}, {2} {3}", client.CurrentAddress, client.City, client.Staat, client.Zip);
+                }
+                else
+                {
+                    return string.Format("{0}, {1} {2}", client.CurrentAddress, client.City, client.Zip);
+                }
+            }
+            else if (!string.IsNullOrEmpty(client.Staat))
+            {
+                return string.Format("{0}, {1} {2}", client.CurrentAddress, client.Staat, client.Zip);
+            }
+            else
+            {
+                return string.Format("{0} {1}", client.CurrentAddress, client.Zip);
+            }  
+        }
+
+        public static string GetBirthplace(Client client)
+        {
+            string birthplace = "none provided";
+
+            if (!string.IsNullOrEmpty(client.BirthCity) && !string.IsNullOrEmpty(client.BirthState))
+            {
+                birthplace = string.Format("{0}, {1}", client.BirthCity, client.BirthState);
+            }
+            else if (!string.IsNullOrEmpty(client.BirthCity) && string.IsNullOrEmpty(client.BirthState))
+            {
+                birthplace = client.BirthCity;
+            }
+            else if (string.IsNullOrEmpty(client.BirthCity) && !string.IsNullOrEmpty(client.BirthState))
+            {
+                birthplace = client.BirthState;
+            }
+
+            return birthplace;
+        }
     }
 }

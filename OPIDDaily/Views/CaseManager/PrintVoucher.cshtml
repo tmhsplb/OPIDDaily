@@ -9,8 +9,12 @@
         <br />
         <h1 align="center">Case Manager Voucher</h1>
         <br />
-        <h4>Client: @ViewBag.ClientName -- DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
-        <h4>@ViewBag.Agency</h4>
+        <h4>Client: @ViewBag.ClientName&nbsp;&nbsp;@(!string.IsNullOrEmpty(@ViewBag.AKA) ? string.Format("AKA: {0}", @ViewBag.AKA) : string.Empty)</h4>
+        <h4>Current Address: @ViewBag.CurrentAddress</h4>
+        <h4>Phone: @ViewBag.Phone&nbsp;&nbsp; Email: @ViewBag.Email</h4>
+        <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)&nbsp;&nbsp;Birthplace: @ViewBag.BirthPlace</h4>
+        <br/>
+        <h4>Agency: @ViewBag.Agency</h4>
         <h4>Voucher good only before 9AM on Operation ID business days. Expires: @ViewBag.Expiry.</h4>
         <h4>Client must be accompanied by a case manager.</h4>
         <h4><strong>DISCLAIMER:</strong> Previous visits to Operation ID may make client ineligible for requested services.</h4>
@@ -18,7 +22,7 @@
         @Html.Partial("_RequestedServices", Model)
         <br />
         @Html.Partial("_SupportingDocuments", Model)
-        <br/><br/>
+        <br /><br />
         @Html.Partial("_CaseManagerSignatureBlock")
     </div>
 <br/>

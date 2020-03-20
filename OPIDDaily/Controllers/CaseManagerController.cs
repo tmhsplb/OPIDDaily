@@ -117,6 +117,13 @@ namespace OPIDDaily.Controllers
             return View("ExpressClientServiceTicket", rsvm);
         }
 
+        public ActionResult StoreContactInfo(ContactInfoViewModel civm)
+        {
+            int nowServing = NowServing();
+            Clients.StoreContactInfo(nowServing, civm);
+            return RedirectToAction("ManageClients");
+        }
+
         public ActionResult ExistingClientServiceTicket()
         { 
             int nowServing = NowServing();
@@ -153,7 +160,14 @@ namespace OPIDDaily.Controllers
                          
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
+            ViewBag.AKA = client.AKA;
+
+            ViewBag.CurrentAddress = Clients.ClientAddress(client);
+            ViewBag.Phone = (!string.IsNullOrEmpty(client.Phone) ? client.Phone : "none given");
+            ViewBag.Email = (!string.IsNullOrEmpty(client.Email) ? client.Email : "none available");
+
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.BirthPlace = Clients.GetBirthplace(client);
             ViewBag.Age = client.Age;
             ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);  // rsvm.Agency will be the Id of an Agency as a string
 
