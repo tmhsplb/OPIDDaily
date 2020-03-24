@@ -1,5 +1,4 @@
-﻿using OpidDaily.Models;
-using OPIDDaily.DAL;
+﻿using OPIDDaily.DAL;
 using OPIDDaily.Models;
 using OPIDDaily.Utils;
 using System;

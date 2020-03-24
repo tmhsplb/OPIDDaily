@@ -214,7 +214,6 @@
     <Compile Include="DAL\Agencies.cs" />
     <Compile Include="DAL\CheckManager.cs" />
     <Compile Include="DAL\Clients.cs" />
-    <Compile Include="DAL\DataManager.cs" />
     <Compile Include="DAL\FileDownloader.cs" />
     <Compile Include="DAL\FileUploader.cs" />
     <Compile Include="DAL\Identity.cs" />
@@ -305,6 +304,14 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202003201500453_ContactInfo.cs" />
     <Compile Include="DataContexts\OPIDDailyMigrations\202003201500453_ContactInfo.Designer.cs">
       <DependentUpon>202003201500453_ContactInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003211952281_Household.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003211952281_Household.Designer.cs">
+      <DependentUpon>202003211952281_Household.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003212055130_HeadOfHousehold.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003212055130_HeadOfHousehold.Designer.cs">
+      <DependentUpon>202003212055130_HeadOfHousehold.cs</DependentUpon>
     </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
@@ -970,6 +977,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003201500453_ContactInfo.resx">
       <DependentUpon>202003201500453_ContactInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003211952281_Household.resx">
+      <DependentUpon>202003211952281_Household.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003212055130_HeadOfHousehold.resx">
+      <DependentUpon>202003212055130_HeadOfHousehold.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

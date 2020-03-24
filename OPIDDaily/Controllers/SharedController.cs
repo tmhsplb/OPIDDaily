@@ -1,5 +1,7 @@
-﻿using DataTables.Mvc;
-using OpidDaily.Models;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using static OPIDDaily.DataContexts.IdentityDB;
+using DataTables.Mvc;
 using OPIDDaily.DAL;
 using OPIDDaily.DataContexts;
 using OPIDDaily.Models;
@@ -21,6 +23,17 @@ namespace OPIDDaily.Controllers
         public static int NowServing()
         {
             return Convert.ToInt32(SessionHelper.Get("NowServing"));
+        }
+
+        // See https://stackoverflow.com/questions/18448637/how-to-get-current-user-and-how-to-use-user-class-in-mvc5
+        protected int ReferringAgency()
+        {
+            var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            var userManager = new UserManager<ApplicationUser>(store);
+            string userName = User.Identity.GetUserName();
+            ApplicationUser user = userManager.FindByNameAsync(userName).Result;
+
+            return user.AgencyId;
         }
 
         public void NowServing(int? nowServing = 0)
@@ -105,6 +118,49 @@ namespace OPIDDaily.Controllers
         {
             Clients.DeleteClient(id);
             DailyHub.Refresh();
+            return "Success";
+        }
+
+        public JsonResult GetDependents(int id, string sord, int page, int rows)
+        {
+            List<ClientViewModel> dependents = Clients.GetDependents(id);
+
+            var jsonData = new
+            {
+                total = 1,
+                page = page,
+                records = dependents.Count,
+                rows = dependents
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
+        public string AddDependentClient(int household, ClientViewModel cvm)
+        {
+            int referringAgency = ReferringAgency();
+
+            if (referringAgency != 0)
+            {
+                int id = Clients.AddDependentClient(referringAgency, household, cvm);
+
+                SessionHelper.Set("NowServing", id.ToString());
+
+                return "Success";
+            }
+
+            return "Failure";
+        }
+
+        public string EditDependentClient(ClientViewModel cvm)
+        {
+            Clients.EditDependentClient(cvm);
+            return "Success";
+        }
+
+        public string DeleteDependentClient(int id)
+        {
+            Clients.DeleteClient(id);
             return "Success";
         }
 

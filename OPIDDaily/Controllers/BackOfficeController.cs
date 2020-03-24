@@ -1,5 +1,4 @@
-﻿using OpidDaily.Models;
-using DataTables.Mvc;
+﻿using DataTables.Mvc;
 using OPIDDaily.DAL;
 using OPIDDaily.Models;
 using System;

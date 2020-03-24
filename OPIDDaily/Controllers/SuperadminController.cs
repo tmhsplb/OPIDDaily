@@ -5,7 +5,6 @@ using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
 using DataTables.Mvc;
-using OpidDaily.Models;
 using OPIDDaily.DAL;
 using OPIDDaily.DataContexts;
 using OPIDDaily.Models;

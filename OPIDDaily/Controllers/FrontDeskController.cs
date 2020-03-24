@@ -1,5 +1,4 @@
-﻿using OpidDaily.Models;
-using OPIDDaily.DAL;
+﻿using OPIDDaily.DAL;
 using OPIDDaily.Models;
 using OPIDDaily.Utils;
 using OpidDailyEntities;
@@ -16,8 +15,8 @@ namespace OPIDDaily.Controllers
     {
         public ActionResult Home()
         {
-            ServiceTicketBackButtonHelper("Reset", null);
-            SpecialReferralBackButtonHelper("Reset", null);
+          //  ServiceTicketBackButtonHelper("Reset", null);
+          //  SpecialReferralBackButtonHelper("Reset", null);
             return View();
         } 
 
@@ -82,7 +81,7 @@ namespace OPIDDaily.Controllers
         {
             SpecialReferralViewModel srvm = new SpecialReferralViewModel();
         
-            SpecialReferralBackButtonHelper("Get", srvm);
+           // SpecialReferralBackButtonHelper("Get", srvm);
 
             return View("SpecialReferral", srvm);
         }
@@ -105,7 +104,7 @@ namespace OPIDDaily.Controllers
                 srvm.AgencyContact = "_________________________";
             }
 
-            SpecialReferralBackButtonHelper("Set", srvm);
+          //  SpecialReferralBackButtonHelper("Set", srvm);
 
             DateTime today = Extras.DateTimeToday();
             ViewBag.SpecialReferralDate = today.ToString("MMM d, yyyy");
@@ -151,7 +150,7 @@ namespace OPIDDaily.Controllers
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            VoucherBackButtonHelper("Get", rsvm);
+          //  VoucherBackButtonHelper("Get", rsvm);
             
             return View(rsvm);
         }
@@ -174,7 +173,7 @@ namespace OPIDDaily.Controllers
             ViewBag.Expiry = Clients.CalculateExpiry().ToString("ddd MMM d, yyyy");
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");  // for _OverflowSignatureBlock.cshtml
 
-            VoucherBackButtonHelper("Set", rsvm);
+         //   VoucherBackButtonHelper("Set", rsvm);
             return View("PrintExpressClientOverflowVoucher", rsvm);
         }
 
@@ -188,14 +187,14 @@ namespace OPIDDaily.Controllers
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            VoucherBackButtonHelper("Get", rsvm);
+          //  VoucherBackButtonHelper("Get", rsvm);
 
             return View(rsvm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PrepareExistingClientOVerflowVoucher(RequestedServicesViewModel rsvm)
+        public ActionResult PrepareExistingClientOverflowVoucher(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, rsvm);
@@ -217,7 +216,7 @@ namespace OPIDDaily.Controllers
             rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;
             rsvm.XID = client.XID == true ? "XID" : string.Empty;
 
-            VoucherBackButtonHelper("Set", rsvm);
+          //  VoucherBackButtonHelper("Set", rsvm);
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClientOverflowVoucher", objTuple);
         }

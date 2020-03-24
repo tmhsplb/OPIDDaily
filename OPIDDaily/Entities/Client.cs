@@ -26,6 +26,10 @@ namespace OpidDailyEntities
 
         public string BirthName { get; set; }
 
+        public bool HeadOfHousehold { get; set; }
+
+        public int HH { get; set; }
+
         public DateTime DOB { get; set; }
 
         public int Age { get; set; }

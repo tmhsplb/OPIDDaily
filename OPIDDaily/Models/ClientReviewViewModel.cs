@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace OpidDaily.Models
+namespace OPIDDaily.Models
 {
     public class ClientReviewViewModel
     {

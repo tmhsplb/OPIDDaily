@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace OpidDaily.Models
+namespace OPIDDaily.Models
 {
     public class ClientViewModel
     {
@@ -18,7 +18,9 @@ namespace OpidDaily.Models
         public int WaitTime { get; set; }
 
         public string Stage { get; set; }
-
+        
+        public string HeadOfHousehold { get; set; }
+        
         public string LastName { get; set; }
 
         public string FirstName { get; set; }

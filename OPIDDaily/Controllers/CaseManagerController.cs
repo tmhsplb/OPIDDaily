@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using OpidDaily.Models;
-using OPIDDaily.DAL;
+﻿using OPIDDaily.DAL;
 using OPIDDaily.Models;
 using OPIDDaily.Utils;
 using OpidDailyEntities;
@@ -10,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using static OPIDDaily.DataContexts.IdentityDB;
+ 
 
 namespace OPIDDaily.Controllers
 {
@@ -21,17 +18,6 @@ namespace OPIDDaily.Controllers
         {
             VoucherBackButtonHelper("Reset", null);
             return View();
-        }
-
-        // See https://stackoverflow.com/questions/18448637/how-to-get-current-user-and-how-to-use-user-class-in-mvc5
-        private int ReferringAgency()
-        {
-            var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
-            var userManager = new UserManager<ApplicationUser>(store);
-            string userName = User.Identity.GetUserName();
-            ApplicationUser user = userManager.FindByNameAsync(userName).Result;
-
-            return user.AgencyId;
         }
 
         public JsonResult GetMyClients(int page, int? rows = 25)
@@ -171,8 +157,12 @@ namespace OPIDDaily.Controllers
             ViewBag.Age = client.Age;
             ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);  // rsvm.Agency will be the Id of an Agency as a string
 
-          //  VoucherBackButtonHelper("Set", rsvm);
-            return View("PrintVoucher", rsvm);
+            List<ClientViewModel> dependents = Clients.GetDependents(nowServing);
+
+            var objTuple = new Tuple<List<ClientViewModel>, RequestedServicesViewModel>(dependents, rsvm);
+
+            //  VoucherBackButtonHelper("Set", rsvm);
+            return View("PrintVoucher", objTuple);
         }
     }
 }
