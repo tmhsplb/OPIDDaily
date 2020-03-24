@@ -42,6 +42,7 @@ namespace OPIDDaily.DAL
                     rsvm.SDDD = client.SDDD;
                     rsvm.SDSL = client.SDSL;
                     rsvm.SDDD214 = client.SDDD214;
+                    rsvm.SDGC = client.SDGC;
                     rsvm.SDEBT = client.SDEBT;
                     rsvm.SDHOTID = client.SDHOTID;
                     rsvm.SDSchoolRecords = client.SDSchoolRecords;
@@ -689,6 +690,7 @@ namespace OPIDDaily.DAL
                 client.SDDD = rsvm.SDDD;
                 client.SDSL = rsvm.SDSL;
                 client.SDDD214 = rsvm.SDDD214;
+                client.SDGC = rsvm.SDGC;
                 client.SDEBT = rsvm.SDEBT;
                 client.SDHOTID = rsvm.SDHOTID;
                 client.SDSchoolRecords = rsvm.SDSchoolRecords;

@@ -106,6 +106,8 @@ namespace OpidDailyEntities
 
         public bool SDDD214 { get; set; }
 
+        public bool SDGC { get; set; }
+
         public bool SDEBT { get; set; }
 
         public bool SDHOTID { get; set; }

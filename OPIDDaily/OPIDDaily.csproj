@@ -313,6 +313,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202003212055130_HeadOfHousehold.Designer.cs">
       <DependentUpon>202003212055130_HeadOfHousehold.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003241922348_GoldCard.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202003241922348_GoldCard.Designer.cs">
+      <DependentUpon>202003241922348_GoldCard.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -983,6 +987,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003212055130_HeadOfHousehold.resx">
       <DependentUpon>202003212055130_HeadOfHousehold.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003241922348_GoldCard.resx">
+      <DependentUpon>202003241922348_GoldCard.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
