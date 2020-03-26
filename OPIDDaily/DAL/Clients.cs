@@ -20,6 +20,8 @@ namespace OPIDDaily.DAL
 
                 if (rsvm != null)
                 {
+                    rsvm.Agency = client.AgencyId.ToString();
+
                     // Requested Services
                     rsvm.BC = client.BC;
                     rsvm.HCC = client.HCC;
@@ -269,7 +271,7 @@ namespace OPIDDaily.DAL
                     MiddleName = cvm.MiddleName,
                     LastName = cvm.LastName,
                     BirthName = cvm.BirthName,
-                    DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday().AddHours(12) : DateTime.Parse(cvm.DOB).AddHours(12)),
+                    DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday() : DateTime.Parse(cvm.DOB)),
                     Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
                   //  EXP = (cvm.EXP.Equals("Y") ? true : false),
                   //  PND = (cvm.PND.Equals("Y") ? true : false),
@@ -662,11 +664,22 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static bool NoServicesRequested(RequestedServicesViewModel rsvm)
+        {
+            return
+                (!rsvm.BC && !rsvm.MBVD
+                && !rsvm.NewTID && !rsvm.ReplacementTID
+                && !rsvm.NewTDL && !rsvm.ReplacementTDL
+                && !rsvm.Numident);
+        }
+
         public static void StoreRequestedServices(int id, RequestedServicesViewModel rsvm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
                 Client client = opiddailycontext.Clients.Find(id);
+
+                client.AgencyId = Convert.ToInt32(rsvm.Agency);
 
                 // Requested Services
                 client.BC = rsvm.BC;
@@ -679,6 +692,8 @@ namespace OPIDDaily.DAL
                 client.ReplacementTDL = rsvm.ReplacementTDL;
                 client.Numident = rsvm.Numident;
 
+                rsvm.TrackingOnly = NoServicesRequested(rsvm);
+                
                 // Supporting documents
                 client.SDBC = rsvm.SDBC;
                 client.SDSSC = rsvm.SDSSC;
@@ -699,7 +714,7 @@ namespace OPIDDaily.DAL
                 client.SDOther = rsvm.SDOther;
                 client.SDOthersd = rsvm.SDOthersd;
 
-                opiddailycontext.SaveChanges();   
+                opiddailycontext.SaveChanges();
             }
         }
 

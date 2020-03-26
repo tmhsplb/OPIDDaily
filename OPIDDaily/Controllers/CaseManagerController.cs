@@ -16,7 +16,7 @@ namespace OPIDDaily.Controllers
     {
         public ActionResult Home()
         {
-            VoucherBackButtonHelper("Reset", null);
+            // VoucherBackButtonHelper("Reset", null);
             return View();
         }
 
@@ -25,7 +25,7 @@ namespace OPIDDaily.Controllers
             int referringAgency = ReferringAgency();
             List<ClientViewModel> clients = Clients.GetMyUnexpiredClients(referringAgency);
 
-            VoucherBackButtonHelper("Reset", null);
+           // VoucherBackButtonHelper("Reset", null);
 
             int pageIndex = page - 1;
             int pageSize = (int)rows;
@@ -131,15 +131,9 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, null);
-
             Clients.StoreRequestedServices(client.Id, rsvm);
-
-            PrepareBCNotes(client, rsvm);
-            PrepareMBVDNotes(client, rsvm);
-
-            PrepareTIDNotes(client, rsvm);
-            PrepareTDLNotes(client, rsvm);
-
+            PrepareClientNotes(client, rsvm);
+             
             DateTime today = Extras.DateTimeToday();
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");
             ViewBag.Expiry = client.Expiry.ToString("ddd MMM d, yyyy");

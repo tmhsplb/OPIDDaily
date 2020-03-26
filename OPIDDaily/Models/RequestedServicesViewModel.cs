@@ -63,7 +63,7 @@ namespace OPIDDaily.Models
 
         public string TIDNotes { get; set; }
 
-        [Display(Name = "New/Dup ID")]
+        [Display(Name = "New/Renew ID")]
         public bool NewTID { get; set; }
 
         [Display(Name = "Pre-approved")]
@@ -85,7 +85,7 @@ namespace OPIDDaily.Models
         public bool ReplacementTIDEligible { get; set; }
         */
 
-        [Display(Name = "New/Dup DL")]
+        [Display(Name = "New/Renew DL")]
         public bool NewTDL { get; set; }
 
         /*
@@ -111,6 +111,10 @@ namespace OPIDDaily.Models
 
         [Display(Name = "Numident")]
         public bool Numident { get; set; }
+
+        public bool TrackingOnly { get; set; }
+
+        public string Notes { get; set; }
 
         // Supporting Documents
         [Display(Name = "Birth Certificate")]

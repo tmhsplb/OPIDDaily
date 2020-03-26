@@ -57,16 +57,10 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-
-            PrepareBCNotes(client, rsvm);
-            PrepareMBVDNotes(client, rsvm);
-
-            PrepareTIDNotes(client, rsvm);
-            PrepareTDLNotes(client, rsvm);
-
+            PrepareClientNotes(client, rsvm);
+            
             DateTime today = Extras.DateTimeToday();
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
-
             ViewBag.ServiceTicket = client.ServiceTicket;
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
@@ -83,16 +77,10 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-           
-            PrepareBCNotes(client, rsvm);
-            PrepareMBVDNotes(client, rsvm);
-
-            PrepareTIDNotes(client, rsvm);
-            PrepareTDLNotes(client, rsvm);
-            
+            PrepareClientNotes(client, rsvm);
+                        
             DateTime today = Extras.DateTimeToday();
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
-
             ViewBag.ServiceTicket = client.ServiceTicket;
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;

@@ -82,6 +82,8 @@
             @using (Html.BeginForm("PrepareVoucher", "CaseManager", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
+                @Html.Hidden("Agency", Model.Agency)
+
                 <div class="form-group">
                     <div class="col-md-2">
                         @Html.CheckBoxFor(m => m.BC, new { @class = "form-control" })
@@ -146,7 +148,7 @@
                 </div>
 
                 @Html.Partial("_BootstrapSupportingDocuments", Model)
-                
+
                 <br /><br />
 
                 <div class="form-group">

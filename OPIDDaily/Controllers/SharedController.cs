@@ -53,8 +53,8 @@ namespace OPIDDaily.Controllers
             DateTime today = Extras.DateTimeToday();
             List<ClientViewModel> clients = Clients.GetClients(today);
 
-            ServiceTicketBackButtonHelper("Reset", null);
-            SpecialReferralBackButtonHelper("Reset", null);
+           // ServiceTicketBackButtonHelper("Reset", null);
+           // SpecialReferralBackButtonHelper("Reset", null);
 
             int pageIndex = page - 1;
             int pageSize = (int)rows;
@@ -144,6 +144,8 @@ namespace OPIDDaily.Controllers
             {
                 int id = Clients.AddDependentClient(referringAgency, household, cvm);
 
+                DailyHub.Refresh();
+
                 SessionHelper.Set("NowServing", id.ToString());
 
                 return "Success";
@@ -200,7 +202,6 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Visits.EditVisit(nowServing, vvm);
-
             return "Success";
         }
 
@@ -208,7 +209,6 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Visits.DeleteVisit(nowServing, id);
-
             return "Success";
         }
         
@@ -346,7 +346,7 @@ namespace OPIDDaily.Controllers
 
         protected void VoucherBackButtonHelper(string mode, RequestedServicesViewModel rsvm)
         {
-            ServiceTicketBackButtonHelper(mode, rsvm);
+           // ServiceTicketBackButtonHelper(mode, rsvm);
         }
 
         protected static void SpecialReferralBackButtonHelper(string mode, SpecialReferralViewModel srvm)
@@ -380,21 +380,6 @@ namespace OPIDDaily.Controllers
                     SessionHelper.Set("Notes", string.Empty);
                     break;
             }
-        }
-
-        public ActionResult ExpressClient()
-        {
-            int nowServing = NowServing();
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
-            Client client = Clients.GetClient(nowServing, rsvm);
-
-            ViewBag.ClientName = Clients.ClientBeingServed(client);
-            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
-            ViewBag.Age = client.Age;
-
-            // ServiceTicketBackButtonHelper("Get", rsvm);
-
-            return View("ExpressClient", rsvm);
         }
 
         protected static void PrepareBCNotes(Client client, RequestedServicesViewModel rsvm)
@@ -471,22 +456,32 @@ namespace OPIDDaily.Controllers
             rsvm.TDLNotes = notes.ToString();
         }
 
+        protected void PrepareClientNotes(Client client, RequestedServicesViewModel rsvm)
+        {
+            if (!rsvm.TrackingOnly)
+            {
+                PrepareBCNotes(client, rsvm);
+                PrepareMBVDNotes(client, rsvm);
+                PrepareTIDNotes(client, rsvm);
+                PrepareTDLNotes(client, rsvm);
+            }
+            else
+            {
+                rsvm.Notes = client.Notes;
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult PrepareExpressClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, rsvm);
-
-            PrepareBCNotes(client, rsvm);
-            PrepareMBVDNotes(client, rsvm);
-
-            PrepareTIDNotes(client, rsvm);
-            PrepareTDLNotes(client, rsvm);
-
+            Clients.StoreRequestedServices(client.Id, rsvm);
+            PrepareClientNotes(client, rsvm);
+            
             DateTime today = Extras.DateTimeToday();
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
-
             ViewBag.ServiceTicket = client.ServiceTicket;
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
@@ -504,22 +499,17 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, rsvm);
-
-            PrepareBCNotes(client, rsvm);
-            PrepareMBVDNotes(client, rsvm);
-
-            PrepareTIDNotes(client, rsvm);
-            PrepareTDLNotes(client, rsvm);
+            Clients.StoreRequestedServices(client.Id, rsvm);
+            PrepareClientNotes(client, rsvm);
             
             DateTime today = Extras.DateTimeToday();
             ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
-
             ViewBag.ServiceTicket = client.ServiceTicket;
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            //   ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
@@ -531,12 +521,31 @@ namespace OPIDDaily.Controllers
             return RedirectToAction("ExistingClient");
         }
 
+        public ActionResult ExpressClient()
+        {
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+            rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+            rsvm.Agency = client.AgencyId.ToString();
+
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+          
+            // ServiceTicketBackButtonHelper("Get", rsvm);
+
+            return View("ExpressClient", rsvm);
+        }
+
         public ActionResult ExistingClient()
         {
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel { Agencies = Agencies.GetAgenciesSelectList() };
             int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-
+            rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+            rsvm.Agency = client.AgencyId.ToString();
+            
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
@@ -620,8 +629,8 @@ namespace OPIDDaily.Controllers
 
             clients = clients.OrderBy(c => c.CheckedIn).ToList();
 
-            ServiceTicketBackButtonHelper("Reset", null);
-            SpecialReferralBackButtonHelper("Reset", null);
+          //  ServiceTicketBackButtonHelper("Reset", null);
+          //  SpecialReferralBackButtonHelper("Reset", null);
 
             var jsonData = new
             {

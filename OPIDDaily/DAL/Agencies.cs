@@ -11,8 +11,7 @@ namespace OPIDDaily.DAL
 {
     public class Agencies
     {
-        
-        public static SelectList GetAgenciesSelectList()
+        public static SelectList GetAgenciesSelectList(int agencyId)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
@@ -20,7 +19,18 @@ namespace OPIDDaily.DAL
 
                 agencies = agencies.OrderBy(a => a.AgencyId).ToList();
 
-                return new SelectList(agencies, "AgencyId", "AgencyName");
+                SelectList sl;
+
+                if (agencyId == 0) // agencyId == 0 => agency is OPID
+                {
+                    sl = new SelectList(agencies, "AgencyId", "AgencyName");
+                }
+                else
+                {
+                    sl = new SelectList(agencies, "AgencyId", "AgencyName", agencyId);
+                }
+
+                return sl;
             }
         }
 
