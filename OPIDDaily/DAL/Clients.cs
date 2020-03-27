@@ -61,11 +61,11 @@ namespace OPIDDaily.DAL
 
         private static ClientViewModel ClientEntityToClientViewModel(Client client)
         {
-            return new ClientViewModel
+            ClientViewModel cvm = new ClientViewModel
             {
                 Id = client.Id,
-                ServiceDate = client.ServiceDate.AddHours(1),
-                Expiry = client.Expiry.AddHours(1),
+                ServiceDate = client.ServiceDate.AddHours(12),
+                Expiry = client.Expiry.AddHours(12),
                 ServiceTicket = client.ServiceTicket,
                 Stage = client.Stage,
                 WaitTime = client.WaitTime,
@@ -74,7 +74,7 @@ namespace OPIDDaily.DAL
                 FirstName = client.FirstName,
                 MiddleName = client.MiddleName,
                 BirthName = client.BirthName,
-                DOB = client.DOB.AddHours(1),
+                DOB = client.DOB.AddHours(12),
                 Age = client.Age,
                 AgencyName = Agencies.GetAgencyName(client.AgencyId),
 
@@ -85,6 +85,8 @@ namespace OPIDDaily.DAL
              //   History = (hasHistory ? "Y" : string.Empty),
                 Notes = client.Notes
             };
+
+            return cvm;
         }
 
         private static void ClientViewModelToClientEntity(ClientViewModel cvm, Client client)
