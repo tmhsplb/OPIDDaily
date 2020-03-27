@@ -64,8 +64,8 @@ namespace OPIDDaily.DAL
             return new ClientViewModel
             {
                 Id = client.Id,
-                ServiceDate = client.ServiceDate, // .ToString("MM/dd/yyyy"),
-                Expiry = client.Expiry, // .ToString("MM/dd/yyyy"),
+                ServiceDate = client.ServiceDate.AddHours(1),
+                Expiry = client.Expiry.AddHours(1),
                 ServiceTicket = client.ServiceTicket,
                 Stage = client.Stage,
                 WaitTime = client.WaitTime,
@@ -74,7 +74,7 @@ namespace OPIDDaily.DAL
                 FirstName = client.FirstName,
                 MiddleName = client.MiddleName,
                 BirthName = client.BirthName,
-                DOB = client.DOB, //.ToString("MM/dd/yyyy"),
+                DOB = client.DOB.AddHours(1),
                 Age = client.Age,
                 AgencyName = Agencies.GetAgencyName(client.AgencyId),
 
