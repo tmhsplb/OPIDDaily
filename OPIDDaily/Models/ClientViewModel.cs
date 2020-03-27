@@ -9,9 +9,9 @@ namespace OPIDDaily.Models
     {
         public int Id { get; set; }
 
-        public string ServiceDate { get; set; }
+        public DateTime ServiceDate { get; set; }   
 
-        public string Expiry { get; set; }
+        public DateTime Expiry { get; set; }    
 
         public string ServiceTicket { get; set; }
 
@@ -29,7 +29,7 @@ namespace OPIDDaily.Models
 
         public string BirthName { get; set; }
 
-        public string DOB { get; set; }
+        public DateTime DOB { get; set; }   
 
         public int Age { get; set; }
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
+using System.Text;
 
 namespace OPIDDaily.DAL
 {
@@ -63,8 +64,8 @@ namespace OPIDDaily.DAL
             return new ClientViewModel
             {
                 Id = client.Id,
-                ServiceDate = client.ServiceDate.ToString("MM/dd/yyyy"),
-                Expiry = client.Expiry.ToString("MM/dd/yyyy"),
+                ServiceDate = client.ServiceDate, // .ToString("MM/dd/yyyy"),
+                Expiry = client.Expiry, // .ToString("MM/dd/yyyy"),
                 ServiceTicket = client.ServiceTicket,
                 Stage = client.Stage,
                 WaitTime = client.WaitTime,
@@ -73,7 +74,7 @@ namespace OPIDDaily.DAL
                 FirstName = client.FirstName,
                 MiddleName = client.MiddleName,
                 BirthName = client.BirthName,
-                DOB = client.DOB.ToString("MM/dd/yyyy"),
+                DOB = client.DOB, //.ToString("MM/dd/yyyy"),
                 Age = client.Age,
                 AgencyName = Agencies.GetAgencyName(client.AgencyId),
 
@@ -94,8 +95,8 @@ namespace OPIDDaily.DAL
             client.FirstName = cvm.FirstName;
             client.MiddleName = cvm.MiddleName;
             client.BirthName = cvm.BirthName;
-            client.DOB = DateTime.Parse(cvm.DOB);
-            client.Age = CalculateAge(DateTime.Parse(cvm.DOB));
+            client.DOB = cvm.DOB; 
+            client.Age = CalculateAge(cvm.DOB); 
 
             // client.EXP = (cvm.EXP.Equals("Y") ? true : false);
             client.PND = (cvm.PND.Equals("Y") ? true : false);
@@ -194,8 +195,8 @@ namespace OPIDDaily.DAL
                     MiddleName = cvm.MiddleName,
                     LastName = cvm.LastName,
                     BirthName = cvm.BirthName,
-                    DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday() : DateTime.Parse(cvm.DOB)),
-                    Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
+                    DOB = cvm.DOB,  
+                    Age = CalculateAge(cvm.DOB), 
                  //   EXP = (cvm.EXP.Equals("Y") ? true : false),
                     PND = (cvm.PND.Equals("Y") ? true : false),
                     XID = (cvm.XID.Equals("Y") ? true : false),
@@ -271,8 +272,8 @@ namespace OPIDDaily.DAL
                     MiddleName = cvm.MiddleName,
                     LastName = cvm.LastName,
                     BirthName = cvm.BirthName,
-                    DOB = (string.IsNullOrEmpty(cvm.DOB) ? Extras.DateTimeToday() : DateTime.Parse(cvm.DOB)),
-                    Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
+                    DOB = cvm.DOB,  
+                    Age = CalculateAge(cvm.DOB),  
                   //  EXP = (cvm.EXP.Equals("Y") ? true : false),
                   //  PND = (cvm.PND.Equals("Y") ? true : false),
                   //  XID = (cvm.XID.Equals("Y") ? true : false),
@@ -296,6 +297,75 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static string GetClientServices(Client client)
+        {
+            StringBuilder services = new StringBuilder();
+            bool empty = true;
+
+            if (client.BC)
+            {
+                services.Append("BC");
+                empty = false;
+            }
+
+            if (client.MBVD)
+            {
+                if (!empty)
+                {
+                    services.Append(", ");
+                }
+
+                services.Append(string.Format("MBVD ({0})", client.State));
+                empty = false;
+            }
+
+            if (client.NewTID)
+            {
+                if (!empty)
+                {
+                    services.Append(", ");
+                }
+
+                services.Append("New/Renewal TID");
+                empty = false;
+            }
+
+            if (client.ReplacementTID)
+            {
+                if (!empty)
+                {
+                    services.Append(", ");
+                }
+
+                services.Append("Replacement TID");
+                empty = false;
+            }
+
+            if (client.NewTDL)
+            {
+                if (!empty)
+                {
+                    services.Append(", ");
+                }
+
+                services.Append("New/Renewal TDL");
+                empty = false;
+            }
+
+            if (client.ReplacementTDL)
+            {
+                if (!empty)
+                {
+                    services.Append(", ");
+                }
+
+                services.Append("Replacement TDL");
+                empty = false;
+            }
+
+            return services.ToString();
+        }
+
         public static List<ClientViewModel> GetDependents(int id)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
@@ -305,7 +375,11 @@ namespace OPIDDaily.DAL
 
                 foreach (Client client in clients)
                 {
-                    dependents.Add(ClientEntityToClientViewModel(client));
+                    ClientViewModel cvm = ClientEntityToClientViewModel(client);
+
+                    cvm.Notes = GetClientServices(client);
+
+                    dependents.Add(cvm);
                 }
 
                 return dependents;
@@ -333,8 +407,8 @@ namespace OPIDDaily.DAL
                         MiddleName = cvm.MiddleName,
                         LastName = cvm.LastName,
                         BirthName = cvm.BirthName,
-                        DOB = DateTime.Parse(cvm.DOB).AddHours(12), // store time as 12 noon
-                        Age = (string.IsNullOrEmpty(cvm.DOB) ? 0 : CalculateAge(DateTime.Parse(cvm.DOB))),
+                        DOB = cvm.DOB,
+                        Age = CalculateAge(cvm.DOB),
                         Notes = cvm.Notes,
                         Screened = now,
                         CheckedIn = now,

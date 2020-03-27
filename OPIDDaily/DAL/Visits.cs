@@ -16,7 +16,7 @@ namespace OPIDDaily.DAL
             return new VisitViewModel
             {
                 Id = visit.Id,
-                Date = visit.Date.AddHours(2),  // make the time be 12 noon
+                Date = visit.Date,
                 Item = visit.Item,
                 Check = (string.IsNullOrEmpty(visit.Check) || visit.Check.Equals("0") ? string.Empty : visit.Check),
                 Status = visit.Status,
@@ -41,7 +41,7 @@ namespace OPIDDaily.DAL
             return new VisitViewModel
             {
                 Id = ancientCheck.Id,
-                Date = date.AddHours(12),  // make the time be 12 noon
+                Date = date,  
                 Item = ancientCheck.Service,
                 Check = (ancientCheck.Num == 0 ? string.Empty : ancientCheck.Num.ToString()),
                 Status = ancientCheck.Disposition,
@@ -66,7 +66,7 @@ namespace OPIDDaily.DAL
             return new VisitViewModel
             {
                 Id = rcheck.Id,
-                Date = date.AddHours(12),  // make the time be 12 noon
+                Date = date, 
                 Item = rcheck.Service,
                 Check = (rcheck.Num == 0 ? string.Empty: rcheck.Num.ToString()),
                 Status = rcheck.Disposition,
@@ -78,7 +78,7 @@ namespace OPIDDaily.DAL
         {
             return new Visit
             {
-                Date = vvm.Date.AddHours(12), // make the time be 12 noon
+                Date = vvm.Date,
                 Item = vvm.Item,
                 Check = vvm.Check,
                 Status = vvm.Status,
@@ -159,7 +159,7 @@ namespace OPIDDaily.DAL
 
                     if (visit != null)
                     {
-                        visit.Date = vvm.Date.AddHours(12);  // make the time be 12 noon
+                        visit.Date = vvm.Date; 
                         visit.Item = vvm.Item;
                         visit.Check = vvm.Check;
                         visit.Status = vvm.Status;
