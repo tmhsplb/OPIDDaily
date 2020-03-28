@@ -476,7 +476,7 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareExpressClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing, rsvm);
+            Client client = Clients.GetClient(nowServing, null);
             Clients.StoreRequestedServices(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
             
@@ -498,7 +498,7 @@ namespace OPIDDaily.Controllers
         public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing, rsvm);
+            Client client = Clients.GetClient(nowServing, null);
             Clients.StoreRequestedServices(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
             
