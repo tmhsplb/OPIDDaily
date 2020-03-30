@@ -53,56 +53,67 @@ namespace OPIDDaily.Utils
         {
             DateTime epochAsDateTime = new DateTime(1900, 1, 1);
             DateTime dt;
+            DispositionRow rr = new DispositionRow(); ;
 
-            foreach (DispositionRow dr in resRows)
+            try
             {
-                dt = (DateTime)dr.LBVDOrderDateTwo;
-                if (dt.CompareTo(epochAsDateTime) == 0)
+                foreach (DispositionRow dr in resRows)
                 {
-                    dr.LBVDOrderDateTwo = null;
-                }
+                    rr = dr;
 
-                dt = (DateTime)dr.LBVDOrderDateThree;
-                if (dt.CompareTo(epochAsDateTime) == 0)
-                {
-                    dr.LBVDOrderDateThree = null;
-                }
+                    dt = (DateTime)dr.LBVDOrderDateTwo;
+                    if (dt.CompareTo(epochAsDateTime) == 0)
+                    {
+                        dr.LBVDOrderDateTwo = null;
+                    }
 
-                dt = (DateTime)dr.MBVDOrderDateTwo;
-                if (dt.CompareTo(epochAsDateTime) == 0)
-                {
-                    dr.MBVDOrderDateTwo = null;
-                }
+                    dt = (DateTime)dr.LBVDOrderDateThree;
+                    if (dt.CompareTo(epochAsDateTime) == 0)
+                    {
+                        dr.LBVDOrderDateThree = null;
+                    }
 
-                dt = (DateTime)dr.MBVDOrderDateThree;
-                if (dt.CompareTo(epochAsDateTime) == 0)
-                {
-                    dr.MBVDOrderDateThree = null;
-                }
+                    dt = (DateTime)dr.MBVDOrderDateTwo;
+                    if (dt.CompareTo(epochAsDateTime) == 0)
+                    {
+                        dr.MBVDOrderDateTwo = null;
+                    }
 
-                dt = (DateTime)dr.TIDOrderDateTwo;
-                if (dt.CompareTo(epochAsDateTime) == 0)
-                {
-                    dr.TIDOrderDateTwo = null;
-                }
+                    dt = (DateTime)dr.MBVDOrderDateThree;
+                    if (dt.CompareTo(epochAsDateTime) == 0)
+                    {
+                        dr.MBVDOrderDateThree = null;
+                    }
 
-                dt = (DateTime)dr.TIDOrderDateThree;
-                if (dt.CompareTo(epochAsDateTime) == 0)
-                {
-                    dr.TIDOrderDateThree = null;
-                }
+                    dt = (DateTime)dr.TIDOrderDateTwo;
+                    if (dt.CompareTo(epochAsDateTime) == 0)
+                    {
+                        dr.TIDOrderDateTwo = null;
+                    }
 
-                dt = (DateTime)dr.TDLOrderDateTwo;
-                if (dt.CompareTo(epochAsDateTime) == 0)
-                {
-                    dr.TDLOrderDateTwo = null;
-                }
+                    dt = (DateTime)dr.TIDOrderDateThree;
+                    if (dt.CompareTo(epochAsDateTime) == 0)
+                    {
+                        dr.TIDOrderDateThree = null;
+                    }
 
-                dt = (DateTime)dr.TDLOrderDateThree;
-                if (dt.CompareTo(epochAsDateTime) == 0)
-                {
-                    dr.TDLOrderDateThree = null;
+                    dt = (DateTime)dr.TDLOrderDateTwo;
+                    if (dt.CompareTo(epochAsDateTime) == 0)
+                    {
+                        dr.TDLOrderDateTwo = null;
+                    }
+
+                    dt = (DateTime)dr.TDLOrderDateThree;
+                    if (dt.CompareTo(epochAsDateTime) == 0)
+                    {
+                        dr.TDLOrderDateThree = null;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Error(string.Format("RecordID = {0}, Name = {1}, {2}", rr.RecordID, rr.Lname, rr.Fname));
+                Log.Error(e.Message);
             }
         }
 
