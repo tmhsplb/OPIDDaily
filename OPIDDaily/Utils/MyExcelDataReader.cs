@@ -38,7 +38,7 @@ namespace OPIDDaily.Utils
             catch (Exception e)
             {
                 // log the dataRow that failed
-                Log.Error(e.Message);
+                Log.Error(string.Format("NewCheckViewModel: {0}", e.Message));
                 return null;
             }
         }
@@ -59,76 +59,96 @@ namespace OPIDDaily.Utils
             {
                 foreach (DispositionRow dr in resRows)
                 {
-                    rr = dr;
-
-                    dt = (DateTime)dr.LBVDOrderDateTwo;
-                    if (dt.CompareTo(epochAsDateTime) == 0)
+                    if (dr != null) // NewDispositionRow may have found a corrupt record and inserted a null
                     {
-                        dr.LBVDOrderDateTwo = null;
-                    }
+                        rr = dr;
 
-                    dt = (DateTime)dr.LBVDOrderDateThree;
-                    if (dt.CompareTo(epochAsDateTime) == 0)
-                    {
-                        dr.LBVDOrderDateThree = null;
-                    }
+                        dt = (DateTime)dr.LBVDOrderDateTwo;
+                        if (dt.CompareTo(epochAsDateTime) == 0)
+                        {
+                            dr.LBVDOrderDateTwo = null;
+                        }
 
-                    dt = (DateTime)dr.MBVDOrderDateTwo;
-                    if (dt.CompareTo(epochAsDateTime) == 0)
-                    {
-                        dr.MBVDOrderDateTwo = null;
-                    }
+                        dt = (DateTime)dr.LBVDOrderDateThree;
+                        if (dt.CompareTo(epochAsDateTime) == 0)
+                        {
+                            dr.LBVDOrderDateThree = null;
+                        }
 
-                    dt = (DateTime)dr.MBVDOrderDateThree;
-                    if (dt.CompareTo(epochAsDateTime) == 0)
-                    {
-                        dr.MBVDOrderDateThree = null;
-                    }
+                        dt = (DateTime)dr.MBVDOrderDateTwo;
+                        if (dt.CompareTo(epochAsDateTime) == 0)
+                        {
+                            dr.MBVDOrderDateTwo = null;
+                        }
 
-                    dt = (DateTime)dr.TIDOrderDateTwo;
-                    if (dt.CompareTo(epochAsDateTime) == 0)
-                    {
-                        dr.TIDOrderDateTwo = null;
-                    }
+                        dt = (DateTime)dr.MBVDOrderDateThree;
+                        if (dt.CompareTo(epochAsDateTime) == 0)
+                        {
+                            dr.MBVDOrderDateThree = null;
+                        }
 
-                    dt = (DateTime)dr.TIDOrderDateThree;
-                    if (dt.CompareTo(epochAsDateTime) == 0)
-                    {
-                        dr.TIDOrderDateThree = null;
-                    }
+                        dt = (DateTime)dr.TIDOrderDateTwo;
+                        if (dt.CompareTo(epochAsDateTime) == 0)
+                        {
+                            dr.TIDOrderDateTwo = null;
+                        }
 
-                    dt = (DateTime)dr.TDLOrderDateTwo;
-                    if (dt.CompareTo(epochAsDateTime) == 0)
-                    {
-                        dr.TDLOrderDateTwo = null;
-                    }
+                        dt = (DateTime)dr.TIDOrderDateThree;
+                        if (dt.CompareTo(epochAsDateTime) == 0)
+                        {
+                            dr.TIDOrderDateThree = null;
+                        }
 
-                    dt = (DateTime)dr.TDLOrderDateThree;
-                    if (dt.CompareTo(epochAsDateTime) == 0)
-                    {
-                        dr.TDLOrderDateThree = null;
+                        dt = (DateTime)dr.TDLOrderDateTwo;
+                        if (dt.CompareTo(epochAsDateTime) == 0)
+                        {
+                            dr.TDLOrderDateTwo = null;
+                        }
+
+                        dt = (DateTime)dr.TDLOrderDateThree;
+                        if (dt.CompareTo(epochAsDateTime) == 0)
+                        {
+                            dr.TDLOrderDateThree = null;
+                        }
                     }
                 }
             }
             catch (Exception e)
             {
-                Log.Error(string.Format("RecordID = {0}, Name = {1}, {2}", rr.RecordID, rr.Lname, rr.Fname));
+                Log.Error(string.Format("InsertNulls: RecordID = {0}, InterviewRecordID = {1} Name = {2}, {3}", rr.RecordID, rr.InterviewRecordID, rr.Lname, rr.Fname));
                 Log.Error(e.Message);
             }
         }
 
         private static DispositionRow NewDispositionRow(System.Data.DataRow dataRow, string epoch)
         {
+            string interviewDate = string.Empty, lname = string.Empty, fname = string.Empty;
+            int recordID = 0, interviewRecordID = 0;
+            DateTime dob = Extras.DateTimeToday();
+
             try
             {
+                recordID = Convert.ToInt32(dataRow["Record ID"].ToString());
+                interviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString());
+                interviewDate = dataRow["OPID Interview Date"].ToString();
+                lname = dataRow["Last Name"].ToString();
+                fname = dataRow["First Name"].ToString();
+                dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
+
+                if (string.IsNullOrEmpty(interviewDate))
+                {
+                    Log.Warn(string.Format("Bad record (1): RecordID = {0}, InterviewRecordID = {1}, Name = {2}, {3}, DOB = {4}", recordID, interviewRecordID, lname, fname, dob));
+                    return null;
+                }
+
                 DispositionRow dr = new DispositionRow
                 {
-                    RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
-                    InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
-                    Lname = dataRow["Last Name"].ToString(),
-                    Fname = dataRow["First Name"].ToString(),
-                    DOB = Convert.ToDateTime(dataRow["Date of Birth"].ToString()),
-                    Date = Convert.ToDateTime(dataRow["OPID Interview Date"].ToString()),
+                    RecordID = recordID,
+                    InterviewRecordID = interviewRecordID,
+                    Lname = lname,
+                    Fname = fname,
+                    DOB = dob,
+                    Date = Convert.ToDateTime(interviewDate),
                     RequestedItem = dataRow["Requested Item"].ToString(),
 
                     LBVDCheckNum = Convert.ToInt32(dataRow["LBVD Check Number"].ToString()),
@@ -207,6 +227,7 @@ namespace OPIDDaily.Utils
             catch (Exception e)
             {
                 // log the dataRow that failed
+                Log.Warn(string.Format("Bad record (2): RecordID = {0}, InterviewRecordID = {1}, Name = {2}, {3}, DOB = {4}", recordID, interviewRecordID, lname, fname, dob));
                 Log.Error(e.Message);
                 return null;
             }           
@@ -245,7 +266,7 @@ namespace OPIDDaily.Utils
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                Log.Error(string.Format("GetDateValue: {0}", e.Message));
                 throw new Exception("Bad date value");
             }
 
@@ -278,7 +299,7 @@ namespace OPIDDaily.Utils
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                Log.Error(string.Format("GetCheckNum: {0}", e.Message));
                 throw new Exception("Bad number value");
             }
 

@@ -215,13 +215,21 @@ namespace OPIDDaily.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteAncientAncientChecks(FileViewModel model)
+        public ActionResult DeleteAncientChecksForYear(FileViewModel model)
         {
-            CheckManager.DeleteAncientAncientChecks(Convert.ToInt32(model.Year));
+            CheckManager.DeleteAncientChecksForYear(Convert.ToInt32(model.Year));
             ViewData["DeletedAncientAncientChecks"] = string.Format("Deleted checks for year {0}", model.Year);
             return View("AncientChecks");
         }
 
+        [HttpPost]
+        public ActionResult DeleteResearchChecksForYear(FileViewModel model)
+        {
+            CheckManager.DeleteResearchChecksForYear(Convert.ToInt32(model.Year));
+            ViewData["DeletedAncientChecks"] = string.Format("Deleted checks for year {0}", model.Year);
+            return View("RecentChecks");
+        }
+        
         public ActionResult RecentChecks()
         {
             ViewBag.RecentYears = Config.RecentYears;
@@ -269,14 +277,7 @@ namespace OPIDDaily.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult DeleteAncientResearchChecks(FileViewModel model)
-        {
-            CheckManager.DeleteAncientResearchChecks(Convert.ToInt32(model.Year));
-            ViewData["DeletedAncientChecks"] = string.Format("Deleted checks for year {0}", model.Year);
-            return View("RecentChecks");
-        }
-
+       
         [HttpPost]
         public ActionResult DeleteResearchTable()
         {

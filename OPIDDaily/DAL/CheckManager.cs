@@ -174,119 +174,122 @@ namespace OPIDDaily.DAL
             {
                 bool lbvd = false, tid = false, tdl = false, mbvd = false;
 
-                if (!string.IsNullOrEmpty(row.RequestedItem))
+                if (row != null) // NewDispositionRow may have found a corrupt record and inserted a null
                 {
-                    string[] services = row.RequestedItem.Split('|');
-                    lbvd = services.Contains("LBVD");
-                    tid = services.Contains("TID");
-                    tdl = services.Contains("TDL");
-                    mbvd = services.Contains("MBVD");
-                }
+                    if (!string.IsNullOrEmpty(row.RequestedItem))
+                    {
+                        string[] services = row.RequestedItem.Split('|');
+                        lbvd = services.Contains("LBVD");
+                        tid = services.Contains("TID");
+                        tdl = services.Contains("TDL");
+                        mbvd = services.Contains("MBVD");
+                    }
 
-                if (row.LBVDCheckNum != 0 || (lbvd && row.LBVDCheckNum == 0))
-                {
-                    NewResearchCheck(row, "LBVD", row.Date, row.LBVDCheckDisposition);
-                }
+                    if (row.LBVDCheckNum != 0 || (lbvd && row.LBVDCheckNum == 0))
+                    {
+                        NewResearchCheck(row, "LBVD", row.Date, row.LBVDCheckDisposition);
+                    }
 
-                if (row.LBVDCheckNum2 != 0)
-                {
-                    NewResearchCheck(row, "LBVD2", row.LBVDOrderDateTwo, row.LBVDCheck2Disposition);
-                }
+                    if (row.LBVDCheckNum2 != 0)
+                    {
+                        NewResearchCheck(row, "LBVD2", row.LBVDOrderDateTwo, row.LBVDCheck2Disposition);
+                    }
 
-                if (row.LBVDCheckNum3 != 0)
-                {
-                    NewResearchCheck(row, "LBVD3", row.LBVDOrderDateThree, row.LBVDCheck3Disposition);
-                }
+                    if (row.LBVDCheckNum3 != 0)
+                    {
+                        NewResearchCheck(row, "LBVD3", row.LBVDOrderDateThree, row.LBVDCheck3Disposition);
+                    }
 
-                if (row.TIDCheckNum != 0 || (tid && row.TIDCheckNum == 0))
-                {
-                    NewResearchCheck(row, "TID", row.Date, row.TIDCheckDisposition);
-                }
+                    if (row.TIDCheckNum != 0 || (tid && row.TIDCheckNum == 0))
+                    {
+                        NewResearchCheck(row, "TID", row.Date, row.TIDCheckDisposition);
+                    }
 
-                if (row.TIDCheckNum2 != 0)
-                {
-                    NewResearchCheck(row, "TID2", row.TIDOrderDateTwo, row.TIDCheck2Disposition);
-                }
+                    if (row.TIDCheckNum2 != 0)
+                    {
+                        NewResearchCheck(row, "TID2", row.TIDOrderDateTwo, row.TIDCheck2Disposition);
+                    }
 
-                if (row.TIDCheckNum3 != 0)
-                {
-                    NewResearchCheck(row, "TID3", row.TIDOrderDateThree, row.TIDCheck3Disposition);
-                }
+                    if (row.TIDCheckNum3 != 0)
+                    {
+                        NewResearchCheck(row, "TID3", row.TIDOrderDateThree, row.TIDCheck3Disposition);
+                    }
 
-                if (row.TDLCheckNum != 0 || (tdl && row.TDLCheckNum == 0))
-                {
-                    NewResearchCheck(row, "TDL", row.Date, row.TDLCheckDisposition);
-                }
+                    if (row.TDLCheckNum != 0 || (tdl && row.TDLCheckNum == 0))
+                    {
+                        NewResearchCheck(row, "TDL", row.Date, row.TDLCheckDisposition);
+                    }
 
-                if (row.TDLCheckNum2 != 0)
-                {
-                    NewResearchCheck(row, "TDL2", row.TDLOrderDateTwo, row.TDLCheck2Disposition);
-                }
+                    if (row.TDLCheckNum2 != 0)
+                    {
+                        NewResearchCheck(row, "TDL2", row.TDLOrderDateTwo, row.TDLCheck2Disposition);
+                    }
 
-                if (row.TDLCheckNum3 != 0)
-                {
-                    NewResearchCheck(row, "TDL3", row.TDLOrderDateThree, row.TDLCheck3Disposition);
-                }
+                    if (row.TDLCheckNum3 != 0)
+                    {
+                        NewResearchCheck(row, "TDL3", row.TDLOrderDateThree, row.TDLCheck3Disposition);
+                    }
 
-                if (row.MBVDCheckNum != 0 || (mbvd && row.MBVDCheckNum == 0))
-                {
-                    NewResearchCheck(row, "MBVD", row.Date, row.MBVDCheckDisposition);
-                }
+                    if (row.MBVDCheckNum != 0 || (mbvd && row.MBVDCheckNum == 0))
+                    {
+                        NewResearchCheck(row, "MBVD", row.Date, row.MBVDCheckDisposition);
+                    }
 
-                if (row.MBVDCheckNum2 != 0)
-                {
-                    NewResearchCheck(row, "MBVD2", row.MBVDOrderDateTwo, row.MBVDCheck2Disposition);
-                }
+                    if (row.MBVDCheckNum2 != 0)
+                    {
+                        NewResearchCheck(row, "MBVD2", row.MBVDOrderDateTwo, row.MBVDCheck2Disposition);
+                    }
 
-                if (row.MBVDCheckNum3 != 0)
-                {
-                    NewResearchCheck(row, "MBVD3", row.MBVDOrderDateThree, row.MBVDCheck3Disposition);
-                }
+                    if (row.MBVDCheckNum3 != 0)
+                    {
+                        NewResearchCheck(row, "MBVD3", row.MBVDOrderDateThree, row.MBVDCheck3Disposition);
+                    }
 
-                // Supporting documents
-                /*
-                // row.Date
-                if (row.SDCheckNum1 != 0)
-                {
-                    NewResearchCheck(row, "SD1", row.Date, row.SDCheckDisposition);
-                }
-                if (row.SDCheckNum2 != 0)
-                {
-                    NewResearchCheck(row, "SD2", row.Date, row.SDCheckDisposition2);
-                }
-                if (row.SDCheckNum3 != 0)
-                {
-                    NewResearchCheck(row, "SD3", row.Date, row.SDCheckDisposition2);
-                }
+                    // Supporting documents
+                    /*
+                    // row.Date
+                    if (row.SDCheckNum1 != 0)
+                    {
+                        NewResearchCheck(row, "SD1", row.Date, row.SDCheckDisposition);
+                    }
+                    if (row.SDCheckNum2 != 0)
+                    {
+                        NewResearchCheck(row, "SD2", row.Date, row.SDCheckDisposition2);
+                    }
+                    if (row.SDCheckNum3 != 0)
+                    {
+                        NewResearchCheck(row, "SD3", row.Date, row.SDCheckDisposition2);
+                    }
 
-                // row.SDOrderDate2
-                if (row.SDCheckNum12 != 0)
-                {
-                    NewResearchCheck(row, "SD12", row.SDOrderDate2, row.SDCheckDisposition12);
-                }
-                if (row.SDCheckNum22 != 0)
-                {
-                    NewResearchCheck(row, "SD22", row.SDOrderDate2, row.SDCheckDisposition22);
-                }
-                if (row.SDCheckNum32 != 0)
-                {
-                    NewResearchCheck(row, "SD32", row.SDOrderDate2, row.SDCheckDisposition32);
-                }
+                    // row.SDOrderDate2
+                    if (row.SDCheckNum12 != 0)
+                    {
+                        NewResearchCheck(row, "SD12", row.SDOrderDate2, row.SDCheckDisposition12);
+                    }
+                    if (row.SDCheckNum22 != 0)
+                    {
+                        NewResearchCheck(row, "SD22", row.SDOrderDate2, row.SDCheckDisposition22);
+                    }
+                    if (row.SDCheckNum32 != 0)
+                    {
+                        NewResearchCheck(row, "SD32", row.SDOrderDate2, row.SDCheckDisposition32);
+                    }
 
-                // row.SDOrderDate3
-                if (row.SDCheckNum13 != 0)
-                {
-                    NewResearchCheck(row, "SD13", row.SDOrderDate3, row.SDCheckDisposition13);
+                    // row.SDOrderDate3
+                    if (row.SDCheckNum13 != 0)
+                    {
+                        NewResearchCheck(row, "SD13", row.SDOrderDate3, row.SDCheckDisposition13);
+                    }
+                    if (row.SDCheckNum23 != 0)
+                    {
+                        NewResearchCheck(row, "SD23", row.SDOrderDate3, row.SDCheckDisposition23);
+                    }
+                    if (row.SDCheckNum33 != 0)
+                    {
+                        NewResearchCheck(row, "SD33", row.SDOrderDate3, row.SDCheckDisposition33);
+                    }
+                    */
                 }
-                if (row.SDCheckNum23 != 0)
-                {
-                    NewResearchCheck(row, "SD23", row.SDOrderDate3, row.SDCheckDisposition23);
-                }
-                if (row.SDCheckNum33 != 0)
-                {
-                    NewResearchCheck(row, "SD33", row.SDOrderDate3, row.SDCheckDisposition33);
-                }
-                */
             }
 
             return newResearchChecks;
@@ -524,7 +527,7 @@ namespace OPIDDaily.DAL
             }
         }
  
-        public static void DeleteAncientResearchChecks(int year)
+        public static void DeleteResearchChecksForYear(int year)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
@@ -535,7 +538,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void DeleteAncientAncientChecks(int year)
+        public static void DeleteAncientChecksForYear(int year)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
