@@ -64,6 +64,8 @@ namespace OPIDDaily.Controllers
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
+            clients = clients.OrderBy(c => c.ServiceDate).ToList();
+
             var jsonData = new
             {
                 total = totalPages,
@@ -162,7 +164,8 @@ namespace OPIDDaily.Controllers
 
         public string DeleteDependentClient(int id)
         {
-            Clients.DeleteClient(id);
+            Clients.DeleteMyClient(id);
+            DailyHub.Refresh();
             return "Success";
         }
 

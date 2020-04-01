@@ -899,6 +899,7 @@
     <Content Include="Views\Shared\_ReadOnlySupportingDocuments.cshtml" />
     <Content Include="Views\CaseManager\ContactInfo.cshtml" />
     <Content Include="Views\BackOffice\ContactInfo.cshtml" />
+    <Content Include="Views\Superadmin\Demo.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

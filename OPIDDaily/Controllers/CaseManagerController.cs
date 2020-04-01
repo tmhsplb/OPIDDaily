@@ -35,6 +35,8 @@ namespace OPIDDaily.Controllers
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
+            clients = clients.OrderBy(c => c.ServiceDate).ToList();
+
             var jsonData = new
             {
                 total = totalPages,
@@ -56,6 +58,13 @@ namespace OPIDDaily.Controllers
             // See: https://stackoverflow.com/questions/5212751/how-can-i-get-id-of-inserted-entity-in-entity-framework
             SessionHelper.Set("NowServing", id.ToString());
 
+            DailyHub.Refresh();
+            return "Success";
+        }
+
+        public string DeleteMyClient(int id)
+        {
+            Clients.DeleteMyClient(id);
             DailyHub.Refresh();
             return "Success";
         }

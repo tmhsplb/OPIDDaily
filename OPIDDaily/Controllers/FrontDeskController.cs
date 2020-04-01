@@ -167,7 +167,7 @@ namespace OPIDDaily.Controllers
             PrepareClientNotes(client, rsvm);
 
             DateTime today = Extras.DateTimeToday();
-            DateTime expiryDate = Clients.CalculateExpiry();
+            DateTime expiryDate = Clients.CalculateExpiry(today);
             Clients.UpdateOverflowExpiry(nowServing, expiryDate);
 
             ViewBag.ClientName = Clients.ClientBeingServed(client);
@@ -176,7 +176,7 @@ namespace OPIDDaily.Controllers
             ViewBag.Age = client.Age;
             ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
             ViewBag.IssueDate = today.ToString("ddd MMM d, yyyy");
-            ViewBag.Expiry = Clients.CalculateExpiry().ToString("ddd MMM d, yyyy");
+            ViewBag.Expiry = Clients.CalculateExpiry(today).ToString("ddd MMM d, yyyy");
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");  // for _OverflowSignatureBlock.cshtml
 
          //   VoucherBackButtonHelper("Set", rsvm);
@@ -209,7 +209,7 @@ namespace OPIDDaily.Controllers
             PrepareClientNotes(client, rsvm);
 
             DateTime today = Extras.DateTimeToday();
-            DateTime expiryDate = Clients.CalculateExpiry();
+            DateTime expiryDate = Clients.CalculateExpiry(today);
             Clients.UpdateOverflowExpiry(nowServing, expiryDate);
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.BirthName = client.BirthName;

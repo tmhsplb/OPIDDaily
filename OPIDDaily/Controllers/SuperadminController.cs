@@ -155,6 +155,19 @@ namespace OPIDDaily.Controllers
             return View();
         }
 
+        public ActionResult Demo()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public string EditClientServiceDate(ClientViewModel cvm)
+        {
+            Clients.EditServiceDate(cvm);
+
+            DailyHub.Refresh();
+            return "Success";
+        }
 
         [HttpPost]
         public ActionResult MergeBoundedResearchTableFile(FileViewModel model)

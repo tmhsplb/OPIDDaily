@@ -172,7 +172,7 @@ namespace OPIDDaily.DAL
                 {
                     opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
 
-                    client.EXP = client.Visits.Count == 0;
+                   // client.EXP = client.Visits.Count == 0;
                     
                     clientCVMS.Add(ClientEntityToClientViewModel(client));
                 }
@@ -249,12 +249,11 @@ namespace OPIDDaily.DAL
             return expiry.Add(extension);
         }
 
-        public static DateTime CalculateExpiry()
+        public static DateTime CalculateExpiry(DateTime serviceDate)
         {
-            DateTime today = Extras.DateTimeToday();
             int days = Config.CaseManagerVoucherDuration;
             TimeSpan duration = new TimeSpan(days, 0, 0, 0);
-            DateTime expiry = today.Add(duration);
+            DateTime expiry = serviceDate.Add(duration);
 
             return ExtendedExpiry(expiry);
         }
@@ -265,9 +264,11 @@ namespace OPIDDaily.DAL
 
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
+                DateTime today = Extras.DateTimeToday();
+
                 Client client = new Client
                 {
-                    ServiceDate = Extras.DateTimeToday(),
+                    ServiceDate = today,
                     ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
                     Stage = "Screened",
                     FirstName = cvm.FirstName,
@@ -287,7 +288,7 @@ namespace OPIDDaily.DAL
                     Interviewed = now,
                     BackOffice = now,
                     Done = now,
-                    Expiry = CalculateExpiry(),
+                    Expiry = CalculateExpiry(today),
                     AgencyId = agencyId,
                     Active = true
                 };
@@ -378,8 +379,16 @@ namespace OPIDDaily.DAL
                 foreach (Client client in clients)
                 {
                     ClientViewModel cvm = ClientEntityToClientViewModel(client);
+                    string clientServices = GetClientServices(client);
 
-                    cvm.Notes = GetClientServices(client);
+                    if (string.IsNullOrEmpty(cvm.Notes))
+                    {
+                        cvm.Notes = clientServices;
+                    }
+                    else if (!string.IsNullOrEmpty(clientServices))
+                    {
+                        cvm.Notes = string.Format("{0}; {1}", cvm.Notes, GetClientServices(client));
+                    }
 
                     dependents.Add(cvm);
                 }
@@ -399,10 +408,11 @@ namespace OPIDDaily.DAL
                     DateTime now = Extras.DateTimeNow();
                     // Adding a dependent client makes the family head a head of household
                     familyHead.HeadOfHousehold = true;
+                    DateTime today = Extras.DateTimeToday();
 
                     Client client = new Client
                     {
-                        ServiceDate = Extras.DateTimeToday(),
+                        ServiceDate = today,
                         ServiceTicket = familyHead.ServiceTicket,
                         Stage = "Screened",
                         FirstName = cvm.FirstName,
@@ -418,7 +428,7 @@ namespace OPIDDaily.DAL
                         Interviewed = now,
                         BackOffice = now,
                         Done = now,
-                        Expiry = CalculateExpiry(),
+                        Expiry = CalculateExpiry(today),
                         HeadOfHousehold = false,
                         HH = household,
                         AgencyId = agencyId,
@@ -440,7 +450,7 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
                 Client client = opiddailycontext.Clients.Find(cvm.Id);
-
+               
                 // cvm.Stage == null for case manager clients
                 if (string.IsNullOrEmpty(cvm.Stage))
                 {
@@ -460,7 +470,14 @@ namespace OPIDDaily.DAL
                 }
 
                 if (client != null)
-                { 
+                {
+                    Client headofhousehold = opiddailycontext.Clients.Find(client.HH);
+
+                    if (headofhousehold != null)
+                    {
+                        cvm.ServiceTicket = headofhousehold.ServiceTicket;
+                    }
+
                     ClientViewModelToClientEntity(cvm, client);
                     opiddailycontext.SaveChanges();
                 }
@@ -534,11 +551,33 @@ namespace OPIDDaily.DAL
                     // Disable automatic stage transitioning
                     // StageTransition(cvm, client);
                     ClientViewModelToClientEntity(cvm, client);
+
                     opidcontext.SaveChanges();
                     return client.Id;
                 }
 
                 return 0;
+            }
+        }
+
+        public static void EditServiceDate(ClientViewModel cvm)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                Client client = opidcontext.Clients.Find(cvm.Id);
+
+                if (client != null)
+                {
+                    if (client.AgencyId != 0)
+                    {
+                        client.ServiceDate = cvm.ServiceDate;
+
+                        // Update the expiry.
+                        client.Expiry = CalculateExpiry(cvm.ServiceDate);
+
+                        opidcontext.SaveChanges();
+                    }
+                }
             }
         }
 
@@ -556,23 +595,25 @@ namespace OPIDDaily.DAL
             }
         }
 
-        private static void HandleLoneDependent(Client dependent)
+        private static void HandleLoneDependent(int dependentHH)
         {
-            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                // Client.HH points back to a head of household
-                List<Client> activeCodependents = opidcontext.Clients.Where(c => c.HH == dependent.HH && c.Active == true).ToList();
+                // dependentHH points back to a head of household
+                List<Client> activeCodependents = opiddailycontext.Clients.Where(c => c.HH == dependentHH && c.Active == true).ToList();
 
                 // The list activeCodependents does not include the dependent argment, because 
-                // dependent.Active was set to false (and persisted) in method DeleteClient. 
+                // dependent.Active was set to false (and persisted) in method DeleteClient
+                // or removed altogether in method DeleteMyClient.
                 if (activeCodependents.Count == 0)
                 {
                     // dependent was the lone dependent in this household
-                    Client headofhousehold = opidcontext.Clients.Find(dependent.HH);
+                    Client headofhousehold = opiddailycontext.Clients.Find(dependentHH);
+
                     if (headofhousehold != null)
                     {
                         headofhousehold.HeadOfHousehold = false;
-                        opidcontext.SaveChanges();
+                        opiddailycontext.SaveChanges();
                     }
                 } 
             }
@@ -590,7 +631,56 @@ namespace OPIDDaily.DAL
 
                     if (client.HH != 0) // This client points back to a head of household.
                     {
-                        HandleLoneDependent(client);  
+                        HandleLoneDependent(client.HH);  
+                    }
+                }
+            }
+        }
+
+        public static void CascadeDelete(int id)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(id);
+
+                opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+                opiddailycontext.Visits.RemoveRange(client.Visits);
+
+                // Physically remove client from table
+                opiddailycontext.Clients.Remove(client);
+
+                opiddailycontext.SaveChanges();
+            }
+        }
+
+        public static void DeleteMyClient(int id)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(id);
+
+                if (client != null)
+                {
+                    bool headofhousehold = client.HeadOfHousehold;
+                    int head = client.Id;
+                    int hh = client.HH;
+
+                    CascadeDelete(client.Id);
+
+                    if (headofhousehold)  // This client was the head of a household
+                    {
+                        List<Client> dependents = opiddailycontext.Clients.Where(c => c.HH == head).ToList();
+
+                        // Remove all dependents because they are now orphans.
+                        foreach (Client dependent in dependents)
+                        {
+                            CascadeDelete(dependent.Id);
+                        }
+                    }
+
+                    if (hh != 0) // This client pointed back to a head of household.
+                    {
+                        HandleLoneDependent(hh);
                     }
                 }
             }
@@ -727,16 +817,9 @@ namespace OPIDDaily.DAL
                 { 
                     if (client.Expiry <= today)  // if client.Expiry > today then client's voucher is still valid, so don't remove
                     {
-                        // Manually perform cascade delete on the related (by a foreign key) Visits table.
-                        opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-                        opiddailycontext.Visits.RemoveRange(client.Visits);
-
-                        // Physically remove client from table
-                        opiddailycontext.Clients.Remove(client);
+                        CascadeDelete(client.Id);
                     }
                 }
-
-                opiddailycontext.SaveChanges();
             }
         }
 
