@@ -1,16 +1,14 @@
 ﻿
 @{
-    ViewBag.Title = "Clients";
-    Layout = "~/Views/Shared/_BackOffice.cshtml";
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
 }
 
-<br /><br /><br />
-<h2>@ViewBag.ServiceDate</h2>
-<br/>
+<br /><br /><br /><br/>
 
 <div>
-    <table id="clientsGrid"></table>
-    <div id="clientsPager"></div>
+    <table id="dashboardGrid"></table>
+    <div id="dashboardPager"></div>
 </div>
 
 <link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
@@ -22,8 +20,8 @@
     var lastServed = 0;
     var rowsToColor = [];
 
-    $("#clientsGrid").jqGrid({
-        url: "@Url.Action("GetClients", "BackOffice")",
+    $("#dashboardGrid").jqGrid({
+        url: "@Url.Action("GetDashboard", "FrontDesk")",
         datatype: "json",
         pageable: true,
         mtype: "Get",
@@ -47,7 +45,7 @@
         { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' }  }
         ],
-        pager: '#clientsPager',
+        pager: '#dashboardPager',
         rowNum: 25,
         
         onSelectRow: function (nowServing) {
@@ -56,10 +54,10 @@
                 //alert("nowServing is null or nowServing == lastServed!");
             } else { 
                 lastServed = nowServing;
-                jQuery("#clientsGrid").jqGrid('setGridParam',
+                jQuery("#dashboardGrid").jqGrid('setGridParam',
                     {
                         postData: { nowServing: nowServing },
-                        url: "@Url.Action("NowServing", "BackOffice")"
+                        url: "@Url.Action("NowServing", "FrontDesk")"
                     }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
             }
         },
@@ -75,7 +73,7 @@
             }
         },
               
-        caption: 'Clients',
+        caption: 'Dashboard',
         emptyrecords: 'No records to display',
         jsonReader: {
             root: "rows",
@@ -96,10 +94,10 @@
             $("#" + subgrid_id).html("<table id='" + subgrid_table_id + "' class='scroll'></table><div id='" + pager_id + "' class='scroll'></div>");
             jQuery("#" + subgrid_table_id).jqGrid({
                 postData: { id: function () { /* alert("id of expanded row = " + row_id); */ return row_id } },  // the secret to getting the row id in the post!
-                url: "@Url.Action("GetDependents", "BackOffice")",
+                url: "@Url.Action("GetDependents", "FrontDesk")",
                 datatype: "json",
                 mtype: 'post',
-                editurl: "@Url.Action("Dummy", "BackOffice")",
+                editurl: "@Url.Action("Dummy", "FrontDesk")",
                 cellsubmit: 'clientArray',
                 colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
                 colModel: [
@@ -123,10 +121,10 @@
                       // Prevent infinite recursion caused by reloadGrid
                     } else {
                         lastServed = nowServing;
-                        jQuery("#clientsGrid").jqGrid('setGridParam',
+                        jQuery("#dashboardGrid").jqGrid('setGridParam',
                             {
                                 postData: { nowServing: nowServing }, 
-                                url: "@Url.Action("NowServing", "BackOffice")"
+                                url: "@Url.Action("NowServing", "FrontDesk")"
                              }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
                     }
                 },
@@ -139,7 +137,7 @@
             jQuery("#" + subgrid_table_id).jqGrid('navGrid', "#" + pager_id, { edit: true, add: false, del: false, search: false, refresh: false },
              {
                 zIndex: 100,
-                url: "@Url.Action("EditDependentClient", "BackOffice")",
+                url: "@Url.Action("EditDependentClient", "FrontDesk")",
                 closeOnEscape: true,
                 closeAfterEdit: true,
                 recreateForm: true,
@@ -153,10 +151,10 @@
         } // close subgridRowExpanded 
     })
 
-     jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: false, del: false, search: false, refresh: false },
+     jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add: false, del: false, search: false, refresh: false },
          {
              zIndex: 100,
-             url: "@Url.Action("EditClient", "BackOffice")",
+             url: "@Url.Action("EditClient", "FrontDesk")",
              closeOnEscape: true,
              closeAfterEdit: true,
              recreateForm: true,
@@ -189,7 +187,6 @@
         width: 500,
         top: 300,
         left: 450,
-        addCaption: "Add Client",
         editCaption: "Edit Client",
         bSubmit: "Submit",
         bCancel: "Cancel",
@@ -210,8 +207,8 @@
         var theHub = $.connection.dailyHub;
       
         theHub.client.refreshPage = function () {
-            var currentPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'page');
-            var url = "@Url.Action("GetClients", "BackOffice", new { page = "pageToken" })";
+            var currentPage = jQuery("#dashboardGrid").jqGrid('getGridParam', 'page');
+            var url = "@Url.Action("GetDashboard", "FrontDesk", new { page = "pageToken" })";
             url = url.replace("pageToken", currentPage);
 
             $.ajax({
@@ -219,7 +216,7 @@
                 cache: false,
                 dataType: "json",
                 success: function (data) {
-                        var mygrid = jQuery("#clientsGrid")[0];
+                        var mygrid = jQuery("#dashboardGrid")[0];
                         mygrid.addJSONData(data);
                     }
                 });

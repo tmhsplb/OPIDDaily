@@ -30,7 +30,7 @@ namespace OPIDDaily.Controllers
 
             if (nowServing == 0)
             {
-                ViewBag.Warning = "Please first select a client from the Clients Table.";
+                ViewBag.Warning = "Please first select a client from the Dashboard.";
                 return View("Warning");
             }
 
