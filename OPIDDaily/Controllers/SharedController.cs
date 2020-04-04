@@ -77,6 +77,39 @@ namespace OPIDDaily.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult ManageDashboard()
+        {
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.ServiceDate = today.ToString("ddd  MMM d");
+            return View("Dashboard");
+        }
+
+        public JsonResult GetDashboard(int page, int? rows = 25)
+        {
+            DateTime today = Extras.DateTimeToday();
+            List<ClientViewModel> clients = Clients.GetDashboardClients(today);
+ 
+            int pageIndex = page - 1;
+            int pageSize = (int)rows;
+
+            int totalRecords = clients.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+
+            clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            clients = clients.OrderBy(c => c.ServiceDate).ToList();
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = clients
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult GetContactInfo()
         {
             int nowServing = NowServing();

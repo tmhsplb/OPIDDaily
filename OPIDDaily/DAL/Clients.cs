@@ -131,7 +131,44 @@ namespace OPIDDaily.DAL
             {
                 DateTime today = Extras.DateTimeToday();
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where( c => c.HH == 0 && (c.ServiceDate == date || c.Expiry >= today)).ToList();
+
+                // A same-day-service client will have c.ServiceDate == c.Expiry
+                List<Client> clients = opiddailycontext.Clients.Where( c => c.HH == 0 && c.ServiceDate == date && c.Expiry == date).ToList();
+
+                foreach (Client client in clients)
+                {
+                    if (client.Active == false && superadmin == false)
+                    {
+                        // If superadmin == true, then this call is coming from SuperadminController.
+                        // In this case return both active and inactive clients. Otherwise return only active clients.
+                    }
+                    else
+                    {
+                        //  bool hasHistory = CheckManager.HasHistory(client);
+
+                        if (updateWaittimes == true)
+                        {
+                            // Disable WaitTime processing
+                            // client.WaitTime = GetUpdatedWaitTime(client);
+                        }
+
+                        clientCVMS.Add(ClientEntityToClientViewModel(client));
+                    }
+                }
+
+                opiddailycontext.SaveChanges();
+                return clientCVMS;
+            }
+        }
+
+        public static List<ClientViewModel> GetDashboardClients(DateTime date, bool? superadmin = false, bool? updateWaittimes = true)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
+
+                // A dashboard client will have c.ServiceDate != c.Expiry
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry).ToList();
 
                 foreach (Client client in clients)
                 {
@@ -161,12 +198,13 @@ namespace OPIDDaily.DAL
 
         public static List<ClientViewModel> GetMyUnexpiredClients(int referringAgency)
         {
-            DateTime today = Extras.DateTimeToday();
-
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
+                DateTime today = Extras.DateTimeToday();
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId == referringAgency && c.Expiry >= today && c.HH == 0 && c.Active == true).ToList();
+
+                // An unexpired remote client will have c.ServiceDate != c.Expiry && c.Expiry >= today
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId == referringAgency && c.ServiceDate != c.Expiry && c.Expiry >= today && c.HH == 0).ToList();
 
                 foreach (Client client in clients)
                 {

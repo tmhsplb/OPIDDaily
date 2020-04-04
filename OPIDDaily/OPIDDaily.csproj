@@ -833,7 +833,6 @@
     <Content Include="Views\Account\Warning.cshtml" />
     <Content Include="Views\FrontDesk\Warning.cshtml" />
     <Content Include="Views\Interviewer\Warning.cshtml" />
-    <Content Include="Views\BackOffice\Clients.cshtml" />
     <Content Include="Views\Shared\_BackOffice.cshtml" />
     <Content Include="Views\BackOffice\Warning.cshtml" />
     <Content Include="Views\BackOffice\Home.cshtml" />
@@ -900,6 +899,8 @@
     <Content Include="Views\CaseManager\ContactInfo.cshtml" />
     <Content Include="Views\BackOffice\ContactInfo.cshtml" />
     <Content Include="Views\Superadmin\Demo.cshtml" />
+    <Content Include="Views\BackOffice\Dashboard.cshtml" />
+    <Content Include="Views\FrontDesk\Dashboard.cshtml" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
