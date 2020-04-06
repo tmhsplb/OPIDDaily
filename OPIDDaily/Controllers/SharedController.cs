@@ -174,19 +174,11 @@ namespace OPIDDaily.Controllers
         public string AddDependentClient(int household, ClientViewModel cvm)
         {
             int referringAgency = ReferringAgency();
+            int id = Clients.AddDependentClient(referringAgency, household, cvm);
 
-            if (referringAgency != 0)
-            {
-                int id = Clients.AddDependentClient(referringAgency, household, cvm);
-
-                DailyHub.Refresh();
-
-                SessionHelper.Set("NowServing", id.ToString());
-
-                return "Success";
-            }
-
-            return "Failure";
+            DailyHub.Refresh();
+            SessionHelper.Set("NowServing", id.ToString());
+            return "Success";
         }
 
         public string EditDependentClient(ClientViewModel cvm)

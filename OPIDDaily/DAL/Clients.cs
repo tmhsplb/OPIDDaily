@@ -763,11 +763,11 @@ namespace OPIDDaily.DAL
             {
                 Id = client.Id,
                 ServiceTicket = client.ServiceTicket,
-                Expiry = client.Expiry.ToString("MM/dd/yyyy"),
                 Stage = client.Stage,
                 LastName = client.LastName,
                 FirstName = client.FirstName,
-                DOB = client.DOB.ToString("MM/dd/yyyy"),
+                DOB = client.DOB,
+                Age = CalculateAge(client.DOB),
                 Active = (client.Active ? "Y" : "N"),
                 Notes = client.Notes
             };
@@ -778,8 +778,10 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 List<ClientReviewViewModel> clientRVMS = new List<ClientReviewViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date || c.Expiry >= date).ToList();
 
+                // A same-day-service client will have c.ServiceDate == c.Expiry
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate == date && c.Expiry == date).ToList();
+                
                 foreach (Client client in clients)
                 {
                     clientRVMS.Add(ClientEntityToClientReviewViewModel(client));
@@ -833,8 +835,9 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 List<ClientServedViewModel> clientsServed = new List<ClientServedViewModel>();
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.ServiceDate == date || c.Expiry >= date).ToList();
-
+     
+                // A same-day-service client will have c.ServiceDate == c.Expiry
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate == date && c.Expiry == date).ToList();
                 foreach (Client client in clients)
                 {
                     clientsServed.Add(ClientToClientServedViewModel(client));

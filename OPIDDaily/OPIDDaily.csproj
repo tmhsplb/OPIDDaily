@@ -646,6 +646,7 @@
     <Content Include="Content\DataTables\css\common.scss" />
     <Content Include="App_Data\Interview Import Me Header.csv" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\Clients\FrontDesk.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
@@ -723,6 +724,8 @@
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
     <Content Include="Scripts\Helper.js" />
+    <Content Include="Scripts\HubCode\FrontDeskHubCode.js" />
+    <Content Include="Scripts\HubCode\FrontDeskReviewHubCode.js" />
     <Content Include="Scripts\i18n\grid.locale-ar.js" />
     <Content Include="Scripts\i18n\grid.locale-bg.js" />
     <Content Include="Scripts\i18n\grid.locale-bg1251.js" />
@@ -784,6 +787,7 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\clientsServed.js" />
     <Content Include="Scripts\preApprovalForm.js" />
+    <Content Include="Scripts\ReviewClients\FrontDeskReview.js" />
     <Content Include="Scripts\serviceTicket.js" />
     <Content Include="Scripts\specialReferral.js" />
     <Content Include="Uploads\DummyUploadFile.txt" />
