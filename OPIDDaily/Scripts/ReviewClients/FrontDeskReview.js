@@ -2,7 +2,7 @@
     var lastServed = 0;
     
     $("#reviewGrid").jqGrid({
-        url: "/OPIDDaily/FrontDesk/GetReviewClients",   // "@Url.Action("GetReviewClients", "FrontDesk")", 
+        url: "GetReviewClients",   // "@Url.Action("GetReviewClients", "FrontDesk")", 
     datatype: "json",
     pageable: true,
     mtype: "Get",
@@ -33,7 +33,7 @@
               jQuery("#reviewGrid").jqGrid('setGridParam',
               {
                 postData: {nowServing: nowServing },
-                url: "/OPIDDaily/FrontDesk/NowServing"  // "@Url.Action("NowServing", "FrontDesk")" 
+                url: "NowServing"  // "@Url.Action("NowServing", "FrontDesk")" 
               }).trigger('reloadGrid', {fromServer: true }).jqGrid('setSelection', nowServing, true);
             }
          },
@@ -63,10 +63,10 @@
     $("#" + subgrid_id).html("<table id='" + subgrid_table_id + "' class='scroll'></table><div id='" + pager_id + "' class='scroll'></div>");
        jQuery("#" + subgrid_table_id).jqGrid({
            postData: { id: function () { /* alert("id of expanded row = " + row_id); */ return row_id } },  // the secret to getting the row id in the post!
-           url: "/OPIDDaily/FrontDesk/GetDependents", // "@Url.Action("GetDependents", "FrontDesk")", 
+           url: "GetDependents", // "@Url.Action("GetDependents", "FrontDesk")", 
            datatype: "json",
            mtype: 'post',
-           editurl: "/OPIDDaily/FrontDesk/Dummy",  // "@Url.Action("Dummy", "FrontDesk")", 
+           editurl: "Dummy",  // "@Url.Action("Dummy", "FrontDesk")", 
            cellsubmit: 'clientArray',
            colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
            colModel: [
@@ -93,7 +93,7 @@
                    jQuery("#reviewGrid").jqGrid('setGridParam',
                        {
                            postData: { nowServing: nowServing },
-                           url: "/OPIDDaily/FrontDesk/NowServing", // "@Url.Action("NowServing", "FrontDesk")"
+                           url: "NowServing", // "@Url.Action("NowServing", "FrontDesk")"
                        }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
                }
            },
@@ -110,7 +110,7 @@
 jQuery("#reviewGrid").jqGrid('navGrid', '#reviewPager', { edit: true, add: false, del: false, search: false, refresh: false },
     {
         zIndex: 100,
-        url: "/OPIDDaily/FrontDesk/EditClient",  // "@Url.Action("EditClient", "FrontDesk")",
+        url: "EditClient",  // "@Url.Action("EditClient", "FrontDesk")",
         closeOnEscape: true,
         closeAfterEdit: true,
         recreateForm: true,

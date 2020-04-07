@@ -3,7 +3,7 @@
     var rowsToColor = [];
 
     $("#clientsGrid").jqGrid({
-        url: "/OPIDDaily/FrontDesk/GetClients",   // "@Url.Action("GetClients", "FrontDesk")", 
+        url: "GetClients",   // "@Url.Action("GetClients", "FrontDesk")", 
     datatype: "json",
     pageable: true,
     mtype: "Get",
@@ -30,16 +30,16 @@
 
         onSelectRow: function (nowServing) {
             if (nowServing == null || nowServing == lastServed) {
-        // Prevent infinite recursion caused by reloadGrid
-        //alert("nowServing is null or nowServing == lastServed!");
-    } else {
-        lastServed = nowServing;
-    jQuery("#clientsGrid").jqGrid('setGridParam',
-                    {
-        postData: {nowServing: nowServing },
-    url: "/OPIDDaily/FrontDesk/NowServing"  // "@Url.Action("NowServing", "FrontDesk")" 
-                    }).trigger('reloadGrid', {fromServer: true }).jqGrid('setSelection', nowServing, true);
-}
+               // Prevent infinite recursion caused by reloadGrid
+               //alert("nowServing is null or nowServing == lastServed!");
+            } else {
+               lastServed = nowServing;
+              jQuery("#clientsGrid").jqGrid('setGridParam',
+              {
+                      postData: {nowServing: nowServing },
+                      url: "NowServing"  // "@Url.Action("NowServing", "FrontDesk")" 
+               }).trigger('reloadGrid', {fromServer: true }).jqGrid('setSelection', nowServing, true);
+             }
 },
 
 height: "100%",
@@ -48,10 +48,10 @@ loadonce: false,
 
         gridComplete: function () {
             for (var i = 0; i < rowsToColor.length; i++) {
-        //  alert("colored row: " + rowsToColor[i]);
-        $("#" + rowsToColor[i].rowId).css("color", rowsToColor[i].rowColor)
-    }
-    },
+               //  alert("colored row: " + rowsToColor[i]);
+               $("#" + rowsToColor[i].rowId).css("color", rowsToColor[i].rowColor)
+             }
+         },
 
     caption: 'Clients',
     emptyrecords: 'No records to display',
@@ -74,10 +74,10 @@ loadonce: false,
             $("#" + subgrid_id).html("<table id='" + subgrid_table_id + "' class='scroll'></table><div id='" + pager_id + "' class='scroll'></div>");
             jQuery("#" + subgrid_table_id).jqGrid({
         postData: {id: function () { /* alert("id of expanded row = " + row_id); */ return row_id } },  // the secret to getting the row id in the post!
-    url: "/OPIDDaily/FrontDesk/GetDependents", // "@Url.Action("GetDependents", "FrontDesk")", 
+    url: "GetDependents", // "@Url.Action("GetDependents", "FrontDesk")", 
     datatype: "json",
     mtype: 'post',
-    editurl: "/OPIDDaily/FrontDesk/Dummy",  // "@Url.Action("Dummy", "FrontDesk")", 
+    editurl: "Dummy",  // "@Url.Action("Dummy", "FrontDesk")", 
     cellsubmit: 'clientArray',
     colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
     colModel: [
@@ -104,7 +104,7 @@ loadonce: false,
         jQuery("#clientsGrid").jqGrid('setGridParam',
         {
            postData: {nowServing: nowServing },
-          url: "/OPIDDaily/FrontDesk/NowServing", // "@Url.Action("NowServing", "FrontDesk")"
+          url: "NowServing", // "@Url.Action("NowServing", "FrontDesk")"
                              }).trigger('reloadGrid', {fromServer: true }).jqGrid('setSelection', nowServing, true);
         }
     },
@@ -117,7 +117,7 @@ loadonce: false,
      jQuery("#" + subgrid_table_id).jqGrid('navGrid', "#" + pager_id, {edit: true, add: true, del: true, search: false, refresh: false },
      {
        zIndex: 100,
-       url: "/OPIDDaily/FrontDesk/EditDependentClient", //"@Url.Action("EditDependentClient", "FrontDesk")",
+       url: "EditDependentClient", //"@Url.Action("EditDependentClient", "FrontDesk")",
        closeOnEscape: true,
        closeAfterEdit: true,
        recreateForm: true,
@@ -129,7 +129,7 @@ loadonce: false,
      },
      {
         zIndex: 100,
-        url: "/OPIDDaily/FrontDesk/AddDependentClient?household="+row_id, // "@Url.Action("AddDependentClient", "FrontDesk")?household=" + row_id,
+        url: "AddDependentClient?household="+row_id, // "@Url.Action("AddDependentClient", "FrontDesk")?household=" + row_id,
         closeOnEscape: true,
         closeAfterAdd: true,
         recreateForm: true,
@@ -141,7 +141,7 @@ loadonce: false,
      },
      {
         zIndex: 100,
-        url: "/OPIDDaily/FrontDesk/DeleteDependentClient", // "@Url.Action("DeleteDependentClient", "FrontDesk")",
+        url: "DeleteDependentClient", // "@Url.Action("DeleteDependentClient", "FrontDesk")",
         closeOnEscape: true,
         closeAfterDelete: true,
         recreateForm: true,
@@ -157,7 +157,7 @@ loadonce: false,
     jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', {edit: true, add: true, del: true, search: false, refresh: false },
       {
         zIndex: 100,
-        url: "/OPIDDaily/FrontDesk/EditClient",  // "@Url.Action("EditClient", "FrontDesk")",
+        url: "EditClient",  // "@Url.Action("EditClient", "FrontDesk")",
         closeOnEscape: true,
         closeAfterEdit: true,
         recreateForm: true,
@@ -169,7 +169,7 @@ loadonce: false,
       },
       {
         zIndex: 100,
-        url: "/OPIDDaily/FrontDesk/AddClient", // "@Url.Action("AddClient", "FrontDesk")",
+        url: "AddClient", // "@Url.Action("AddClient", "FrontDesk")",
         closeOnEscape: true,
         closeAfterAdd: true,
         recreateForm: true,
@@ -183,7 +183,7 @@ loadonce: false,
       },
       {
         zIndex: 100,
-        url: "/OPIDDaily/FrontDesk/DeleteClient", // "@Url.Action("DeleteClient", "FrontDesk")",
+        url: "DeleteClient", // "@Url.Action("DeleteClient", "FrontDesk")",
         closeOnEscape: true,
         closeAfterDelete: true,
         recreateForm: true,
