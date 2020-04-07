@@ -4,7 +4,7 @@
     theHub.client.refreshPage = function () {
         var currentPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'page');
         // alert("currentPage = " + currentPage)
-        var url = "/OPIDDaily/FrontDesk/GetClients?page=pageToken&rows=25"
+        var url = "GetClients?page=pageToken&rows=25"
             // "@Url.Action("GetClients", "FrontDesk", new { page = "pageToken", rows = "rowsToken" })";
 
         url = url.replace("pageToken", currentPage);

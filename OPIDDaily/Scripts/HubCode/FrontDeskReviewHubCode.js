@@ -3,7 +3,7 @@
 
     theHub.client.refreshPage = function () {
         var currentPage = jQuery("#reviewGrid").jqGrid('getGridParam', 'page');
-        var url = "/OPIDDaily/FrontDesk/GetReviewClients?page=pageToken", // "@Url.Action("GetReviewClients", "FrontDesk", new { page = "pageToken" })";
+        var url = "GetReviewClients?page=pageToken", // "@Url.Action("GetReviewClients", "FrontDesk", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
 
         $.ajax({

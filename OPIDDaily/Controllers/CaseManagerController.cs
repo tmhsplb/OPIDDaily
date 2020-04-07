@@ -69,7 +69,7 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
  
-        public ActionResult CaseManagerServiceTicket()
+        public ActionResult ServiceRequest()
         {
             int nowServing = NowServing();
 

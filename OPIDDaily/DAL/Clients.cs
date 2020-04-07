@@ -766,7 +766,7 @@ namespace OPIDDaily.DAL
                 Stage = client.Stage,
                 LastName = client.LastName,
                 FirstName = client.FirstName,
-                DOB = client.DOB,
+                DOB = client.DOB.AddHours(12),
                 Age = CalculateAge(client.DOB),
                 Active = (client.Active ? "Y" : "N"),
                 Notes = client.Notes

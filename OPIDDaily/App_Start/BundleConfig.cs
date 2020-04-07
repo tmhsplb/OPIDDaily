@@ -29,7 +29,7 @@ namespace OPIDDaily
                          "~/Scripts/moment.js"));
 
            // jquery mvc5 datatables css file
-           bundles.Add(new StyleBundle("~/Content/DataTables").Include(
+           bundles.Add(new StyleBundle("~/Content/DataTables/css").Include(
                        "~/Content/DataTables/css/dataTables.bootstrap.css"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
