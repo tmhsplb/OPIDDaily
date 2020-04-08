@@ -29,20 +29,20 @@
         colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
-        { key: false, name: 'AgencyName', index: 'AgencyName', width: 150, editable: false, sortable: false, search: false },
+        { key: false, name: 'AgencyName', index: 'AgencyName', width: 150, editable: false, sortable: false, search: true, searchoptions:{sopt:['bw']} },
         { key: false, align: 'center', name: 'Expiry', index: 'Expiry', formatter: 'date', width: 120, editable: false, sortable: true, search: false },
        @* { key: false, align: 'center', name: 'WaitTime', index: 'WaitTime', width: 50, formatter: rowColorFormatter, editable: false, sortable: true, search: false }, *@
         { key: false, name: 'Stage', index: 'Stage', width: 100, editable: true, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing': 'Interviewing', 'BackOffice': 'BackOffice', 'Done': 'Done' } }, sortable: false, search: false },
         { key: false, name: 'HeadOfHousehold', index: 'HeadOfHousehold', width: 35, align: 'center', editable: false, sortable: false, search: false },
-        { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'MiddleName', index: 'MiddleName', width: 150, editable: true, sortable: false, search: false },
-        { key: false, name: 'BirthName', index: 'BirthName', width: 150, editable: true, sortable: false, search: false },
+        { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: true },
+        { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: true },
+        { key: false, name: 'MiddleName', index: 'MiddleName', width: 150, editable: true, sortable: false, search: true },
+        { key: false, name: 'BirthName', index: 'BirthName', width: 150, editable: true, sortable: false, search: true },
         { key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 120, editable: true, sortable: true, search: false },
         { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: true, search: false },
-        { name: 'PND', index: 'PND', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
-        { name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
-        { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
+        { name: 'PND', index: 'PND', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
+        { name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
+        { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' }  }
         ],
         pager: '#dashboardPager',
@@ -64,7 +64,7 @@
 
         height: "100%",
         viewrecords: true,
-        loadonce: false,
+        loadonce: true,  // enables searching
 
          gridComplete: function () {
             for (var i = 0; i < rowsToColor.length; i++) {
@@ -108,9 +108,9 @@
                     { key: false, name: 'BirthName', index: 'BirthName', width: 100,  editable: true, sortable: false, search: false },
                     { key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width:120, editable: true },
                     { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: false, search: false },
-                    { name: 'PND', index: 'PND', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
+                    { name: 'PND', index: 'PND', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                     { name: 'XID', index: 'XID', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
-                    { name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
+                    { name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                     { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
                 ],
                 rowNum: 10,
@@ -151,7 +151,8 @@
         } // close subgridRowExpanded 
     })
 
-     jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add: false, del: false, search: false, refresh: false },
+     jQuery("#dashboardGrid").jqGrid('filterToolbar', { searchOperators: true });
+     jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add: false, del: false, search: false, refresh: true },
          {
              zIndex: 100,
              url: "@Url.Action("EditClient", "FrontDesk")",
