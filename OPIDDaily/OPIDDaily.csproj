@@ -345,6 +345,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RequestedServicesViewModel.cs" />
     <Compile Include="Models\RoleViewModel.cs" />
+    <Compile Include="Models\SearchParameters.cs" />
     <Compile Include="Models\SpecialReferralViewModel.cs" />
     <Compile Include="Models\VisitViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

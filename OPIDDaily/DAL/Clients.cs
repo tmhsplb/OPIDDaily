@@ -161,7 +161,39 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static List<ClientViewModel> GetDashboardClients(DateTime date, bool? superadmin = false, bool? updateWaittimes = true)
+        private static List<ClientViewModel> GetFilteredDashboardClients(SearchParameters sps, List<ClientViewModel> cvms)
+        {
+            List<ClientViewModel> filteredCVMS;
+
+            if (!string.IsNullOrEmpty(sps.AgencyName))
+            {
+                filteredCVMS = cvms.Where(c => c.AgencyName != null && c.AgencyName.ToUpper().StartsWith(sps.AgencyName.ToUpper())).ToList();
+            }
+            else if (!string.IsNullOrEmpty(sps.LastName))
+            {
+                filteredCVMS = cvms.Where(c => c.LastName != null && c.LastName.ToUpper().StartsWith(sps.LastName.ToUpper())).ToList();
+            }
+            else if (!string.IsNullOrEmpty(sps.FirstName))
+            {
+                filteredCVMS = cvms.Where(c => c.FirstName != null && c.FirstName.ToUpper().StartsWith(sps.FirstName.ToUpper())).ToList();
+            }
+            else if (!string.IsNullOrEmpty(sps.MiddleName))
+            {
+                filteredCVMS = cvms.Where(c => c.MiddleName != null && c.MiddleName.ToUpper().StartsWith(sps.MiddleName.ToUpper())).ToList();
+            }
+            else if (!string.IsNullOrEmpty(sps.BirthName))
+            {
+                filteredCVMS = cvms.Where(c => c.BirthName != null && c.BirthName.ToUpper().StartsWith(sps.BirthName.ToUpper())).ToList();
+            }
+            else
+            {
+                filteredCVMS = cvms;
+            }
+
+            return filteredCVMS;
+        }
+
+        public static List<ClientViewModel> GetDashboardClients(SearchParameters sps)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
@@ -172,27 +204,17 @@ namespace OPIDDaily.DAL
 
                 foreach (Client client in clients)
                 {
-                    if (client.Active == false && superadmin == false)
-                    {
-                        // If superadmin == true, then this call is coming from SuperadminController.
-                        // In this case return both active and inactive clients. Otherwise return only active clients.
-                    }
-                    else
-                    {
-                        //  bool hasHistory = CheckManager.HasHistory(client);
-
-                        if (updateWaittimes == true)
-                        {
-                            // Disable WaitTime processing
-                            // client.WaitTime = GetUpdatedWaitTime(client);
-                        }
-
-                        clientCVMS.Add(ClientEntityToClientViewModel(client));
-                    }
+                    clientCVMS.Add(ClientEntityToClientViewModel(client));
                 }
 
-                opiddailycontext.SaveChanges();
-                return clientCVMS;
+                if (!sps._search)
+                {
+                    // if not performing filtered search (example, when refreshing) then
+                    // just return the required view models
+                    return clientCVMS;
+                }
+
+                return GetFilteredDashboardClients(sps, clientCVMS);
             }
         }
 

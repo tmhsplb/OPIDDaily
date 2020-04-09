@@ -84,10 +84,9 @@ namespace OPIDDaily.Controllers
             return View("Dashboard");
         }
 
-        public JsonResult GetDashboard(int page, int? rows = 25)
+        public JsonResult GetDashboard(SearchParameters sps, int page, int? rows = 25)
         {
-            DateTime today = Extras.DateTimeToday();
-            List<ClientViewModel> clients = Clients.GetDashboardClients(today);
+            List<ClientViewModel> clients = Clients.GetDashboardClients(sps);
  
             int pageIndex = page - 1;
             int pageSize = (int)rows;
@@ -97,7 +96,7 @@ namespace OPIDDaily.Controllers
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
-            clients = clients.OrderBy(c => c.ServiceDate).ToList();
+            clients = clients.OrderBy(c => c.Expiry).ToList();
 
             var jsonData = new
             {
