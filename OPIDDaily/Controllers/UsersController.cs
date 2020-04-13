@@ -14,6 +14,8 @@ namespace OPIDDaily.Controllers
 {
     public class UsersController : Controller
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(UsersController));
+
         public bool IsInRole(string role)
         {
             if (User.Identity.IsAuthenticated)
@@ -85,6 +87,7 @@ namespace OPIDDaily.Controllers
 
                 else if (IsInRole("BackOffice"))
                 {
+                    // Log.Debug("User is in role BackOffice. Redirect to Backoffice.Home");
                     return RedirectToAction("Home", "BackOffice");
                 }
 
@@ -112,8 +115,10 @@ namespace OPIDDaily.Controllers
             else
             {
                 ViewBag.Warning = "Not Logged In";
+                return View();
             }
 
+            Log.Warn("Return a warning");
             return View();
         }
 

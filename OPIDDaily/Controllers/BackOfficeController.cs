@@ -21,7 +21,8 @@ namespace OPIDDaily.Controllers
        
         public ActionResult Home()
         {
-            return View();
+            Log.Debug("Return view Home");
+            return View("Home");
         }
 
         public ActionResult BackOfficeServiceTicket()

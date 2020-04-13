@@ -18,6 +18,8 @@ namespace OPIDDaily.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(AccountController));
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         
@@ -82,6 +84,7 @@ namespace OPIDDaily.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    Log.Info(string.Format("User {0} has logged in", model.UserName));
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -150,9 +153,8 @@ namespace OPIDDaily.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, string returnUrl)
         {
-            
             Invitation invite = Identity.AcceptedInvitation(model.UserName, model.Email);
 
             if (invite == null)
@@ -161,14 +163,13 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
             
-
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, AgencyId = invite.AgencyId };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -176,11 +177,13 @@ namespace OPIDDaily.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    //Assign Role to user Here   
+                    // Assign Role to user here   
                     await this.UserManager.AddToRoleAsync(user.Id, invite.Role);
 
+                    // Log.Info("Redirect to Users.Index");
                     return RedirectToAction("Index", "Users");
                 }
+
                 AddErrors(result);
             }
 
@@ -436,6 +439,8 @@ namespace OPIDDaily.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            string userName = User.Identity.GetUserName();
+            Log.Info(string.Format("User {0} has logged off", userName));
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Users");
         }

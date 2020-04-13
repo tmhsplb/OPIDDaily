@@ -64,7 +64,7 @@
         viewrecords: true,
         loadonce: false, // will use filtered searching on server side
 
-        caption: 'Dashboard',
+        caption: 'Service Requests Dashboard',
         emptyrecords: 'No records to display',
         jsonReader: {
             root: "rows",
@@ -156,18 +156,6 @@
                  }
              }
          });
-
-    // See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
-    function rowColorFormatter(cellValue, options, rowObject) {
-        if (cellValue > 10 && cellValue < 15) { 
-            rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "LightPink" };
-        } else if (cellValue > 15 && cellValue < 20) {  
-            rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "HotPink" };
-        } else if (cellValue > 20) {   
-            rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "Red" };
-        }
-        return cellValue;
-    }
 
     // http://www.trirand.com/blog/?page_id=393/help/how-to-use-add-form-dialog-popup-window-set-position
     $.extend($.jgrid.edit, {
