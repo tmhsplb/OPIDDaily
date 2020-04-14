@@ -21,7 +21,7 @@ namespace OPIDDaily.Controllers
        
         public ActionResult Home()
         {
-            Log.Debug("Return view Home");
+            // Log.Debug("Return view Home");
             return View("Home");
         }
 

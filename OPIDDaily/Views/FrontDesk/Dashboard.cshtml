@@ -44,7 +44,7 @@
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' }  }
         ],
         pager: '#dashboardPager',
-        rowNum: 10, // 25,
+        rowNum: 25,
         
         onSelectRow: function (nowServing) {
             if (nowServing == null || nowServing == lastServed) {
@@ -62,7 +62,7 @@
 
         height: "100%",
         viewrecords: true,
-        loadonce: true,  // enables searching but disables pagination!
+        loadonce: false,  // will use filtered searching on server side
               
         caption: 'Service Requests Dashboard',
         emptyrecords: 'No records to display',
