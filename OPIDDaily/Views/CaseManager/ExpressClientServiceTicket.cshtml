@@ -1,13 +1,17 @@
-﻿@model OPIDDaily.Models.RequestedServicesViewModel
+﻿
+@using OPIDDaily.Models
+@model RequestedServicesViewModel
 
 @{
     ViewBag.Title = "Express Client";
     Layout = "~/Views/Shared/_CaseManager.cshtml";
+    string dependent = ViewBag.Dependent;
 }
+
 
 <style>
     input[type="checkbox"] {
-        transform:scale(0.75,0.75);
+        transform: scale(0.75,0.75);
     }
 </style>
 
@@ -17,7 +21,7 @@
 <br />
 
 <h4>Requested Services</h4>
-<hr/>
+<hr />
 <div class="row">
     <div class="col-md-12">
         <section id="voucherForm">
@@ -89,19 +93,30 @@
                     </div>
                 </div>
 
-                @*  @Html.Partial("_BootstrapSupportingDocuments", Model) *@
-                @Html.Partial("_BootstrapSupportingDocuments")
+
+                @Html.Partial("_BootstrapSupportingDocuments", Model)
 
                 <br /><br />
 
-                <div class="form-group">
-                    <div class="col-md-10">
-                        <input type="submit" value="Prepare Case Manager Voucher" class="btn btn-default" />
+                if (dependent.Equals("true"))
+                {
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <input type="submit" value="Save and Prepare Case Manager Voucher" class="btn btn-default" />
+                        </div>
+                    </div>
+                }
 
             }
         </section>
     </div>
 </div>
- 
+

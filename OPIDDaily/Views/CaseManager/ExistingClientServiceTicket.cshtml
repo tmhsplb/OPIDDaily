@@ -1,10 +1,11 @@
-﻿@* @model OPIDDaily.Models.RequestedServicesViewModel *@
-
-@model OPIDDaily.Models.RequestedServicesViewModel
+﻿
+@using OPIDDaily.Models
+@model RequestedServicesViewModel
 
 @{
     ViewBag.Title = "Existing Client";
     Layout = "~/Views/Shared/_CaseManager.cshtml";
+    string dependent = ViewBag.Dependent;
 }
 
 <br /><br /><br />
@@ -151,11 +152,22 @@
 
                 <br /><br />
 
-                <div class="form-group">
-                    <div class="col-md-10">
-                        <input type="submit" value="Prepare Case Manager Voucher" class="btn btn-default" />
+                if (dependent.Equals("true"))
+                {
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <input type="submit" value="Save and Prepare Case Manager Voucher" class="btn btn-default" />
+                        </div>
+                    </div>
+                }
 
             }
         </section>

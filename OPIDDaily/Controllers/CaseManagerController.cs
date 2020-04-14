@@ -14,6 +14,8 @@ namespace OPIDDaily.Controllers
     [Authorize(Roles = "CaseManager")]
     public class CaseManagerController : SharedController
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(CaseManagerController));
+
         public ActionResult Home()
         {
             // VoucherBackButtonHelper("Reset", null);
@@ -89,11 +91,11 @@ namespace OPIDDaily.Controllers
 
             if (CheckManager.HasHistory(client.Id))
             {
-                client.EXP = false;
+                //client.EXP = false;
                 return RedirectToAction("ExistingClientServiceTicket");
             }
 
-            client.EXP = true;
+            //client.EXP = true;
             return RedirectToAction("ExpressClientServiceTicket");
         }
 
@@ -102,13 +104,13 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-
+            ViewBag.Dependent = (client.HH != 0 ? "true" : "false");
+           
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-          //  VoucherBackButtonHelper("Get", rsvm);
-
+            //  VoucherBackButtonHelper("Get", rsvm);
             return View("ExpressClientServiceTicket", rsvm);
         }
 
@@ -124,13 +126,13 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
+            ViewBag.Dependent = (client.HH != 0 ? "true" : "false");
 
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
             // VoucherBackButtonHelper("Get", rsvm);
-
             return View("ExistingClientServiceTicket", rsvm);
         }
 
@@ -141,8 +143,15 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, null);
             Clients.StoreRequestedServices(client.Id, rsvm);
+
+            if (client.HH != 0)
+            {
+                // Don't prepare a case manager voucher for a dependent of another client
+                return RedirectToAction("ManageClients", "CaseManager");
+            }
+
             PrepareClientNotes(client, rsvm);
-             
+
             DateTime today = Extras.DateTimeToday();
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");
             ViewBag.Expiry = client.Expiry.ToString("ddd MMM d, yyyy");
