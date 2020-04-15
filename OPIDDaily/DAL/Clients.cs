@@ -34,6 +34,8 @@ namespace OPIDDaily.DAL
                     rsvm.ReplacementTDL = client.ReplacementTDL;
                     rsvm.Numident = client.Numident;
 
+                    rsvm.TrackingOnly = NoServicesRequested(rsvm);
+
                     // Supporting documents
                     rsvm.SDBC = client.SDBC;
                     rsvm.SDSSC = client.SDSSC;
@@ -337,10 +339,6 @@ namespace OPIDDaily.DAL
                     BirthName = cvm.BirthName,
                     DOB = cvm.DOB,  
                     Age = CalculateAge(cvm.DOB),  
-                  //  EXP = (cvm.EXP.Equals("Y") ? true : false),
-                  //  PND = (cvm.PND.Equals("Y") ? true : false),
-                  //  XID = (cvm.XID.Equals("Y") ? true : false),
-                  //  XBC = (cvm.XBC.Equals("Y") ? true : false),
                     Notes = cvm.Notes,
                     Screened = now,
                     CheckedIn = now,
@@ -360,7 +358,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        private static string GetClientServices(Client client)
+        private static string GetDependentServices(Client client)
         {
             StringBuilder services = new StringBuilder();
             bool empty = true;
@@ -368,6 +366,11 @@ namespace OPIDDaily.DAL
             if (client.BC)
             {
                 services.Append("BC");
+
+                if (client.HCC)
+                {
+                    services.Append(" (Harris County Clerk)");
+                }
                 empty = false;
             }
 
@@ -433,21 +436,21 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == id && c.Active == true).ToList();
+                List<Client> clientDependents = opiddailycontext.Clients.Where(c => c.HH == id && c.Active == true).ToList();
                 List<ClientViewModel> dependents = new List<ClientViewModel>();
 
-                foreach (Client client in clients)
+                foreach (Client dependent in clientDependents)
                 {
-                    ClientViewModel cvm = ClientEntityToClientViewModel(client);
-                    string clientServices = GetClientServices(client);
+                    ClientViewModel cvm = ClientEntityToClientViewModel(dependent);
+                    string dependentServices = GetDependentServices(dependent);
 
                     if (string.IsNullOrEmpty(cvm.Notes))
                     {
-                        cvm.Notes = clientServices;
+                        cvm.Notes = dependentServices;
                     }
-                    else if (!string.IsNullOrEmpty(clientServices))
+                    else if (!string.IsNullOrEmpty(dependentServices))
                     {
-                        cvm.Notes = string.Format("{0}; {1}", cvm.Notes, GetClientServices(client));
+                        cvm.Notes = string.Format("{0}; {1}", cvm.Notes, dependentServices);
                     }
 
                     dependents.Add(cvm);

@@ -24,6 +24,14 @@ namespace OPIDDaily
             }
         }
 
+        public static string TrainingClients
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["TrainingClients"];
+            }
+        }
+
         public static string WorkingDesktopConnectionString
         {
             get

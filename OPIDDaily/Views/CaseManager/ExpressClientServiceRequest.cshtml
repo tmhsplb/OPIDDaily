@@ -5,7 +5,6 @@
 @{
     ViewBag.Title = "Express Client";
     Layout = "~/Views/Shared/_CaseManager.cshtml";
-    string dependent = ViewBag.Dependent;
 }
 
 
@@ -25,7 +24,7 @@
 <div class="row">
     <div class="col-md-12">
         <section id="voucherForm">
-            @using (Html.BeginForm("PrepareVoucher", "CaseManager", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("StoreServiceRequest", "CaseManager", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.Hidden("Agency", Model.Agency)
@@ -98,23 +97,11 @@
 
                 <br /><br />
 
-                if (dependent.Equals("true"))
-                {
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            <input type="submit" value="Save" class="btn btn-default" />
-                        </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Save Service Request" class="btn btn-default" />
                     </div>
-                }
-                else
-                {
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            <input type="submit" value="Save and Prepare Case Manager Voucher" class="btn btn-default" />
-                        </div>
-                    </div>
-                }
-
+                </div>
             }
         </section>
     </div>

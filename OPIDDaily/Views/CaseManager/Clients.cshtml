@@ -206,8 +206,8 @@
           closeAfterDelete: true,
           recreateForm: true,
           afterComplete: function (response) {
-              if (response) {
-                  // alert(response.responseText);
+              if (response.responseText == "Failure") {
+                   alert("Not permitted to delete a training client!");
               }
           }
       });

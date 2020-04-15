@@ -871,7 +871,7 @@
     <Content Include="Views\CaseManager\Clients.cshtml" />
     <Content Include="Views\Users\_SelectAgency.cshtml" />
     <Content Include="Views\CaseManager\Warning.cshtml" />
-    <Content Include="Views\CaseManager\ExpressClientServiceTicket.cshtml" />
+    <Content Include="Views\CaseManager\ExpressClientServiceRequest.cshtml" />
     <Content Include="Views\CaseManager\PrintVoucher.cshtml" />
     <Content Include="Views\Shared\_CaseManagerSignatureBlock.cshtml" />
     <Content Include="Views\FrontDesk\ExpressClientOverflowVoucher.cshtml" />
@@ -896,7 +896,7 @@
     <Content Include="Views\Shared\_SupportingDocuments.cshtml" />
     <Content Include="Views\Shared\_PreApproval.cshtml" />
     <Content Include="Views\Shared\_BootstrapSupportingDocuments.cshtml" />
-    <Content Include="Views\CaseManager\ExistingClientServiceTicket.cshtml" />
+    <Content Include="Views\CaseManager\ExistingClientServiceRequest.cshtml" />
     <Content Include="Views\BackOffice\PrintExistingClient.cshtml" />
     <Content Include="Views\Shared\_ExistingClientServiceTicket.cshtml" />
     <Content Include="Views\BackOffice\PrintExpressClient.cshtml" />

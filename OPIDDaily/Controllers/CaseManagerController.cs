@@ -66,6 +66,13 @@ namespace OPIDDaily.Controllers
 
         public string DeleteMyClient(int id)
         {
+            string trainingClients = Config.TrainingClients;
+
+            if (!string.IsNullOrEmpty(trainingClients) && trainingClients.Contains(id.ToString()))
+            {
+                return "Failure";
+            }
+
             Clients.DeleteMyClient(id);
             DailyHub.Refresh();
             return "Success";
@@ -92,26 +99,25 @@ namespace OPIDDaily.Controllers
             if (CheckManager.HasHistory(client.Id))
             {
                 //client.EXP = false;
-                return RedirectToAction("ExistingClientServiceTicket");
+                return RedirectToAction("ExistingClientServiceRequest");
             }
 
             //client.EXP = true;
-            return RedirectToAction("ExpressClientServiceTicket");
+            return RedirectToAction("ExpressClientServiceRequest");
         }
 
-        public ActionResult ExpressClientServiceTicket()
+        public ActionResult ExpressClientServiceRequest()
         {
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-            ViewBag.Dependent = (client.HH != 0 ? "true" : "false");
            
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
             //  VoucherBackButtonHelper("Get", rsvm);
-            return View("ExpressClientServiceTicket", rsvm);
+            return View("ExpressClientServiceRequest", rsvm);
         }
 
         public ActionResult StoreContactInfo(ContactInfoViewModel civm)
@@ -121,37 +127,52 @@ namespace OPIDDaily.Controllers
             return RedirectToAction("ManageClients");
         }
 
-        public ActionResult ExistingClientServiceTicket()
+        public ActionResult ExistingClientServiceRequest()
         { 
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-            ViewBag.Dependent = (client.HH != 0 ? "true" : "false");
-
+            
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
             // VoucherBackButtonHelper("Get", rsvm);
-            return View("ExistingClientServiceTicket", rsvm);
+            return View("ExistingClientServiceRequest", rsvm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PrepareVoucher(RequestedServicesViewModel rsvm)
+        public ActionResult StoreServiceRequest(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, null);
             Clients.StoreRequestedServices(client.Id, rsvm);
+            PrepareClientNotes(client, rsvm);
+            return RedirectToAction("ManageClients", "CaseManager");
+        }
+                 
+        public ActionResult PrepareVoucher()
+        {
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please first select a client from the Clients Table.";
+                return View("Warning");
+            }
+
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
 
             if (client.HH != 0)
             {
-                // Don't prepare a case manager voucher for a dependent of another client
-                return RedirectToAction("ManageClients", "CaseManager");
+                ViewBag.Warning = "Cannot prepare voucher for a dependent of another client.";
+                return View("Warning");
             }
 
             PrepareClientNotes(client, rsvm);
-
+            
             DateTime today = Extras.DateTimeToday();
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");
             ViewBag.Expiry = client.Expiry.ToString("ddd MMM d, yyyy");
