@@ -906,9 +906,9 @@
     <Content Include="Views\Superadmin\Demo.cshtml" />
     <Content Include="Views\BackOffice\Dashboard.cshtml" />
     <Content Include="Views\FrontDesk\Dashboard.cshtml" />
-    <None Include="Web.Staging.config">
+    <Content Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
