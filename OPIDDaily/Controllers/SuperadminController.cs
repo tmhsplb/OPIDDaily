@@ -20,10 +20,9 @@ namespace OPIDDaily.Controllers
         {
             string workingConnectionString = string.Empty;
 
-            ViewBag.Release = Config.GetRelease();  /* was Config.Release */
-            ViewBag.ConfigRelease = Config.Release; // make sure Web.Staging.config has build action set to Content
-             
-            switch (Config.GetRelease())  /* was Config.Release */
+            ViewBag.Release = Config.Release;   
+                         
+            switch (Config.Release) 
             {
                 case "Desktop":
                     workingConnectionString = Config.WorkingDesktopConnectionString;
