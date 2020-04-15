@@ -21,6 +21,7 @@ namespace OPIDDaily.Controllers
             string workingConnectionString = string.Empty;
 
             ViewBag.Release = Config.GetRelease();  /* was Config.Release */
+            ViewBag.ConfigRelease = Config.Release;
              
             switch (Config.GetRelease())  /* was Config.Release */
             {
@@ -37,6 +38,7 @@ namespace OPIDDaily.Controllers
 
             ViewBag.ConnectionString = Config.ConnectionString;
             ViewBag.ChangedConnectionString = (Config.ConnectionString.Equals(workingConnectionString) ? "False" : "True");
+            ViewBag.TrainingClients = Config.TrainingClients;
 
             // Log.Info("Goto Superadmin home page");
             return View();
