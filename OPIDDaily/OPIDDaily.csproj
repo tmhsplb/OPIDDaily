@@ -640,6 +640,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="robots.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\DataTables\css\semanticui.scss" />
@@ -647,8 +648,12 @@
     <Content Include="Content\DataTables\css\common.scss" />
     <Content Include="App_Data\Interview Import Me Header.csv" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\ClientHistory\CaseManagerClientHistory.js" />
+    <Content Include="Scripts\ClientHistory\FrontDeskClientHistory.js" />
     <Content Include="Scripts\Clients\CaseManager.js" />
     <Content Include="Scripts\Clients\FrontDesk.js" />
+    <Content Include="Scripts\Dashboards\BackOfficeDashboard.js" />
+    <Content Include="Scripts\Dashboards\FrontDeskDashboard.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
@@ -726,7 +731,9 @@
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
     <Content Include="Scripts\Helper.js" />
+    <Content Include="Scripts\HubCode\BackOfficeHubCode.js" />
     <Content Include="Scripts\HubCode\CaseManagerHubCode.js" />
+    <Content Include="Scripts\HubCode\FrontDeskDashboardHubCode.js" />
     <Content Include="Scripts\HubCode\FrontDeskHubCode.js" />
     <Content Include="Scripts\HubCode\FrontDeskReviewHubCode.js" />
     <Content Include="Scripts\i18n\grid.locale-ar.js" />

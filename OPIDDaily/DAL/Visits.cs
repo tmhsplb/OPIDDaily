@@ -149,13 +149,13 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                Client client = opiddailycontext.Clients.Where(c => c.Id == nowServing).SingleOrDefault();
+                Client client = opiddailycontext.Clients.Find(nowServing);
 
                 if (client != null)
                 {
                     opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
 
-                    Visit visit = opiddailycontext.Visits.Where(v => v.Id == vvm.Id).SingleOrDefault();
+                    Visit visit = client.Visits.Where(v => v.Id == vvm.Id).SingleOrDefault();
 
                     if (visit != null)
                     {
