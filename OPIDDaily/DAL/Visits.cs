@@ -183,7 +183,12 @@ namespace OPIDDaily.DAL
 
                     if (ancientCheck != null)
                     {
-                        ancientCheck.Disposition = vvm.Status; 
+                        if (string.IsNullOrEmpty(ancientCheck.Disposition))
+                        {
+                            // vvm.Status == null when calling from ~/Scripts/ClientHistory/CaseManagerClientHistory.js
+                            ancientCheck.Disposition = (string.IsNullOrEmpty(vvm.Status) ? string.Empty : vvm.Status);
+                        }
+
                         if (!string.IsNullOrEmpty(vvm.Notes))
                         {
                             string[] currentDisposition = ancientCheck.Disposition.Split(':');
@@ -192,6 +197,7 @@ namespace OPIDDaily.DAL
                             string disposition = string.Format("{0}:{1}", currentDisposition[0], vvm.Notes);
                             ancientCheck.Disposition = disposition;      
                         }
+
                         opiddailycontext.SaveChanges();
                         return;
                     }
@@ -200,7 +206,12 @@ namespace OPIDDaily.DAL
 
                     if (rcheck != null)
                     {
-                        rcheck.Disposition = vvm.Status;
+                        if (string.IsNullOrEmpty(rcheck.Disposition))
+                        {
+                            // vvm.Status == null when calling from ~/Scripts/ClientHistory/CaseManagerClientHistory.js
+                            rcheck.Disposition = (string.IsNullOrEmpty(vvm.Status) ? string.Empty : vvm.Status);
+                        }
+
                         if (!string.IsNullOrEmpty(vvm.Notes))
                         {
                             string[] currentDisposition = rcheck.Disposition.Split(':');
@@ -209,6 +220,7 @@ namespace OPIDDaily.DAL
                             string disposition = string.Format("{0}:{1}", currentDisposition[0], vvm.Notes);
                             rcheck.Disposition = disposition;
                         }
+
                         opiddailycontext.SaveChanges();
                         return;
                     }

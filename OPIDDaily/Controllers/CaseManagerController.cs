@@ -49,8 +49,7 @@ namespace OPIDDaily.Controllers
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-
-       
+ 
         public string AddMyClient(ClientViewModel cvm)
         {
             int referringAgency = ReferringAgency();
