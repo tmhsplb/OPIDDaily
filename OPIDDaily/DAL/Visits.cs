@@ -38,14 +38,20 @@ namespace OPIDDaily.DAL
                 date = (DateTime)adate;
             }
 
+
+            // Example: ancientCheck.Disposition = "Voided:Please reissue"
+            string[] dnotes = ancientCheck.Disposition.Split(':');
+            string disposition = dnotes[0];
+            string notes = (dnotes.Length == 1 ? string.Empty : dnotes[1]);
+
             return new VisitViewModel
             {
                 Id = ancientCheck.Id,
                 Date = date.AddHours(12),  
                 Item = ancientCheck.Service,
                 Check = (ancientCheck.Num == 0 ? string.Empty : ancientCheck.Num.ToString()),
-                Status = ancientCheck.Disposition,
-                Notes = string.Empty
+                Status = disposition,
+                Notes = notes
             };
         }
 
@@ -63,14 +69,19 @@ namespace OPIDDaily.DAL
                 date = (DateTime)rdate;
             }
 
+            // Example: rheck.Disposition = "Voided:Please reissue"
+            string[] dnotes = rcheck.Disposition.Split(':');
+            string disposition = dnotes[0];
+            string notes = (dnotes.Length == 1 ? string.Empty : dnotes[1]);
+
             return new VisitViewModel
             {
                 Id = rcheck.Id,
                 Date = date.AddHours(12), 
                 Item = rcheck.Service,
                 Check = (rcheck.Num == 0 ? string.Empty: rcheck.Num.ToString()),
-                Status = rcheck.Disposition,
-                Notes = string.Empty
+                Status = disposition,
+                Notes = notes,
             };
         }
 
@@ -164,9 +175,45 @@ namespace OPIDDaily.DAL
                         visit.Check = vvm.Check;
                         visit.Status = vvm.Status;
                         visit.Notes = vvm.Notes;
+                        opiddailycontext.SaveChanges();
+                        return;
+                    }
+                    
+                    AncientCheck ancientCheck = opiddailycontext.AncientChecks.Find(vvm.Id);
+
+                    if (ancientCheck != null)
+                    {
+                        ancientCheck.Disposition = vvm.Status; 
+                        if (!string.IsNullOrEmpty(vvm.Notes))
+                        {
+                            string[] currentDisposition = ancientCheck.Disposition.Split(':');
+
+                            // Example: currentDisposition = "Voided:Please reissue"
+                            string disposition = string.Format("{0}:{1}", currentDisposition[0], vvm.Notes);
+                            ancientCheck.Disposition = disposition;      
+                        }
+                        opiddailycontext.SaveChanges();
+                        return;
                     }
 
-                    opiddailycontext.SaveChanges();
+                    RCheck rcheck = opiddailycontext.RChecks.Find(vvm.Id);
+
+                    if (rcheck != null)
+                    {
+                        rcheck.Disposition = vvm.Status;
+                        if (!string.IsNullOrEmpty(vvm.Notes))
+                        {
+                            string[] currentDisposition = rcheck.Disposition.Split(':');
+
+                            // Example: currentDisposition = "Voided:Please reissue"
+                            string disposition = string.Format("{0}:{1}", currentDisposition[0], vvm.Notes);
+                            rcheck.Disposition = disposition;
+                        }
+                        opiddailycontext.SaveChanges();
+                        return;
+                    }
+
+                    return;         
                 }
             }
         }
@@ -175,7 +222,7 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                Client client = opiddailycontext.Clients.Where(c => c.Id == nowServing).SingleOrDefault();
+                Client client = opiddailycontext.Clients.Find(nowServing);
 
                 if (client != null)
                 {

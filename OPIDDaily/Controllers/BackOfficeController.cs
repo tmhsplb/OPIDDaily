@@ -46,13 +46,29 @@ namespace OPIDDaily.Controllers
             if (CheckManager.HasHistory(client.Id))
             {
                 client.EXP = false;
-                return RedirectToAction("PrepareBackOfficeExistingClient");
+                return RedirectToAction("BackOfficeExistingClient");
             }
 
             client.EXP = true;
-            return RedirectToAction("PrepareBackOfficeExpressClient");
+            return RedirectToAction("BackOfficeExpressClient");
         }
-                
+
+        public ActionResult BackOfficeExpressClient()
+        {
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+          
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);
+
+            // ServiceTicketBackButtonHelper("Get", rsvm);
+
+            return View("ExpressClient", rsvm);
+        }
+
         public ActionResult PrepareBackOfficeExpressClient()
         {
             int nowServing = NowServing();
@@ -71,6 +87,22 @@ namespace OPIDDaily.Controllers
 
             // ServiceTicketBackButtonHelper("Set", rsvm);
             return View("PrintExpressClient", rsvm);
+        }
+
+        public ActionResult BackOfficeExistingClient()
+        {
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+            
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);
+
+            // ServiceTicketBackButtonHelper("Get", rsvm);
+
+            return View("ExistingClient", rsvm);
         }
                
         public ActionResult PrepareBackOfficeExistingClient()

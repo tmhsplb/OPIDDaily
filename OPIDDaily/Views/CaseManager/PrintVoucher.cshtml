@@ -16,6 +16,10 @@
         <h4>Current Address: @ViewBag.CurrentAddress</h4>
         <h4>Phone: @ViewBag.Phone&nbsp;&nbsp; Email: @ViewBag.Email</h4>
         <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)&nbsp;&nbsp;Birthplace: @ViewBag.BirthPlace</h4>
+        @if (!string.IsNullOrEmpty(Model.Item2.Notes))
+        {
+          <h4>Notes:&nbsp;@Model.Item2.Notes</h4>
+        }
         <br />
 
         @if (Model.Item1.Count > 0)
@@ -31,7 +35,7 @@
                     <td align="center" width="80">@cvm.LastName</td>
                     <td align="center" width="30">&nbsp;&nbsp; @cvm.DOB.ToShortDateString()</td>
                     <td align="center" width="15">&nbsp;&nbsp; @cvm.Age</td>
-                    <td width="150">&nbsp;&nbsp; @cvm.Notes</td>
+                    <td width="150">&nbsp;&nbsp;@cvm.Notes</td>
                   </tr>
                 }
             </table>

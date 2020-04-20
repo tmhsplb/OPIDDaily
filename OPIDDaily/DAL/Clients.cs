@@ -33,6 +33,7 @@ namespace OPIDDaily.DAL
                     rsvm.NewTDL = client.NewTDL;
                     rsvm.ReplacementTDL = client.ReplacementTDL;
                     rsvm.Numident = client.Numident;
+                    rsvm.Notes = client.Notes;
 
                     rsvm.TrackingOnly = NoServicesRequested(rsvm);
 
@@ -582,6 +583,27 @@ namespace OPIDDaily.DAL
             }
         }
 
+        public static void EditMyClientVisitHistory(int nowServing, ClientViewModel cvm)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+
+                if (client != null)
+                {
+                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+
+                    Visit visit = client.Visits.Where(v => v.Id == client.Id).SingleOrDefault();
+                    if (visit != null)
+                    {
+                        visit.Notes = cvm.Notes;
+                    }
+
+                    opiddailycontext.SaveChanges();
+                }
+            }
+        }
+
         public static int EditClient(ClientViewModel cvm)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
@@ -898,7 +920,7 @@ namespace OPIDDaily.DAL
                 && !rsvm.Numident);
         }
 
-        public static void StoreRequestedServices(int id, RequestedServicesViewModel rsvm)
+        public static void StoreRequestedServicesAndSupportingDocuments(int id, RequestedServicesViewModel rsvm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {

@@ -502,9 +502,17 @@ namespace OPIDDaily.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult PrepareExpressClient(RequestedServicesViewModel rsvm)
         {
+            // This is the POST method of
+            //   ~/Views/FrontDesk/ExpressClient.cshtml
+            // If the NowServing client comes from the front desk, then the client will
+            // have no supporting documents and the supporting documents section of the service
+            // ticket will simply be a worksheet for the interviewr to fill in. If the NowServing
+            // client comes from the Dashboard, then the client will have supporting documents.
+            // So in either case, passing rsvm instead of null as the second argument of
+            // GetClient is correct.
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing, null);
-            Clients.StoreRequestedServices(client.Id, rsvm);
+            Client client = Clients.GetClient(nowServing, rsvm);  
+            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
             
             DateTime today = Extras.DateTimeToday();
@@ -524,9 +532,17 @@ namespace OPIDDaily.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
         {
+            // This is the POST method of
+            //   ~/Views/FrontDesk/ExistingClient.cshtml
+            // If the NowServing client comes from the front desk, then the client will
+            // have no supporting documents and the supporting documents section of the service
+            // ticket will simply be a worksheet for the interviewr to fill in. If the NowServing 
+            // client comes from the Dashboard, then the client will have supporting documents.
+            // So in either case, passing rsvm instead of null as the second argument of
+            // GetClient is correct.
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing, null);
-            Clients.StoreRequestedServices(client.Id, rsvm);
+            Client client = Clients.GetClient(nowServing, rsvm);  
+            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
             
             DateTime today = Extras.DateTimeToday();
@@ -622,11 +638,11 @@ namespace OPIDDaily.Controllers
             
             if (CheckManager.HasHistory(client.Id))
             {
-                client.EXP = false;
+               // client.EXP = false;
                 return RedirectToAction("ExistingClient");
             }
 
-            client.EXP = true;
+           // client.EXP = true;
             return RedirectToAction("ExpressClient");
         }
 

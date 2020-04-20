@@ -1,27 +1,24 @@
-﻿@model Tuple<List<VisitViewModel>, RequestedServicesViewModel>
+﻿@model List<VisitViewModel>
 @using OPIDDaily.Models
 
 @{
-    ViewBag.Title = "Print Existing Client";
-    Layout = "~/Views/Shared/_BackOffice.cshtml";
+    ViewBag.Title = "Print Existing Client Visits";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
 }
 
+    <script type="text/javascript" src="@Url.Content("~/Scripts/serviceTicket.js")"></script>
+
     <div id="printerDiv">
-        <br />
-        <h3>Remote Service Ticket: @ViewBag.ServiceTicket</h3>
+        <link rel="stylesheet" href="@Url.Content("~/Content/serviceTicket.css")" type="text/css" />
         <br />
         <h3>Existing Client: @ViewBag.ClientName</h3>
         <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
-        @if (!string.IsNullOrEmpty(Model.Item2.Notes))
-        {
-            <h4>Notes:&nbsp;@Model.Item2.Notes</h4>
-        }
-        <h4>Agency: @ViewBag.Agency</h4>
+
         <br />
 
         <table id="visitHistory" width="100%">
             <tr><th>Date</th><th>Item</th><th>Check</th><th>Status</th><th>Notes</th></tr>
-            @foreach (VisitViewModel vvm in Model.Item1)
+            @foreach (VisitViewModel vvm in Model)
             {
                 <tr>
                     <td align="center" width="80">@vvm.Date.ToString("MM/dd/yyyy")</td>
@@ -32,14 +29,6 @@
                 </tr>
             }
         </table>
-
-        <br />
-
-        @Html.Partial("_RequestedServices", Model.Item2)
-        <br />
-        @Html.Partial("_ReadOnlySupportingDocuments", Model.Item2)
-        <br /><br />
-        @Html.Partial("_SignatureBlock")
     </div>
     <br/>
     <center>

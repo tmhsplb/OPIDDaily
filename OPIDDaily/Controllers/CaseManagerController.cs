@@ -50,6 +50,7 @@ namespace OPIDDaily.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
+       
         public string AddMyClient(ClientViewModel cvm)
         {
             int referringAgency = ReferringAgency();
@@ -145,9 +146,15 @@ namespace OPIDDaily.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult StoreServiceRequest(RequestedServicesViewModel rsvm)
         {
+            // Called when either
+            //   ~/Views/CaseManager/ExpressClientServiceRequest.cshtml
+            // or
+            //   ~/Views/CaseManager/ExistingClientServiceRequest.cshtml
+            // posts to server. In both cases rsvm contains both requested services
+            // and supporting documents.
             int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing, null);
-            Clients.StoreRequestedServices(client.Id, rsvm);
+            Client client = Clients.GetClient(nowServing, null);  // pass null so the supporting documents won't be erased
+            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
             return RedirectToAction("ManageClients", "CaseManager");
         }

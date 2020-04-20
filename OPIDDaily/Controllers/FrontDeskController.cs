@@ -163,7 +163,7 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, null);
-            Clients.StoreRequestedServices(client.Id, rsvm);
+            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
 
             DateTime today = Extras.DateTimeToday();
@@ -205,7 +205,7 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, null);
-            Clients.StoreRequestedServices(client.Id, rsvm);
+            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
 
             DateTime today = Extras.DateTimeToday();
