@@ -178,24 +178,40 @@ namespace OPIDDaily.DAL
                         opiddailycontext.SaveChanges();
                         return;
                     }
-                    
+
+                    // For an ancient check or an rcheck, the Dispostion field contains both
+                    // the check dispositon and any notes associated with the check.
+                    // This is trick, ut requires less space than reserving a separate data
+                    // column for the seldom used notes feature.
+                    // A colon (:) is used to separate the Disposition from the Notes. For
+                    // example, "Voided:Please reissue. See dropbox"
+                    // If the Disposition i the empty string but the Notes are not the empty
+                    // string, for example, ":Status?", then the Disposition is effectively
+                    // the empty string. The logic gets tricky
+
                     AncientCheck ancientCheck = opiddailycontext.AncientChecks.Find(vvm.Id);
 
                     if (ancientCheck != null)
                     {
-                        if (string.IsNullOrEmpty(ancientCheck.Disposition))
+                        if (string.IsNullOrEmpty(ancientCheck.Disposition) 
+                            || 
+                            ancientCheck.Disposition.StartsWith(":"))  // effectively the empty string
                         {
                             // vvm.Status == null when calling from ~/Scripts/ClientHistory/CaseManagerClientHistory.js
                             ancientCheck.Disposition = (string.IsNullOrEmpty(vvm.Status) ? string.Empty : vvm.Status);
                         }
 
+                        string[] currentDisposition = ancientCheck.Disposition.Split(':');
+
                         if (!string.IsNullOrEmpty(vvm.Notes))
                         {
-                            string[] currentDisposition = ancientCheck.Disposition.Split(':');
-
                             // Example: currentDisposition = "Voided:Please reissue"
                             string disposition = string.Format("{0}:{1}", currentDisposition[0], vvm.Notes);
                             ancientCheck.Disposition = disposition;      
+                        }
+                        else
+                        {
+                            ancientCheck.Disposition = currentDisposition[0];
                         }
 
                         opiddailycontext.SaveChanges();
@@ -206,19 +222,25 @@ namespace OPIDDaily.DAL
 
                     if (rcheck != null)
                     {
-                        if (string.IsNullOrEmpty(rcheck.Disposition))
+                        if (string.IsNullOrEmpty(rcheck.Disposition) 
+                            || 
+                            rcheck.Disposition.StartsWith(":"))  // effectively the empty string
                         {
                             // vvm.Status == null when calling from ~/Scripts/ClientHistory/CaseManagerClientHistory.js
                             rcheck.Disposition = (string.IsNullOrEmpty(vvm.Status) ? string.Empty : vvm.Status);
                         }
 
+                        string[] currentDisposition = rcheck.Disposition.Split(':');
+
                         if (!string.IsNullOrEmpty(vvm.Notes))
                         {
-                            string[] currentDisposition = rcheck.Disposition.Split(':');
-
                             // Example: currentDisposition = "Voided:Please reissue"
                             string disposition = string.Format("{0}:{1}", currentDisposition[0], vvm.Notes);
                             rcheck.Disposition = disposition;
+                        }
+                        else
+                        {
+                            rcheck.Disposition = currentDisposition[0];
                         }
 
                         opiddailycontext.SaveChanges();
