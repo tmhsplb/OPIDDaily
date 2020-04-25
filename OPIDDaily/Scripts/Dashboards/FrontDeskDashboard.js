@@ -1,11 +1,13 @@
 ﻿var lastServed = 0;
+var rowsToColor = [];
+
 
 $("#dashboardGrid").jqGrid({
     url: "GetDashboard", // "@Url.Action("GetDashboard", "FrontDesk")",
     datatype: "json",
     pageable: true,
     mtype: "Get",
-    colNames: ['Id', 'ST', 'Agency', 'Expires', 'Stage', 'H', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
+    colNames: ['Id', 'ST', 'Agency', 'Expires', 'Stage', 'H', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'MSG', 'Notes'],
     colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
@@ -45,6 +47,13 @@ $("#dashboardGrid").jqGrid({
     height: "100%",
     viewrecords: true,
     loadonce: false,
+
+    gridComplete: function () {
+        for (var i = 0; i < rowsToColor.length; i++) {
+            //  alert("colored row: " + rowsToColor[i].rowId + " " + rowsToColor[i].rowColor);
+            $("#" + rowsToColor[i].rowId).css("color", rowsToColor[i].rowColor)
+        }
+    },
 
     caption: 'Service Requests Dashboard',
     emptyrecords: 'No records to display',
