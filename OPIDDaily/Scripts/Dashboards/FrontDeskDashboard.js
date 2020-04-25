@@ -11,7 +11,7 @@ $("#dashboardGrid").jqGrid({
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
         { key: false, name: 'AgencyName', index: 'AgencyName', width: 150, editable: false, sortable: false, search: true, searchoptions: { sopt: ['bw'] } },
         { key: false, align: 'center', name: 'Expiry', index: 'Expiry', formatter: 'date', width: 120, editable: false, sortable: true, search: false },
-        { key: false, name: 'Stage', index: 'Stage', width: 100, editable: true, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing': 'Interviewing', 'BackOffice': 'BackOffice', 'Done': 'Done' } }, sortable: false, search: false },
+        { key: false, name: 'Stage', index: 'Stage', width: 100, formatter: rowColorFormatter, editable: true, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing': 'Interviewing', 'BackOffice': 'BackOffice', 'Done': 'Done' } }, sortable: false, search: false },
         { key: false, name: 'HeadOfHousehold', index: 'HeadOfHousehold', width: 35, align: 'center', editable: false, sortable: false, search: false },
         { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: true },
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: true },
@@ -22,6 +22,7 @@ $("#dashboardGrid").jqGrid({
         { name: 'PND', index: 'PND', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
         { name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
         { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
+        { key: false, hidden: true, name: 'MSG', index: 'MSG', width: 80, formatter: rowColorFormatter, editable: false, sortable: false, search: false },
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
     ],
     pager: '#dashboardPager',
@@ -139,6 +140,20 @@ jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add:
         }
     });
 
+// See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
+function rowColorFormatter(cellValue, options, rowObject) {
+    if (cellValue != null && cellValue == "FromAgency") {
+        // alert("cellValue == FromAgency");
+        rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#00FF00" };  // green
+    } else if (cellValue != null && cellValue == "FromOPID") {
+        // alert("cellValue == FromOPID");
+        rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#FF0000" };  // red
+    } else if (cellValue != null && cellValue == "StageChange") {
+        // alert("cellValue == FromOPID");
+        rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#0000FF" };  // blue
+    }
+    return cellValue;
+}
 
 // http://www.trirand.com/blog/?page_id=393/help/how-to-use-add-form-dialog-popup-window-set-position
 $.extend($.jgrid.edit, {

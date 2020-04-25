@@ -45,11 +45,11 @@ namespace OPIDDaily.Controllers
 
             if (CheckManager.HasHistory(client.Id))
             {
-                client.EXP = false;
+              //  client.EXP = false;
                 return RedirectToAction("BackOfficeExistingClient");
             }
 
-            client.EXP = true;
+           // client.EXP = true;
             return RedirectToAction("BackOfficeExpressClient");
         }
 

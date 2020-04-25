@@ -20,9 +20,16 @@ namespace OPIDDaily.Controllers
 {
     public class SharedController : Controller
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(SharedController));
+
         public static int NowServing()
         {
             return Convert.ToInt32(SessionHelper.Get("NowServing"));
+        }
+ 
+        public void NowServing(int? nowServing = 0)
+        {
+            SessionHelper.Set("NowServing", nowServing.ToString());
         }
 
         // See https://stackoverflow.com/questions/18448637/how-to-get-current-user-and-how-to-use-user-class-in-mvc5
@@ -34,11 +41,6 @@ namespace OPIDDaily.Controllers
             ApplicationUser user = userManager.FindByNameAsync(userName).Result;
 
             return user.AgencyId;
-        }
-
-        public void NowServing(int? nowServing = 0)
-        {
-            SessionHelper.Set("NowServing", nowServing.ToString());
         }
 
         public ActionResult ManageClients()
@@ -155,7 +157,7 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
-        public JsonResult GetDependents(int id, string sord, int page, int rows)
+        public JsonResult GetDependents(int id, int page, int rows)
         {
             List<ClientViewModel> dependents = Clients.GetDependents(id);
 
@@ -196,8 +198,8 @@ namespace OPIDDaily.Controllers
         public JsonResult GetVisitHistory(int page, int rows)
         {
             int nowServing = NowServing();
+           
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
-
             int pageIndex = page - 1;
             int pageSize = rows;
             int totalRecords = visits.Count;
@@ -238,7 +240,50 @@ namespace OPIDDaily.Controllers
             Visits.DeleteVisit(nowServing, id);
             return "Success";
         }
-        
+
+        public void NewVisitId(int vid)
+        {
+        }
+
+        public JsonResult GetVisitNotes(int id, int page, int rows)
+        {
+            int nowServing = NowServing();
+            List<VisitNoteModel> visitNotes = Visits.GetVisitNotes(nowServing, -id);
+
+            var jsonData = new
+            {
+                total = 1,
+                page = page,
+                records = visitNotes.Count,
+                rows = visitNotes
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);  
+        }
+
+        public string AddVisitNote(int vid, string side, VisitNoteModel vnm)
+        {
+            int nowServing = NowServing();
+                      
+          //  Log.Debug(string.Format("NowServing = {0}, vid = {1}, side = {2}", nowServing, vid, side));
+
+            Visits.AddVisitNote(nowServing, vid, side, vnm);
+            DailyHub.Refresh();
+            return "Success";
+        }
+
+        public string EditVisitNote(VisitNoteModel vnm)
+        {
+            Visits.EditVisitNote(vnm);
+            return "Success";
+        }
+
+        public string DeleteVisitNote(int id)
+        {
+            Visits.DeleteVisitNote(id);
+            return "Success";
+        }
+
         protected static void ServiceTicketBackButtonHelper(string mode, RequestedServicesViewModel rsvm)
         {
             switch (mode)

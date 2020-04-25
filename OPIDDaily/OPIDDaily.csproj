@@ -317,6 +317,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202003241922348_GoldCard.Designer.cs">
       <DependentUpon>202003241922348_GoldCard.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202004241959520_ColorCoding.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202004241959520_ColorCoding.Designer.cs">
+      <DependentUpon>202004241959520_ColorCoding.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -347,6 +351,7 @@
     <Compile Include="Models\RoleViewModel.cs" />
     <Compile Include="Models\SearchParameters.cs" />
     <Compile Include="Models\SpecialReferralViewModel.cs" />
+    <Compile Include="Models\VisitNoteModel.cs" />
     <Compile Include="Models\VisitViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -1011,6 +1016,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202003241922348_GoldCard.resx">
       <DependentUpon>202003241922348_GoldCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202004241959520_ColorCoding.resx">
+      <DependentUpon>202004241959520_ColorCoding.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

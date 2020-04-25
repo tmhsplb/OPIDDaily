@@ -64,6 +64,19 @@ namespace OPIDDaily.DAL
 
         private static ClientViewModel ClientEntityToClientViewModel(Client client)
         {
+            string msg = string.Empty;
+
+            if (!string.IsNullOrEmpty(client.Msgs))
+            {
+                int separatorIndex = client.Msgs.IndexOf(":");
+
+                if (separatorIndex >= 0)
+                {
+                    // msg is the first message in the string client.Msgs
+                    msg = client.Msgs.Substring(0, separatorIndex);
+                }  
+            }
+
             ClientViewModel cvm = new ClientViewModel
             {
                 Id = client.Id,
@@ -86,6 +99,10 @@ namespace OPIDDaily.DAL
                 XID = (client.XID == true ? "Y" : string.Empty),
                 XBC = (client.XBC == true ? "Y" : string.Empty),
              //   History = (hasHistory ? "Y" : string.Empty),
+
+                MSG = msg,
+                Msgs = client.Msgs,
+
                 Notes = client.Notes
             };
 
@@ -107,6 +124,7 @@ namespace OPIDDaily.DAL
             client.PND = (cvm.PND.Equals("Y") ? true : false);
             client.XID = (cvm.XID.Equals("Y") ? true : false);
             client.XBC = (cvm.XBC.Equals("Y") ? true : false);
+            client.Msgs = cvm.Msgs;
             client.Notes = cvm.Notes;
         }
 
@@ -202,7 +220,10 @@ namespace OPIDDaily.DAL
             {
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
 
-                // A dashboard client will have c.ServiceDate != c.Expiry
+                // A dashboard client will 
+                //    come from an agency: c.AgencyId != 0
+                //    be a head of household: c.HH == 0
+                //    be unexpired: c.ServiceDate != c.Expiry
                 List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry).ToList();
 
                 foreach (Client client in clients)
@@ -515,26 +536,26 @@ namespace OPIDDaily.DAL
             {
                 Client client = opiddailycontext.Clients.Find(cvm.Id);
                
-                // cvm.Stage == null for case manager clients
-                if (string.IsNullOrEmpty(cvm.Stage))
-                {
-                    cvm.Stage = "Screened";
-                    if (cvm.PND == null)
-                    {
-                        cvm.PND = (client.PND ? "Y" : string.Empty);
-                    }
-                    if (cvm.XID == null)
-                    {
-                        cvm.XID = (client.XID ? "Y" : string.Empty);
-                    }
-                    if (cvm.XBC == null)
-                    {
-                        cvm.XBC = (client.XBC ? "Y" : string.Empty);
-                    }
-                }
-
                 if (client != null)
                 {
+                    // cvm.Stage == null for case manager clients
+                    if (string.IsNullOrEmpty(cvm.Stage))
+                    {
+                        cvm.Stage = "Screened";
+                        if (cvm.PND == null)
+                        {
+                            cvm.PND = (client.PND ? "Y" : string.Empty);
+                        }
+                        if (cvm.XID == null)
+                        {
+                            cvm.XID = (client.XID ? "Y" : string.Empty);
+                        }
+                        if (cvm.XBC == null)
+                        {
+                            cvm.XBC = (client.XBC ? "Y" : string.Empty);
+                        }
+                    }
+
                     Client headofhousehold = opiddailycontext.Clients.Find(client.HH);
 
                     if (headofhousehold != null)
@@ -583,37 +604,61 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static void PrependStageChangeMsg(ClientViewModel cvm, string clientMsgs)
+        {
+            string msg = string.Format("StageChange:{0}", cvm.Stage);
+
+            // clientMsgs is a comma separated list of messages
+            // Example: clientMsgs = "FromOPID:123588,FromAgency:123587"
+            if (string.IsNullOrEmpty(clientMsgs))
+            {
+                cvm.Msgs = msg;
+            }
+            else
+            {
+                cvm.Msgs = string.Format("{0},{1}", msg, clientMsgs);
+            }   
+        }
+
         public static int EditClient(ClientViewModel cvm)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
                 Client client = opidcontext.Clients.Find(cvm.Id);
-
-                // cvm.Stage == null for case manager clients
-                if (string.IsNullOrEmpty(cvm.Stage))
-                {
-                    cvm.Stage = "Screened";
-
-                    if (cvm.PND == null)
-                    {
-                        cvm.PND = (client.PND ? "Y" : string.Empty);
-                    }
-
-                    if (cvm.XID == null)
-                    {
-                        cvm.XID = (client.XID ? "Y" : string.Empty);
-                    }
-
-                    if (cvm.XBC == null)
-                    {
-                        cvm.XBC = (client.XBC ? "Y" : string.Empty);
-                    }
-                }
-
+ 
                 if (client != null)
                 {
+                    if (client.Stage != cvm.Stage)
+                    {
+                       // There as been a stage transition
+                       PrependStageChangeMsg(cvm, client.Msgs);
+                    }
+
                     // Disable automatic stage transitioning
                     // StageTransition(cvm, client);
+                    ClientViewModelToClientEntity(cvm, client);
+
+                    opidcontext.SaveChanges();
+                    return client.Id;
+                }
+
+                return 0;
+            }
+        }
+
+        public static int EditMyClient(ClientViewModel cvm)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                Client client = opidcontext.Clients.Find(cvm.Id);
+              
+                if (client != null)
+                {
+                    cvm.Stage = client.Stage;
+                    cvm.PND = (client.PND ? "Y" : string.Empty);
+                    cvm.XID = (client.XID ? "Y" : string.Empty);
+                    cvm.XBC = (client.XBC ? "Y" : string.Empty);
+
                     ClientViewModelToClientEntity(cvm, client);
 
                     opidcontext.SaveChanges();

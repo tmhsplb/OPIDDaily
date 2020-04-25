@@ -26,7 +26,7 @@
            {key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: {rows: '2', columns: '10' }  }
     ],
     pager: '#clientsPager',
-    rowNum: 5, // 25,
+    rowNum: 25,
 
         onSelectRow: function (nowServing) {
             if (nowServing == null || nowServing == lastServed) {

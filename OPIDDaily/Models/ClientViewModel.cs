@@ -56,6 +56,10 @@ namespace OPIDDaily.Models
         public DateTime BackOffice { get; set; }
 
         public DateTime Done { get; set; }
+
+        public string MSG { get; set; }
+
+        public string Msgs { get; set; }
                 
         public string Notes { get; set; }
     }

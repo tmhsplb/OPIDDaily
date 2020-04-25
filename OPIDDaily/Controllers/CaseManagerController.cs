@@ -64,6 +64,17 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
+        public string EditMyClient(ClientViewModel cvm)
+        {
+            int id = Clients.EditMyClient(cvm);
+
+            // Edited client becomes the client being served.
+            SessionHelper.Set("NowServing", id.ToString());
+
+            DailyHub.Refresh();
+            return "Success";
+        }
+
         public string DeleteMyClient(int id)
         {
             string trainingClients = Config.TrainingClients;

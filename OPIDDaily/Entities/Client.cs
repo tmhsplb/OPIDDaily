@@ -52,6 +52,8 @@ namespace OpidDailyEntities
 
         public string Zip { get; set; }
 
+        public string Msgs { get; set; }
+
         public string Notes { get; set; }
 
         public DateTime Screened { get; set; }

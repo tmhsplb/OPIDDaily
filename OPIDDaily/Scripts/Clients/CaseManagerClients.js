@@ -6,13 +6,13 @@ $("#clientsGrid").jqGrid({
     datatype: "json",
     pageable: true,
     mtype: "Get",
-    colNames: ['Id', 'Intls', 'Added', 'Expires', 'Stage', 'H', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
+    colNames: ['Id', 'Intls', 'Added', 'Expires', 'Stage', 'H', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'MSG', 'Notes'],
     colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 55, editable: true, sortable: true, search: false },
         { key: false, align: 'center', name: 'ServiceDate', index: 'ServiceDate', formatter: 'date', width: 120, editable: false, sortable: true, search: false },
         { key: false, align: 'center', name: 'Expiry', index: 'Expiry', formatter: 'date', width: 120, editable: false, sortable: true, search: false },
-        { key: false, name: 'Stage', index: 'Stage', width: 100, editable: false, edittype: 'select', editoptions: { value: { 'CheckedIn': 'CheckedIn', 'Interviewing': 'Interviewing', 'BackOffice': 'BackOffice', 'Done': 'Done' } }, sortable: false, search: false },
+        { key: false, name: 'Stage', index: 'Stage', width: 100, formatter: rowColorFormatter, editable: false, edittype: 'select', editoptions: { value: { 'CheckedIn': 'CheckedIn', 'Interviewing': 'Interviewing', 'BackOffice': 'BackOffice', 'Done': 'Done' } }, sortable: false, search: false },
         { key: false, name: 'HeadOfHousehold', index: 'HeadOfHousehold', width: 35, align: 'center', editable: false, sortable: false, search: false },
         { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: false },
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
@@ -23,6 +23,7 @@ $("#clientsGrid").jqGrid({
         { name: 'PND', index: 'PND', align: 'center', width: 55, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { name: 'XID', index: 'XID', align: 'center', width: 50, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" } },
         { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" }, },
+        { key: false, hidden: true, name: 'MSG', index: 'MSG', width: 80, formatter: rowColorFormatter, editable: false, sortable: false, search: false },
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
     ],
     pager: '#clientsPager',
@@ -45,6 +46,13 @@ $("#clientsGrid").jqGrid({
     height: "100%",
     viewrecords: true,
     loadonce: false,
+
+    gridComplete: function () {
+        for (var i = 0; i < rowsToColor.length; i++) {
+            //  alert("colored row: " + rowsToColor[i].rowId + " " + rowsToColor[i].rowColor);
+            $("#" + rowsToColor[i].rowId).css("color", rowsToColor[i].rowColor)
+        }
+    },
 
     caption: 'Clients',
     emptyrecords: 'No records to display',
@@ -150,7 +158,7 @@ $("#clientsGrid").jqGrid({
 jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: true, del: true, search: false, refresh: false },
     {
         zIndex: 100,
-        url: "EditClient", // "@Url.Action("EditClient", "CaseManager")",
+        url: "EditMyClient", // "@Url.Action("EditClient", "CaseManager")",
         closeOnEscape: true,
         closeAfterEdit: true,
         recreateForm: true,
@@ -187,6 +195,20 @@ jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: tru
             }
         }
     });
+
+// See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
+function rowColorFormatter(cellValue, options, rowObject) {
+    if (cellValue != null && cellValue == "FromAgency") {
+        rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#FF0000" };  // red
+    } else if (cellValue != null && cellValue == "FromOPID") {
+        // alert("cellValue == FromOPID");
+        rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#00FF00" };  // green
+    } else if (cellValue != null && cellValue == "StageChange") {
+        // alert("cellValue == FromOPID");
+        rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#0000FF" };  // blue
+    }
+    return cellValue;
+}
 
 // http://www.trirand.com/blog/?page_id=393/help/how-to-use-add-form-dialog-popup-window-set-position
 $.extend($.jgrid.edit, {
