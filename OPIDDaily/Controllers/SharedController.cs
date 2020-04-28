@@ -547,17 +547,18 @@ namespace OPIDDaily.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult PrepareExpressClient(RequestedServicesViewModel rsvm)
         {
+            int nowServing = NowServing();
+            Clients.StoreRequestedServicesAndSupportingDocuments(nowServing, rsvm);
+
             // This is the POST method of
             //   ~/Views/FrontDesk/ExpressClient.cshtml
             // If the NowServing client comes from the front desk, then the client will
             // have no supporting documents and the supporting documents section of the service
-            // ticket will simply be a worksheet for the interviewr to fill in. If the NowServing
+            // ticket will simply be a worksheet for the interviewer to fill in. If the NowServing
             // client comes from the Dashboard, then the client will have supporting documents.
             // So in either case, passing rsvm instead of null as the second argument of
             // GetClient is correct.
-            int nowServing = NowServing();
-            Client client = Clients.GetClient(nowServing, rsvm);  
-            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
+            Client client = Clients.GetClient(nowServing, rsvm);     
             PrepareClientNotes(client, rsvm);
             
             DateTime today = Extras.DateTimeToday();
@@ -577,17 +578,18 @@ namespace OPIDDaily.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult PrepareExistingClient(RequestedServicesViewModel rsvm)
         {
+            int nowServing = NowServing();
+            Clients.StoreRequestedServicesAndSupportingDocuments(nowServing, rsvm);
+
             // This is the POST method of
             //   ~/Views/FrontDesk/ExistingClient.cshtml
             // If the NowServing client comes from the front desk, then the client will
             // have no supporting documents and the supporting documents section of the service
-            // ticket will simply be a worksheet for the interviewr to fill in. If the NowServing 
+            // ticket will simply be a worksheet for the interviewer to fill in. If the NowServing 
             // client comes from the Dashboard, then the client will have supporting documents.
             // So in either case, passing rsvm instead of null as the second argument of
             // GetClient is correct.
-            int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, rsvm);  
-            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
             
             DateTime today = Extras.DateTimeToday();

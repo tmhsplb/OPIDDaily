@@ -87,6 +87,8 @@ namespace OpidDailyEntities
 
         public bool Numident { get; set; }
 
+        public string RequestedDocument { get; set; }
+
         // Supporting documents
         public bool SDBC { get; set; }
 

@@ -109,9 +109,11 @@ namespace OPIDDaily.Models
         public bool ReplacementTDLEligible { get; set; }
         */
 
-        [Display(Name = "Numident")]
+        [Display(Name = "Vitals Check")]
         public bool Numident { get; set; }
 
+        public string RequestedDocument { get; set; }
+                
         public bool TrackingOnly { get; set; }
 
         public string Notes { get; set; }

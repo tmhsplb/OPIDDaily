@@ -321,6 +321,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202004241959520_ColorCoding.Designer.cs">
       <DependentUpon>202004241959520_ColorCoding.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202004272031377_RequestedDocument.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202004272031377_RequestedDocument.Designer.cs">
+      <DependentUpon>202004272031377_RequestedDocument.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -928,6 +932,10 @@
     <Content Include="Views\BackOffice\ExistingClient.cshtml" />
     <Content Include="Views\BackOffice\ExpressClient.cshtml" />
     <Content Include="Views\BackOffice\PrintExistingClientVisits.cshtml" />
+    <Content Include="Views\Shared\_CaseManagerRequestedServicesForm.cshtml" />
+    <Content Include="Views\Shared\_RequestedServicesForm.cshtml" />
+    <Content Include="Views\Shared\_HiddenSupportingDocuments.cshtml" />
+    <Content Include="Views\Shared\_ReadOnlyRequestedServicesForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
@@ -1019,6 +1027,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202004241959520_ColorCoding.resx">
       <DependentUpon>202004241959520_ColorCoding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202004272031377_RequestedDocument.resx">
+      <DependentUpon>202004272031377_RequestedDocument.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

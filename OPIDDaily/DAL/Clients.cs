@@ -33,6 +33,7 @@ namespace OPIDDaily.DAL
                     rsvm.NewTDL = client.NewTDL;
                     rsvm.ReplacementTDL = client.ReplacementTDL;
                     rsvm.Numident = client.Numident;
+                    rsvm.RequestedDocument = client.RequestedDocument;
                     rsvm.Notes = client.Notes;
 
                     rsvm.TrackingOnly = NoServicesRequested(rsvm);
@@ -962,6 +963,7 @@ namespace OPIDDaily.DAL
                 client.NewTDL = rsvm.NewTDL;
                 client.ReplacementTDL = rsvm.ReplacementTDL;
                 client.Numident = rsvm.Numident;
+                client.RequestedDocument = rsvm.RequestedDocument;
 
                 rsvm.TrackingOnly = NoServicesRequested(rsvm);
                 
