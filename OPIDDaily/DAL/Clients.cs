@@ -220,11 +220,42 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
+                DateTime today = Extras.DateTimeToday();
 
                 // A dashboard client will 
                 //    come from an agency: c.AgencyId != 0
                 //    be a head of household: c.HH == 0
-                //    be unexpired: c.ServiceDate != c.Expiry
+                //    be not a same day client: c.ServiceDate != c.Expiry
+                //    be unexpired: today <= c.Expiry
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry).ToList();
+
+                foreach (Client client in clients)
+                {
+                    clientCVMS.Add(ClientEntityToClientViewModel(client));
+                }
+
+                if (!sps._search)
+                {
+                    // if not performing filtered search (example, when refreshing) then
+                    // just return the required view models
+                    return clientCVMS;
+                }
+
+                return GetFilteredDashboardClients(sps, clientCVMS);
+            }
+        }
+
+        public static List<ClientViewModel> GetDemoDashboardClients(SearchParameters sps)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
+
+                // A demo dashboard client will 
+                //    come from an agency: c.AgencyId != 0
+                //    be a head of household: c.HH == 0
+                //    be not a same day client: c.ServiceDate != c.Expiry
+                //    may be expired, i.e. expiry lies in the past
                 List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry).ToList();
 
                 foreach (Client client in clients)

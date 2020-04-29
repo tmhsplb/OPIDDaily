@@ -161,6 +161,31 @@ namespace OPIDDaily.Controllers
             return View();
         }
 
+        public JsonResult GetDemoDashboard(SearchParameters sps, int page, int? rows = 25)
+        {
+            List<ClientViewModel> clients = Clients.GetDemoDashboardClients(sps);
+
+            int pageIndex = page - 1;
+            int pageSize = (int)rows;
+
+            int totalRecords = clients.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+
+            clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            clients = clients.OrderBy(c => c.Expiry).ToList();
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = clients
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public string EditClientServiceDate(ClientViewModel cvm)
         {

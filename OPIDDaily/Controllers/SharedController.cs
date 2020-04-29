@@ -157,7 +157,7 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
-        public JsonResult GetDependents(int id, int page, int rows)
+        public JsonResult GetDependents(int id, int page)
         {
             List<ClientViewModel> dependents = Clients.GetDependents(id);
 
@@ -239,10 +239,6 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             Visits.DeleteVisit(nowServing, id);
             return "Success";
-        }
-
-        public void NewVisitId(int vid)
-        {
         }
 
         public JsonResult GetVisitNotes(int id, int page, int rows)
