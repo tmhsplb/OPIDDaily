@@ -41,6 +41,14 @@ namespace OPIDDaily
             }
         }
 
+        public static string WorkingTrainingConnectionString
+        {
+            get
+            {
+                return "Server=7bcbd8b7-5eb2-4fd5-9046-abb401405c20.sqlserver.sequelizer.com;Database=db7bcbd8b75eb24fd59046abb401405c20;User ID=gosvlqzhyvsoquuf;Password=GJMBHbiCMyNcCG2ib3mScPk2zmEAxYJtn3HPqN7ozpkb73Wx8JFSJfj2yTbvCPfW;";
+            }
+        }
+
         public static string WorkingStagingConnectionString
         {
             get
@@ -78,26 +86,6 @@ namespace OPIDDaily
             get
             {
                 return ConfigurationManager.AppSettings["Release"];
-            }
-        }
-
-        public static string GetRelease()
-        {
-            // return ConfigurationManager.AppSettings ["Release"];  // this should work, but it doesn't
-
-            string connectionString = Config.ConnectionString;
-
-            if (connectionString.Equals(Config.WorkingDesktopConnectionString))
-            {
-                return "Desktop";
-            }
-            else if (connectionString.Equals(Config.WorkingStagingConnectionString))
-            {
-                return "Staging";
-            }
-            else
-            {
-                return "Production";
             }
         }
 

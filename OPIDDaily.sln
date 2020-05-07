@@ -10,6 +10,7 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 		Staging|Any CPU = Staging|Any CPU
+		Training|Any CPU = Training|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A9ECE01C-8E94-4798-B40E-A5AACB69576C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -18,6 +19,8 @@ Global
 		{A9ECE01C-8E94-4798-B40E-A5AACB69576C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A9ECE01C-8E94-4798-B40E-A5AACB69576C}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
 		{A9ECE01C-8E94-4798-B40E-A5AACB69576C}.Staging|Any CPU.Build.0 = Staging|Any CPU
+		{A9ECE01C-8E94-4798-B40E-A5AACB69576C}.Training|Any CPU.ActiveCfg = Training|Any CPU
+		{A9ECE01C-8E94-4798-B40E-A5AACB69576C}.Training|Any CPU.Build.0 = Training|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
