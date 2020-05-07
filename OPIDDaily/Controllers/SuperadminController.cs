@@ -30,6 +30,9 @@ namespace OPIDDaily.Controllers
                 case "Staging":
                     workingConnectionString = Config.WorkingStagingConnectionString;
                     break;
+                case "Training":
+                    workingConnectionString = Config.WorkingTrainingConnectionString;
+                    break;
                 case "Production":
                     workingConnectionString = Config.WorkingProductionConnectionString;
                     break;

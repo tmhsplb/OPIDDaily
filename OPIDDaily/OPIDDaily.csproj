@@ -940,9 +940,9 @@
     <Content Include="Views\Shared\_RequestedServicesForm.cshtml" />
     <Content Include="Views\Shared\_HiddenSupportingDocuments.cshtml" />
     <Content Include="Views\Shared\_ReadOnlyRequestedServicesForm.cshtml" />
-    <None Include="Web.Training.config">
+    <Content Include="Web.Training.config">
       <DependentUpon>Web.config</DependentUpon>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
