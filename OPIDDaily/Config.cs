@@ -20,7 +20,9 @@ namespace OPIDDaily
             get
             {
                 // The value of SQLSERVER_CONNECTION_STRING configured on Web.config is overwritten at AppHarbor deployment time.
-                return ConfigurationManager.AppSettings["SQLSERVER_CONNECTION_STRING"];
+               // return ConfigurationManager.AppSettings["SQLSERVER_CONNECTION_STRING"];
+               // return ConfigurationManager.AppSettings["OpidDailyConnectionString"];
+                return ConfigurationManager.ConnectionStrings["OpidDailyConnectionString"].ToString();
             }
         }
 
