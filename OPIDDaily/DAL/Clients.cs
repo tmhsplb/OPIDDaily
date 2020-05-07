@@ -114,6 +114,7 @@ namespace OPIDDaily.DAL
         {
             client.ServiceTicket = cvm.ServiceTicket;
             client.Stage = cvm.Stage;
+            client.Expiry = (cvm.Expiry != default(DateTime) ? cvm.Expiry : client.Expiry);;
             client.LastName = cvm.LastName;
             client.FirstName = cvm.FirstName;
             client.MiddleName = cvm.MiddleName;
