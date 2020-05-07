@@ -11,6 +11,8 @@ namespace OPIDDaily.DAL
 {
     public class Agencies
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(Agencies));
+
         public static SelectList GetAgenciesSelectList(int agencyId)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
@@ -51,9 +53,13 @@ namespace OPIDDaily.DAL
         {
             List<AgencyViewModel> agenciesAVMS = new List<AgencyViewModel>();
 
+            Log.Debug("Inside Agencies.GetAgencies");
+
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
                 List<Agency> agencies = opiddailycontext.Agencies.ToList();
+
+                Log.Debug(string.Format("agencies.Count = {0}", agencies.Count));
 
                 agencies = agencies.OrderBy(a => a.AgencyId).ToList();
 
