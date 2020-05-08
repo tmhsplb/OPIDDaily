@@ -113,47 +113,35 @@ namespace OPIDDaily.DAL
 
         public static List<AgencyViewModel> GetAgencies(string sidx, string sord)
         {
-            Log.Debug("Inside Agencies.GetAgencies");
 
-            try
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+                List<AgencyViewModel> avm = new List<AgencyViewModel>();
+                List<Agency> agencies = opiddailycontext.Agencies.ToList();
+ 
+                foreach (Agency agency in agencies)
                 {
-                    List<AgencyViewModel> avm = new List<AgencyViewModel>();
-                    List<Agency> agencies = opiddailycontext.Agencies.ToList();
-
-                    Log.Debug(string.Format("agencies.Count = {0}", agencies.Count));
-
-                    foreach (Agency agency in agencies)
-                    {
-                        avm.Add(AgencyToAgencyViewModel(agency));
-                    }
-
-                    switch (sidx)
-                    {
-                        case "AgencyName":
-                            if (sord.ToUpper().Equals("DESC"))
-                            {
-                                avm = avm.OrderByDescending(a => a.AgencyName).ToList();
-                            }
-                            else
-                            {
-                                avm = avm.OrderBy(a => a.AgencyName).ToList();
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-
-                    return avm;
+                    avm.Add(AgencyToAgencyViewModel(agency));
                 }
-            }
-            catch (Exception e)
-            {
-                Log.Error(string.Format("Couldn't open database: {0}", e.Message));
-            }
 
-            return null;
+                switch (sidx)
+                {
+                    case "AgencyName":
+                        if (sord.ToUpper().Equals("DESC"))
+                        {
+                            avm = avm.OrderByDescending(a => a.AgencyName).ToList();
+                        }
+                        else
+                        {
+                            avm = avm.OrderBy(a => a.AgencyName).ToList();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                return avm;
+            }
         }
 
         public static void AddAgency(AgencyViewModel avm)

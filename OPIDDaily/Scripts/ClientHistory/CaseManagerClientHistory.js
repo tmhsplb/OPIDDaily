@@ -12,7 +12,7 @@ $("#historyGrid").jqGrid({
         { key: false, name: 'Check', index: 'Check', width: 80, editable: false, sortable: false, search: false },
         { key: false, name: 'Status', index: 'Status', width: 100, editable: false, edittype: 'select', editoptions: { value: { '': '', 'Cleared': 'Cleared', 'Voided': 'Voided', 'Voided/No Reissue': 'Voided/No Reissue', 'Voided/Resissued': 'Voided/Reissued', 'Voided/Replaced': 'Voided/Replaced', 'Used': 'Used', 'Not Used': 'Not Ussed' } }, sortable: false, search: false },
         { key: false, hidden: true, name: 'Sender', index: 'Sender', formatter: rowColorFormatter, editable: false, sortable: false, search: false },
-        { key: false, hidden: true, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+        { key: false, hidden: true, name: 'Notes', index: 'Notes', width: 150, editable: false, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
     ],
     pager: '#historyPager',
     rowNum: 25,
@@ -109,21 +109,8 @@ $("#historyGrid").jqGrid({
     } // close subgridRowExpanded
 })
 
-jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: false, del: false, search: false, refresh: false },
-     {
-        zIndex: 100,
-        url: "EditVisit", // "@Url.Action("EditMyClientVisitHistory", "CaseManager")",
-        closeOnEscape: true,
-        closeAfterEdit: true,
-        recreateForm: true,
-
-        afterComplete: function (response) {
-            if (response.responseText) {
-                //  alert("CaseManager: " + response.responseText);
-            }
-        }
-    }
-)
+jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: false, add: false, del: false, search: false, refresh: false })
+      
 
 // See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
 function rowColorFormatter(cellValue, options, rowObject) {

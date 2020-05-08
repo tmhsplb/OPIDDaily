@@ -36,15 +36,11 @@ namespace OPIDDaily.Controllers
         }
         public JsonResult GetAgencies(int page, int rows)
         {
-            Log.Debug("Before call to Agencies.GetAgencies");
-
             List<AgencyViewModel> agencies = Agencies.GetAgencies("AgencyName", "ASC");
             int pageIndex = page - 1;
             int pageSize = rows;
             int totalRecords = agencies.Count;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
-
-            Log.Debug(string.Format("After call to Agencies.GetAgencies. agencies.Count = {0}", agencies.Count));
 
             agencies = agencies.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
