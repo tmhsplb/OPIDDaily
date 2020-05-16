@@ -19,6 +19,8 @@ namespace OPIDDaily.Models
 
         public string Stage { get; set; }
         
+        public string Conversation { get; set; }
+
         public string HeadOfHousehold { get; set; }
         
         public string LastName { get; set; }

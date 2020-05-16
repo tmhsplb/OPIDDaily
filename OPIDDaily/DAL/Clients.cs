@@ -86,6 +86,7 @@ namespace OPIDDaily.DAL
                 ServiceTicket = client.ServiceTicket,
                 Stage = client.Stage,
                 WaitTime = client.WaitTime,
+                Conversation = (client.Conversation ? "Y" : string.Empty),
                 HeadOfHousehold = (client.HeadOfHousehold ? "Y" : string.Empty),
                 LastName = client.LastName,
                 FirstName = client.FirstName,
@@ -114,6 +115,7 @@ namespace OPIDDaily.DAL
         {
             client.ServiceTicket = cvm.ServiceTicket;
             client.Stage = cvm.Stage;
+            client.Conversation = (client.Conversation ? true : (string.IsNullOrEmpty(cvm.Conversation) ? false : true));
             client.Expiry = (cvm.Expiry != default(DateTime) ? cvm.Expiry : client.Expiry);;
             client.LastName = cvm.LastName;
             client.FirstName = cvm.FirstName;
@@ -246,6 +248,105 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static TextMsgViewModel TextMsgToTextMsgViewModel(TextMsg textMsg)
+        {
+            return new TextMsgViewModel
+            {
+                Id = textMsg.Id,
+                Date = textMsg.Date,
+                From = textMsg.From,
+                To = textMsg.To,
+                Msg = textMsg.Msg
+            };
+        }
+
+        private static TextMsg TextMsgViewModelToTextMsg(TextMsgViewModel textMsg)
+        {
+            return new TextMsg
+            {
+                Date = Extras.DateTimeToday(),
+                From = textMsg.From,
+                To = textMsg.To,
+                Msg = textMsg.Msg
+            };
+        }
+
+        private static void PrependMsg(Client client, string side)
+        {
+            string msg = string.Format("From{0}:0", side);
+
+            // client.Msgs will be a comma separated list of messages
+            // Example: client.Msgs = "FromOPID:0,FromFrontDesk:0"
+            if (string.IsNullOrEmpty(client.Msgs))
+            {
+                client.Msgs = msg;
+            }
+            else
+            {
+                client.Msgs = string.Format("{0},{1}", msg, client.Msgs);
+            }
+
+        }
+
+        public static void AddTextMsg(int nowServing, string side, TextMsgViewModel tmvm)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+
+                if (client != null)
+                {
+                    PrependMsg(client, side);
+                    TextMsg textMsg = TextMsgViewModelToTextMsg(tmvm);
+                    opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
+
+                    client.TextMsgs.Add(textMsg);
+                    opiddailycontext.SaveChanges();
+                }
+            }
+        }
+
+        public static void EditTextMsg(int nowServing, TextMsgViewModel tmvm)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+
+                if (client != null)
+                {
+                    opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
+                    TextMsg textMsg = client.TextMsgs.Where(t => t.Id == tmvm.Id).SingleOrDefault();
+
+                    if (textMsg != null)
+                    {
+                        textMsg.From = tmvm.From;
+                        textMsg.To = tmvm.To;
+                        textMsg.Msg = tmvm.Msg;
+                        opiddailycontext.SaveChanges();
+                    }                  
+                }
+            }
+        }
+
+        public static List<TextMsgViewModel> GetConversation(int nowServing)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+
+                opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
+
+                List<TextMsgViewModel> texts = new List<TextMsgViewModel>();
+
+                foreach (TextMsg textMsg in client.TextMsgs)
+                {
+                    texts.Add(TextMsgToTextMsgViewModel(textMsg));
+                }
+
+                return texts;
+            }
+        }
+
         public static List<ClientViewModel> GetDemoDashboardClients(SearchParameters sps)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
@@ -310,6 +411,7 @@ namespace OPIDDaily.DAL
                     ServiceDate = today,
                     ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
                     Stage = cvm.Stage,
+                    Conversation = (string.IsNullOrEmpty(cvm.Conversation) ? false : true),
                     FirstName = cvm.FirstName,
                     MiddleName = cvm.MiddleName,
                     LastName = cvm.LastName,

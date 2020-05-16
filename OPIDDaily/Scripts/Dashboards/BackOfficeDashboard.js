@@ -6,13 +6,14 @@ $("#dashboardGrid").jqGrid({
     datatype: "json",
     pageable: true,
     mtype: "Get",
-    colNames: ['Id', 'CM', 'Agency', 'Expires', 'Stage', 'H', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'MSG', 'Notes'],
+    colNames: ['Id', 'CM', 'Agency', 'Expires', 'Stage', 'C', 'H', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'MSG', 'Notes'],
     colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
         { key: false, name: 'AgencyName', index: 'AgencyName', width: 150, editable: false, search: true }, // searchoptions:{sopt:['bw']} },
         { key: false, align: 'center', name: 'Expiry', index: 'Expiry', formatter: 'date', width: 120, editable: true, sortable: true, search: false },
         { key: false, name: 'Stage', index: 'Stage', width: 100, formatter: rowColorFormatter, editable: true, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing': 'Interviewing', 'BackOffice': 'BackOffice', 'Done': 'Done' } }, sortable: false, search: false },
+        { key: false, name: 'Conversation', index: 'Conversation', width: 35, align: 'center', editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, sortable: false, search: false },
         { key: false, name: 'HeadOfHousehold', index: 'HeadOfHousehold', width: 35, align: 'center', editable: false, sortable: false, search: false },
         { key: false, name: 'LastName', index: 'LastName', width: 150, editable: true, sortable: false, search: true },
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: true },
@@ -35,11 +36,24 @@ $("#dashboardGrid").jqGrid({
            // alert("nowServing is null or nowServing == lastServed!");
         } else {
             lastServed = nowServing;
+
+            var dashboard = jQuery("#dashboardGrid"),
+                selRowId = dashboard.jqGrid('getGridParam', 'selrow'),
+                hasConversation = dashboard.jqGrid('getCell', selRowId, 'Conversation');
+
+            if (hasConversation == "Y") {
+                jQuery("#conversation").removeClass("hideConversation");
+            } else {
+                jQuery("#conversation").addClass("hideConversation");
+            }
+            
             jQuery("#dashboardGrid").jqGrid('setGridParam',
                 {
                     postData: { nowServing: nowServing },
-                    url: "NowServing", // "@Url.Action("NowServing", "BackOffice")"
-                    }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                    url: "NowConversing", // "@Url.Action("NowServing", "BackOffice")"
+                }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+
+            
         }
     },
 
@@ -149,7 +163,7 @@ jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add:
 
 // See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
 function rowColorFormatter(cellValue, options, rowObject) {
-    if (cellValue != null && cellValue == "FromAgency") {
+    if (cellValue != null && (cellValue == "FromAgency" || cellValue == "FromFrontDesk" || cellValue == "FromInterviewer")) {
         // alert("cellValue == FromAgency");
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#00FF00" };  // green
     } else if (cellValue != null && cellValue == "FromOPID") {

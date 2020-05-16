@@ -72,6 +72,12 @@ namespace OPIDDaily.Controllers
             SessionHelper.Set("NowServing", id.ToString());
 
             DailyHub.Refresh();
+
+            if (cvm.Conversation.Equals("Y"))
+            {
+                DailyHub.RefreshConversation("Open");
+            }
+
             return "Success";
         }
 

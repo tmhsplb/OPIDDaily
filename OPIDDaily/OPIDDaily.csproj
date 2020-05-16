@@ -325,9 +325,18 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202004272031377_RequestedDocument.Designer.cs">
       <DependentUpon>202004272031377_RequestedDocument.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202005152029597_Conversations.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202005152029597_Conversations.Designer.cs">
+      <DependentUpon>202005152029597_Conversations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202005161356091_TextMsgTo.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202005161356091_TextMsgTo.Designer.cs">
+      <DependentUpon>202005161356091_TextMsgTo.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
+    <Compile Include="Entities\TextMsg.cs" />
     <Compile Include="Entities\Invitation.cs" />
     <Compile Include="Entities\AncientCheck.cs" />
     <Compile Include="Entities\RCheck.cs" />
@@ -355,6 +364,7 @@
     <Compile Include="Models\RoleViewModel.cs" />
     <Compile Include="Models\SearchParameters.cs" />
     <Compile Include="Models\SpecialReferralViewModel.cs" />
+    <Compile Include="Models\TextMsgViewModel.cs" />
     <Compile Include="Models\VisitNoteModel.cs" />
     <Compile Include="Models\VisitViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -658,6 +668,10 @@
     <Content Include="Content\DataTables\css\common.scss" />
     <Content Include="App_Data\Interview Import Me Header.csv" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\Conversation\InterviewerConversation.js" />
+    <Content Include="Scripts\Conversation\FrontDeskConversation.js" />
+    <Content Include="Scripts\Conversation\CaseManagerConversation.js" />
+    <Content Include="Scripts\Conversation\BackOfficeConversation.js" />
     <Content Include="Scripts\ClientHistory\CaseManagerClientHistory.js" />
     <Content Include="Scripts\ClientHistory\BackOfficeClientHistory.js" />
     <Content Include="Scripts\ClientHistory\FrontDeskClientHistory.js" />
@@ -667,6 +681,7 @@
     <Content Include="Scripts\Clients\SuperadminClients.js" />
     <Content Include="Scripts\Dashboards\BackOfficeDashboard.js" />
     <Content Include="Scripts\Dashboards\DemoDashboard.js" />
+    <Content Include="Scripts\Dashboards\InterviewerDashboard.js" />
     <Content Include="Scripts\Dashboards\FrontDeskDashboard.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -749,6 +764,7 @@
     <Content Include="Scripts\HubCode\CaseManagerHubCode.js" />
     <Content Include="Scripts\HubCode\DemoHubCode.js" />
     <Content Include="Scripts\HubCode\FrontDeskDashboardHubCode.js" />
+    <Content Include="Scripts\HubCode\InterviewerDashboardHubCode.js" />
     <Content Include="Scripts\HubCode\FrontDeskHubCode.js" />
     <Content Include="Scripts\HubCode\FrontDeskReviewHubCode.js" />
     <Content Include="Scripts\i18n\grid.locale-ar.js" />
@@ -943,6 +959,7 @@
     <Content Include="Web.Training.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="Views\Interviewer\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
@@ -1037,6 +1054,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202004272031377_RequestedDocument.resx">
       <DependentUpon>202004272031377_RequestedDocument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202005152029597_Conversations.resx">
+      <DependentUpon>202005152029597_Conversations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202005161356091_TextMsgTo.resx">
+      <DependentUpon>202005161356091_TextMsgTo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

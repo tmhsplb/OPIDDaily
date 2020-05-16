@@ -25,7 +25,9 @@ namespace OpidDailyEntities
         public string MiddleName { get; set; }
 
         public string BirthName { get; set; }
-
+        
+        public bool Conversation { get; set; }
+        
         public bool HeadOfHousehold { get; set; }
 
         public int HH { get; set; }
@@ -139,6 +141,8 @@ namespace OpidDailyEntities
         public DateTime Expiry { get; set; }
 
         public bool Active { get; set; }
+
+        public ICollection<TextMsg> TextMsgs { get; set; }
 
         public ICollection<Visit> Visits { get; set; }
     }

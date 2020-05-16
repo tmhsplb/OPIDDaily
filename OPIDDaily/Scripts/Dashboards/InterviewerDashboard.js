@@ -163,10 +163,10 @@ jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add:
 
 // See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
 function rowColorFormatter(cellValue, options, rowObject) {
-    if (cellValue != null && (cellValue == "FromAgency" || cellValue == "FromOPID" || cellValue == "FromInterviewer")) {
+    if (cellValue != null && (cellValue == "FromAgency" || cellValue == "FromOPID" || cellValue == "FromFrontDesk")) {
         // alert("cellValue == FromAgency");
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#00FF00" };  // green
-    } else if (cellValue != null && cellValue == "FromFrontDesk") {
+    } else if (cellValue != null && cellValue == "FromInterviewer") {
         // alert("cellValue == FromOPID");
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#FF0000" };  // red
     } else if (cellValue != null && cellValue == "StageChange") {

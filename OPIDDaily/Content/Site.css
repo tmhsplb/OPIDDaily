@@ -54,3 +54,7 @@ textarea {
     top: 50px;
     left: 0;
 }
+
+.hideConversation {
+    display: none;
+}

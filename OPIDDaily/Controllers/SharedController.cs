@@ -32,6 +32,14 @@ namespace OPIDDaily.Controllers
             SessionHelper.Set("NowServing", nowServing.ToString());
         }
 
+        public void NowConversing(int? nowServing = 0)
+        {
+            SessionHelper.Set("NowServing", nowServing.ToString());
+            Client client = Clients.GetClient((int)nowServing, null);
+            string clientName = Clients.ClientBeingServed(client);
+            DailyHub.RefreshConversation(clientName);
+        }
+
         // See https://stackoverflow.com/questions/18448637/how-to-get-current-user-and-how-to-use-user-class-in-mvc5
         protected int ReferringAgency()
         {
@@ -146,7 +154,13 @@ namespace OPIDDaily.Controllers
             // Edited client becomes the client being served.
             SessionHelper.Set("NowServing", id.ToString());
 
-            DailyHub.Refresh();      
+            DailyHub.Refresh(); 
+            
+            if (cvm.Conversation.Equals("Y"))
+            {
+                DailyHub.RefreshConversation("Open");
+            }
+
             return "Success";
         }
 
@@ -659,6 +673,73 @@ namespace OPIDDaily.Controllers
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
  
             return View("PrintExistingClientVisits", visits);
+        }
+
+        public string AddTextMsg(string side, TextMsgViewModel textMsg)
+        {
+            int nowServing = NowServing();
+
+            if (nowServing != 0)
+            {
+                Clients.AddTextMsg(nowServing, side, textMsg);
+                DailyHub.Refresh();
+
+                Client client = Clients.GetClient(nowServing, null);
+                string clientName = Clients.ClientBeingServed(client);
+                DailyHub.RefreshConversation(clientName);
+                return "Success";
+            }
+
+            return "Failure";
+        }
+
+        public string EditTextMsg(TextMsgViewModel textMsg)
+        {
+            int nowServing = NowServing();
+
+            if (nowServing != 0)
+            {
+                Clients.EditTextMsg(nowServing, textMsg);
+                DailyHub.Refresh();
+
+                Client client = Clients.GetClient(nowServing, null);
+                string clientName = Clients.ClientBeingServed(client);
+                DailyHub.RefreshConversation(clientName);
+                return "Success";
+            }
+
+            return "Failure";
+        }
+
+        public ActionResult GetConversation(int page, int rows)
+        {
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                return null;
+            }
+
+            List <TextMsgViewModel> texts = Clients.GetConversation(nowServing);
+
+            int pageIndex = page - 1;
+            int pageSize = rows;
+            int totalTexts = texts.Count;
+            int totalPages = (int)Math.Ceiling((float)totalTexts / (float)rows);
+
+            texts = texts.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            texts = texts.OrderBy(t => t.Date).ToList();
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page = page,
+                records = texts.Count,
+                rows = texts
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+
         }
 
         public ActionResult ServiceTicket()

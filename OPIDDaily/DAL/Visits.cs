@@ -175,7 +175,7 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                Client client = opiddailycontext.Clients.Where(c => c.Id == nowServing).SingleOrDefault();
+                Client client = opiddailycontext.Clients.Find(nowServing);
 
                 if (client != null)
                 {
@@ -307,7 +307,7 @@ namespace OPIDDaily.DAL
 
             // client.Msgs will be a comma separated list of messages
             // Example: client.Msgs = "FromOPID:123588,FromAgency:123587"
-            // client.Notes is split into an array of meessages in method GetVisits.
+            // client.Msgs is split into an array of meessages in method GetVisits.
             if (string.IsNullOrEmpty(client.Msgs))
             {
                 client.Msgs = msg;
