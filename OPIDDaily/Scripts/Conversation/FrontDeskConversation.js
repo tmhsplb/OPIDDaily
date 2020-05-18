@@ -48,7 +48,7 @@ jQuery("#conversationGrid").jqGrid('navGrid', '#conversationPager', { edit: true
     },
     {
         zIndex: 100,
-        url: "AddTextMsg?side=FrontDesk", 
+        url: "AddTextMsg?sender=FrontDesk", 
         closeOnEscape: true,
         closeAfterAdd: true,
         recreateForm: true,

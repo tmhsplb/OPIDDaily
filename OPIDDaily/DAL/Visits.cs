@@ -301,9 +301,9 @@ namespace OPIDDaily.DAL
             };
         }
 
-        private static void PrependMsg(Client client, string side, int vid)
+        private static void PrependMsg(Client client, string sender, int vid)
         {
-            string msg = string.Format("From{0}:{1}", side, vid);
+            string msg = string.Format("From{0}:{1}", sender, vid);
 
             // client.Msgs will be a comma separated list of messages
             // Example: client.Msgs = "FromOPID:123588,FromAgency:123587"
@@ -319,7 +319,7 @@ namespace OPIDDaily.DAL
             
         }
 
-        public static void AddVisitNote(int nowServing, int vid, string side, VisitNoteModel vnm)
+        public static void AddVisitNote(int nowServing, int vid, string sender, VisitNoteModel vnm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
@@ -327,7 +327,7 @@ namespace OPIDDaily.DAL
                
                 if (client != null)
                 {
-                    PrependMsg(client, side, vid);
+                    PrependMsg(client, sender, vid);
                     
                     Visit visit = VisitNoteModelToVisit(vid, vnm);
 

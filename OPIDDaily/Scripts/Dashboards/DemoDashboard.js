@@ -20,7 +20,7 @@ $("#clientsGrid").jqGrid({
         { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: true, search: false }
     ],
     pager: '#clientsPager',
-    rowNum: 25,
+    rowNum: 20,
 
     onSelectRow: function (nowServing) {
         if (nowServing == null || nowServing == lastServed) {

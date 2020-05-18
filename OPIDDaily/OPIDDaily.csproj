@@ -668,6 +668,7 @@
     <Content Include="Content\DataTables\css\common.scss" />
     <Content Include="App_Data\Interview Import Me Header.csv" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\ClientHistory\InterviewerClientHistory.js" />
     <Content Include="Scripts\Conversation\InterviewerConversation.js" />
     <Content Include="Scripts\Conversation\FrontDeskConversation.js" />
     <Content Include="Scripts\Conversation\CaseManagerConversation.js" />

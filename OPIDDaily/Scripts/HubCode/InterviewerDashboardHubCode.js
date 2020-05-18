@@ -2,9 +2,9 @@
     var theHub = $.connection.dailyHub;
 
     theHub.client.refreshPage = function () {
-        var currentPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'page');
+        var currentPage = jQuery("#dashboardGrid").jqGrid('getGridParam', 'page');
         // alert("currentPage = " + currentPage)
-        var url = "GetClients?page=pageToken&rows=25"
+        var url = "GetDashboard?page=pageToken&rows=20"
             // "@Url.Action("GetClients", "FrontDesk", new { page = "pageToken", rows = "rowsToken" })";
 
         url = url.replace("pageToken", currentPage);
@@ -16,7 +16,7 @@
             cache: false,
             dataType: "json",
             success: function (data) {
-                var mygrid = jQuery("#clientsGrid")[0];
+                var mygrid = jQuery("#dashboardGrid")[0];
                 mygrid.addJSONData(data);
             }
         });

@@ -84,7 +84,7 @@ $("#historyGrid").jqGrid({
             },
             {
                 zIndex: 100,
-                url: "AddVisitNote?vid=" + row_id + "&side=Agency",
+                url: "AddVisitNote?vid=" + row_id + "&sender=Agency",
                 closeOnEscape: true,
                 closeAfterAdd: true,
                 recreateForm: true,

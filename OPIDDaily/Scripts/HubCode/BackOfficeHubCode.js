@@ -4,7 +4,7 @@ $(function () {
 
     theHub.client.refreshPage = function () {
         var currentPage = jQuery("#dashboardGrid").jqGrid('getGridParam', 'page');
-        var url = "GetDashboard?page=pageToken&rows=25"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
+        var url = "GetDashboard?page=pageToken&rows=20"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
 
         $.ajax({

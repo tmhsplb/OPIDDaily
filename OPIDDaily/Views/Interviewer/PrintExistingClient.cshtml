@@ -7,9 +7,9 @@
 }
 
     <div id="printerDiv">
-        <br/>
+        <br />
         <h3>Service Ticket: @ViewBag.ServiceTicket</h3>
-        <br/>
+        <br />
         <h3>Existing Client: @ViewBag.ClientName</h3>
         <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
         <h4>Agency: @ViewBag.Agency</h4>
@@ -31,9 +31,11 @@
 
         <br />
         @Html.Partial("_RequestedServices", Model.Item2)
-        <br/><br/>     
+        <br />
+        @Html.Partial("_ReadOnlySupportingDocuments", Model.Item2)
+        <br /><br />
         @Html.Partial("_SignatureBlock")
-     </div> 
+    </div> 
      <br/>
     <center>
        <button class="btn btn-primary hidden-print" onclick="printServiceTicket()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>

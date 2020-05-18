@@ -271,9 +271,9 @@ namespace OPIDDaily.DAL
             };
         }
 
-        private static void PrependMsg(Client client, string side)
+        private static void PrependMsg(Client client, string sender)
         {
-            string msg = string.Format("From{0}:0", side);
+            string msg = string.Format("From{0}:0", sender);
 
             // client.Msgs will be a comma separated list of messages
             // Example: client.Msgs = "FromOPID:0,FromFrontDesk:0"
@@ -288,7 +288,7 @@ namespace OPIDDaily.DAL
 
         }
 
-        public static void AddTextMsg(int nowServing, string side, TextMsgViewModel tmvm)
+        public static void AddTextMsg(int nowServing, string sender, TextMsgViewModel tmvm)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
@@ -296,7 +296,7 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    PrependMsg(client, side);
+                    PrependMsg(client, sender);
                     TextMsg textMsg = TextMsgViewModelToTextMsg(tmvm);
                     opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
 
@@ -889,6 +889,9 @@ namespace OPIDDaily.DAL
 
                 opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
                 opiddailycontext.Visits.RemoveRange(client.Visits);
+
+                opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
+                opiddailycontext.TextMsgs.RemoveRange(client.TextMsgs);
 
                 // Physically remove client from table
                 opiddailycontext.Clients.Remove(client);

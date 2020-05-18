@@ -24,7 +24,7 @@
 
     theHub.client.refreshConversation = function (action) {
         var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
-        var url = "GetConversation?page=pageToken&rows=25"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
+        var url = "GetConversation?page=pageToken&rows=20"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
 
         if (action == "Open") {

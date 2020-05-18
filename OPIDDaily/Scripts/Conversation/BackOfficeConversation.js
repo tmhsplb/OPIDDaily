@@ -48,7 +48,7 @@ jQuery("#conversationGrid").jqGrid('navGrid', '#conversationPager', { edit: true
     },
     {
         zIndex: 100,
-        url: "AddTextMsg?side=OPID", 
+        url: "AddTextMsg?sender=OPID", 
         closeOnEscape: true,
         closeAfterAdd: true,
         recreateForm: true,

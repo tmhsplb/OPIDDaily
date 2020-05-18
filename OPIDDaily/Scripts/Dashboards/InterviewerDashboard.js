@@ -29,7 +29,7 @@ $("#dashboardGrid").jqGrid({
         { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
     ],
     pager: '#dashboardPager',
-    rowNum: 25,
+    rowNum: 20,
 
     onSelectRow: function (nowServing) {
         if (nowServing == null || nowServing == lastServed) {
@@ -155,8 +155,9 @@ jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add:
         recreateForm: true,
 
         afterComplete: function (response) {
-            if (response.responseText) {
-                //  alert("FrontDesk: " + response.responseText);
+            if (response.responseText == "Success") {
+                var theHub = $.connection.dailyHub;
+                theHub.client.refreshConversation("Open");
             }
         }
     });

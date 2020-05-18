@@ -156,11 +156,6 @@ namespace OPIDDaily.Controllers
 
             DailyHub.Refresh(); 
             
-            if (cvm.Conversation.Equals("Y"))
-            {
-                DailyHub.RefreshConversation("Open");
-            }
-
             return "Success";
         }
 
@@ -271,13 +266,13 @@ namespace OPIDDaily.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);  
         }
 
-        public string AddVisitNote(int vid, string side, VisitNoteModel vnm)
+        public string AddVisitNote(int vid, string sender, VisitNoteModel vnm)
         {
             int nowServing = NowServing();
                       
           //  Log.Debug(string.Format("NowServing = {0}, vid = {1}, side = {2}", nowServing, vid, side));
 
-            Visits.AddVisitNote(nowServing, vid, side, vnm);
+            Visits.AddVisitNote(nowServing, vid, sender, vnm);
             DailyHub.Refresh();
             return "Success";
         }
@@ -675,13 +670,13 @@ namespace OPIDDaily.Controllers
             return View("PrintExistingClientVisits", visits);
         }
 
-        public string AddTextMsg(string side, TextMsgViewModel textMsg)
+        public string AddTextMsg(string sender, TextMsgViewModel textMsg)
         {
             int nowServing = NowServing();
 
             if (nowServing != 0)
             {
-                Clients.AddTextMsg(nowServing, side, textMsg);
+                Clients.AddTextMsg(nowServing, sender, textMsg);
                 DailyHub.Refresh();
 
                 Client client = Clients.GetClient(nowServing, null);

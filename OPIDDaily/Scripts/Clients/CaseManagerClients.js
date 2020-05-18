@@ -176,8 +176,9 @@ jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: tru
         recreateForm: true,
 
         afterComplete: function (response) {
-            if (response.responseText) {
-                //  alert("CaseManager: " + response.responseText);
+            if (response.responseText == "Success") {
+                var theHub = $.connection.dailyHub;
+                theHub.client.refreshConversation("Open");
             }
         }
     },
