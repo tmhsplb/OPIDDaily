@@ -60,7 +60,7 @@ $("#historyGrid").jqGrid({
                 { key: true, hidden: true, name: 'Id', index: 'Id', editable: true },
                 { key: false, align: 'center', name: 'Date', index: 'Date', formatter: 'date', width: 80, editable: false, sortable: true, search: false },
                 { key: false, name: 'From', index: 'From', width: 80, editable: true, sortable: false, search: false },
-                { key: false, name: 'Note', index: 'Note', width: 750, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+                { key: false, name: 'Note', index: 'Note', width: 750, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
             ],
             rowNum: 10,
             pager: pager_id,

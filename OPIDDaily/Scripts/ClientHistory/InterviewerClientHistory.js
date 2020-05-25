@@ -9,7 +9,7 @@
         { key: false, name: 'Item', index: 'Item', width: 80, editable: true, sortable: false, search: false },
         { key: false, name: 'Check', index: 'Check', width: 80, editable: true, sortable: false, search: false },
         { key: false, name: 'Status', index: 'Status', width: 100, editable: true, edittype: 'select', editoptions: { value: { '': '', 'Cleared': 'Cleared', 'Voided': 'Voided', 'Voided/No Reissue': 'Voided/No Reissue', 'Voided/Resissued': 'Voided/Reissued', 'Voided/Replaced': 'Voided/Replaced' } }, sortable: false, search: false },
-        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
     ],
     pager: '#historyPager',
     rowNum: 25,

@@ -25,18 +25,21 @@ $("#dashboardGrid").jqGrid({
         { name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
         { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
         { key: false, hidden: true, name: 'MSG', index: 'MSG', width: 80, formatter: rowColorFormatter, editable: false, sortable: false, search: false },
-        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
     ],
     pager: '#dashboardPager',
-    rowNum: 20,
+    rowNum: 15,
+   // rowList: [15, 20, 25],
 
     onSelectRow: function (nowServing) {
         if (nowServing == null || nowServing == lastServed) {
             // Prevent infinite recursion caused by reloadGrid
            // alert("nowServing is null or nowServing == lastServed!");
+           
+           // alert("Prevent infinite recursion");
         } else {
             lastServed = nowServing;
-
+            
             var dashboard = jQuery("#dashboardGrid"),
                 selRowId = dashboard.jqGrid('getGridParam', 'selrow'),
                 hasConversation = dashboard.jqGrid('getCell', selRowId, 'Conversation');
@@ -52,8 +55,6 @@ $("#dashboardGrid").jqGrid({
                     postData: { nowServing: nowServing },
                     url: "NowConversing", // "@Url.Action("NowServing", "BackOffice")"
                 }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
-
-            
         }
     },
 
@@ -67,6 +68,8 @@ $("#dashboardGrid").jqGrid({
             $("#" + rowsToColor[i].rowId).css("color", rowsToColor[i].rowColor)
         }
     },
+
+   // gridview: true,
 
     caption: 'Service Requests Dashboard',
     emptyrecords: 'No records to display',
@@ -106,7 +109,7 @@ $("#dashboardGrid").jqGrid({
                 { name: 'PND', index: 'PND', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { name: 'XID', index: 'XID', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
-                { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+                { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
             ],
             rowNum: 10,
             pager: pager_id,
@@ -146,7 +149,8 @@ $("#dashboardGrid").jqGrid({
     } // close subgridRowExpanded 
 })
 jQuery("#dashboardGrid").jqGrid('filterToolbar', { searchOperators: true });
-jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add: false, del: false, search: false, refresh: true },
+jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', {
+    edit: true, add: false, del: false, search: false, refresh: true },
     {
         zIndex: 100,
         url: "EditClient", // "@Url.Action("EditClient", "BackOffice")",

@@ -19,7 +19,7 @@
         {key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 100, editable: true, sortable: true, search: false },
         {key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: false, search: false },
         { name: 'Active', index: 'Active', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
-        {key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: {rows: '2', columns: '10' }  }
+        {key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: {rows: '2', cols: '300' }  }
     ],
     pager: '#reviewPager',
     rowNum: 25,
@@ -80,7 +80,7 @@
                { name: 'PND', index: 'PND', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
                { name: 'XID', index: 'XID', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                { name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
-               { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+               { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
            ],
            rowNum: 10,
            pager: pager_id,

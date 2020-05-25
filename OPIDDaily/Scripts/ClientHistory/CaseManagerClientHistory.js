@@ -12,7 +12,7 @@ $("#historyGrid").jqGrid({
         { key: false, name: 'Check', index: 'Check', width: 80, editable: false, sortable: false, search: false },
         { key: false, name: 'Status', index: 'Status', width: 100, editable: false, edittype: 'select', editoptions: { value: { '': '', 'Cleared': 'Cleared', 'Voided': 'Voided', 'Voided/No Reissue': 'Voided/No Reissue', 'Voided/Resissued': 'Voided/Reissued', 'Voided/Replaced': 'Voided/Replaced', 'Used': 'Used', 'Not Used': 'Not Ussed' } }, sortable: false, search: false },
         { key: false, hidden: true, name: 'Sender', index: 'Sender', formatter: rowColorFormatter, editable: false, sortable: false, search: false },
-        { key: false, hidden: true, name: 'Notes', index: 'Notes', width: 150, editable: false, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+        { key: false, hidden: true, name: 'Notes', index: 'Notes', width: 150, editable: false, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
     ],
     pager: '#historyPager',
     rowNum: 25,
@@ -59,7 +59,7 @@ $("#historyGrid").jqGrid({
                 { key: true, hidden: true, name: 'Id', index: 'Id', editable: true },
                 { key: false, align: 'center', name: 'Date', index: 'Date', formatter: 'date', width: 80, editable: false, sortable: true, search: false },
                 { key: false, name: 'From', index: 'From', width: 80, editable: true, sortable: false, search: false },
-                { key: false, name: 'Note', index: 'Note', width: 750, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+                { key: false, name: 'Note', index: 'Note', width: 750, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
             ],
             rowNum: 10,
             pager: pager_id,

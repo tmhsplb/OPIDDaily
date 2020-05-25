@@ -10,7 +10,7 @@ $("#conversationGrid").jqGrid({
         { key: false, align: 'center', name: 'Date', index: 'Date', formatter: 'date', width: 80, editable: false, sortable: true, search: false },
         { key: false, align: 'center', name: 'From', index: 'From', width: 80, editable: true, sortable: false, search: false },
         { key: false, align: 'center', name: 'To', index: 'To', width: 80, editable: true, sortable: false, search: false },
-        { key: false, hidden: false, name: 'Msg', index: 'Msg', width: 850, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+        { key: false, hidden: false, name: 'Msg', index: 'Msg', width: 850, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
     ],
     pager: '#conversationPager',
     rowNum: 10,

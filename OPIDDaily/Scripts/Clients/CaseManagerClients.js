@@ -1,4 +1,5 @@
-﻿var lastServed = 0;
+﻿
+var lastServed = 0;
 var rowsToColor = [];
 
 $("#clientsGrid").jqGrid({
@@ -25,15 +26,16 @@ $("#clientsGrid").jqGrid({
         { name: 'XID', index: 'XID', align: 'center', width: 50, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" } },
         { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { key: false, hidden: true, name: 'MSG', index: 'MSG', width: 80, formatter: rowColorFormatter, editable: false, sortable: false, search: false },
-        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+        { key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
     ],
     pager: '#clientsPager',
-    rowNum: 25,
+    rowNum: 15,
 
     onSelectRow: function (nowServing) {
         if (nowServing == null || nowServing == lastServed) {
             // Prevent infinite recursion caused by reloadGrid
             //alert("nowServing is null or nowServing == lastServed!");
+           // jQuery("#conversation").addClass("hideConversation");
         } else {
             lastServed = nowServing;
 
@@ -104,7 +106,7 @@ $("#clientsGrid").jqGrid({
                 { name: 'PND', index: 'PND', align: 'center', width: 35, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" }, },
                 { name: 'XID', index: 'XID', align: 'center', width: 35, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" }, },
-                { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
+                { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
             ],
             rowNum: 10,
             pager: pager_id,

@@ -961,6 +961,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Interviewer\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_HowItWorks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
