@@ -62,7 +62,7 @@ $("#clientsGrid").jqGrid({
     loadonce: false,
     loadComplete: function () {
         //  alert("load is Complete");
-        jQuery("#clentsGrid").jqGrid('setSelection', lastServed);
+        jQuery("#clientsGrid").jqGrid('setSelection', lastServed);
     },
 
     gridComplete: function () {

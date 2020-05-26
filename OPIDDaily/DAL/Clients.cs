@@ -12,7 +12,9 @@ using System.Text;
 namespace OPIDDaily.DAL
 {
     public class Clients
-    { 
+    {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(Clients));
+
         public static Client GetClient(int nowServing, RequestedServicesViewModel rsvm)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
@@ -495,7 +497,8 @@ namespace OPIDDaily.DAL
                     LastName = cvm.LastName,
                     BirthName = cvm.BirthName,
                     DOB = cvm.DOB,  
-                    Age = CalculateAge(cvm.DOB),  
+                    Age = CalculateAge(cvm.DOB),
+                    Conversation = (string.IsNullOrEmpty(cvm.Conversation) || cvm.Conversation.Equals("''") ? false : true),
                     Notes = cvm.Notes,
                     Screened = now,
                     CheckedIn = now,
