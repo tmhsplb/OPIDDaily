@@ -32,12 +32,45 @@ namespace OPIDDaily.Controllers
             SessionHelper.Set("NowServing", nowServing.ToString());
         }
 
-        public void NowConversing(int? nowServing = 0)
+        public JsonResult NowConversing(SearchParameters sps, int page, int? nowServing = 0, int? rows = 15)
         {
+            int agencyId = ReferringAgency();
             SessionHelper.Set("NowServing", nowServing.ToString());
             Client client = Clients.GetClient((int)nowServing, null);
             string clientName = Clients.ClientBeingServed(client);
             DailyHub.RefreshConversation(clientName);
+            List<ClientViewModel> clients;
+
+            if (agencyId == 0)
+            {
+                clients = Clients.GetDashboardClients(sps);
+            }
+            else
+            {
+                clients = Clients.GetMyUnexpiredClients(agencyId);
+            }
+
+            int pageIndex = page - 1;
+            int pageSize = (int)rows;
+
+            int totalRecords = clients.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+
+            clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            clients = clients.OrderBy(c => c.Expiry).ToList();
+
+          //  Log.Debug(string.Format("NowConversing: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = clients
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
         // See https://stackoverflow.com/questions/18448637/how-to-get-current-user-and-how-to-use-user-class-in-mvc5
@@ -108,7 +141,7 @@ namespace OPIDDaily.Controllers
 
             clients = clients.OrderBy(c => c.Expiry).ToList();
 
-            //Log.Debug(string.Format("page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
+           // Log.Debug(string.Format("GetDashboard: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
 
             var jsonData = new
             {
@@ -708,7 +741,7 @@ namespace OPIDDaily.Controllers
             return "Failure";
         }
 
-        public ActionResult GetConversation(int page, int rows)
+        public ActionResult GetConversation(int page, int? rows = 20)
         {
             int nowServing = NowServing();
 
@@ -720,7 +753,7 @@ namespace OPIDDaily.Controllers
             List <TextMsgViewModel> texts = Clients.GetConversation(nowServing);
 
             int pageIndex = page - 1;
-            int pageSize = rows;
+            int pageSize = (int)rows;
             int totalTexts = texts.Count;
             int totalPages = (int)Math.Ceiling((float)totalTexts / (float)rows);
 

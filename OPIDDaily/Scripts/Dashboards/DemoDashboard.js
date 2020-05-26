@@ -1,6 +1,6 @@
 ﻿var lastServed = 0;
  
-$("#clientsGrid").jqGrid({
+$("#dashboardGrid").jqGrid({
     url: "GetDemoDashboard", // "@Url.Action("GetDemoDashboard", "Superadmin")",
     datatype: "json",
     pageable: true,
@@ -23,7 +23,7 @@ $("#clientsGrid").jqGrid({
         { name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, },
         { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
     ],
-    pager: '#clientsPager',
+    pager: '#dashboardPager',
     rowNum: 15,
 
     onSelectRow: function (nowServing) {
@@ -32,17 +32,21 @@ $("#clientsGrid").jqGrid({
             //alert("nowServing is null or nowServing == lastServed!");
         } else {
             lastServed = nowServing;
-            jQuery("#clientsGrid").jqGrid('setGridParam',
+            jQuery("#dashboardGrid").jqGrid('setGridParam',
                 {
                     postData: { nowServing: nowServing },
-                    url: "NowServing" // "@Url.Action("NowServing", "Superadmin")"
-                    }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                    url: "NowConversing" // "@Url.Action("NowServing", "Superadmin")"
+                    }).trigger('reloadGrid', { fromServer: true });
         }
     },
 
     height: "100%",
     viewrecords: true,
     loadonce: false,
+    loadComplete: function () {
+        //  alert("load is Complete");
+        jQuery("#dashboardGrid").jqGrid('setSelection', lastServed);
+    },
     
     caption: 'Dashboard',
     emptyrecords: 'No records to display',
@@ -92,11 +96,11 @@ $("#clientsGrid").jqGrid({
                     // Prevent infinite recursion caused by reloadGrid
                 } else {
                     lastServed = nowServing;
-                    jQuery("#clientsGrid").jqGrid('setGridParam',
+                    jQuery("#dashboardGrid").jqGrid('setGridParam',
                         {
                             postData: { nowServing: nowServing },
-                            url: "NowServing" // "@Url.Action("NowServing", "Superadmin")"
-                             }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                            url: "NowConversing" // "@Url.Action("NowServing", "Superadmin")"
+                             }).trigger('reloadGrid', { fromServer: true });
                 }
             },
             height: '100%',
@@ -110,7 +114,7 @@ $("#clientsGrid").jqGrid({
     } // close subgridRowExpanded
 })
 
-jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: false, del: false, search: false, refresh: false },
+jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add: false, del: false, search: false, refresh: false },
     {
         zIndex: 100,
         url: "EditClientServiceDate", // "@Url.Action("EditClientServiceDate", "Superadmin")",

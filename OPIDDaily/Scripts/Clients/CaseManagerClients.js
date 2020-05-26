@@ -34,8 +34,7 @@ $("#clientsGrid").jqGrid({
     onSelectRow: function (nowServing) {
         if (nowServing == null || nowServing == lastServed) {
             // Prevent infinite recursion caused by reloadGrid
-            //alert("nowServing is null or nowServing == lastServed!");
-           // jQuery("#conversation").addClass("hideConversation");
+            // alert("Prevent infinite recursion");
         } else {
             lastServed = nowServing;
 
@@ -51,15 +50,20 @@ $("#clientsGrid").jqGrid({
 
             jQuery("#clientsGrid").jqGrid('setGridParam',
                 {
-                    postData: { nowServing: nowServing },
+                    postData:
+                    { nowServing: nowServing },
                     url: "NowConversing", // "@Url.Action("NowServing", "CaseManager")"
-                    }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                    }).trigger('reloadGrid', { fromServer: true });
         }
     },
 
     height: "100%",
     viewrecords: true,
     loadonce: false,
+    loadComplete: function () {
+        //  alert("load is Complete");
+        jQuery("#clentsGrid").jqGrid('setSelection', lastServed);
+    },
 
     gridComplete: function () {
         for (var i = 0; i < rowsToColor.length; i++) {
@@ -119,8 +123,8 @@ $("#clientsGrid").jqGrid({
                     jQuery("#clientsGrid").jqGrid('setGridParam',
                         {
                             postData: { nowServing: nowServing },
-                            url: "NowServing",  // "@Url.Action("NowServing", "CaseManager")"
-                             }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                            url: "NowConversing",  // "@Url.Action("NowServing", "CaseManager")"
+                        }).trigger('reloadGrid', { fromServer: true });
                 }
             },
             height: '100%',

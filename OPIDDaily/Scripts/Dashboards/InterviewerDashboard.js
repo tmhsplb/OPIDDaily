@@ -52,13 +52,17 @@ $("#dashboardGrid").jqGrid({
                 {
                     postData: { nowServing: nowServing },
                     url: "NowConversing", // "@Url.Action("NowServing", "FrontDesk")"
-                    }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                    }).trigger('reloadGrid', { fromServer: true });
         }
     },
 
     height: "100%",
     viewrecords: true,
     loadonce: false,
+    loadComplete: function () {
+        //  alert("load is Complete");
+        jQuery("#dashboardGrid").jqGrid('setSelection', lastServed);
+    },
 
     gridComplete: function () {
         for (var i = 0; i < rowsToColor.length; i++) {
@@ -118,8 +122,8 @@ $("#dashboardGrid").jqGrid({
                     jQuery("#dashboardGrid").jqGrid('setGridParam',
                         {
                             postData: { nowServing: nowServing },
-                            url: "NowServing", // "@Url.Action("NowServing", "FrontDesk")"
-                             }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                            url: "NowConversing", // "@Url.Action("NowServing", "FrontDesk")"
+                        }).trigger('reloadGrid', { fromServer: true });
                 }
             },
             height: '100%',

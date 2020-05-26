@@ -4,11 +4,10 @@
     theHub.client.refreshPage = function () {
         var currentPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'page');
         // alert("currentPage = " + currentPage)
-        var url = "GetMyClients?page=pageToken&rows=25",
+        var url = "GetMyClients?page=pageToken",
         // @Url.Action("GetMyClients", "CaseManager", new { page = "pageToken", rows = "rowsToken" }) ";
 
         url = url.replace("pageToken", currentPage);
-        url = url.replace("rowsToken", 25);
         // alert("url = " + url);
 
         $.ajax({
@@ -24,7 +23,7 @@
 
     theHub.client.refreshConversation = function (action) {
         var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
-        var url = "GetConversation?page=pageToken&rows=20"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
+        var url = "GetConversation?page=pageToken"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
 
         if (action == "Open") {

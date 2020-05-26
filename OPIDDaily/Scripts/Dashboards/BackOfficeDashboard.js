@@ -34,12 +34,10 @@ $("#dashboardGrid").jqGrid({
     onSelectRow: function (nowServing) {
         if (nowServing == null || nowServing == lastServed) {
             // Prevent infinite recursion caused by reloadGrid
-           // alert("nowServing is null or nowServing == lastServed!");
-           
-           // alert("Prevent infinite recursion");
+            // alert("Prevent infinite recursion");
         } else {
             lastServed = nowServing;
-            
+
             var dashboard = jQuery("#dashboardGrid"),
                 selRowId = dashboard.jqGrid('getGridParam', 'selrow'),
                 hasConversation = dashboard.jqGrid('getCell', selRowId, 'Conversation');
@@ -49,18 +47,25 @@ $("#dashboardGrid").jqGrid({
             } else {
                 jQuery("#conversation").addClass("hideConversation");
             }
+           
+           // alert("Don't call NowConversing");
             
             jQuery("#dashboardGrid").jqGrid('setGridParam',
                 {
                     postData: { nowServing: nowServing },
-                    url: "NowConversing", // "@Url.Action("NowServing", "BackOffice")"
-                }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                    url: "NowConversing",
+                }).trigger('reloadGrid', { fromServer: true });
+            
         }
     },
 
     height: "100%",
     viewrecords: true,
     loadonce: false,
+    loadComplete: function () {
+      //  alert("load is Complete");
+        jQuery("#dashboardGrid").jqGrid('setSelection', lastServed);
+    },
 
     gridComplete: function () {
         for (var i = 0; i < rowsToColor.length; i++) {
@@ -122,8 +127,8 @@ $("#dashboardGrid").jqGrid({
                     jQuery("#dashboardGrid").jqGrid('setGridParam',
                         {
                             postData: { nowServing: nowServing },
-                            url: "NowServing", // "@Url.Action("NowServing", "BackOffice")"
-                             }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                            url: "NowConversing", // "@Url.Action("NowServing", "BackOffice")"
+                        }).trigger('reloadGrid', { fromServer: true });
                 }
             },
             height: '100%',
@@ -148,9 +153,9 @@ $("#dashboardGrid").jqGrid({
         )
     } // close subgridRowExpanded 
 })
+
 jQuery("#dashboardGrid").jqGrid('filterToolbar', { searchOperators: true });
-jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', {
-    edit: true, add: false, del: false, search: false, refresh: true },
+jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add: false, del: false, search: false, refresh: true },
     {
         zIndex: 100,
         url: "EditClient", // "@Url.Action("EditClient", "BackOffice")",

@@ -4,7 +4,7 @@
     theHub.client.refreshPage = function () {
         var currentPage = jQuery("#dashboardGrid").jqGrid('getGridParam', 'page');
         // alert("currentPage = " + currentPage)
-        var url = "GetDashboard?page=pageToken&rows=20"
+        var url = "GetDashboard?page=pageToken"
             // "@Url.Action("GetClients", "FrontDesk", new { page = "pageToken", rows = "rowsToken" })";
 
         url = url.replace("pageToken", currentPage);
@@ -24,7 +24,7 @@
 
     theHub.client.refreshConversation = function (action) {
         var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
-        var url = "GetConversation?page=pageToken&rows=25"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
+        var url = "GetConversation?page=pageToken"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
 
         if (action == "Open") {

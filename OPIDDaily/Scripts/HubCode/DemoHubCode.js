@@ -2,7 +2,7 @@
     var theHub = $.connection.dailyHub;
 
     theHub.client.refreshPage = function () {
-        var currentPage = jQuery("#clientsGrid").jqGrid('getGridParam', 'page');
+        var currentPage = jQuery("#dashboardGrid").jqGrid('getGridParam', 'page');
         var url = "GetDemoDashboard?page=pageToken" // "@Url.Action("GetDemoDashboard", "Superadmin", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
 
@@ -11,7 +11,7 @@
             cache: false,
             dataType: "json",
             success: function (data) {
-                var mygrid = jQuery("#clientsGrid")[0];
+                var mygrid = jQuery("#dashboardGrid")[0];
                 mygrid.addJSONData(data);
             }
         });
