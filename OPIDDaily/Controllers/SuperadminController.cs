@@ -164,7 +164,7 @@ namespace OPIDDaily.Controllers
             return View();
         }
 
-        public JsonResult GetDemoDashboard(SearchParameters sps, int page, int? rows = 25)
+        public JsonResult GetDemoDashboard(SearchParameters sps, int page, int? rows = 15)
         {
             List<ClientViewModel> clients = Clients.GetDemoDashboardClients(sps);
 
