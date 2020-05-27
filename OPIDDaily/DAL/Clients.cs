@@ -352,12 +352,13 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-
+                
                 // A demo dashboard client will 
                 //    come from an agency: c.AgencyId != 0
                 //    be a head of household: c.HH == 0
-                //    be not a same day client: c.ServiceDate != c.Expiry
-                //    may be expired, i.e. expiry lies in the past
+                //    be not a same day client: c.ServiceDate != c.Expiry.
+                // The expiry date of a demo dashboard client does not matter. It may lie in the past
+                // or it may lie in the future.
                 List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry).ToList();
 
                 foreach (Client client in clients)
@@ -600,16 +601,7 @@ namespace OPIDDaily.DAL
                 {
                     ClientViewModel cvm = ClientEntityToClientViewModel(dependent);
                     string dependentServices = GetDependentServices(dependent);
-
-                    if (string.IsNullOrEmpty(cvm.Notes))
-                    {
-                        cvm.Notes = dependentServices;
-                    }
-                    else if (!string.IsNullOrEmpty(dependentServices))
-                    {
-                        cvm.Notes = string.Format("{0}; {1}", cvm.Notes, dependentServices);
-                    }
-
+                    cvm.Notes = dependentServices;
                     dependents.Add(cvm);
                 }
 

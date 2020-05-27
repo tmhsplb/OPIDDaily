@@ -32,11 +32,11 @@ namespace OPIDDaily.Controllers
             SessionHelper.Set("NowServing", nowServing.ToString());
         }
 
-        public JsonResult NowConversing(SearchParameters sps, int page, int? nowServing = 0, int? rows = 15)
+        public JsonResult NowConversing(SearchParameters sps, int page, int nowServing = 0, int? rows = 15)
         {
             int agencyId = ReferringAgency();
             SessionHelper.Set("NowServing", nowServing.ToString());
-            Client client = Clients.GetClient((int)nowServing, null);
+            Client client = Clients.GetClient(nowServing, null);
             string clientName = Clients.ClientBeingServed(client);
             DailyHub.RefreshConversation(clientName);
             List<ClientViewModel> clients;
@@ -60,7 +60,7 @@ namespace OPIDDaily.Controllers
 
             clients = clients.OrderBy(c => c.Expiry).ToList();
 
-          //  Log.Debug(string.Format("NowConversing: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
+            //  Log.Debug(string.Format("NowConversing: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
 
             var jsonData = new
             {
