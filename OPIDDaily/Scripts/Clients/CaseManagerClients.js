@@ -217,7 +217,10 @@ jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: tru
 
 // See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
 function rowColorFormatter(cellValue, options, rowObject) {
-    if (cellValue != null && cellValue == "FromAgency") {
+    if (cellValue != null && cellValue == "END") {
+        // End of conversation. Turn coloring off.
+        rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#000000" };  // black
+    } else if (cellValue != null && cellValue == "FromAgency") {
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#FF0000" };  // red
     } else if (cellValue != null && (cellValue == "FromOPID" || cellValue == "FromFrontDesk" || cellValue == "FromInterviewer")) {
         // alert("cellValue == FromOPID");

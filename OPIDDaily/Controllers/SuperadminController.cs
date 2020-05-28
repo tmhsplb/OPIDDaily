@@ -16,6 +16,8 @@ namespace OPIDDaily.Controllers
     [Authorize(Roles = "SuperAdmin")]
     public class SuperadminController : SharedController 
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(SuperadminController));
+
         public ActionResult Home()
         {
             string workingConnectionString = string.Empty;
@@ -173,6 +175,8 @@ namespace OPIDDaily.Controllers
 
             int totalRecords = clients.Count;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+
+            Log.Debug(string.Format("pageIndex = {0}, pageSize = {1}, totalRecords = {2}, totalPages = {3}", pageIndex, pageSize, totalRecords, totalPages));
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 

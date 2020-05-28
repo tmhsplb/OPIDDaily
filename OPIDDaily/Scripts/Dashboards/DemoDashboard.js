@@ -100,7 +100,7 @@ $("#dashboardGrid").jqGrid({
                         {
                             postData: { nowServing: nowServing },
                             url: "NowConversing" // "@Url.Action("NowServing", "Superadmin")"
-                             }).trigger('reloadGrid', { fromServer: true });
+                        }).trigger('reloadGrid', { fromServer: true });
                 }
             },
             height: '100%',

@@ -273,10 +273,19 @@ namespace OPIDDaily.DAL
             };
         }
 
-        private static void PrependMsg(Client client, string sender)
+        private static void PrependMsg(Client client, string sender, string textMsg)
         {
-            string msg = string.Format("From{0}:0", sender);
+            string msg;
 
+            if (textMsg.ToUpper().Equals("END"))
+            {
+                msg = string.Format("END:0");
+            }
+            else
+            {
+                msg = string.Format("From{0}:0", sender);
+            }
+            
             // client.Msgs will be a comma separated list of messages
             // Example: client.Msgs = "FromOPID:0,FromFrontDesk:0"
             if (string.IsNullOrEmpty(client.Msgs))
@@ -287,7 +296,6 @@ namespace OPIDDaily.DAL
             {
                 client.Msgs = string.Format("{0},{1}", msg, client.Msgs);
             }
-
         }
 
         public static void AddTextMsg(int nowServing, string sender, TextMsgViewModel tmvm)
@@ -298,7 +306,7 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    PrependMsg(client, sender);
+                    PrependMsg(client, sender, tmvm.Msg);
                     TextMsg textMsg = TextMsgViewModelToTextMsg(tmvm);
                     opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
 
