@@ -608,7 +608,15 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency =  Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+
+            if (rsvm.OtherAgency)
+            {
+                ViewBag.Agency = rsvm.OtherAgencyName;
+            }
+            else
+            {
+                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+            }
 
             // ServiceTicketBackButtonHelper("Set", rsvm);
             return View("PrintExpressClient", rsvm);
@@ -639,7 +647,16 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+
+            if (rsvm.OtherAgency)
+            {
+                ViewBag.Agency = rsvm.OtherAgencyName;
+            }
+            else
+            {
+                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+            }
+
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);

@@ -10,7 +10,7 @@ $("#dashboardGrid").jqGrid({
     colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
-        { key: false, name: 'AgencyName', index: 'AgencyName', width: 150, editable: false, search: true }, // searchoptions:{sopt:['bw']} },
+        { key: false, name: 'AgencyName', index: 'AgencyName', width: 150, editable: false, search: true }, 
         { key: false, align: 'center', name: 'Expiry', index: 'Expiry', formatter: 'date', width: 120, editable: true, sortable: true, search: false },
         { key: false, name: 'Stage', index: 'Stage', width: 100, formatter: rowColorFormatter, editable: true, edittype: 'select', editoptions: { value: { 'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing': 'Interviewing', 'BackOffice': 'BackOffice', 'Done': 'Done' } }, sortable: false, search: false },
         { key: false, name: 'Conversation', index: 'Conversation', width: 35, align: 'center', editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, sortable: false, search: false },
@@ -47,15 +47,12 @@ $("#dashboardGrid").jqGrid({
             } else {
                 jQuery("#conversation").addClass("hideConversation");
             }
-           
-           // alert("Don't call NowConversing");
-            
+                  
             jQuery("#dashboardGrid").jqGrid('setGridParam',
                 {
                     postData: { nowServing: nowServing },
                     url: "NowConversing",
                 }).trigger('reloadGrid', { fromServer: true });
-            
         }
     },
 

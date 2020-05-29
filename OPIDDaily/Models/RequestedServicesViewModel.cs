@@ -24,21 +24,15 @@ namespace OPIDDaily.Models
         public string Agency { get; set; }
 
         public SelectList Agencies { get; set; }
- 
-        /*
-        [Display(Name = "Use Birth Name?")]
-        public bool UseBirthName { get; set; }
-        */
+
+        public bool OtherAgency { get; set; }
+
+        public string OtherAgencyName { get; set; }
 
         [Display(Name = "Texas BC")]
         public bool BC { get; set; }
 
         public string BCNotes { get; set; }
-
-        /*
-        [Display(Name = "Eligible?")]
-        public bool BCEligible { get; set; }
-        */
 
         [Display(Name = "Harris County Clerk")]
         public bool HCC { get; set; }
@@ -54,11 +48,6 @@ namespace OPIDDaily.Models
 
         public string MBVDNotes { get; set; }
 
-        /*
-        [Display(Name = "Eligible?")]
-        public bool MBVDEligible { get; set; }
-        */
-
         public string State { get; set; }
 
         public string TIDNotes { get; set; }
@@ -68,31 +57,17 @@ namespace OPIDDaily.Models
 
         [Display(Name = "Pre-approved")]
         public bool PreApprovedNewTID { get; set; }
-
-        /*
-        [Display(Name = "Eligible?")]
-        public bool NewTIDEligible { get; set; }
-        */
+ 
 
         [Display(Name = "Replacement ID")]
         public bool ReplacementTID { get; set; }
 
         [Display(Name = "Pre-approved")]
         public bool PreApprovedReplacementTID { get; set; }
-
-        /*
-        [Display(Name = "Eligible?")]
-        public bool ReplacementTIDEligible { get; set; }
-        */
-
+        
         [Display(Name = "New/Renew DL")]
         public bool NewTDL { get; set; }
-
-        /*
-        [Display(Name = "Eligible?")]
-        public bool NewTDLEligible { get; set; }
-        */
-
+ 
         public string TDLNotes { get; set; }
 
         [Display(Name = "Replacement DL")]

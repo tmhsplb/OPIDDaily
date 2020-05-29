@@ -44,13 +44,15 @@
              @using (Html.BeginForm("PrepareInterviewerExistingClient", "Interviewer", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
              {
                  @Html.AntiForgeryToken()
-                
+
                  @* @Html.Partial("_PreApproval", Model) *@
 
                  <h4>Requested Services</h4>
                  <hr />
                  @Html.Partial("_HiddenSupportingDocuments", Model)
                  @Html.Partial("_ReadOnlyRequestedServicesForm", Model)
+
+                 @Html.Partial("_ReadOnlySupportingDocuments", Model)
 
                  <br />
                  <div class="form-group">

@@ -193,7 +193,6 @@ namespace OPIDDaily.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
         public string EditClientServiceDate(ClientViewModel cvm)
         {
             Clients.EditServiceDate(cvm);
