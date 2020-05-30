@@ -161,7 +161,7 @@ jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add:
         afterComplete: function (response) {
             if (response.responseText == "Success") {
                 var theHub = $.connection.dailyHub;
-                theHub.client.refreshConversation("Open");
+                theHub.client.openConversation();
             }
         }
     });

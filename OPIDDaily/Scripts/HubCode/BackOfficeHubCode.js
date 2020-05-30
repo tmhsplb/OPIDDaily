@@ -4,7 +4,7 @@ $(function () {
 
     theHub.client.refreshPage = function () {
         var currentPage = jQuery("#dashboardGrid").jqGrid('getGridParam', 'page');
-        var url = "GetDashboard?page=pageToken"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
+        var url = "GetDashboard?page=pageToken"; 
         url = url.replace("pageToken", currentPage);
 
         $.ajax({
@@ -18,15 +18,31 @@ $(function () {
         });
     };
 
-    theHub.client.refreshConversation = function (action) {
+    theHub.client.refreshConversation = function (nowServing) {
         var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
-        var url = "GetConversation?page=pageToken"; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
+        var url = "GetConversation?page=pageToken&nowServing="+nowServing;  
         url = url.replace("pageToken", currentPage);
 
-        if (action == "Open") {
-            jQuery("#conversation").removeClass("hideConversation");
-        }
+       // alert("refreshConversation: nowServing = " + nowServing);
+         
+        $.ajax({
+            url: url,
+            cache: false,
+            dataType: "json",
+            success: function (data) {
+                var mygrid = jQuery("#conversationGrid")[0];
+                mygrid.addJSONData(data);
+            }
+        });
+    };
 
+    theHub.client.openConversation = function () {
+        var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
+        var url = "GetConversation?page=pageToken" 
+        url = url.replace("pageToken", currentPage);
+
+        jQuery("#conversation").removeClass("hideConversation");
+        
         // alert("clientName = " + action);
         // jQuery("#conversationGrid").jqGrid('setGridParam', { caption: action }).trigger("reloadGrid");
         $.ajax({
@@ -36,7 +52,7 @@ $(function () {
             success: function (data) {
                 var mygrid = jQuery("#conversationGrid")[0];
                 mygrid.addJSONData(data);
-                
+
             }
         });
     };

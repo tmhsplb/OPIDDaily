@@ -32,13 +32,13 @@ namespace OPIDDaily.Controllers
             SessionHelper.Set("NowServing", nowServing.ToString());
         }
 
-        public JsonResult NowConversing(SearchParameters sps, int page, int nowServing = 0, int? rows = 15)
+        public JsonResult NowConversing(SearchParameters sps, int page, int? nowServing = 0, int? rows = 15)
         {
+          // Log.Debug(string.Format("Enter NowConversing: nowServing = {0}", nowServing));
+
             int agencyId = ReferringAgency();
             SessionHelper.Set("NowServing", nowServing.ToString());
-            Client client = Clients.GetClient(nowServing, null);
-            string clientName = Clients.ClientBeingServed(client);
-            DailyHub.RefreshConversation(clientName);
+                     
             List<ClientViewModel> clients;
 
             if (agencyId == 0)
@@ -57,10 +57,11 @@ namespace OPIDDaily.Controllers
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-
             clients = clients.OrderBy(c => c.Expiry).ToList();
 
             //  Log.Debug(string.Format("NowConversing: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
+
+            DailyHub.RefreshConversation((int)nowServing);
 
             var jsonData = new
             {
@@ -730,10 +731,7 @@ namespace OPIDDaily.Controllers
             {
                 Clients.AddTextMsg(nowServing, sender, textMsg);
                 DailyHub.Refresh();
-
-                Client client = Clients.GetClient(nowServing, null);
-                string clientName = Clients.ClientBeingServed(client);
-                DailyHub.RefreshConversation(clientName);
+                DailyHub.RefreshConversation(nowServing);
                 return "Success";
             }
 
@@ -748,26 +746,30 @@ namespace OPIDDaily.Controllers
             {
                 Clients.EditTextMsg(nowServing, textMsg);
                 DailyHub.Refresh();
-
-                Client client = Clients.GetClient(nowServing, null);
-                string clientName = Clients.ClientBeingServed(client);
-                DailyHub.RefreshConversation(clientName);
+                DailyHub.RefreshConversation(nowServing);
                 return "Success";
             }
 
             return "Failure";
         }
 
-        public ActionResult GetConversation(int page, int? rows = 20)
+        public ActionResult GetConversation(int page, int? nowServing = 0, int? rows = 20)
         {
-            int nowServing = NowServing();
+           // Log.Debug(string.Format("Enter GetConversation: nowServing = {0}", nowServing));
 
             if (nowServing == 0)
             {
+                nowServing = NowServing();
+               // Log.Debug(string.Format("Reset GetConversation: nowServing = {0}", nowServing));
+            }
+
+            if (nowServing == 0)
+            {
+                Log.Debug("No conversation!");
                 return null;
             }
 
-            List <TextMsgViewModel> texts = Clients.GetConversation(nowServing);
+            List <TextMsgViewModel> texts = Clients.GetConversation((int)nowServing);
 
             int pageIndex = page - 1;
             int pageSize = (int)rows;

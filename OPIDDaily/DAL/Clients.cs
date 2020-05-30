@@ -118,7 +118,7 @@ namespace OPIDDaily.DAL
             client.ServiceTicket = cvm.ServiceTicket;
             client.Stage = cvm.Stage;
             client.Conversation = (client.Conversation ? true : (string.IsNullOrEmpty(cvm.Conversation) ? false : true));
-            client.Expiry = (cvm.Expiry != default(DateTime) ? cvm.Expiry : client.Expiry);;
+            client.Expiry = (cvm.Expiry != default(DateTime) ? cvm.Expiry : client.Expiry);
             client.LastName = cvm.LastName;
             client.FirstName = cvm.FirstName;
             client.MiddleName = cvm.MiddleName;
@@ -160,7 +160,10 @@ namespace OPIDDaily.DAL
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
 
                 // A same-day-service client will have c.ServiceDate == c.Expiry
-                List<Client> clients = opiddailycontext.Clients.Where( c => c.HH == 0 && c.ServiceDate == date && c.Expiry == date).ToList();
+               // List<Client> clients = opiddailycontext.Clients.Where( c => c.HH == 0 && c.ServiceDate == date && c.Expiry == date).ToList();
+
+                // The virtual front desk TicketMaster will create service tickets with a 30-day expiry
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate == date).ToList();
 
                 foreach (Client client in clients)
                 {
@@ -232,7 +235,10 @@ namespace OPIDDaily.DAL
                 //    be a head of household: c.HH == 0
                 //    be not a same day client: c.ServiceDate != c.Expiry
                 //    be unexpired: today <= c.Expiry
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry).ToList();
+                // List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry).ToList();
+
+                // For virtual front desk, c.AgencyId == 0, i.e. agency = OPID
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry).ToList();
 
                 foreach (Client client in clients)
                 {
@@ -440,7 +446,7 @@ namespace OPIDDaily.DAL
                     Interviewed = now,
                     BackOffice = now,
                     Done = now,
-                    Expiry = today,
+                    Expiry = CalculateExpiry(today),  // was just today
                     Active = true
                 };
 
