@@ -23,12 +23,8 @@
 
     theHub.client.refreshConversation = function (nowServing) {
         var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
-        var url = "GetConversation?page=pageToken&nowServing="+nowServing; 
+        var url = "GetConversation?page=pageToken&nowServing="+nowServing; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
-
-        if (action == "Open") {
-            jQuery("#conversation").removeClass("hideConversation");
-        }
 
         // alert("clientName = " + action);
         // jQuery("#conversationGrid").jqGrid('setGridParam', { caption: action }).trigger("reloadGrid");

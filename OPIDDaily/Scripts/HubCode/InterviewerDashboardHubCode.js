@@ -26,7 +26,7 @@
         var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
         var url = "GetConversation?page=pageToken&nowServing="+nowServing; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
-
+ 
         // alert("clientName = " + action);
         // jQuery("#conversationGrid").jqGrid('setGridParam', { caption: action }).trigger("reloadGrid");
         $.ajax({
