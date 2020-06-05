@@ -41,8 +41,8 @@
                     <li>@Html.ActionLink("Service Ticket", "ServiceTicket", "FrontDesk")</li>
                     <li>@Html.ActionLink("Dashboard", "ManageDashboard", "FrontDesk")</li>
                     @*
-                    <li>@Html.ActionLink("Recent Checks", "RecentChecks", "FrontDesk")</li>
-                    <li>@Html.ActionLink("Ancient Checks", "AncientChecks", "FrontDesk")</li>
+                        <li>@Html.ActionLink("Recent Checks", "RecentChecks", "FrontDesk")</li>
+                        <li>@Html.ActionLink("Ancient Checks", "AncientChecks", "FrontDesk")</li>
                     *@
                     <li>@Html.ActionLink("Overflow Voucher", "OverflowVoucher", "FrontDesk")</li>
                     <li>@Html.ActionLink("Special Referral", "SpecialReferral", "FrontDesk")</li>
@@ -55,11 +55,7 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Today.Year - Main Street Ministries</p>
-        </footer>
+        @Html.Partial("_Footer")
     </div>
-
 </body>
 </html>

@@ -765,7 +765,7 @@ namespace OPIDDaily.Controllers
 
             if (nowServing == 0)
             {
-                Log.Debug("No conversation!");
+              //  Log.Debug("No conversation!");
                 return null;
             }
 

@@ -34,7 +34,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Home", "Interviewer")</li>
-                   @* <li>@Html.ActionLink("Clients", "ManageClients", "Interviewer")</li> *@
+                    @* <li>@Html.ActionLink("Clients", "ManageClients", "Interviewer")</li> *@
                     <li>@Html.ActionLink("Dashboard", "ManageDashboard", "Interviewer")</li>
                     <li>@Html.ActionLink("Service Ticket", "ServiceTicket", "Interviewer")</li>
                 </ul>
@@ -45,11 +45,7 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Today.Year - Main Street Ministries</p>
-        </footer>
+        @Html.Partial("_Footer")
     </div>
-
 </body>
 </html>

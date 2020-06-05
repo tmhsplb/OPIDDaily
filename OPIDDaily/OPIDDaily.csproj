@@ -962,6 +962,7 @@
     </Content>
     <Content Include="Views\Interviewer\Dashboard.cshtml" />
     <Content Include="Views\Shared\_HowItWorks.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />

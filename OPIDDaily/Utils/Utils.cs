@@ -62,7 +62,7 @@ namespace OPIDDaily.Utils
         public static string GetImportMeFileName()
         {
             string timestamp = GetTimestamp();
-            string fname = string.Format("interview-importme-{0}", timestamp);
+            string fname = string.Format("importme-{0}", timestamp);
             return fname;
         }
 

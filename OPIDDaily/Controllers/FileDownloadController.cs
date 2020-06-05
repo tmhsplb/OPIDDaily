@@ -13,6 +13,8 @@ namespace OPIDChecks.Controllers
 {
     public class FileDownloadController : Controller
     {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(FileDownloadController));
+
         public static string GetResearchTableCSV()
         {
             List<CheckViewModel> checks = CheckManager.GetChecks();
@@ -377,6 +379,7 @@ namespace OPIDChecks.Controllers
                                 // birth certificates.
                                 if (!added)
                                 {
+                                    // Log.Debug(string.Format("resolvedCheck: RecordID {0}, InterviewRecordID {1}, Num: {2}, Name: {3}", resolvedCheck.RecordID, resolvedCheck.InterviewRecordID, resolvedCheck.Num, resolvedCheck.Name));
                                     importRows.Add(NewImportRow(researchChecks, resolvedCheck, disposition));
                                     // Prevent the same resolved check from being added twice.
                                     added = true;
