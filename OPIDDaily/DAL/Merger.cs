@@ -62,14 +62,14 @@ namespace OPIDDaily.DAL
                 || disposition.Equals("Scammed Check");
         }
 
-        private static void DetermineResolvedChecks(List<Check> checks, string disposition, List<Check> researchChecks)
+        private static void DetermineResolvedChecks(List<Check> excelChecks, string disposition, List<Check> researchChecks)
         {
             int i = 0;
-            int checkCount = checks.Count;
+            int checkCount = excelChecks.Count;
 
-            foreach (Check check in checks)
+            foreach (Check echeck in excelChecks)
             {
-                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == check.Num);
+                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == echeck.Num);
 
                 // Normally, matchedChecks.Count() == 0 or matchedChecks.Count == 1 
                 // But in the case of a birth certificate, a single check number may cover
@@ -176,6 +176,7 @@ namespace OPIDDaily.DAL
            
             DetermineResolvedChecks(excelChecks, disposition, researchChecks);
             CheckManager.ResolveResearchChecks();
+            CheckManager.ResolvePocketChecks(excelChecks, disposition);
         }
 
         private static void ProcessMistakenlyResolvedChecks(string uploadedFile)

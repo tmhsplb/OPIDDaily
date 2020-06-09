@@ -404,24 +404,13 @@ namespace OPIDChecks.Controllers
         {
             var csv = new StringBuilder();
 
-            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Interview Import Me Header.csv"));
+            string pathToDispositionHeader = System.Web.HttpContext.Current.Request.MapPath(string.Format("~/App_Data/Import Me Header.csv"));
 
             using (StreamReader reader = new StreamReader(pathToDispositionHeader))
             {
                 string header = reader.ReadToEnd();
                 csv.Append(header);
             }
-
-            /*
-            string filePath = string.Format("~/App_Data/Interview Import Me Header.csv");
-            string mappedPath = HttpContext.Server.MapPath(filePath);
-
-            using (StreamReader reader = new StreamReader(mappedPath))
-            {
-                string header = reader.ReadToEnd();
-                csv.Append(header);
-            }
-            */
 
             List<ImportRow> importRows = GetImportRows();
 

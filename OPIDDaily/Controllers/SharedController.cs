@@ -264,10 +264,42 @@ namespace OPIDDaily.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult GetPocketChecks(int page, int rows)
+        {
+            int nowServing = NowServing();
+
+            List<VisitViewModel> visits = Visits.GetPocketChecks(nowServing);
+            int pageIndex = page - 1;
+            int pageSize = rows;
+            int totalRecords = visits.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            visits = visits.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            visits = visits.OrderBy(v => v.Date).ToList();
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = visits
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
         public string AddVisit(VisitViewModel vvm)
         {
             int nowServing = NowServing();
             Visits.AddVisit(nowServing, vvm);
+            DailyHub.Refresh();
+            return "Success";
+        }
+
+        public string AddPocketVisit(VisitViewModel vvm)
+        {
+            int nowServing = NowServing();
+            Visits.AddPocketVisit(nowServing, vvm);
             DailyHub.Refresh();
             return "Success";
         }
@@ -680,6 +712,7 @@ namespace OPIDDaily.Controllers
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
+            ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);
           
             // ServiceTicketBackButtonHelper("Get", rsvm);
 

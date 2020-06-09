@@ -29,6 +29,8 @@ namespace OPIDDaily.DataContexts
         public DbSet<RCheck> RChecks { get; set; }
 
         public DbSet<AncientCheck> AncientChecks { get; set; }
+
+        public DbSet<PocketCheck> PocketChecks { get; set; }
     }
     
 }

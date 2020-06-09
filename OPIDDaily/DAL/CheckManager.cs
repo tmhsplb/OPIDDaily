@@ -654,6 +654,26 @@ namespace OPIDDaily.DAL
             }
         }
 
+        public static void ResolvePocketChecks(List<Check> excelChecks, string disposition)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                var pchecks = opiddailycontext.PocketChecks;
+
+                foreach (PocketCheck pcheck in pchecks)
+                {
+                    Check echeck = excelChecks.Where(e => e.Num == pcheck.Num).SingleOrDefault();
+
+                    if (echeck != null)
+                    {
+                        pcheck.Disposition = disposition;
+                    }
+                }
+
+                opiddailycontext.SaveChanges();
+            }
+        }
+
         public static bool ResearchTableIsEmpty()
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())

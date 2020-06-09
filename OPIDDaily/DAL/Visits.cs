@@ -105,6 +105,20 @@ namespace OPIDDaily.DAL
             };
         }
 
+        private static VisitViewModel PocketCheckToVisitViewModel(PocketCheck pcheck)
+        {
+            return new VisitViewModel
+            {
+                Id = pcheck.Id,
+                Date = pcheck.Date,
+                Item = pcheck.Item,
+                Check = pcheck.Num.ToString(),
+                Status = pcheck.Disposition,
+                Sender = string.Empty,
+                Notes = pcheck.Notes
+            };
+        }
+
         private static Visit VisitViewModelToVisit(VisitViewModel vvm)
         {
             return new Visit
@@ -125,11 +139,13 @@ namespace OPIDDaily.DAL
                 string[] msgs = (string.IsNullOrEmpty(client.Msgs) ? new[] {"None:0"} : client.Msgs.Split(','));
                 DateTime DOB = client.DOB;
                 string lastName = Extras.StripSuffix(client.LastName.ToUpper());
+                bool resolvedPocketCheck = false;
 
                 if (client != null)
                 {
                     List<AncientCheck> ancientChecks = opiddailycontext.AncientChecks.Where(ac => ac.DOB == DOB && ac.Name.ToUpper().StartsWith(lastName)).ToList();
                     List<RCheck> rchecks = opiddailycontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.ToUpper().StartsWith(lastName)).ToList();
+                    List<PocketCheck> pchecks = opiddailycontext.PocketChecks.Where(pc => pc.ClientId == client.Id && pc.IsActive == true).ToList();
 
                     opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
 
@@ -146,9 +162,15 @@ namespace OPIDDaily.DAL
                         }
 
                         // Exclude visit notes which all have icheck < 0
+                        // Exclude pocket checks
                         if (icheck >= 0)
                         {
-                            visits.Add(VisitToVisitViewModel(visit, msgs));
+                            PocketCheck pcheck = pchecks.Where(p => p.Num == icheck).SingleOrDefault();
+
+                            if (pcheck == null)
+                            {
+                                visits.Add(VisitToVisitViewModel(visit, msgs));
+                            }
                         }
                     }
 
@@ -160,6 +182,29 @@ namespace OPIDDaily.DAL
                     foreach (RCheck rcheck in rchecks)
                     {
                         visits.Add(RCheckToVisitViewModel(rcheck, msgs));
+
+                        PocketCheck pcheck = pchecks.Where(p => p.Num == rcheck.Num).SingleOrDefault();
+
+                        // If any pocket check gets resolved, then mark it as inactive.
+                        // Save changes below.
+                        if (pcheck != null)
+                        {
+                            pcheck.IsActive = false;
+                            resolvedPocketCheck = true;
+                        }
+                    }
+
+                    foreach (PocketCheck pcheck in pchecks)
+                    {
+                        if (pcheck.IsActive)
+                        {
+                            visits.Add(PocketCheckToVisitViewModel(pcheck));
+                        }
+                    }
+
+                    if (resolvedPocketCheck)
+                    {
+                        opiddailycontext.SaveChanges();
                     }
 
                     // Make sure that visits are listed by ascending referral date
@@ -169,6 +214,29 @@ namespace OPIDDaily.DAL
             }
 
             return null;
+        }
+
+        public static List<VisitViewModel> GetPocketChecks(int nowServing)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+                List<PocketCheck> pchecks = opiddailycontext.PocketChecks.Where(pc => pc.ClientId == client.Id && pc.IsActive == true).ToList();
+
+                List<VisitViewModel> visits = new List<VisitViewModel>();
+
+                foreach (PocketCheck pcheck in pchecks)
+                {
+                    if (pcheck.IsActive)
+                    {
+                        visits.Add(PocketCheckToVisitViewModel(pcheck));
+                    }
+                }
+
+                // Make sure that visits are listed by ascending referral date
+                visits = visits.OrderBy(v => v.Date).ToList();
+                return visits;
+            }
         }
 
         public static void AddVisit(int nowServing, VisitViewModel vvm)
@@ -189,6 +257,36 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static PocketCheck NewPocketCheck(Client client, VisitViewModel vvm)
+        {
+            return new PocketCheck
+            {
+                ClientId = client.Id,
+                Date = Extras.DateTimeToday().AddHours(12),
+                Name = Clients.ClientBeingServed(client),
+                DOB = client.DOB,
+                Item = vvm.Item,
+                Num = Convert.ToInt32(vvm.Check),
+                Disposition = vvm.Status,
+                Notes = vvm.Notes,
+                IsActive = true
+            };
+        }
+              
+        public static void AddPocketVisit(int nowServing, VisitViewModel vvm)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+
+                if (client != null)
+                {
+                    opiddailycontext.PocketChecks.Add(NewPocketCheck(client, vvm));
+                    opiddailycontext.SaveChanges();
+                }
+            }
+        }
+
         public static void EditVisit(int nowServing, VisitViewModel vvm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
@@ -204,6 +302,7 @@ namespace OPIDDaily.DAL
                     if (visit != null)
                     {
                         visit.Status = vvm.Status;
+                        visit.Notes = vvm.Notes;
                         opiddailycontext.SaveChanges();
                         return;
                     }
@@ -226,7 +325,15 @@ namespace OPIDDaily.DAL
                         return;
                     }
 
-                    return;           
+                    PocketCheck pcheck = opiddailycontext.PocketChecks.Where(p => p.ClientId == nowServing).SingleOrDefault();
+
+                    if (pcheck != null)
+                    {
+                        pcheck.Disposition = vvm.Status;
+                        pcheck.Notes = vvm.Notes;
+                        opiddailycontext.SaveChanges();
+                        return;
+                    }          
                 }
             }
         }
@@ -246,6 +353,14 @@ namespace OPIDDaily.DAL
                     if (visit != null)
                     {
                         opiddailycontext.Visits.Remove(visit);
+                        opiddailycontext.SaveChanges();
+                    }
+
+                    PocketCheck pcheck = opiddailycontext.PocketChecks.Where(p => p.ClientId == nowServing).SingleOrDefault();
+
+                    if (pcheck != null)
+                    {
+                        opiddailycontext.PocketChecks.Remove(pcheck);
                         opiddailycontext.SaveChanges();
                     }
                 }

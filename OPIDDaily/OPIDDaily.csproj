@@ -333,9 +333,22 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202005161356091_TextMsgTo.Designer.cs">
       <DependentUpon>202005161356091_TextMsgTo.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006082134471_PocketChecks.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006082134471_PocketChecks.Designer.cs">
+      <DependentUpon>202006082134471_PocketChecks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006090111193_PocketChecksDisposition.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006090111193_PocketChecksDisposition.Designer.cs">
+      <DependentUpon>202006090111193_PocketChecksDisposition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006091721518_PocketCheckNotes.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006091721518_PocketCheckNotes.Designer.cs">
+      <DependentUpon>202006091721518_PocketCheckNotes.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
+    <Compile Include="Entities\PocketCheck.cs" />
     <Compile Include="Entities\TextMsg.cs" />
     <Compile Include="Entities\Invitation.cs" />
     <Compile Include="Entities\AncientCheck.cs" />
@@ -666,7 +679,7 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
-    <Content Include="App_Data\Interview Import Me Header.csv" />
+    <Content Include="App_Data\Import Me Header.csv" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\ClientHistory\InterviewerClientHistory.js" />
     <Content Include="Scripts\Conversation\InterviewerConversation.js" />
@@ -828,6 +841,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\clientsServed.js" />
+    <Content Include="Scripts\PocketChecks\InterviewerPocketChecks.js" />
+    <Content Include="Scripts\PocketChecks\BackOfficePocketChecks.js" />
     <Content Include="Scripts\preApprovalForm.js" />
     <Content Include="Scripts\ReviewClients\FrontDeskReview.js" />
     <Content Include="Scripts\serviceTicket.js" />
@@ -1063,6 +1078,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202005161356091_TextMsgTo.resx">
       <DependentUpon>202005161356091_TextMsgTo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202006082134471_PocketChecks.resx">
+      <DependentUpon>202006082134471_PocketChecks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202006090111193_PocketChecksDisposition.resx">
+      <DependentUpon>202006090111193_PocketChecksDisposition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202006091721518_PocketCheckNotes.resx">
+      <DependentUpon>202006091721518_PocketCheckNotes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
