@@ -659,15 +659,27 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
                 var pchecks = opiddailycontext.PocketChecks;
+                bool resolved;
 
                 foreach (PocketCheck pcheck in pchecks)
                 {
-                    Check echeck = excelChecks.Where(e => e.Num == pcheck.Num).SingleOrDefault();
+                    resolved = resolvedChecks.Any(r => r.Num == pcheck.Num);
 
-                    if (echeck != null)
+                    if (resolved)
                     {
-                        pcheck.Disposition = disposition;
+                        // If pcheck is among resolvedChecks, then mark pcheck as inactive
+                        pcheck.IsActive = false;
                     }
+                    else
+                    {
+                        resolved = excelChecks.Any(e => e.Num == pcheck.Num);
+
+                        if (resolved)
+                        {
+                            // This is the case of an excel check resolving a pocket check.
+                            pcheck.Disposition = disposition;
+                        }
+                    }                 
                 }
 
                 opiddailycontext.SaveChanges();

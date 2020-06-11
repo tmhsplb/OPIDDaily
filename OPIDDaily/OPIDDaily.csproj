@@ -345,6 +345,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202006091721518_PocketCheckNotes.Designer.cs">
       <DependentUpon>202006091721518_PocketCheckNotes.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006102035056_DbCheckNotes.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006102035056_DbCheckNotes.Designer.cs">
+      <DependentUpon>202006102035056_DbCheckNotes.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -1087,6 +1091,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202006091721518_PocketCheckNotes.resx">
       <DependentUpon>202006091721518_PocketCheckNotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202006102035056_DbCheckNotes.resx">
+      <DependentUpon>202006102035056_DbCheckNotes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

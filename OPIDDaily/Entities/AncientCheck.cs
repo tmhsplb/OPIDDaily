@@ -21,5 +21,6 @@ namespace OpidDailyEntities
         public string sDate { get; set; }
         public string Service { get; set; }
         public string Disposition { get; set; }
+        public string Notes { get; set; }
     }
 }

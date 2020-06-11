@@ -43,6 +43,7 @@ namespace OPIDDaily.DAL
                 Item = visit.Item,
                 Check = (string.IsNullOrEmpty(visit.Check) || visit.Check.Equals("0") ? string.Empty : visit.Check),
                 Status = visit.Status,
+                Notes = visit.Notes,
                 Sender = visit.Id == extractedVid ? sender : string.Empty
             };
         }
@@ -72,6 +73,7 @@ namespace OPIDDaily.DAL
                 Item = ancientCheck.Service,
                 Check = (ancientCheck.Num == 0 ? string.Empty : ancientCheck.Num.ToString()),
                 Status = ancientCheck.Disposition,
+                Notes = ancientCheck.Notes,
                 Sender = ancientCheck.Id == extractedVid ? sender : string.Empty
             };
         }
@@ -101,6 +103,7 @@ namespace OPIDDaily.DAL
                 Item = rcheck.Service,
                 Check = (rcheck.Num == 0 ? string.Empty: rcheck.Num.ToString()),
                 Status = rcheck.Disposition,
+                Notes = rcheck.Notes,
                 Sender = rcheck.Id == extractedVid ? sender : string.Empty
             };
         }
@@ -139,8 +142,7 @@ namespace OPIDDaily.DAL
                 string[] msgs = (string.IsNullOrEmpty(client.Msgs) ? new[] {"None:0"} : client.Msgs.Split(','));
                 DateTime DOB = client.DOB;
                 string lastName = Extras.StripSuffix(client.LastName.ToUpper());
-                bool resolvedPocketCheck = false;
-
+                
                 if (client != null)
                 {
                     List<AncientCheck> ancientChecks = opiddailycontext.AncientChecks.Where(ac => ac.DOB == DOB && ac.Name.ToUpper().StartsWith(lastName)).ToList();
@@ -161,16 +163,10 @@ namespace OPIDDaily.DAL
                             icheck = Convert.ToInt32(check);
                         }
 
-                        // Exclude visit notes which all have icheck < 0
-                        // Exclude pocket checks
+                        // Exclude visit notes which are implemented as visits but all have icheck < 0
                         if (icheck >= 0)
                         {
-                            PocketCheck pcheck = pchecks.Where(p => p.Num == icheck).SingleOrDefault();
-
-                            if (pcheck == null)
-                            {
-                                visits.Add(VisitToVisitViewModel(visit, msgs));
-                            }
+                            visits.Add(VisitToVisitViewModel(visit, msgs));
                         }
                     }
 
@@ -182,29 +178,11 @@ namespace OPIDDaily.DAL
                     foreach (RCheck rcheck in rchecks)
                     {
                         visits.Add(RCheckToVisitViewModel(rcheck, msgs));
-
-                        PocketCheck pcheck = pchecks.Where(p => p.Num == rcheck.Num).SingleOrDefault();
-
-                        // If any pocket check gets resolved, then mark it as inactive.
-                        // Save changes below.
-                        if (pcheck != null)
-                        {
-                            pcheck.IsActive = false;
-                            resolvedPocketCheck = true;
-                        }
                     }
 
                     foreach (PocketCheck pcheck in pchecks)
                     {
-                        if (pcheck.IsActive)
-                        {
-                            visits.Add(PocketCheckToVisitViewModel(pcheck));
-                        }
-                    }
-
-                    if (resolvedPocketCheck)
-                    {
-                        opiddailycontext.SaveChanges();
+                        visits.Add(PocketCheckToVisitViewModel(pcheck));
                     }
 
                     // Make sure that visits are listed by ascending referral date
@@ -311,7 +289,10 @@ namespace OPIDDaily.DAL
 
                     if (ancientCheck != null)
                     {
+                        ancientCheck.Num = Convert.ToInt32(vvm.Check);
+                        ancientCheck.Service = vvm.Item;
                         ancientCheck.Disposition = vvm.Status;
+                        ancientCheck.Notes = vvm.Notes;
                         opiddailycontext.SaveChanges();
                         return;
                     }
@@ -320,20 +301,25 @@ namespace OPIDDaily.DAL
 
                     if (rcheck != null)
                     {
+                        rcheck.Num = Convert.ToInt32(vvm.Check);
+                        rcheck.Service = vvm.Item;
                         rcheck.Disposition = vvm.Status;
+                        rcheck.Notes = vvm.Notes;
                         opiddailycontext.SaveChanges();
                         return;
                     }
 
-                    PocketCheck pcheck = opiddailycontext.PocketChecks.Where(p => p.ClientId == nowServing).SingleOrDefault();
+                    PocketCheck pcheck = opiddailycontext.PocketChecks.Find(vvm.Id);
 
                     if (pcheck != null)
                     {
+                        pcheck.Item = vvm.Item;
+                        pcheck.Num = Convert.ToInt32(vvm.Check);
                         pcheck.Disposition = vvm.Status;
                         pcheck.Notes = vvm.Notes;
                         opiddailycontext.SaveChanges();
                         return;
-                    }          
+                    }        
                 }
             }
         }

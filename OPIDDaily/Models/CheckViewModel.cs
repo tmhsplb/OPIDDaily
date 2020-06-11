@@ -16,7 +16,6 @@ namespace OPIDDaily.Models
         public DateTime DOB { get; set; }
         public int Num { get; set; }
         public string sNum { get; set; }
-       // public DateTime? Date { get; set; } // string Date { get; set; }
         public string Date { get; set; }
         public string sDate { get; set; }
         public string Service { get; set; }
