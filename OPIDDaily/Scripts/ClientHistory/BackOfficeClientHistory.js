@@ -97,7 +97,7 @@ $("#historyGrid").jqGrid({
             },
             {
                 zIndex: 100,
-                url: "DeleteVisitNote", // "@Url.Action("DeleteDependentClient", "FrontDesk")",
+                url: "DeleteVisitNote", 
                 closeOnEscape: true,
                 closeAfterDelete: true,
                 recreateForm: true,
@@ -125,7 +125,7 @@ jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: tru
     },
     {
         zIndex: 100,
-        url: "AddPocketVisit", // "@Url.Action("AddVisit", "FrontDesk")",
+        url: "AddPocketCheck",
         closeOnEscape: true,
         closeAfterAdd: true,
         recreateForm: true,
@@ -139,7 +139,7 @@ jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: tru
     },
     {
         zIndex: 100,
-        url: "DeleteVisit", // "@Url.Action("DeleteVisit", "FrontDesk")",
+        url: "DeletePocketCheck", 
         closeOnEscape: true,
         closeAfterDelete: true,
         recreateForm: true,

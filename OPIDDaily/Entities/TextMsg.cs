@@ -17,6 +17,8 @@ namespace OpidDailyEntities
 
         public string To { get; set; }
 
+        public int Vid { get; set; }
+
         public string Msg { get; set; }
     }
 }

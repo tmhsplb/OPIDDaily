@@ -356,7 +356,10 @@ namespace OPIDDaily.DAL
 
                 foreach (TextMsg textMsg in client.TextMsgs)
                 {
-                    texts.Add(TextMsgToTextMsgViewModel(textMsg));
+                    if (textMsg.Vid == 0)
+                    {
+                        texts.Add(TextMsgToTextMsgViewModel(textMsg));
+                    }
                 }
 
                 return texts;
@@ -405,10 +408,12 @@ namespace OPIDDaily.DAL
 
                 foreach (Client client in clients)
                 {
+                    /*
                     opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
 
-                   // client.EXP = client.Visits.Count == 0;
-                    
+                    client.EXP = client.Visits.Count == 0;
+                    */
+
                     clientCVMS.Add(ClientEntityToClientViewModel(client));
                 }
 
@@ -896,8 +901,8 @@ namespace OPIDDaily.DAL
             {
                 Client client = opiddailycontext.Clients.Find(id);
 
-                opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-                opiddailycontext.Visits.RemoveRange(client.Visits);
+               // opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+               // opiddailycontext.Visits.RemoveRange(client.Visits);
 
                 opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
                 opiddailycontext.TextMsgs.RemoveRange(client.TextMsgs);

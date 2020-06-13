@@ -24,8 +24,6 @@ namespace OPIDDaily.DataContexts
 
         public DbSet<TextMsg> TextMsgs { get; set; }
 
-        public DbSet<Visit> Visits { get; set; }
-
         public DbSet<RCheck> RChecks { get; set; }
 
         public DbSet<AncientCheck> AncientChecks { get; set; }

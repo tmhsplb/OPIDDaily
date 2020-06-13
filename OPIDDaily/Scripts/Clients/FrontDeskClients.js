@@ -28,32 +28,39 @@
            {key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: {rows: '2', cols: '300' }  }
     ],
     pager: '#clientsPager',
-    rowNum: 25,
+    rowNum: 15,
 
-        onSelectRow: function (nowServing) {
-            if (nowServing == null || nowServing == lastServed) {
+    onSelectRow: function (nowServing) {
+       if (nowServing == null || nowServing == lastServed) {
                // Prevent infinite recursion caused by reloadGrid
                //alert("nowServing is null or nowServing == lastServed!");
-            } else {
-               lastServed = nowServing;
-              jQuery("#clientsGrid").jqGrid('setGridParam',
-              {
-                      postData: {nowServing: nowServing },
-                      url: "NowServing"  // "@Url.Action("NowServing", "FrontDesk")" 
-               }).trigger('reloadGrid', {fromServer: true }).jqGrid('setSelection', nowServing, true);
-             }
-        },
+       } else {
+           lastServed = nowServing;
+           jQuery("#clientsGrid").jqGrid('setGridParam',
+           {
+               postData: {
+                   nowServing: nowServing,
+                   frontdesk: 1
+               },
+               url: "NowConversing"
+           }).trigger('reloadGrid', { fromServer: true });
+       }
+    },
 
     height: "100%",
     viewrecords: true,
     loadonce: false,
+    loadComplete: function () {
+        //  alert("load is Complete");
+        jQuery("#clientsGrid").jqGrid('setSelection', lastServed);
+    },
 
-        gridComplete: function () {
-            for (var i = 0; i < rowsToColor.length; i++) {
-               //  alert("colored row: " + rowsToColor[i]);
-               $("#" + rowsToColor[i].rowId).css("color", rowsToColor[i].rowColor)
-             }
-         },
+    gridComplete: function () {
+       for (var i = 0; i < rowsToColor.length; i++) {
+           //  alert("colored row: " + rowsToColor[i]);
+          $("#" + rowsToColor[i].rowId).css("color", rowsToColor[i].rowColor)
+       }
+    },
 
     caption: 'Clients',
     emptyrecords: 'No records to display',

@@ -42,6 +42,7 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
+        /*
         public ActionResult PrehistoricChecks()
         {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
@@ -57,6 +58,7 @@ namespace OPIDDaily.Controllers
             // that is not yet visible, i.e. must be added to any actual existing history.
             return View("ExistingClient", rsvm);
         }
+        */
 
         public ActionResult GetClientHistory()
         {

@@ -598,12 +598,14 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
+                    /*
                     opidcontext.Entry(client).Collection(c => c.Visits).Load();
 
                     if (client.Visits.Count > 0)
                     {
                         return true;
                     }
+                    */
 
                     DateTime DOB = client.DOB;
                     string lastName = Extras.StripSuffix(client.LastName.ToUpper());

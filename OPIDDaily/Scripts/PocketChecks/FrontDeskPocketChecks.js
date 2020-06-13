@@ -28,7 +28,7 @@ $("#historyGrid").jqGrid({
         }
     },
 
-    caption: 'Checks for ' + GetClientName(),
+    caption: 'Checks prior to 2015 for ' + GetClientName() + " (if any)",
     emptyrecords: 'No records to display',
     jsonReader: {
         root: "rows",

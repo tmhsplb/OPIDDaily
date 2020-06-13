@@ -10,44 +10,7 @@ using System.Web;
 namespace OPIDDaily.DAL
 {
     public class Visits
-    {
-        private static string[] ExtractMsg(int vid, string[] msgs)
-        {
-            // msgs is an array of messages
-            // Example: msgs = ["FromOPID:123588, FromAgency:123587]"
-            // If there are no messages, then msgs = ["None:0"]
-            foreach (string msg in msgs)
-            {
-                if (msg.Contains(vid.ToString()))
-                {
-                    // If vid = 123588, then using the example above, extractedMsg = ["FromOPID", "123588"]
-                    string[] extractedMsg = msg.Split(':');
-                    return extractedMsg;
-                }
-            }
-
-            string[] none = new string[] { "None", "0" };
-            return none;
-        }
-
-        private static VisitViewModel VisitToVisitViewModel(Visit visit, string[] msgs)
-        {
-            string[] msg = ExtractMsg(visit.Id, msgs);
-            int extractedVid = Convert.ToInt32(msg[1]);
-            string sender = msg[0];
-
-            return new VisitViewModel
-            {
-                Id = visit.Id,
-                Date = visit.Date.AddHours(12),
-                Item = visit.Item,
-                Check = (string.IsNullOrEmpty(visit.Check) || visit.Check.Equals("0") ? string.Empty : visit.Check),
-                Status = visit.Status,
-                Notes = visit.Notes,
-                Sender = visit.Id == extractedVid ? sender : string.Empty
-            };
-        }
-
+    {        
         private static VisitViewModel AncientCheckToVisitViewModel(AncientCheck ancientCheck, string[] msgs)
         {
             DateTime? adate = ancientCheck.Date;
@@ -62,10 +25,6 @@ namespace OPIDDaily.DAL
                 date = (DateTime)adate;
             }
 
-            string[] msg = ExtractMsg(ancientCheck.Id, msgs);
-            int extractedVid = Convert.ToInt32(msg[1]);
-            string sender = msg[0];
-
             return new VisitViewModel
             {
                 Id = ancientCheck.Id,
@@ -74,7 +33,7 @@ namespace OPIDDaily.DAL
                 Check = (ancientCheck.Num == 0 ? string.Empty : ancientCheck.Num.ToString()),
                 Status = ancientCheck.Disposition,
                 Notes = ancientCheck.Notes,
-                Sender = ancientCheck.Id == extractedVid ? sender : string.Empty
+                Sender = string.Empty
             };
         }
 
@@ -92,10 +51,6 @@ namespace OPIDDaily.DAL
                 date = (DateTime)rdate;
             }
 
-            string[] msg = ExtractMsg(rcheck.Id, msgs);
-            int extractedVid = Convert.ToInt32(msg[1]);
-            string sender = msg[0];
-
             return new VisitViewModel
             {
                 Id = rcheck.Id,
@@ -104,7 +59,7 @@ namespace OPIDDaily.DAL
                 Check = (rcheck.Num == 0 ? string.Empty: rcheck.Num.ToString()),
                 Status = rcheck.Disposition,
                 Notes = rcheck.Notes,
-                Sender = rcheck.Id == extractedVid ? sender : string.Empty
+                Sender = string.Empty
             };
         }
 
@@ -119,18 +74,6 @@ namespace OPIDDaily.DAL
                 Status = pcheck.Disposition,
                 Sender = string.Empty,
                 Notes = pcheck.Notes
-            };
-        }
-
-        private static Visit VisitViewModelToVisit(VisitViewModel vvm)
-        {
-            return new Visit
-            {
-                Date = vvm.Date,
-                Item = vvm.Item,
-                Check = vvm.Check,
-                Status = vvm.Status,
-                Notes = vvm.Notes
             };
         }
 
@@ -149,26 +92,7 @@ namespace OPIDDaily.DAL
                     List<RCheck> rchecks = opiddailycontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.ToUpper().StartsWith(lastName)).ToList();
                     List<PocketCheck> pchecks = opiddailycontext.PocketChecks.Where(pc => pc.ClientId == client.Id && pc.IsActive == true).ToList();
 
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-
                     List<VisitViewModel> visits = new List<VisitViewModel>();
-
-                    foreach (Visit visit in client.Visits)
-                    {
-                        string check = visit.Check;
-                        int icheck = 0;
-
-                        if (!string.IsNullOrEmpty(check))
-                        {
-                            icheck = Convert.ToInt32(check);
-                        }
-
-                        // Exclude visit notes which are implemented as visits but all have icheck < 0
-                        if (icheck >= 0)
-                        {
-                            visits.Add(VisitToVisitViewModel(visit, msgs));
-                        }
-                    }
 
                     foreach (AncientCheck ancientCheck in ancientChecks)
                     {
@@ -217,24 +141,6 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void AddVisit(int nowServing, VisitViewModel vvm)
-        {
-            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
-            {
-                Client client = opiddailycontext.Clients.Find(nowServing);
-
-                if (client != null)
-                {
-                    Visit visit = VisitViewModelToVisit(vvm);
-
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-
-                    client.Visits.Add(visit);
-                    opiddailycontext.SaveChanges();
-                }
-            }
-        }
-
         private static PocketCheck NewPocketCheck(Client client, VisitViewModel vvm)
         {
             return new PocketCheck
@@ -251,7 +157,7 @@ namespace OPIDDaily.DAL
             };
         }
               
-        public static void AddPocketVisit(int nowServing, VisitViewModel vvm)
+        public static void AddPocketCheck(int nowServing, VisitViewModel vvm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
@@ -273,18 +179,6 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-
-                    Visit visit = client.Visits.Where(v => v.Id == vvm.Id).SingleOrDefault();
-
-                    if (visit != null)
-                    {
-                        visit.Status = vvm.Status;
-                        visit.Notes = vvm.Notes;
-                        opiddailycontext.SaveChanges();
-                        return;
-                    }
-
                     AncientCheck ancientCheck = opiddailycontext.AncientChecks.Find(vvm.Id);
 
                     if (ancientCheck != null)
@@ -324,7 +218,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void DeleteVisit(int nowServing, int id)
+        public static void DeletePocketCheck(int nowServing, int id)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
@@ -332,16 +226,6 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-
-                    Visit visit = opiddailycontext.Visits.Find(id);
-
-                    if (visit != null)
-                    {
-                        opiddailycontext.Visits.Remove(visit);
-                        opiddailycontext.SaveChanges();
-                    }
-
                     PocketCheck pcheck = opiddailycontext.PocketChecks.Where(p => p.ClientId == nowServing).SingleOrDefault();
 
                     if (pcheck != null)
@@ -353,71 +237,42 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static List<VisitNoteModel> GetVisitNotes(int nowServing, int rowId)
-        {
-            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
-            {
-                Client client = opiddailycontext.Clients.Find(nowServing);
-
-                if (client != null)
-                {
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-                    List<VisitNoteModel> visitNotes = new List<VisitNoteModel>();
-                    
-                    foreach (Visit visit in client.Visits)
-                    {
-                        if (visit.Check == rowId.ToString())
-                        {
-                            visitNotes.Add(VisitToVisitNote(visit));
-                        }
-                    }
-
-                    return visitNotes;
-                }
-            }
-
-            return null;
-        }
-        
-        private static VisitNoteModel VisitToVisitNote(Visit visit)
+        private static VisitNoteModel TextMsgToVisitNoteModel(TextMsg textmsg)
         {
             return new VisitNoteModel
             {
-                Id = visit.Id,
-                RowId = -Convert.ToInt32(visit.Check),
-                Date = visit.Date,
-                From = visit.Item,
-                Note = visit.Notes
-            };
-        }
-        
-        private static Visit VisitNoteModelToVisit(int vid, VisitNoteModel vnm)
-        {
-            return new Visit
-            {
-                Date = Extras.DateTimeToday(),
-                Item = vnm.From,
-                Check = (-vid).ToString(),
-                Notes = vnm.Note
+                Id = textmsg.Vid,
+                Date = textmsg.Date,
+                From = textmsg.From,
+                Note = textmsg.Msg
             };
         }
 
-        private static void PrependMsg(Client client, string sender, int vid)
+        public static List<VisitNoteModel> GetVisitNotes(int nowServing, int vid)
         {
-            string msg = string.Format("From{0}:{1}", sender, vid);
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                List<TextMsg> textmsgs = opiddailycontext.TextMsgs.Where(m => m.Vid == vid).ToList();
+                List<VisitNoteModel> visitNotes = new List<VisitNoteModel>();
 
-            // client.Msgs will be a comma separated list of messages
-            // Example: client.Msgs = "FromOPID:123588,FromAgency:123587"
-            // client.Msgs is split into an array of meessages in method GetVisits.
-            if (string.IsNullOrEmpty(client.Msgs))
+                foreach (TextMsg textmsg in textmsgs)
+                {
+                    visitNotes.Add(TextMsgToVisitNoteModel(textmsg));
+                }
+
+                return visitNotes;
+            }          
+        }
+         
+        private static TextMsg VisitNoteModelToTextMsg(VisitNoteModel vnm, int vid)
+        {
+            return new TextMsg
             {
-                client.Msgs = msg;
-            }
-            else
-            {
-                client.Msgs = string.Format("{0},{1}", msg, client.Msgs);
-            }
-            
+                Date = Extras.DateTimeToday().AddHours(12),
+                Vid = vid,
+                From = vnm.From,
+                Msg = vnm.Note
+            };
         }
 
         public static void AddVisitNote(int nowServing, int vid, string sender, VisitNoteModel vnm)
@@ -425,37 +280,33 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
                 Client client = opiddailycontext.Clients.Find(nowServing);
-               
-                if (client != null)
-                {
-                    PrependMsg(client, sender, vid);
-                    
-                    Visit visit = VisitNoteModelToVisit(vid, vnm);
 
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
+                opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
 
-                    client.Visits.Add(visit);
+                TextMsg textmsg = VisitNoteModelToTextMsg(vnm, vid);
 
-                    opiddailycontext.SaveChanges();
-                }
+                client.TextMsgs.Add(textmsg);
+
+                opiddailycontext.SaveChanges();
             }
         }
 
-        private static void VisitNoteModelToVisitEntity(VisitNoteModel vnm, Visit visit)
+        private static void VisitNoteModelToTextMsg(VisitNoteModel vnm, TextMsg textmsg)
         {
-            visit.Item = vnm.From;
-            visit.Notes = vnm.Note;
+            textmsg.From = vnm.From;
+            textmsg.Msg = vnm.Note;
         }
 
         public static void EditVisitNote(VisitNoteModel vnm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                Visit visit = opiddailycontext.Visits.Find(vnm.Id); 
+                List<TextMsg> textmsgs = opiddailycontext.TextMsgs.Where(m => m.Vid == vnm.Id).ToList();
 
-                if (visit != null)
+                if (textmsgs.Count == 1)
                 {
-                    VisitNoteModelToVisitEntity(vnm, visit);
+                    TextMsg textmsg = textmsgs[0];
+                    VisitNoteModelToTextMsg(vnm, textmsg);
                     opiddailycontext.SaveChanges();
                 }
             }
@@ -465,9 +316,14 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
-                Visit visit = opiddailycontext.Visits.Find(id);
-                opiddailycontext.Visits.Remove(visit);
-                opiddailycontext.SaveChanges();
+                List<TextMsg> textmsgs = opiddailycontext.TextMsgs.Where(m => m.Vid == id).ToList();
+                TextMsg textmsg = textmsgs[0];
+
+                if (textmsgs.Count == 1)
+                {
+                    opiddailycontext.TextMsgs.Remove(textmsg);
+                    opiddailycontext.SaveChanges();
+                }
             }
         }
     }

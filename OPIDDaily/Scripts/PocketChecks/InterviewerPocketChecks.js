@@ -57,7 +57,7 @@ jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: tru
     },
     {
         zIndex: 100,
-        url: "AddPocketVisit", // "@Url.Action("AddVisit", "FrontDesk")",
+        url: "AddPocketCheck",
         closeOnEscape: true,
         closeAfterAdd: true,
         recreateForm: true,

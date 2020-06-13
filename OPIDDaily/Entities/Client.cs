@@ -144,6 +144,6 @@ namespace OpidDailyEntities
 
         public ICollection<TextMsg> TextMsgs { get; set; }
 
-        public ICollection<Visit> Visits { get; set; }
+     //   public ICollection<Visit> Visits { get; set; }
     }
 }

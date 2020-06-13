@@ -96,7 +96,7 @@ $("#historyGrid").jqGrid({
             },
             {
                 zIndex: 100,
-                url: "DeleteVisitNote", // "@Url.Action("DeleteDependentClient", "FrontDesk")",
+                url: "DeleteVisitNote", 
                 closeOnEscape: true,
                 closeAfterDelete: true,
                 recreateForm: true,

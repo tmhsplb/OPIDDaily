@@ -349,6 +349,14 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202006102035056_DbCheckNotes.Designer.cs">
       <DependentUpon>202006102035056_DbCheckNotes.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006131254299_DeleteVisitsTable.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006131254299_DeleteVisitsTable.Designer.cs">
+      <DependentUpon>202006131254299_DeleteVisitsTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006131444485_TextMsgVid.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202006131444485_TextMsgVid.Designer.cs">
+      <DependentUpon>202006131444485_TextMsgVid.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -357,7 +365,6 @@
     <Compile Include="Entities\Invitation.cs" />
     <Compile Include="Entities\AncientCheck.cs" />
     <Compile Include="Entities\RCheck.cs" />
-    <Compile Include="Entities\Visit.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -845,6 +852,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\clientsServed.js" />
+    <Content Include="Scripts\PocketChecks\FrontDeskPocketChecks.js" />
     <Content Include="Scripts\PocketChecks\InterviewerPocketChecks.js" />
     <Content Include="Scripts\PocketChecks\BackOfficePocketChecks.js" />
     <Content Include="Scripts\preApprovalForm.js" />
@@ -1094,6 +1102,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202006102035056_DbCheckNotes.resx">
       <DependentUpon>202006102035056_DbCheckNotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202006131254299_DeleteVisitsTable.resx">
+      <DependentUpon>202006131254299_DeleteVisitsTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202006131444485_TextMsgVid.resx">
+      <DependentUpon>202006131444485_TextMsgVid.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

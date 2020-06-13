@@ -32,7 +32,7 @@ namespace OPIDDaily.Controllers
             SessionHelper.Set("NowServing", nowServing.ToString());
         }
 
-        public JsonResult NowConversing(SearchParameters sps, int page, int? nowServing = 0, int? rows = 15)
+        public JsonResult NowConversing(SearchParameters sps, int page, int frontdesk = 0, int? nowServing = 0, int? rows = 15)
         {
           // Log.Debug(string.Format("Enter NowConversing: nowServing = {0}", nowServing));
 
@@ -43,7 +43,15 @@ namespace OPIDDaily.Controllers
 
             if (agencyId == 0)
             {
-                clients = Clients.GetDashboardClients(sps);
+                if (frontdesk == 1)
+                {
+                    clients = Clients.GetClients(Extras.DateTimeToday());
+                }
+                else
+                {
+                    clients = Clients.GetDashboardClients(sps);
+                }
+               
             }
             else
             {
@@ -288,18 +296,10 @@ namespace OPIDDaily.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        public string AddVisit(VisitViewModel vvm)
+        public string AddPocketCheck(VisitViewModel vvm)
         {
             int nowServing = NowServing();
-            Visits.AddVisit(nowServing, vvm);
-            DailyHub.Refresh();
-            return "Success";
-        }
-
-        public string AddPocketVisit(VisitViewModel vvm)
-        {
-            int nowServing = NowServing();
-            Visits.AddPocketVisit(nowServing, vvm);
+            Visits.AddPocketCheck(nowServing, vvm);
             DailyHub.Refresh();
             return "Success";
         }
@@ -311,17 +311,17 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
-        public string DeleteVisit(int id)
+        public string DeletePocketCheck(int id)
         {
             int nowServing = NowServing();
-            Visits.DeleteVisit(nowServing, id);
+            Visits.DeletePocketCheck(nowServing, id);
             return "Success";
         }
 
         public JsonResult GetVisitNotes(int id, int page, int rows)
         {
             int nowServing = NowServing();
-            List<VisitNoteModel> visitNotes = Visits.GetVisitNotes(nowServing, -id);
+            List<VisitNoteModel> visitNotes = Visits.GetVisitNotes(nowServing, id);
 
             var jsonData = new
             {

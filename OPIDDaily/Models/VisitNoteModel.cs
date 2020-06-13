@@ -9,7 +9,6 @@ namespace OPIDDaily.Models
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public int RowId { get; set; }
         public string From { get; set; }
         public string Note { get; set; }
     }
