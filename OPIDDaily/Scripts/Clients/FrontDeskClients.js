@@ -12,7 +12,7 @@
            {key: true, hidden: true, name: 'Id', index: 'Id' },
            { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
            { key: false, align: 'center', name: 'ServiceDate', index: 'ServiceDate', formatter: 'date', width: 120, editable: false, sortable: true, search: false },
-           { key: false, align: 'center', name: 'Expiry', index: 'Expiry', formatter: 'date', width: 120, editable: true, sortable: true, search: false },
+           { key: false, align: 'center', name: 'Expiry', index: 'Expiry', formatter: 'date', width: 120, editable: false, sortable: true, search: false },
           // {key: false, align: 'center', name: 'WaitTime', index: 'WaitTime', width: 50, formatter: rowColorFormatter, editable: false, sortable: true, search: false },
            {key: false, name: 'Stage', index: 'Stage', width: 100, editable: true, edittype: 'select', editoptions: {value: {'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing': 'Interviewing', 'Interviewed': 'Interviewed', 'BackOffice': 'BackOffice', 'Done': 'Done' } }, sortable: false, search: false },
            {key: false, name: 'HeadOfHousehold', index: 'HeadOfHousehold', width: 35, align: 'center', editable: false, sortable: false, search: false },

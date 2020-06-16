@@ -11,6 +11,25 @@ namespace OPIDDaily.DAL
 {
     public class Visits
     {        
+        private static string MostRecentSender(int id)
+        {
+            // This method was too complicated to implement.  It was intended
+            // to support color coding of a client's visit history. But instead
+            // I just settled on indicating whether there was a conversation
+            // going on regarding a particualr check. See method HavingConversation.
+            return string.Empty;
+        }
+
+        private static bool HavingConversation(int id)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                bool havingConversation = opiddailycontext.TextMsgs.Any(tm => tm.Vid == id);
+
+                return havingConversation;
+            }
+        }
+
         private static VisitViewModel AncientCheckToVisitViewModel(AncientCheck ancientCheck, string[] msgs)
         {
             DateTime? adate = ancientCheck.Date;
@@ -28,12 +47,13 @@ namespace OPIDDaily.DAL
             return new VisitViewModel
             {
                 Id = ancientCheck.Id,
-                Date = date.AddHours(12),  
+                Date = date.AddHours(12),
+                Conversation = (HavingConversation(ancientCheck.Id) ? "Y" : string.Empty),
                 Item = ancientCheck.Service,
                 Check = (ancientCheck.Num == 0 ? string.Empty : ancientCheck.Num.ToString()),
                 Status = ancientCheck.Disposition,
                 Notes = ancientCheck.Notes,
-                Sender = string.Empty
+                Sender = MostRecentSender(ancientCheck.Id)
             };
         }
 
@@ -54,12 +74,13 @@ namespace OPIDDaily.DAL
             return new VisitViewModel
             {
                 Id = rcheck.Id,
-                Date = date.AddHours(12), 
+                Date = date.AddHours(12),
+                Conversation = (HavingConversation(rcheck.Id) ? "Y" : string.Empty),
                 Item = rcheck.Service,
                 Check = (rcheck.Num == 0 ? string.Empty: rcheck.Num.ToString()),
                 Status = rcheck.Disposition,
                 Notes = rcheck.Notes,
-                Sender = string.Empty
+                Sender = MostRecentSender(rcheck.Id)
             };
         }
 
@@ -69,10 +90,11 @@ namespace OPIDDaily.DAL
             {
                 Id = pcheck.Id,
                 Date = pcheck.Date,
+                Conversation = (HavingConversation(pcheck.Id) ? "Y" : string.Empty),
                 Item = pcheck.Item,
                 Check = pcheck.Num.ToString(),
                 Status = pcheck.Disposition,
-                Sender = string.Empty,
+                Sender = MostRecentSender(pcheck.Id),
                 Notes = pcheck.Notes
             };
         }
@@ -109,7 +131,7 @@ namespace OPIDDaily.DAL
                         visits.Add(PocketCheckToVisitViewModel(pcheck));
                     }
 
-                    // Make sure that visits are listed by ascending referral date
+                    // Make sure that visits are listed by ascending date
                     visits = visits.OrderBy(v => v.Date).ToList();
                     return visits;
                 }
@@ -135,7 +157,7 @@ namespace OPIDDaily.DAL
                     }
                 }
 
-                // Make sure that visits are listed by ascending referral date
+                // Make sure that visits are listed by ascending date
                 visits = visits.OrderBy(v => v.Date).ToList();
                 return visits;
             }
@@ -146,7 +168,7 @@ namespace OPIDDaily.DAL
             return new PocketCheck
             {
                 ClientId = client.Id,
-                Date = Extras.DateTimeToday().AddHours(12),
+                Date = vvm.Date,
                 Name = Clients.ClientBeingServed(client),
                 DOB = client.DOB,
                 Item = vvm.Item,
@@ -230,6 +252,7 @@ namespace OPIDDaily.DAL
 
                     if (pcheck != null)
                     {
+                        DeleteVisitNotes(pcheck.Id);
                         opiddailycontext.PocketChecks.Remove(pcheck);
                         opiddailycontext.SaveChanges();
                     }
@@ -324,6 +347,16 @@ namespace OPIDDaily.DAL
                     opiddailycontext.TextMsgs.Remove(textmsg);
                     opiddailycontext.SaveChanges();
                 }
+            }
+        }
+
+        public static void DeleteVisitNotes(int id)
+        {
+            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            {
+                List<TextMsg> textmsgs = opiddailycontext.TextMsgs.Where(m => m.Vid == id).ToList();
+                opiddailycontext.TextMsgs.RemoveRange(textmsgs);
+                opiddailycontext.SaveChanges();  
             }
         }
     }

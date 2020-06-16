@@ -785,6 +785,7 @@
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
     <Content Include="Scripts\Helper.js" />
+    <Content Include="Scripts\HubCode\VisitHistoryHubCode.js" />
     <Content Include="Scripts\HubCode\BackOfficeHubCode.js" />
     <Content Include="Scripts\HubCode\CaseManagerHubCode.js" />
     <Content Include="Scripts\HubCode\DemoHubCode.js" />

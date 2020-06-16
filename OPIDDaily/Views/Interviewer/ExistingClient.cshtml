@@ -36,31 +36,35 @@
 
 <h3>Existing Client: @ViewBag.ClientName</h3>
 <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
- <br/>
+<br />
 
- <div class="row">
-     <div class="col-md-12">
-         <section id="existingclientForm">
-             @using (Html.BeginForm("PrepareInterviewerExistingClient", "Interviewer", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
-             {
-                 @Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-md-12">
+        <section id="existingclientForm">
+            @using (Html.BeginForm("PrepareInterviewerExistingClient", "Interviewer", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
 
-                 @* @Html.Partial("_PreApproval", Model) *@
+                @* @Html.Partial("_PreApproval", Model) *@
 
-                 <h4>Requested Services</h4>
-                 <hr />
-                 @Html.Partial("_HiddenSupportingDocuments", Model)
-                 @Html.Partial("_ReadOnlyRequestedServicesForm", Model)
+                <h4>Requested Services</h4>
+                <hr />
+                @Html.Partial("_HiddenSupportingDocuments", Model)
+                @Html.Partial("_ReadOnlyRequestedServicesForm", Model)
 
-                 @Html.Partial("_ReadOnlySupportingDocuments", Model)
+                @Html.Partial("_ReadOnlySupportingDocuments", Model)
 
-                 <br />
-                 <div class="form-group">
-                     <div class="col-md-10">
-                         <input type="submit" value="Prepare Service Ticket" class="btn btn-default" />
-                     </div>
-                 </div>
-             }
-         </section>
-     </div>
- </div>
+                <br />
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Prepare Service Ticket" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.signalR-2.4.1.min.js")"></script>
+<script type="text/javascript" src="~/signalr/hubs"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/HubCode/VisitHistoryHubCode.js")"></script>

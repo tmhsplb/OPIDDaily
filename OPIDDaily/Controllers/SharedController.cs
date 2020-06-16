@@ -308,13 +308,27 @@ namespace OPIDDaily.Controllers
         {
             int nowServing = NowServing();
             Visits.EditVisit(nowServing, vvm);
+            DailyHub.Refresh();
             return "Success";
         }
 
+        /// <summary>
+        ///  PLB: 6/15/2020 Disallowed this through jqGrid in 
+        ///     FrontDeskClientHistory.js
+        ///     FrontDeskPocketChecks.js
+        ///     BackOfficeClientHistory.js 
+        ///     BackOfficePocketChecks.js
+        ///     InterviewerClientHistory.js
+        ///     InterviewerPocketChecks.js
+        ///  May revisit this decision later.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public string DeletePocketCheck(int id)
-        {
+        { 
             int nowServing = NowServing();
             Visits.DeletePocketCheck(nowServing, id);
+            DailyHub.Refresh();
             return "Success";
         }
 
@@ -348,12 +362,14 @@ namespace OPIDDaily.Controllers
         public string EditVisitNote(VisitNoteModel vnm)
         {
             Visits.EditVisitNote(vnm);
+            DailyHub.Refresh();
             return "Success";
         }
 
         public string DeleteVisitNote(int id)
         {
             Visits.DeleteVisitNote(id);
+            DailyHub.Refresh();
             return "Success";
         }
 

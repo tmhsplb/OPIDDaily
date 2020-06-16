@@ -7,7 +7,7 @@ $("#historyGrid").jqGrid({
     colNames: ['Id', 'Date', 'Item', 'Check', 'Status', 'Sender', 'Notes'],
     colModel: [
         { key: false, hidden: true, name: 'Id', index: 'Id' },  // Id may not be unique!
-        { key: false, align: 'center', name: 'Date', index: 'Date', formatter: 'date', width: 80, editable: false, sortable: true, search: false },
+        { key: false, align: 'center', name: 'Date', index: 'Date', formatter: 'date', width: 80, editable: true, sortable: true, search: false },
         { key: false, name: 'Item', index: 'Item', width: 80, editable: true, sortable: false, search: false },
         { key: false, name: 'Check', index: 'Check', width: 80, editable: true, sortable: false, search: false },
         { key: false, name: 'Status', index: 'Status', width: 100, editable: true, edittype: 'select', editoptions: { value: { '': '', 'Cleared': 'Cleared', 'Voided': 'Voided', 'Voided/No Reissue': 'Voided/No Reissue', 'Voided/Resissued': 'Voided/Reissued', 'Voided/Replaced': 'Voided/Replaced', 'Used': 'Used', 'Not Used': 'Not Ussed' } }, sortable: false, search: false },
@@ -42,7 +42,7 @@ $("#historyGrid").jqGrid({
     multiselect: false,
 })
 
-jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: true, del: true, search: false, refresh: false },
+jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: true, del: false, search: false, refresh: false },
     {
         zIndex: 100,
         url: "EditVisit", 
@@ -68,10 +68,11 @@ jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: tru
                 }
             }
         }
-    },
+    }
+    /*
     {
         zIndex: 100,
-        url: "DeleteVisit", // "@Url.Action("DeleteVisit", "FrontDesk")",
+        url: "DeletePocketCheck", // "@Url.Action("DeleteVisit", "FrontDesk")",
         closeOnEscape: true,
         closeAfterDelete: true,
         recreateForm: true,
@@ -80,7 +81,9 @@ jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: tru
                 //   alert(response.responseText);
             }
         }
-    });
+    }
+    */
+    );
 
 // See: https://stackoverflow.com/questions/3908171/jqgrid-change-row-background-color-based-on-condition
 function rowColorFormatter(cellValue, options, rowObject) {

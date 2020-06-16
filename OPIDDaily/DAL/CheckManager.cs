@@ -598,28 +598,26 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    /*
-                    opidcontext.Entry(client).Collection(c => c.Visits).Load();
-
-                    if (client.Visits.Count > 0)
-                    {
-                        return true;
-                    }
-                    */
-
                     DateTime DOB = client.DOB;
                     string lastName = Extras.StripSuffix(client.LastName.ToUpper());
 
-                    List<RCheck> rchecks = opidcontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.StartsWith(lastName)).ToList();
+                    bool rchecks = opidcontext.RChecks.Any(rc => rc.DOB == DOB && rc.Name.StartsWith(lastName));
 
-                    if (rchecks.Count > 0)
+                    if (rchecks)
                     {
                         return true;
                     }
 
-                    List<AncientCheck> ancientChecks = opidcontext.AncientChecks.Where(ac => ac.DOB == DOB && ac.Name.StartsWith(lastName)).ToList();
+                    bool ancientChecks = opidcontext.AncientChecks.Any(ac => ac.DOB == DOB && ac.Name.StartsWith(lastName));
 
-                    if (ancientChecks.Count > 0)
+                    if (ancientChecks)
+                    {
+                        return true;
+                    }
+
+                    bool pchecks = opidcontext.PocketChecks.Any(pc => pc.ClientId == nowServing);
+
+                    if (pchecks)
                     {
                         return true;
                     }
