@@ -837,7 +837,18 @@ namespace OPIDDaily.Controllers
             };
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
 
+        public ActionResult RecentChecks()
+        {
+            ViewBag.RecentYears = Config.RecentYears;
+            return View();
+        }
+
+        public ActionResult AncientChecks()
+        {
+            ViewBag.AncientYears = Config.AncientYears;
+            return View();
         }
 
         public ActionResult ServiceTicket()

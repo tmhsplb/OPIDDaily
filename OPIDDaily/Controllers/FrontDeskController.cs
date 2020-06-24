@@ -230,17 +230,5 @@ namespace OPIDDaily.Controllers
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClientOverflowVoucher", objTuple);
         }
-
-        public ActionResult RecentChecks()
-        {
-            ViewBag.RecentYears = Config.RecentYears;
-            return View();
-        }
-
-        public ActionResult AncientChecks()
-        {
-            ViewBag.AncientYears = Config.AncientYears;
-            return View();
-        }
     }
 }

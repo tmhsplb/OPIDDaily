@@ -991,6 +991,8 @@
     <Content Include="Views\Interviewer\Dashboard.cshtml" />
     <Content Include="Views\Shared\_HowItWorks.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Interviewer\RecentChecks.cshtml" />
+    <Content Include="Views\Interviewer\AncientChecks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />

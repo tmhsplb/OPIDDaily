@@ -1,0 +1,64 @@
+﻿@model OPIDDaily.Models.FileViewModel
+
+@{
+    ViewBag.Title = "Recent Checks";
+    Layout = "~/Views/Shared/_Interviewer.cshtml";
+}
+
+<br /><br /><br />
+
+<h4>Checks for years: @ViewBag.RecentYears</h4>
+
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary list-panel" id="list-panel">
+            <div class="panel-heading list-panel-heading">
+                <h1 class="panel-title list-panel-title">Recent Checks</h1>
+            </div>
+            <div class="panel-body">
+                <table id="checks-data-table" class="table table-striped table-bordered" style="width:100%;"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        var checksListVM;
+        $(function () {
+            checksListVM = {
+                dt: null,
+
+                init: function () {
+                    dt = $('#checks-data-table').DataTable({
+                        "serverSide": true,
+                        "processing": true,
+                        "ajax": {
+                            "url": "@Url.Action("GetRecentChecks","ResearchTable")"
+                        },
+                        "columns": [
+                            { "title": "Record ID", "data": "sRecordID", "searchable": true },
+                            { "title": "Interview Record ID", "data": "sInterviewRecordID", "searchable": true },
+                            { "title": "Name", "data": "Name", "searchable": true },
+                            { "title": "DOB", "data": "sDOB", "searchable": true},
+                            { "title": "Num", "data": "sNum", "searchable": true },
+                            { "title": "Date", "data": "sDate", "searchable": true },
+                            { "title": "Service", "data": "Service", "searchable": true },
+                            { "title": "Disposition", "data": "Disposition", "searchable": true }
+                        ],
+                        "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+                    });
+                }
+            }
+
+            // initialize the datatables
+            checksListVM.init();
+        });
+    </script>
+}
+
+ 
+

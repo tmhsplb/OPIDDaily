@@ -282,17 +282,5 @@ namespace OPIDDaily.Controllers
             ViewData["MergeStatus"] = "Merge Complete";
             return View("Merge");
         }
-
-        public ActionResult RecentChecks()
-        {
-            ViewBag.RecentYears = Config.RecentYears;
-            return View();
-        }
-
-        public ActionResult AncientChecks()
-        {
-            ViewBag.AncientYears = Config.AncientYears;
-            return View();
-        }
     }
 }

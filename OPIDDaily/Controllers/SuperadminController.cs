@@ -275,18 +275,6 @@ namespace OPIDDaily.Controllers
             return View("RecentChecks");
         }
         
-        public ActionResult RecentChecks()
-        {
-            ViewBag.RecentYears = Config.RecentYears;
-            return View();
-        }
-
-        public ActionResult AncientChecks()
-        {
-            ViewBag.AncientYears = Config.AncientYears;
-            return View();
-        }
-
         public ActionResult PreApprovalForm()
         {
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();

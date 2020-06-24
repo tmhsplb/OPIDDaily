@@ -615,7 +615,7 @@ namespace OPIDDaily.DAL
                         return true;
                     }
 
-                    bool pchecks = opidcontext.PocketChecks.Any(pc => pc.ClientId == nowServing);
+                    bool pchecks = opidcontext.PocketChecks.Any(pc => pc.ClientId == nowServing && pc.IsActive == true);
 
                     if (pchecks)
                     {
@@ -874,7 +874,7 @@ namespace OPIDDaily.DAL
         {
             // PLB 1/23/2019 Added r.RecordID == check.RecordID.
             // This fixed the problem that Bill reported in an email dated 1/21/2019.
-            CheckViewModel alreadyResolved = resolvedChecks.Where(r => (r.RecordID == check.RecordID && (r.Num == check.Num || r.Num == -check.Num))).FirstOrDefault();
+            CheckViewModel alreadyResolved = resolvedChecks.Where(r => (r.RecordID == check.RecordID && r.Num == check.Num)).FirstOrDefault();
             CheckViewModel cvm = null;
             DateTime checkDate = new DateTime(1900, 1, 1);
 

@@ -29,7 +29,7 @@ $("#historyGrid").jqGrid({
         }
     },
 
-    caption: 'Previous visits by ' + GetClientName(),
+    caption: 'Checks for ' + GetClientName(),
     emptyrecords: 'No records to display',
     jsonReader: {
         root: "rows",
