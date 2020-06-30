@@ -27,7 +27,7 @@
             @using (Html.BeginForm("StoreServiceRequest", "CaseManager", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.Hidden("Agency", Model.Agency)
+                @Html.Hidden("AgencyId", Model.AgencyId)
                 @Html.Partial("_CaseManagerRequestedServicesForm", Model)
 
                 @Html.Partial("_BootstrapSupportingDocuments", Model)
