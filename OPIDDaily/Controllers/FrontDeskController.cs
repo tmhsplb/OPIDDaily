@@ -176,7 +176,7 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.AgencyId will be the Id of an Agency as a string
             ViewBag.IssueDate = today.ToString("ddd MMM d, yyyy");
             ViewBag.Expiry = Clients.CalculateExpiry(today).ToString("ddd MMM d, yyyy");
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");  // for _OverflowSignatureBlock.cshtml
@@ -217,7 +217,7 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.AgencyId will be the Id of an Agency as a string
             ViewBag.IssueDate = today.ToString("ddd MMM d, yyyy");
             ViewBag.Expiry = expiryDate.ToString("ddd MMM d, yyyy");
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy"); // for _OverflowSignatureBlock.cshtml

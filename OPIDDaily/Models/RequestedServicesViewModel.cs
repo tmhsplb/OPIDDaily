@@ -19,9 +19,8 @@ namespace OPIDDaily.Models
 
         [Display(Name = "Client has returned with requested documents")]
         public bool HasDocs { get; set; }
-
-        [Required(ErrorMessage = "Please select an agency from the list.")]
-        public string Agency { get; set; }
+ 
+        public string AgencyId { get; set; }
 
         public SelectList Agencies { get; set; }
 

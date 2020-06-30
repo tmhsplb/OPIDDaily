@@ -373,6 +373,7 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
+        /*
         protected static void ServiceTicketBackButtonHelper(string mode, RequestedServicesViewModel rsvm)
         {
             switch (mode)
@@ -542,6 +543,7 @@ namespace OPIDDaily.Controllers
                     break;
             }
         }
+        */
 
         protected static void PrepareBCNotes(Client client, RequestedServicesViewModel rsvm)
         {
@@ -664,7 +666,7 @@ namespace OPIDDaily.Controllers
             }
             else
             {
-                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.Agency will be the Id of an Agency as a string
             }
 
             // ServiceTicketBackButtonHelper("Set", rsvm);
@@ -703,7 +705,7 @@ namespace OPIDDaily.Controllers
             }
             else
             {
-                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.Agency));  // rsvm.Agency will be the Id of an Agency as a string
+                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.AgencyId will be the Id of an Agency as a string
             }
 
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
@@ -722,8 +724,8 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-            rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
-            rsvm.Agency = client.AgencyId.ToString();
+            rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId); //Agencies.GetAgenciesSelectList(client.AgencyId);
+            //   rsvm.Agency = client.AgencyId.ToString(); //  Agencies.GetAgencyName(client.AgencyId);  
 
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
@@ -741,7 +743,7 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
             rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
-            rsvm.Agency = client.AgencyId.ToString();
+         //   rsvm.Agency = Agencies.GetAgencyName(client.AgencyId);  
             
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");

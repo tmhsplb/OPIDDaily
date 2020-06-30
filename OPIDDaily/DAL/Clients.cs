@@ -23,7 +23,7 @@ namespace OPIDDaily.DAL
 
                 if (rsvm != null)
                 {
-                    rsvm.Agency = client.AgencyId.ToString();
+                    rsvm.AgencyId = client.AgencyId.ToString();
 
                     // Requested Services
                     rsvm.BC = client.BC;
@@ -1102,7 +1102,7 @@ namespace OPIDDaily.DAL
             {
                 Client client = opiddailycontext.Clients.Find(id);
 
-                client.AgencyId = Convert.ToInt32(rsvm.Agency);
+                client.AgencyId = Convert.ToInt32(rsvm.AgencyId);
 
                 // Requested Services
                 client.BC = rsvm.BC;

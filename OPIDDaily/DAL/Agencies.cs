@@ -17,19 +17,23 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
+              //  IEnumerable<Agency> agencies = opiddailycontext.Agencies.ToList();
+
                 List<Agency> agencies = opiddailycontext.Agencies.ToList();
 
                 agencies = agencies.OrderBy(a => a.AgencyId).ToList();
+
+               // agencies = agencies.OrderBy(a => a.AgencyId).AsEnumerable();
 
                 SelectList sl;
 
                 if (agencyId == 0) // agencyId == 0 => agency is OPID
                 {
-                    sl = new SelectList(agencies, "AgencyId", "AgencyName");
+                   sl = new SelectList(agencies, "AgencyId", "AgencyName");
                 }
                 else
                 {
-                    sl = new SelectList(agencies, "AgencyId", "AgencyName", agencyId);
+                  sl = new SelectList(agencies, "AgencyId", "AgencyName", agencyId.ToString());
                 }
 
                 return sl;
