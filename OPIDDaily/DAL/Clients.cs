@@ -462,6 +462,78 @@ namespace OPIDDaily.DAL
             }
         }
 
+
+        public static List<ClientRow> GetNewClients(string uploadedFileName)
+        {
+            List<ClientRow> newClients = MyExcelDataReader.GetClientRows(uploadedFileName);
+            return newClients;
+        }
+
+        public static void AddNewClients(List<ClientRow> clientRows)
+        {
+            DateTime today = Extras.DateTimeToday();
+            DateTime now = Extras.DateTimeNow();
+            List<Client> newClients = new List<Client>();
+
+            try
+            {
+                using (OpidDailyDB opidcontext = new OpidDailyDB())
+                {
+                    // Using context.AddRange as described in: https://entityframework.net/improve-ef-add-performance
+                    opidcontext.Configuration.AutoDetectChangesEnabled = false;
+
+                    foreach (ClientRow cr in clientRows)
+                    {
+                        Client existingClient = opidcontext.Clients.Where(c => c.LastName == cr.LastName && c.DOB == cr.DOB).SingleOrDefault();
+
+                        if (existingClient == null)
+                        {
+                            Client client = new Client
+                            {
+                                ServiceDate = today,
+                                ServiceTicket = "PB",
+                                Stage = "Screened",
+                                Conversation = false,
+                                FirstName = cr.FirstName,
+                                MiddleName = cr.MiddleName,
+                                LastName = cr.LastName,
+                                BirthName = cr.BirthName,
+                                DOB = cr.DOB,
+                                Age = CalculateAge(cr.DOB),
+                                PND = false,
+                                XID = false,
+                                XBC = false,
+                                Notes = string.Empty,
+                                Screened = now,
+                                CheckedIn = now,
+                                Interviewing = now,
+                                Interviewed = now,
+                                BackOffice = now,
+                                Done = now,
+                                Expiry = CalculateExpiry(today),  // was just today
+                                Active = true
+                            };
+
+                            newClients.Add(client);
+                        }
+                    }
+
+                    if (newClients.Count > 0)
+                    {
+                        opidcontext.Clients.AddRange(newClients);
+                    }
+
+                    opidcontext.ChangeTracker.DetectChanges();
+                    opidcontext.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+            }
+
+        }
+
         private static DateTime ExtendedExpiry(DateTime expiry)
         {
             string weekday = expiry.ToString("ddd");

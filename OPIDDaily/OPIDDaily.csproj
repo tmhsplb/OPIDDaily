@@ -373,6 +373,7 @@
     <Compile Include="Models\Check.cs" />
     <Compile Include="Models\CheckViewModel.cs" />
     <Compile Include="Models\ClientReviewViewModel.cs" />
+    <Compile Include="Models\ClientRow.cs" />
     <Compile Include="Models\ClientServedViewModel.cs" />
     <Compile Include="Models\ClientViewModel.cs" />
     <Compile Include="Models\ContactInfoViewModel.cs" />

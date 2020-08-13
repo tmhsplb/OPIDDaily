@@ -51,7 +51,7 @@ namespace OPIDDaily.Models
 
         public string TIDNotes { get; set; }
 
-        [Display(Name = "New/Renew ID")]
+        [Display(Name = "New/Renewal ID")]
         public bool NewTID { get; set; }
 
         [Display(Name = "Pre-approved")]
@@ -64,7 +64,7 @@ namespace OPIDDaily.Models
         [Display(Name = "Pre-approved")]
         public bool PreApprovedReplacementTID { get; set; }
         
-        [Display(Name = "New/Renew DL")]
+        [Display(Name = "New/Renewal DL")]
         public bool NewTDL { get; set; }
  
         public string TDLNotes { get; set; }

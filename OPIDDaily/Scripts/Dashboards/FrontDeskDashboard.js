@@ -119,12 +119,13 @@ $("#dashboardGrid").jqGrid({
                     // Prevent infinite recursion caused by reloadGrid
                 } else {
                     lastServed = nowServing;
+
                     jQuery("#dashboardGrid").jqGrid('setGridParam',
                         {
-                            postData: { nowServing: nowServing },
-                            url: "NowConversing", // "@Url.Action("NowServing", "FrontDesk")"
-                             }).trigger('reloadGrid', { fromServer: true });
-                }
+                          postData: { nowServing: nowServing },
+                          url: "NowServing", // "@Url.Action("NowServing", "FrontDesk")"
+                          }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
+                 }       
             },
             height: '100%',
             // https://stackoverflow.com/questions/3213984/jqgrid-giving-exception-when-json-is-attempted-to-be-loaded

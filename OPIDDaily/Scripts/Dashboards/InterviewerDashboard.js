@@ -122,8 +122,8 @@ $("#dashboardGrid").jqGrid({
                     jQuery("#dashboardGrid").jqGrid('setGridParam',
                         {
                             postData: { nowServing: nowServing },
-                            url: "NowConversing", // "@Url.Action("NowServing", "FrontDesk")"
-                        }).trigger('reloadGrid', { fromServer: true });
+                            url: "NowServing",  
+                        }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
                 }
             },
             height: '100%',

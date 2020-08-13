@@ -76,20 +76,20 @@
     multiselect: false,
 
     subGrid: true,
-        subGridRowExpanded: function (subgrid_id, row_id) {
-            var subgrid_table_id, pager_id;
-    subgrid_table_id = subgrid_id + "t";
-    pager_id = "p_" + subgrid_table_id;
+    subGridRowExpanded: function (subgrid_id, row_id) {
+       var subgrid_table_id, pager_id;
+       subgrid_table_id = subgrid_id + "t";
+       pager_id = "p_" + subgrid_table_id;
             $("#" + subgrid_id).html("<table id='" + subgrid_table_id + "' class='scroll'></table><div id='" + pager_id + "' class='scroll'></div>");
             jQuery("#" + subgrid_table_id).jqGrid({
-        postData: {id: function () { /* alert("id of expanded row = " + row_id); */ return row_id } },  // the secret to getting the row id in the post!
-    url: "GetDependents", // "@Url.Action("GetDependents", "FrontDesk")", 
-    datatype: "json",
-    mtype: 'post',
-    editurl: "Dummy",  // "@Url.Action("Dummy", "FrontDesk")", 
-    cellsubmit: 'clientArray',
-    colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
-    colModel: [
+       postData: {id: function () { /* alert("id of expanded row = " + row_id); */ return row_id } },  // the secret to getting the row id in the post!
+       url: "GetDependents", // "@Url.Action("GetDependents", "FrontDesk")", 
+       datatype: "json",
+       mtype: 'post',
+       editurl: "Dummy",  // "@Url.Action("Dummy", "FrontDesk")", 
+       cellsubmit: 'clientArray',
+       colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
+       colModel: [
         {key: true, hidden: true, name: 'Id', index: 'Id', editable: true },
         {key: false, name: 'FirstName', index: 'FirstName', width: 100, editable: true },
         {key: false, name: 'MiddleName', index: 'MiddleName', width: 100, editable: true },
@@ -101,26 +101,26 @@
         {name: 'XID', index: 'XID', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" } },
         {name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" }, },
         {key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: {rows: '2', cols: '300' } }
-    ],
-    rowNum: 10,
-    pager: pager_id,
-    onSelectRow: function (nowServing) {
+       ],
+       rowNum: 10,
+       pager: pager_id,
+       onSelectRow: function (nowServing) {
                     // alert("subgrid nowServing = " + nowServing);
                     if (nowServing == null || nowServing == lastServed) {
         // Prevent infinite recursion caused by reloadGrid
-    } else {
+       } else {
         lastServed = nowServing;
         jQuery("#clientsGrid").jqGrid('setGridParam',
         {
-           postData: {nowServing: nowServing },
+          postData: {nowServing: nowServing },
           url: "NowServing", // "@Url.Action("NowServing", "FrontDesk")"
-                             }).trigger('reloadGrid', {fromServer: true }).jqGrid('setSelection', nowServing, true);
+         }).trigger('reloadGrid', {fromServer: true }).jqGrid('setSelection', nowServing, true);
         }
-    },
-    height: '100%',
-    // https://stackoverflow.com/questions/3213984/jqgrid-giving-exception-when-json-is-attempted-to-be-loaded
-    jsonReader: {repeatitems: false }
-    });
+       },
+       height: '100%',
+       // https://stackoverflow.com/questions/3213984/jqgrid-giving-exception-when-json-is-attempted-to-be-loaded
+       jsonReader: {repeatitems: false }
+      });
 
      // Insert jquery("#" + subgrid_table_id).jqgrid('navGrid', ...  )  HERE
      jQuery("#" + subgrid_table_id).jqGrid('navGrid', "#" + pager_id, {edit: true, add: true, del: true, search: false, refresh: false },

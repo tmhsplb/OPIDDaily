@@ -19,6 +19,13 @@ namespace OPIDDaily.DAL
                     UpdateResearchTableFromFile(uploadedFile);
                     break;
 
+                case "OPIDailyTracking":
+                    break;
+
+                case "NewClients":
+                    UpdateClientsTableFromFile(uploadedFile);
+                    break;
+
                 case "AncientChecksFile":
                     UpdateAncientChecksTableFromFile(uploadedFile);
                     break;
@@ -46,6 +53,12 @@ namespace OPIDDaily.DAL
                 default:
                     break;
             }
+        }
+
+        private static void UpdateClientsTableFromFile(string uploadedFile)
+        {
+            List<ClientRow> newClients = Clients.GetNewClients(uploadedFile);
+            Clients.AddNewClients(newClients);
         }
 
         public static bool IsProtectedCheck(string disposition)

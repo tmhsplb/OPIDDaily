@@ -120,6 +120,42 @@ namespace OPIDDaily.Utils
             }
         }
 
+        private static ClientRow NewClientRow(System.Data.DataRow dataRow)
+        {
+            string lname = string.Empty, fname = string.Empty, mname = string.Empty, birthName = string.Empty;
+            int recordID = 0;
+            DateTime dob = Extras.DateTimeToday();
+
+            try
+            {
+                recordID = Convert.ToInt32(dataRow["Record ID"].ToString());
+                lname = dataRow["Last Name"].ToString();
+                fname = dataRow["First Name"].ToString();
+                mname = dataRow["Middle Name"].ToString();
+                birthName = dataRow["Birth Name"].ToString();
+                dob = Convert.ToDateTime(dataRow["DOB"].ToString());
+
+                ClientRow cr = new ClientRow
+                {
+                    RecordID = recordID,
+                    LastName = lname,
+                    FirstName = fname,
+                    MiddleName = mname,
+                    BirthName = birthName,
+                    DOB = dob
+                };
+
+                return cr;
+            }
+            catch (Exception e)
+            {
+                // log the dataRow that failed
+                Log.Warn(string.Format("Bad new client record: RecordID = {0}, Name = {1}, {2}, DOB = {3}", recordID, lname, fname, dob));
+                Log.Error(e.Message);
+                return null;
+            }
+        }
+
         private static DispositionRow NewDispositionRow(System.Data.DataRow dataRow, string epoch)
         {
             string interviewDate = string.Empty, lname = string.Empty, fname = string.Empty;
@@ -231,6 +267,14 @@ namespace OPIDDaily.Utils
                 Log.Error(e.Message);
                 return null;
             }           
+        }
+
+        public static List<ClientRow> GetClientRows(string filePath)
+        {
+            List<ClientRow> clientRows = new ExcelData(filePath).GetData().Select(dataRow => NewClientRow(dataRow)).ToList();
+
+           // InsertNulls(dispositionRows);
+            return clientRows;
         }
 
         public static List<DispositionRow> GetResearchRows(string filePath)
