@@ -251,7 +251,7 @@ namespace OPIDDaily.DAL
                 // List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry).ToList();
 
                 // For virtual front desk, c.AgencyId == 0, i.e. agency = OPID
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry).ToList();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry && c.Active == true).ToList();
 
                 foreach (Client client in clients)
                 {
