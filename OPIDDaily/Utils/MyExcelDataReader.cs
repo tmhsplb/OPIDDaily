@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using log4net;
 using OPIDDaily.Controllers;
+using OpidDailyEntities;
+using OPIDDaily.DAL;
 
 namespace OPIDDaily.Utils
 {
@@ -269,6 +271,103 @@ namespace OPIDDaily.Utils
             }           
         }
 
+        private static TrackingRow NewTrackingRow(System.Data.DataRow dataRow, string epoch)
+        {
+            string lname = string.Empty, fname = string.Empty;
+            DateTime dob = Extras.DateTimeToday();
+
+            try
+            {
+                lname = dataRow["Last Name"].ToString();
+                fname = dataRow["First Name"].ToString();
+                dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
+                int cid = Clients.IdentifyClient(lname, fname, dob);
+
+                if (cid == 0)
+                {
+                    Log.Warn(string.Format("Could not identify client: {0}, {1}, DOB = {2}", lname, fname, dob));
+                    return null;
+                }
+
+                List<VisitViewModel> visits = Visits.GetVisits(cid);
+                string requestedItem = dataRow["Requested Item"].ToString();
+
+                requestedItem = CheckManager.SequencedRequestedItem(visits, requestedItem);
+
+                return NewTrackingRow(requestedItem, lname, fname, dob, dataRow, epoch);
+            }
+            catch (Exception e)
+            {
+                // log the dataRow that failed
+                Log.Warn(string.Format("Bad tracking row:  Name = {0}, {1}, DOB = {2}", lname, fname, dob));
+                Log.Error(e.Message);
+                return null;
+            }
+        }
+
+        private static TrackingRow NewTrackingRow(string requestedItem, string lname, string fname, DateTime dob, System.Data.DataRow dataRow, string epoch)
+        {
+            int recordID = Convert.ToInt32(dataRow["Record ID"].ToString());
+            int interviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString());
+            DateTime epochDate = Convert.ToDateTime(epoch);
+
+            try
+            {
+                string interviewDate = dataRow["OPID Interview Date"].ToString();
+                string scammed = dataRow["Scammed"].ToString();
+                DateTime orderDate = DBNull.Value.Equals(dataRow["Order Date"]) ? epochDate : Convert.ToDateTime(dataRow["Order Date"].ToString());
+                string reissued = dataRow["Reissued"].ToString();
+                string reissuedReason = dataRow["Reissued Reason"].ToString();
+                string checkNumber = dataRow["Check Number"].ToString();
+                string checkDisposition = dataRow["Check Disposition"].ToString();
+
+                if (string.IsNullOrEmpty(interviewDate))
+                {
+                    Log.Warn(string.Format("Bad record (1): RecordID = {0}, InterviewRecordID = {1}, Name = {2}, {3}, DOB = {4}", recordID, interviewRecordID, lname, fname, dob));
+                    return null;
+                }
+
+                if (!string.IsNullOrEmpty(reissued) && reissued.Equals("Reissued"))
+                {
+                    checkDisposition = reissuedReason;
+                }
+
+                if (!string.IsNullOrEmpty(scammed) && scammed.Equals("Yes"))
+                {
+                    checkDisposition = "Scammed Check";
+                }
+
+                TrackingRow tr = new TrackingRow
+                {
+                    RecordID = recordID,
+                    InterviewRecordID = interviewRecordID,
+                    Lname = lname,
+                    Fname = fname,
+                    DOB = dob,
+                    Date = Convert.ToDateTime(interviewDate),
+                    OrderDate = orderDate,
+                    RequestedItem = requestedItem,
+                    CheckNum = Convert.ToInt32(checkNumber),
+                    CheckDisposition = checkDisposition 
+                };
+
+                // Special test for tr.OrderDate
+                if (orderDate.CompareTo(epochDate) == 0)
+                {
+                    tr.OrderDate = null;
+                }
+
+                return tr;
+            }
+            catch (Exception e)
+            {
+                // log the dataRow that failed
+                Log.Warn(string.Format("Bad record (2): RecordID = {0}, InterviewRecordID = {1}, Name = {2}, {3}, DOB = {4}", recordID, interviewRecordID, lname, fname, dob));
+                Log.Error(e.Message);
+                return null;
+            }
+        }
+
         public static List<ClientRow> GetClientRows(string filePath)
         {
             List<ClientRow> clientRows = new ExcelData(filePath).GetData().Select(dataRow => NewClientRow(dataRow)).ToList();
@@ -286,7 +385,14 @@ namespace OPIDDaily.Utils
             return dispositionRows;
         }
 
-       
+        public static List<TrackingRow> GetTrackingRows(string filePath)
+        {
+            string epoch = "01/01/1900"; // Use this in place of a null value, because I couldn't make null work
+            List<TrackingRow> trackingRows = new ExcelData(filePath).GetData().Select(dataRow => NewTrackingRow(dataRow, epoch)).ToList();
+
+            return trackingRows;
+        }
+
         private static DateTime GetDateValue(System.Data.DataRow row)
         {
             string dvalue;

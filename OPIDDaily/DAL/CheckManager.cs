@@ -28,6 +28,7 @@ namespace OPIDDaily.DAL
       //  private static List<int> incidentals;
 
         private static List<Check> newResearchChecks;
+        private static List<Check> newTrackingChecks;
         private static List<CheckViewModel> resolvedChecks;
         private static List<int> mistakenlyResolved;
        // private static List<Check> typoChecks;
@@ -43,6 +44,7 @@ namespace OPIDDaily.DAL
             }
 
             newResearchChecks = new List<Check>();
+            newTrackingChecks = new List<Check>();
           //  incidentals = new List<int>();
         }
 
@@ -64,14 +66,23 @@ namespace OPIDDaily.DAL
 
         public static void PersistResearchChecks(List<DispositionRow> researchRows)
         {
+            Init();
             List<Check> rChecks = DetermineResearchChecks(researchRows);
             UpdateCheckTables(rChecks);
         }
 
         public static void PersistAncientChecks(List<DispositionRow> researchRows)
         {
+            Init();
             List<Check> ancientChecks = DetermineResearchChecks(researchRows);
             UpdateAncientChecksTable(ancientChecks);
+        }
+
+        public static void PersistTrackingChecks(List<TrackingRow> trackingRows)
+        {
+            Init();
+            List<Check> trackingChecks = DetermineTrackingChecks(trackingRows);
+            UpdateCheckTables(trackingChecks);
         }
 
         public static void NewResearchCheck(DispositionRow row, string service, DateTime? serviceDate, string disposition)
@@ -293,6 +304,35 @@ namespace OPIDDaily.DAL
             }
 
             return newResearchChecks;
+        }
+
+        private static void NewTrackingCheck(TrackingRow row)
+        {
+            newTrackingChecks.Add(new Check
+            {
+                RecordID = row.RecordID,
+                InterviewRecordID = row.InterviewRecordID,
+                Num = row.CheckNum,
+                Name = string.Format("{0}, {1}", row.Lname, row.Fname),
+                DOB = row.DOB,
+                Date = (row.OrderDate != null ? row.OrderDate : row.Date),
+                Service = row.RequestedItem,
+                Disposition = row.CheckDisposition
+            });
+
+        }
+
+        private static List<Check> DetermineTrackingChecks(List<TrackingRow> trackingRows)
+        {
+            foreach (TrackingRow row in trackingRows)
+            {
+                if (row != null)
+                {
+                    NewTrackingCheck(row);
+                }
+            }
+
+            return newTrackingChecks;
         }
 
         private static void UpdateCheckTables(List<Check> checks)
@@ -850,6 +890,47 @@ namespace OPIDDaily.DAL
         {
             List<DispositionRow> resRows = MyExcelDataReader.GetResearchRows(uploadedFileName);
             return resRows;
+        }
+
+        public static List<TrackingRow> GetTrackingRows(string uploadedFileName)
+        {
+            List<TrackingRow> trackingRows = MyExcelDataReader.GetTrackingRows(uploadedFileName);
+            return trackingRows;
+        }
+
+        private static string Successor(string sequencedItem)
+        {
+            int length = sequencedItem.Length;
+            string item = sequencedItem.Substring(0, length - 1);
+            int sequenceNumber = Convert.ToInt32(sequencedItem.Substring(length - 1));
+
+            return string.Format("{0}{1}", item, sequenceNumber + 1);
+        }
+
+        public static string SequencedRequestedItem(List<VisitViewModel> visits, string requestedItem)
+        {
+            string sequencedItem = string.Empty;
+
+            foreach (VisitViewModel vvm in visits)
+            {
+                if (vvm.Item.StartsWith(requestedItem))
+                {
+                    sequencedItem = vvm.Item;
+                }
+            }
+
+            if (string.IsNullOrEmpty(sequencedItem))
+            {
+                return requestedItem;
+            }
+            else if (sequencedItem.Equals(requestedItem))
+            {
+                // Example: if requestedItem = "TDL" and sequencedItem = "TDL"
+                // then the next sequencedItem is TDL2.
+                return string.Format("{0}2", sequencedItem);
+            }
+
+            return Successor(sequencedItem);
         }
 
         public static List<Check> GetExcelChecks(string uploadedFileName, string disposition)

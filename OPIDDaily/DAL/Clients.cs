@@ -15,6 +15,19 @@ namespace OPIDDaily.DAL
     {
         private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(Clients));
 
+        public static int IdentifyClient(string lastName, string firstName, DateTime dob)
+        {
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                string lname = Extras.StripSuffix(lastName.ToUpper());
+                Client client = opidcontext.Clients.Where(c => c.LastName.StartsWith(lname) && c.FirstName.StartsWith(firstName) && c.DOB == dob).SingleOrDefault();
+
+                if (client == null) return 0;
+
+                return client.Id;
+            }
+        }
+
         public static Client GetClient(int nowServing, RequestedServicesViewModel rsvm)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())

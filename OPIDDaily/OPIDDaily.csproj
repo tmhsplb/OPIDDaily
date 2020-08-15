@@ -390,6 +390,7 @@
     <Compile Include="Models\SearchParameters.cs" />
     <Compile Include="Models\SpecialReferralViewModel.cs" />
     <Compile Include="Models\TextMsgViewModel.cs" />
+    <Compile Include="Models\TrackingRow.cs" />
     <Compile Include="Models\VisitNoteModel.cs" />
     <Compile Include="Models\VisitViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -16,10 +16,11 @@ namespace OPIDDaily.DAL
             {
                 case "OPIDDaily":
                 case "BoundedResearchTableFile":
-                    UpdateResearchTableFromFile(uploadedFile);
+                    UpdateResearchTableFromOPIDFile(uploadedFile);
                     break;
 
-                case "OPIDailyTracking":
+                case "OPIDDailyTracking":
+                    UpdateResearchTableFromOPIDTrackingFile(uploadedFile);
                     break;
 
                 case "NewClients":
@@ -132,11 +133,9 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void UpdateResearchTableFromFile(string uploadedFile)
+        public static void UpdateResearchTableFromOPIDFile(string uploadedFile)
         {
             List<DispositionRow> researchRows = CheckManager.GetResearchRows(uploadedFile);
-
-            CheckManager.Init();
 
             // Handle incidental checks before persisting unmatched checks.
             // This way an Interview Research file cannot add to the set
@@ -156,11 +155,16 @@ namespace OPIDDaily.DAL
             // CheckManager.RemoveTypoChecks();
         }
 
+        public static void UpdateResearchTableFromOPIDTrackingFile(string uploadedFile)
+        {
+            List<TrackingRow> trackingRows = CheckManager.GetTrackingRows(uploadedFile);
+
+            CheckManager.PersistTrackingChecks(trackingRows);
+        }
+
         public static void UpdateAncientChecksTableFromFile(string uploadedFile)
         {
             List<DispositionRow> researchRows = CheckManager.GetResearchRows(uploadedFile);
-
-            CheckManager.Init();
 
             // Handle incidental checks before persisting unmatched checks.
             // This way an Interview Research file cannot add to the set
