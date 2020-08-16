@@ -327,6 +327,15 @@ namespace OPIDDaily.Utils
                     return null;
                 }
 
+                // The data entry person may have accidentally clicked the radio
+                // button for Voided or Cleared. The way to fix this is to select
+                // the radio button Mistakenly Marked. This should create a record
+                // with no check disposition instead of one with dispositon Mistakenly Marked.
+                if (checkDisposition.Equals("Mistakenly Marked"))
+                {
+                    checkDisposition = string.Empty;
+                }
+
                 if (!string.IsNullOrEmpty(reissued) && reissued.Equals("Reissued"))
                 {
                     checkDisposition = reissuedReason;
@@ -334,6 +343,7 @@ namespace OPIDDaily.Utils
 
                 if (!string.IsNullOrEmpty(scammed) && scammed.Equals("Yes"))
                 {
+                    // This disposition overrides everything.
                     checkDisposition = "Scammed Check";
                 }
 

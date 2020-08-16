@@ -899,7 +899,12 @@ namespace OPIDDaily.DAL
         }
 
         private static string Successor(string sequencedItem)
-        {
+        {   // Example: sequencedItem = "TID2"
+            // Then:
+            //    length = 3
+            //    item = "TID"
+            //    sequenceNumber = 2
+            // Returns: "TID3"
             int length = sequencedItem.Length;
             string item = sequencedItem.Substring(0, length - 1);
             int sequenceNumber = Convert.ToInt32(sequencedItem.Substring(length - 1));
