@@ -328,6 +328,13 @@ namespace OPIDDaily.DAL
             {
                 if (row != null)
                 {
+                    // row will be null in case of an error, a reissued check or a scammed check.
+                    // Don't let an error stop the processing of the rest of the file. Check
+                    // the log file for an error if one is suspected after loading an 
+                    // OPID Daily Tracking file.
+                    // In the case of a reissued or scammed check the disposition of an existing check
+                    // will be changed instead of adding a new tracking row. See method
+                    // MyExcelDataReader.NewTrackingRow
                     NewTrackingCheck(row);
                 }
             }
@@ -898,6 +905,40 @@ namespace OPIDDaily.DAL
             return trackingRows;
         }
 
+        public static void SetDisposition(string lastName, string firstName, DateTime dob, List<VisitViewModel> visits, string checkNumber, string disposition)
+        {
+            try
+            {
+                int num = Convert.ToInt32(checkNumber);
+                using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+                {
+                    AncientCheck ancientCheck = opiddailycontext.AncientChecks.Where(ac => ac.DOB == dob && ac.Name.ToUpper().StartsWith(lastName) && ac.Num == num).SingleOrDefault();
+
+                    if (ancientCheck != null)
+                    {
+                        ancientCheck.Disposition = disposition;
+                        opiddailycontext.SaveChanges();
+                        return;
+                    }
+
+                    RCheck rcheck = opiddailycontext.RChecks.Where(rc => rc.DOB == dob && rc.Name.ToUpper().StartsWith(lastName) && rc.Num == num).SingleOrDefault();
+
+                    if (rcheck != null)
+                    {
+                        rcheck.Disposition = disposition;
+                        opiddailycontext.SaveChanges();
+                        return;
+                    }
+
+                    Log.Warn(string.Format("Could not find check number {0} to reissue for {1}, {2} DOB: {3}", num, lastName, firstName, dob.ToString()));
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        }
+ 
         private static string Successor(string sequencedItem)
         {   // Example: sequencedItem = "TID2"
             // Then:

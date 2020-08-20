@@ -280,6 +280,8 @@ namespace OPIDDaily.Utils
             {
                 lname = dataRow["Last Name"].ToString();
                 fname = dataRow["First Name"].ToString();
+                string reissued = dataRow["Reissued"].ToString();
+                string scammed = dataRow["Scammed"].ToString();
                 dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
                 int cid = Clients.IdentifyClient(lname, fname, dob);
 
@@ -291,6 +293,29 @@ namespace OPIDDaily.Utils
 
                 List<VisitViewModel> visits = Visits.GetVisits(cid);
                 string requestedItem = dataRow["Requested Item"].ToString();
+
+                if (!string.IsNullOrEmpty(reissued) && reissued.Equals("Reissued"))
+                {
+                    // We are reissuing an existing check. Change the disposition of
+                    // the existing check to the reissuing reason.
+                    string checkNumber = dataRow["Check Number"].ToString();
+                    string reissuedReason = dataRow["Reissued Reason"].ToString();
+                    CheckManager.SetDisposition(lname, fname, dob, visits, checkNumber, reissuedReason);
+
+                    // Don't create a new tracking row.
+                    return null;
+                }
+
+                if (!string.IsNullOrEmpty(scammed) && scammed.Equals("Yes"))
+                {
+                    // We are marking an existing check as scammed. Change the disposition
+                    // of the existing check to "Scammed Check"
+                    string checkNumber = dataRow["Check Number"].ToString();
+                    CheckManager.SetDisposition (lname, fname, dob, visits, checkNumber, "Scammed Check");
+
+                    // Don't create a new tracking row.
+                    return null;
+                }
 
                 requestedItem = CheckManager.SequencedRequestedItem(visits, requestedItem);
 
@@ -314,10 +339,7 @@ namespace OPIDDaily.Utils
             try
             {
                 string interviewDate = dataRow["OPID Interview Date"].ToString();
-                string scammed = dataRow["Scammed"].ToString();
                 DateTime orderDate = DBNull.Value.Equals(dataRow["Order Date"]) ? epochDate : Convert.ToDateTime(dataRow["Order Date"].ToString());
-                string reissued = dataRow["Reissued"].ToString();
-                string reissuedReason = dataRow["Reissued Reason"].ToString();
                 string checkNumber = dataRow["Check Number"].ToString();
                 string checkDisposition = dataRow["Check Disposition"].ToString();
 
@@ -334,17 +356,6 @@ namespace OPIDDaily.Utils
                 if (checkDisposition.Equals("Mistakenly Marked"))
                 {
                     checkDisposition = string.Empty;
-                }
-
-                if (!string.IsNullOrEmpty(reissued) && reissued.Equals("Reissued"))
-                {
-                    checkDisposition = reissuedReason;
-                }
-
-                if (!string.IsNullOrEmpty(scammed) && scammed.Equals("Yes"))
-                {
-                    // This disposition overrides everything.
-                    checkDisposition = "Scammed Check";
                 }
 
                 TrackingRow tr = new TrackingRow
