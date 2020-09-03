@@ -8,7 +8,7 @@
 <br /><br /><br />
             <div>
                 <fieldset>
-                    <legend>OPID Daily File (Prepandemic) </legend>
+                    <legend>OPID Daily File (Before Shutdown) </legend>
 
                     @using (Html.BeginForm("UploadOpidDailyFile", "BackOffice", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
                     {
@@ -43,7 +43,7 @@
                 <br /><br /><br />
 
                 <fieldset>
-                    <legend>OPID Daily Tracking File (Since Pandemic)</legend>
+                    <legend>OPID Daily Tracking File (Since Shutdown)</legend>
 
                     @using (Html.BeginForm("UploadOpidDailyTrackingFile", "BackOffice", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
                     {
@@ -78,7 +78,7 @@
                 <br /><br /><br />
 
                 <fieldset>
-                    <legend>New Clients File (Since Pandemic)</legend>
+                    <legend>New Clients File (Since Shutdown)</legend>
 
                     @using (Html.BeginForm("UploadNewClientsFile", "BackOffice", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
                     {

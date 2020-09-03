@@ -294,12 +294,12 @@ namespace OPIDDaily.Utils
                 List<VisitViewModel> visits = Visits.GetVisits(cid);
                 string requestedItem = dataRow["Requested Item"].ToString();
 
-                if (!string.IsNullOrEmpty(reissued) && reissued.Equals("Reissued"))
+                if (!string.IsNullOrEmpty(reissued) && (reissued.Equals("Reissued") || reissued.Equals("Replaced")))
                 {
                     // We are reissuing an existing check. Change the disposition of
                     // the existing check to the reissuing reason.
                     string checkNumber = dataRow["Check Number"].ToString();
-                    string reissuedReason = dataRow["Reissued Reason"].ToString();
+                    string reissuedReason = string.Format("{0}/{1}", dataRow["Reissued Reason"], reissued).ToString();
                     CheckManager.SetDisposition(lname, fname, dob, visits, checkNumber, reissuedReason);
 
                     // Don't create a new tracking row.

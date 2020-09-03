@@ -930,7 +930,7 @@ namespace OPIDDaily.DAL
                         return;
                     }
 
-                    Log.Warn(string.Format("Could not find check number {0} to reissue for {1}, {2} DOB: {3}", num, lastName, firstName, dob.ToString()));
+                    Log.Warn(string.Format("Could not find check number {0} to reset disposition for {1}, {2} DOB: {3}. Possibly same day reissue in which case no harm done.", num, lastName, firstName, dob.ToString()));
                 }
             }
             catch (Exception e)
