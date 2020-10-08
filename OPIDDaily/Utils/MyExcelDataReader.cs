@@ -339,7 +339,7 @@ namespace OPIDDaily.Utils
             try
             {
                 string interviewDate = dataRow["OPID Interview Date"].ToString();
-                DateTime orderDate = DBNull.Value.Equals(dataRow["Order Date"]) ? epochDate : Convert.ToDateTime(dataRow["Order Date"].ToString());
+             //   DateTime orderDate = DBNull.Value.Equals(dataRow["Order Date"]) ? epochDate : Convert.ToDateTime(dataRow["Order Date"].ToString());
                 string checkNumber = dataRow["Check Number"].ToString();
                 string checkDisposition = dataRow["Check Disposition"].ToString();
 
@@ -366,17 +366,19 @@ namespace OPIDDaily.Utils
                     Fname = fname,
                     DOB = dob,
                     Date = Convert.ToDateTime(interviewDate),
-                    OrderDate = orderDate,
+                //    OrderDate = orderDate,
                     RequestedItem = requestedItem,
                     CheckNum = Convert.ToInt32(checkNumber),
                     CheckDisposition = checkDisposition 
                 };
 
                 // Special test for tr.OrderDate
+                /* PLB 10/08/2020 New interface does not use Order Date.
                 if (orderDate.CompareTo(epochDate) == 0)
                 {
                     tr.OrderDate = null;
                 }
+                */
 
                 return tr;
             }
