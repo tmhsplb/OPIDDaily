@@ -30,11 +30,31 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static string NormalizedService(string service)
+        {
+            if (service.StartsWith("LBVD"))
+            {
+                if (service.Equals("LBVD"))
+                {
+                    return "BC";
+                }
+                else
+                {
+                    // Example: service = LBVD2 returns BC2
+                    return string.Format("BC{0}", service.Substring(4));
+                }
+            }
+            else
+            {
+                return service;
+            }
+        }
+
         private static VisitViewModel AncientCheckToVisitViewModel(AncientCheck ancientCheck, string[] msgs)
         {
             DateTime? adate = ancientCheck.Date;
             DateTime date;
-
+            
             if (adate == null)
             {
                 date = new DateTime(1900, 1, 1);
@@ -49,7 +69,7 @@ namespace OPIDDaily.DAL
                 Id = ancientCheck.Id,
                 Date = date.AddHours(12),
                 Conversation = (HavingConversation(ancientCheck.Id) ? "Y" : string.Empty),
-                Item = ancientCheck.Service,
+                Item = NormalizedService(ancientCheck.Service),
                 Check = (ancientCheck.Num == 0 ? string.Empty : ancientCheck.Num.ToString()),
                 Status = ancientCheck.Disposition,
                 Notes = ancientCheck.Notes,
@@ -61,7 +81,7 @@ namespace OPIDDaily.DAL
         {
             DateTime? rdate = rcheck.Date;
             DateTime date;
-
+            
             if (rdate == null)
             {
                 date = new DateTime(1900, 1, 1);
@@ -76,7 +96,7 @@ namespace OPIDDaily.DAL
                 Id = rcheck.Id,
                 Date = date.AddHours(12),
                 Conversation = (HavingConversation(rcheck.Id) ? "Y" : string.Empty),
-                Item = rcheck.Service,
+                Item = NormalizedService(rcheck.Service),
                 Check = (rcheck.Num == 0 ? string.Empty: rcheck.Num.ToString()),
                 Status = rcheck.Disposition,
                 Notes = rcheck.Notes,
