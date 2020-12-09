@@ -670,6 +670,17 @@ namespace OPIDDaily.Controllers
             }
 
             // ServiceTicketBackButtonHelper("Set", rsvm);
+
+            // May have added a pocket check. In that case, this express client becomes
+            // an existing client.
+            if (CheckManager.HasHistory(nowServing))
+            {
+                List<VisitViewModel> visits = Visits.GetVisits(nowServing);
+
+                var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
+                return View("PrintExistingClient", objTuple);
+            }
+
             return View("PrintExpressClient", rsvm);
         }
 

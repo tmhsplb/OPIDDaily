@@ -81,6 +81,12 @@
                 <td colspan="3">&nbsp;&nbsp;Tracking Only</td>
             </tr>
         }
+        @if (!string.IsNullOrEmpty(Model.Notes))
+        {
+            <tr>
+               <td colspan="3"><strong>&nbsp;&nbsp;@Model.Notes</strong></td>
+           </tr>
+        }
     </table>
    
 </div>

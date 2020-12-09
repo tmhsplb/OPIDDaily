@@ -13,6 +13,8 @@ namespace OPIDDaily.Models
 
         public bool _search { get; set; }
 
+        public int Id { get; set; }
+
         public string AgencyName { get; set; }
 
         public string LastName { get; set; }
