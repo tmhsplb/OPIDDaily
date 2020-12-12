@@ -660,9 +660,9 @@ namespace OPIDDaily.Controllers
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            if (rsvm.OtherAgency)
+            if (rsvm.OtherAgency && !string.IsNullOrEmpty(client.AgencyName))
             {
-                ViewBag.Agency = rsvm.OtherAgencyName;
+                ViewBag.Agency = client.AgencyName;
             }
             else
             {
@@ -710,13 +710,13 @@ namespace OPIDDaily.Controllers
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            if (rsvm.OtherAgency)
+            if (rsvm.OtherAgency && !string.IsNullOrEmpty(client.AgencyName))
             {
-                ViewBag.Agency = rsvm.OtherAgencyName;
+                ViewBag.Agency = client.AgencyName;
             }
             else
             {
-                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.AgencyId will be the Id of an Agency as a string
+                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.Agency will be the Id of an Agency as a string
             }
 
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
@@ -741,7 +741,12 @@ namespace OPIDDaily.Controllers
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);
+
+            if (!string.IsNullOrEmpty(client.AgencyName))
+            {
+                rsvm.OtherAgency = true;
+                rsvm.OtherAgencyName = client.AgencyName;
+            }
           
             // ServiceTicketBackButtonHelper("Get", rsvm);
 
@@ -754,8 +759,15 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
             rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
-         //   rsvm.Agency = Agencies.GetAgencyName(client.AgencyId);  
-            
+
+            if (!string.IsNullOrEmpty(client.AgencyName))
+            {
+                rsvm.OtherAgency = true;
+                rsvm.OtherAgencyName = client.AgencyName;
+            }
+
+            //   rsvm.Agency = Agencies.GetAgencyName(client.AgencyId);  
+
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;

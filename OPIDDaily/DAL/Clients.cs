@@ -37,6 +37,10 @@ namespace OPIDDaily.DAL
                 if (rsvm != null)
                 {
                     rsvm.AgencyId = client.AgencyId.ToString();
+                    if (!string.IsNullOrEmpty(client.AgencyName))
+                    {
+                        rsvm.AgencyName = client.AgencyName;
+                    }
 
                     // Requested Services
                     rsvm.BC = client.BC;
@@ -109,7 +113,7 @@ namespace OPIDDaily.DAL
                 BirthName = client.BirthName,
                 DOB = client.DOB.AddHours(12),
                 Age = client.Age,
-                AgencyName = Agencies.GetAgencyName(client.AgencyId),
+                AgencyName = (!string.IsNullOrEmpty(client.AgencyName) ? client.AgencyName : Agencies.GetAgencyName(client.AgencyId)),
 
               //  EXP = (client.EXP == true ? "Y" : string.Empty),
                 PND = (client.PND == true ? "Y" : string.Empty),
@@ -1187,7 +1191,17 @@ namespace OPIDDaily.DAL
             {
                 Client client = opiddailycontext.Clients.Find(id);
 
-                client.AgencyId = Convert.ToInt32(rsvm.AgencyId);
+                
+                if (rsvm.OtherAgency && !string.IsNullOrEmpty(rsvm.OtherAgencyName))
+                {
+                    client.AgencyName = rsvm.OtherAgencyName;
+                    client.AgencyId = 0;
+                }
+                else
+                {
+                    client.AgencyName = string.Empty;
+                    client.AgencyId = Convert.ToInt32(rsvm.AgencyId);
+                }
 
                 // Requested Services
                 client.BC = rsvm.BC;

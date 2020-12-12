@@ -357,6 +357,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202006131444485_TextMsgVid.Designer.cs">
       <DependentUpon>202006131444485_TextMsgVid.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202012111620016_AgencyName.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202012111620016_AgencyName.Designer.cs">
+      <DependentUpon>202012111620016_AgencyName.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -1113,6 +1117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202006131444485_TextMsgVid.resx">
       <DependentUpon>202006131444485_TextMsgVid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202012111620016_AgencyName.resx">
+      <DependentUpon>202012111620016_AgencyName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -22,6 +22,8 @@ namespace OPIDDaily.Models
  
         public string AgencyId { get; set; }
 
+        public string AgencyName { get; set; }
+
         public SelectList Agencies { get; set; }
 
         public bool OtherAgency { get; set; }

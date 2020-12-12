@@ -138,6 +138,8 @@ namespace OpidDailyEntities
 
         public int AgencyId { get; set; }
 
+        public string AgencyName { get; set; }
+
         public DateTime Expiry { get; set; }
 
         public bool Active { get; set; }
