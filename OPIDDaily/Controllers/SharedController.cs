@@ -93,6 +93,18 @@ namespace OPIDDaily.Controllers
             return user.AgencyId;
         }
 
+        public string GetClientAgencyName(Client client)
+        {
+            if (!string.IsNullOrEmpty(client.AgencyName))
+            {
+                return client.AgencyName;
+            }
+            else
+            {
+                return Agencies.GetAgencyName(client.AgencyId);
+            }
+        }
+
         public ActionResult ManageClients()
         {
             DateTime today = Extras.DateTimeToday();
@@ -736,7 +748,8 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
             rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId); //Agencies.GetAgenciesSelectList(client.AgencyId);
-            //   rsvm.Agency = client.AgencyId.ToString(); //  Agencies.GetAgencyName(client.AgencyId);  
+             
+             //  rsvm.AgencyId = client.AgencyId.ToString(); //  Agencies.GetAgencyName(client.AgencyId);  
 
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");

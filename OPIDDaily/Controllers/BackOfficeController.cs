@@ -58,11 +58,11 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-          
+        
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);
+            ViewBag.Agency = GetClientAgencyName(client);
 
             // ServiceTicketBackButtonHelper("Get", rsvm);
 
@@ -83,7 +83,7 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.AgencyId will be the Id of an Agency as a string
+            ViewBag.Agency = GetClientAgencyName(client);  
 
             // ServiceTicketBackButtonHelper("Set", rsvm);
             return View("PrintExpressClient", rsvm);
@@ -94,11 +94,11 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-            
+          
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);
+            ViewBag.Agency = GetClientAgencyName(client); 
 
             // ServiceTicketBackButtonHelper("Get", rsvm);
 
@@ -119,7 +119,7 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.AgencyId will be the Id of an Agency as a string
+            ViewBag.Agency = GetClientAgencyName(client);   
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
 
             rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;

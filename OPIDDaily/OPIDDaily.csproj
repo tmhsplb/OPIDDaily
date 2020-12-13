@@ -999,6 +999,7 @@
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Interviewer\RecentChecks.cshtml" />
     <Content Include="Views\Interviewer\AncientChecks.cshtml" />
+    <Content Include="Views\Shared\_BackOfficeRequestedServicesForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />

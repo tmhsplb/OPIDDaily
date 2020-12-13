@@ -33,10 +33,11 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
                 Client client = opidcontext.Clients.Find(nowServing);
-
+               
                 if (rsvm != null)
                 {
                     rsvm.AgencyId = client.AgencyId.ToString();
+
                     if (!string.IsNullOrEmpty(client.AgencyName))
                     {
                         rsvm.AgencyName = client.AgencyName;
@@ -626,80 +627,7 @@ namespace OPIDDaily.DAL
                 return client.Id;
             }
         }
-
-        private static string GetDependentServices(Client client)
-        {
-            StringBuilder services = new StringBuilder();
-            bool empty = true;
-
-            if (client.BC)
-            {
-                services.Append("BC");
-
-                if (client.HCC)
-                {
-                    services.Append(" (Harris County Clerk)");
-                }
-                empty = false;
-            }
-
-            if (client.MBVD)
-            {
-                if (!empty)
-                {
-                    services.Append(", ");
-                }
-
-                services.Append(string.Format("MBVD ({0})", client.State));
-                empty = false;
-            }
-
-            if (client.NewTID)
-            {
-                if (!empty)
-                {
-                    services.Append(", ");
-                }
-
-                services.Append("New/Renewal TID");
-                empty = false;
-            }
-
-            if (client.ReplacementTID)
-            {
-                if (!empty)
-                {
-                    services.Append(", ");
-                }
-
-                services.Append("Replacement TID");
-                empty = false;
-            }
-
-            if (client.NewTDL)
-            {
-                if (!empty)
-                {
-                    services.Append(", ");
-                }
-
-                services.Append("New/Renewal TDL");
-                empty = false;
-            }
-
-            if (client.ReplacementTDL)
-            {
-                if (!empty)
-                {
-                    services.Append(", ");
-                }
-
-                services.Append("Replacement TDL");
-                empty = false;
-            }
-
-            return services.ToString();
-        }
+ 
 
         public static List<ClientViewModel> GetDependents(int id)
         {
@@ -711,8 +639,6 @@ namespace OPIDDaily.DAL
                 foreach (Client dependent in clientDependents)
                 {
                     ClientViewModel cvm = ClientEntityToClientViewModel(dependent);
-                    string dependentServices = GetDependentServices(dependent);
-                    cvm.Notes = dependentServices;
                     dependents.Add(cvm);
                 }
 
