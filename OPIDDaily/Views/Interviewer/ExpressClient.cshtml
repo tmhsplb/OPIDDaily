@@ -40,7 +40,7 @@
 <div class="row">
     <div class="col-md-12">
         <section id="expressclientForm">
-            @using (Html.BeginForm("PrepareExpressClient", "Interviewer", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("PrepareInterviewerExpressClient", "Interviewer", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <h4>Requested Services</h4>

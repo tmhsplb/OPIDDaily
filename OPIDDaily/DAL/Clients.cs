@@ -257,7 +257,7 @@ namespace OPIDDaily.DAL
 
                 // For virtual front desk, c.AgencyId == 0, i.e. agency = OPID
                 List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry && c.Active == true).ToList();
-
+              
                 foreach (Client client in clients)
                 {
                     clientCVMS.Add(ClientEntityToClientViewModel(client));
@@ -297,11 +297,17 @@ namespace OPIDDaily.DAL
             };
         }
 
+        private static bool EndMsg(string textMsg)
+        {
+            string msg = textMsg.ToUpper();
+            return (msg.Equals("END") || msg.Equals("DONE") || msg.Equals("OVER"));
+        }
+
         private static void PrependMsg(Client client, string sender, string textMsg)
         {
             string msg;
 
-            if (textMsg.ToUpper().Equals("END"))
+            if (EndMsg(textMsg))
             {
                 msg = string.Format("END:0");
             }

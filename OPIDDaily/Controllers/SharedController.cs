@@ -65,7 +65,7 @@ namespace OPIDDaily.Controllers
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-            clients = clients.OrderBy(c => c.Expiry).ToList();
+            clients = clients.OrderByDescending(c => c.Expiry).ToList();
 
             //  Log.Debug(string.Format("NowConversing: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
 
@@ -160,7 +160,7 @@ namespace OPIDDaily.Controllers
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
-            clients = clients.OrderBy(c => c.Expiry).ToList();
+            clients = clients.OrderByDescending(c => c.Expiry).ToList();
 
            // Log.Debug(string.Format("GetDashboard: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
 
@@ -678,7 +678,7 @@ namespace OPIDDaily.Controllers
             }
             else
             {
-                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.Agency will be the Id of an Agency as a string
+                ViewBag.Agency = Agencies.GetAgencyName(Convert.ToInt32(rsvm.AgencyId));  // rsvm.Agency will be the Id of an Agency as a string 
             }
 
             // ServiceTicketBackButtonHelper("Set", rsvm);
@@ -754,6 +754,7 @@ namespace OPIDDaily.Controllers
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
+            ViewBag.Agency = GetClientAgencyName(client);  // needed only for Interviewer role
 
             if (!string.IsNullOrEmpty(client.AgencyName))
             {
@@ -784,8 +785,9 @@ namespace OPIDDaily.Controllers
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
+            ViewBag.Agency = GetClientAgencyName(client);  // needed only for Interviewer role
 
-           // ServiceTicketBackButtonHelper("Get", rsvm);
+            // ServiceTicketBackButtonHelper("Get", rsvm);
 
             return View("ExistingClient", rsvm);
         }

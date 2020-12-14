@@ -63,6 +63,7 @@ namespace OPIDDaily.Controllers
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
             ViewBag.Agency = GetClientAgencyName(client);
+            ViewBag.Notes = client.Notes;
 
             // ServiceTicketBackButtonHelper("Get", rsvm);
 
@@ -83,7 +84,8 @@ namespace OPIDDaily.Controllers
             ViewBag.BirthName = client.BirthName;
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = GetClientAgencyName(client);  
+            ViewBag.Agency = GetClientAgencyName(client);
+           
 
             // ServiceTicketBackButtonHelper("Set", rsvm);
             return View("PrintExpressClient", rsvm);
@@ -98,7 +100,8 @@ namespace OPIDDaily.Controllers
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
-            ViewBag.Agency = GetClientAgencyName(client); 
+            ViewBag.Agency = GetClientAgencyName(client);
+            ViewBag.Notes = client.Notes;
 
             // ServiceTicketBackButtonHelper("Get", rsvm);
 

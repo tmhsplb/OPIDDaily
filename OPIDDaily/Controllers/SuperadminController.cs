@@ -180,7 +180,7 @@ namespace OPIDDaily.Controllers
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
-            clients = clients.OrderBy(c => c.Expiry).ToList();
+            clients = clients.OrderByDescending(c => c.Expiry).ToList();
 
             var jsonData = new
             {
