@@ -65,8 +65,7 @@ namespace OPIDDaily.Controllers
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-            clients = clients.OrderByDescending(c => c.Expiry).ToList();
-
+           
             //  Log.Debug(string.Format("NowConversing: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
 
             DailyHub.RefreshConversation((int)nowServing);
@@ -159,8 +158,6 @@ namespace OPIDDaily.Controllers
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-
-            clients = clients.OrderByDescending(c => c.Expiry).ToList();
 
            // Log.Debug(string.Format("GetDashboard: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
 

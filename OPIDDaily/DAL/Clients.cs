@@ -257,7 +257,8 @@ namespace OPIDDaily.DAL
 
                 // For virtual front desk, c.AgencyId == 0, i.e. agency = OPID
                 List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry && c.Active == true).ToList();
-              
+                clients = clients.OrderByDescending(c => c.ServiceDate).ToList();
+
                 foreach (Client client in clients)
                 {
                     clientCVMS.Add(ClientEntityToClientViewModel(client));
@@ -429,6 +430,7 @@ namespace OPIDDaily.DAL
 
                 // An unexpired remote client will have c.ServiceDate != c.Expiry && c.Expiry >= today
                 List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId == referringAgency && c.ServiceDate != c.Expiry && c.Expiry >= today && c.HH == 0).ToList();
+                clients = clients.OrderByDescending(c => c.ServiceDate).ToList();
 
                 foreach (Client client in clients)
                 {
