@@ -131,7 +131,7 @@ namespace OPIDDaily.Models
         [Display(Name = "EBT Card")]
         public bool SDEBT { get; set; }
 
-        [Display(Name = "HOTID")]
+        [Display(Name = "H.O.T. ID")]
         public bool SDHOTID { get; set; }
 
         [Display(Name = "School Records")]
