@@ -905,14 +905,17 @@ namespace OPIDDaily.DAL
             return trackingRows;
         }
 
-        public static void SetDisposition(string lastName, string firstName, DateTime dob, List<VisitViewModel> visits, string checkNumber, string disposition)
+        public static void SetDisposition(System.Data.DataRow dataRow, int checkNumber, string disposition)
         {
             try
             {
-                int num = Convert.ToInt32(checkNumber);
+                string lastName = dataRow["Last Name"].ToString();
+                string firstName = dataRow["First Name"].ToString();
+                DateTime dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
+
                 using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
                 {
-                    AncientCheck ancientCheck = opiddailycontext.AncientChecks.Where(ac => ac.DOB == dob && ac.Name.ToUpper().StartsWith(lastName) && ac.Num == num).SingleOrDefault();
+                    AncientCheck ancientCheck = opiddailycontext.AncientChecks.Where(ac => ac.DOB == dob && ac.Name.ToUpper().StartsWith(lastName) && ac.Num == checkNumber).SingleOrDefault();
 
                     if (ancientCheck != null)
                     {
@@ -921,7 +924,7 @@ namespace OPIDDaily.DAL
                         return;
                     }
 
-                    RCheck rcheck = opiddailycontext.RChecks.Where(rc => rc.DOB == dob && rc.Name.ToUpper().StartsWith(lastName) && rc.Num == num).SingleOrDefault();
+                    RCheck rcheck = opiddailycontext.RChecks.Where(rc => rc.DOB == dob && rc.Name.ToUpper().StartsWith(lastName) && rc.Num == checkNumber).SingleOrDefault();
 
                     if (rcheck != null)
                     {
@@ -930,7 +933,27 @@ namespace OPIDDaily.DAL
                         return;
                     }
 
-                    Log.Warn(string.Format("Could not find check number {0} to reset disposition for {1}, {2} DOB: {3}. Possibly same day reissue in which case no harm done.", num, lastName, firstName, dob.ToString()));
+                    // Add a new research check on the fly.
+                    // This is the case where an OPID Daily Tracking File reissues or replaces a check which
+                    // was not yet recorded as a research check.
+                    opiddailycontext.RChecks.Add(new RCheck
+                    {
+                        RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
+                        sRecordID = dataRow["Record ID"].ToString(),
+                        InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
+                        sInterviewRecordID = dataRow["Interview Record ID"].ToString(),
+                        Num = checkNumber,
+                        sNum = checkNumber.ToString(),
+                        Name = string.Format("{0}, {1}", lastName, firstName),
+                        DOB = dob,
+                        sDOB = dataRow["Date of Birth"].ToString(),
+                        Date = Convert.ToDateTime(dataRow["OPID Interview Date"]),
+                        sDate = dataRow["OPID Interview Date"].ToString(),
+                        Service = dataRow["Requested Item"].ToString(),
+                        Disposition = disposition
+                    });
+
+                    opiddailycontext.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -938,7 +961,8 @@ namespace OPIDDaily.DAL
                 Log.Error(e);
             }
         }
- 
+
+
         private static string Successor(string sequencedItem)
         {   // Example: sequencedItem = "TID2"
             // Then:

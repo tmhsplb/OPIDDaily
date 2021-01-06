@@ -19,8 +19,9 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
+                DateTime today = Extras.DateTimeToday();
                 string lname = Extras.StripSuffix(lastName.ToUpper());
-                Client client = opidcontext.Clients.Where(c => c.LastName.StartsWith(lname) && c.FirstName.StartsWith(firstName) && c.DOB == dob).SingleOrDefault();
+                Client client = opidcontext.Clients.Where(c => c.LastName.StartsWith(lname) && c.FirstName.StartsWith(firstName) && c.DOB == dob && c.Expiry > today).SingleOrDefault();
 
                 if (client == null) return 0;
 

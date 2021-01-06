@@ -273,16 +273,14 @@ namespace OPIDDaily.Utils
 
         private static TrackingRow NewTrackingRow(System.Data.DataRow dataRow, string epoch)
         {
-            string lname = string.Empty, fname = string.Empty;
-            DateTime dob = Extras.DateTimeToday();
+            string lname = dataRow["Last Name"].ToString();
+            string fname = dataRow["First Name"].ToString();
+            DateTime dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
 
             try
             {
-                lname = dataRow["Last Name"].ToString();
-                fname = dataRow["First Name"].ToString();
                 string reissued = dataRow["Reissued"].ToString();
                 string scammed = dataRow["Scammed"].ToString();
-                dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
                 int cid = Clients.IdentifyClient(lname, fname, dob);
 
                 if (cid == 0)
@@ -291,16 +289,15 @@ namespace OPIDDaily.Utils
                     return null;
                 }
 
-                List<VisitViewModel> visits = Visits.GetVisits(cid);
                 string requestedItem = dataRow["Requested Item"].ToString();
 
                 if (!string.IsNullOrEmpty(reissued) && (reissued.Equals("Reissued") || reissued.Equals("Replaced")))
                 {
                     // We are reissuing an existing check. Change the disposition of
                     // the existing check to the reissuing reason.
-                    string checkNumber = dataRow["Check Number"].ToString();
-                    string reissuedReason = string.Format("{0}/{1}", dataRow["Reissued Reason"], reissued).ToString();
-                    CheckManager.SetDisposition(lname, fname, dob, visits, checkNumber, reissuedReason);
+                    int checkNumber = Convert.ToInt32(dataRow["Check Number"].ToString());
+                    string reissuedReason = string.Format("{0}/{1}", reissued, dataRow["Reissued Reason"]).ToString();
+                    CheckManager.SetDisposition(dataRow, checkNumber, reissuedReason);
 
                     // Don't create a new tracking row.
                     return null;
@@ -310,15 +307,15 @@ namespace OPIDDaily.Utils
                 {
                     // We are marking an existing check as scammed. Change the disposition
                     // of the existing check to "Scammed Check"
-                    string checkNumber = dataRow["Check Number"].ToString();
-                    CheckManager.SetDisposition (lname, fname, dob, visits, checkNumber, "Scammed Check");
+                    int checkNumber = Convert.ToInt32(dataRow["Check Number"].ToString());
+                    CheckManager.SetDisposition(dataRow, checkNumber, "Scammed Check");
 
                     // Don't create a new tracking row.
                     return null;
                 }
 
+                List<VisitViewModel> visits = Visits.GetVisits(cid);
                 requestedItem = CheckManager.SequencedRequestedItem(visits, requestedItem);
-
                 return NewTrackingRow(requestedItem, lname, fname, dob, dataRow, epoch);
             }
             catch (Exception e)
