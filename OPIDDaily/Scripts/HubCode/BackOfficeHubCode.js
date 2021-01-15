@@ -18,13 +18,17 @@ $(function () {
         });
     };
 
-    theHub.client.refreshConversation = function (nowServing) {
+    theHub.client.refreshConversation = function (nowServing, messageCnt) {
         var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
         var url = "GetConversation?page=pageToken&nowServing="+nowServing;  
         url = url.replace("pageToken", currentPage);
 
-       // alert("refreshConversation: nowServing = " + nowServing);
-         
+        if (messageCnt > 0) {
+            jQuery("#messages").removeClass("hideMessages");
+        } else {
+            jQuery("#messages").addClass("hideMessages");
+        }
+
         $.ajax({
             url: url,
             cache: false,
@@ -52,7 +56,6 @@ $(function () {
             success: function (data) {
                 var mygrid = jQuery("#conversationGrid")[0];
                 mygrid.addJSONData(data);
-
             }
         });
     };

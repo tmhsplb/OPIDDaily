@@ -22,13 +22,17 @@
         });
     };
 
-    theHub.client.refreshConversation = function (nowServing) {
+    theHub.client.refreshConversation = function (nowServing, messageCnt) {
         var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
         var url = "GetConversation?page=pageToken&nowServing="+nowServing; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
  
-        // alert("clientName = " + action);
-        // jQuery("#conversationGrid").jqGrid('setGridParam', { caption: action }).trigger("reloadGrid");
+        if (messageCnt > 0) {
+            jQuery("#messages").removeClass("hideMessages");
+        } else {
+            jQuery("#messages").addClass("hideMessages");
+        }
+
         $.ajax({
             url: url,
             cache: false,
@@ -36,7 +40,6 @@
             success: function (data) {
                 var mygrid = jQuery("#conversationGrid")[0];
                 mygrid.addJSONData(data);
-
             }
         });
     };

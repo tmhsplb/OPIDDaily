@@ -6,6 +6,22 @@
 
 <br /><br /><br />
 
+<div class="container">
+    <div id="messages" class="hideMessages">
+        <p><span style="color:red" class="glyphicon glyphicon-bell"></span></p>
+    </div>
+ </div>
+<br />
+
+<script type="text/javascript">
+    if (@ViewBag.MsgCnt > 0) {
+       // alert("unhide messages");
+        jQuery("#messages").removeClass("hideMessages");
+    } else {
+       // alert("keep messages hidden");
+    }
+</script>
+
 <div>
     <table id="dashboardGrid"></table>
     <div id="dashboardPager"></div>
@@ -16,7 +32,7 @@
 <script src="@Url.Content("~/Scripts/jquery.jqGrid.min.js")" type="text/javascript"></script>
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/Dashboards/FrontDeskDashboard.js")"></script>
- 
+
 <br /><br />
 
 <div id="conversation" class="hideConversation">

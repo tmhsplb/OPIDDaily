@@ -37,6 +37,8 @@ namespace OPIDDaily.Controllers
           // Log.Debug(string.Format("Enter NowConversing: nowServing = {0}", nowServing));
 
             int agencyId = ReferringAgency();
+            int msgCnt = Convert.ToInt32(SessionHelper.Get("MsgCnt"));
+
             SessionHelper.Set("NowServing", nowServing.ToString());
                      
             List<ClientViewModel> clients;
@@ -55,7 +57,7 @@ namespace OPIDDaily.Controllers
             }
             else
             {
-                clients = Clients.GetMyUnexpiredClients(agencyId);
+                clients = Clients.GetMyClients(agencyId);
             }
 
             int pageIndex = page - 1;
@@ -68,7 +70,7 @@ namespace OPIDDaily.Controllers
            
             //  Log.Debug(string.Format("NowConversing: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
 
-            DailyHub.RefreshConversation((int)nowServing);
+            DailyHub.RefreshConversation((int)nowServing, msgCnt);
 
             var jsonData = new
             {
@@ -143,7 +145,13 @@ namespace OPIDDaily.Controllers
         public ActionResult ManageDashboard()
         {
             DateTime today = Extras.DateTimeToday();
+            int msgCnt = Convert.ToInt32(SessionHelper.Get("MsgCnt"));
+
+           // Log.Info(string.Format("msgCnt = {0}", msgCnt));
+
             ViewBag.ServiceDate = today.ToString("ddd  MMM d");
+            ViewBag.MsgCnt = msgCnt;
+            
             return View("Dashboard");
         }
 
@@ -812,12 +820,25 @@ namespace OPIDDaily.Controllers
         public string AddTextMsg(string sender, TextMsgViewModel textMsg)
         {
             int nowServing = NowServing();
+            int msgCnt = Convert.ToInt32(SessionHelper.Get("MsgCnt"));
 
             if (nowServing != 0)
             {
-                Clients.AddTextMsg(nowServing, sender, textMsg);
+                bool stopConversation = Clients.AddTextMsg(nowServing, sender, textMsg);
+
+                if (stopConversation)
+                {
+                    msgCnt -= 1;
+                }
+                else
+                {
+                    msgCnt += 1;
+                }
+
+                SessionHelper.Set("MsgCnt", msgCnt.ToString());
+
                 DailyHub.Refresh();
-                DailyHub.RefreshConversation(nowServing);
+                DailyHub.RefreshConversation(nowServing, msgCnt);
                 return "Success";
             }
 
@@ -827,12 +848,13 @@ namespace OPIDDaily.Controllers
         public string EditTextMsg(TextMsgViewModel textMsg)
         {
             int nowServing = NowServing();
+            int msgCnt = Convert.ToInt32(SessionHelper.Get("MsgCnt"));
 
             if (nowServing != 0)
             {
                 Clients.EditTextMsg(nowServing, textMsg);
                 DailyHub.Refresh();
-                DailyHub.RefreshConversation(nowServing);
+                DailyHub.RefreshConversation(nowServing, msgCnt);
                 return "Success";
             }
 

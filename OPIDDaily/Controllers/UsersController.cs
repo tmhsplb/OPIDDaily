@@ -3,9 +3,13 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using OPIDDaily.DAL;
 using OPIDDaily.DataContexts;
 using OPIDDaily.Models;
+using OPIDDaily.Utils;
+using OpidDailyEntities;
 using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
 using static OPIDDaily.DataContexts.IdentityDB;
@@ -68,7 +72,7 @@ namespace OPIDDaily.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                var user = User.Identity;
+               // var user = User.Identity;
 
                 if (IsInRole("SuperAdmin"))
                 {
@@ -77,16 +81,19 @@ namespace OPIDDaily.Controllers
 
                 else if (IsInRole("FrontDesk"))
                 {
+                    Users.SetDashboardMsgCnt();
                     return RedirectToAction("Home", "FrontDesk");
                 }
 
                 else if (IsInRole("Interviewer"))
                 {
+                    Users.SetDashboardMsgCnt();
                     return RedirectToAction("Home", "Interviewer");
                 }
 
                 else if (IsInRole("BackOffice"))
                 {
+                    Users.SetDashboardMsgCnt();
                     // Log.Debug("User is in role BackOffice. Redirect to Backoffice.Home");
                     return RedirectToAction("Home", "BackOffice");
                 }

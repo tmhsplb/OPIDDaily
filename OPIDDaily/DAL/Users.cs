@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using OPIDDaily.DataContexts;
 using OPIDDaily.Models;
+using OPIDDaily.Utils;
 using OpidDailyEntities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,29 @@ namespace OPIDDaily.DAL
 {
     public class Users
     {
+        public static void SetDashboardMsgCnt()
+        {
+            DateTime today = Extras.DateTimeToday();
+            int msgCnt = 0;
+
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry && c.Active == true).ToList();
+
+                foreach (Client client in clients)
+                {
+                    if (!string.IsNullOrEmpty(client.Msgs) && !client.Msgs.StartsWith("END"))
+                    {
+                        msgCnt += 1;
+                    }
+                }
+
+                // Log.Info(string.Format("MsgCnt = {0}", msgCnt));
+
+                SessionHelper.Set("MsgCnt", msgCnt.ToString());
+            }
+        }
+
         public static string EditUser(InvitationViewModel invite)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())

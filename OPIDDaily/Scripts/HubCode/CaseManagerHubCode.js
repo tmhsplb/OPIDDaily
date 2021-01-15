@@ -35,7 +35,6 @@
             success: function (data) {
                 var mygrid = jQuery("#conversationGrid")[0];
                 mygrid.addJSONData(data);
-
             }
         });
     };
@@ -56,7 +55,6 @@
             success: function (data) {
                 var mygrid = jQuery("#conversationGrid")[0];
                 mygrid.addJSONData(data);
-
             }
         });
     };

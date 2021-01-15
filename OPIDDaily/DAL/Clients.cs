@@ -179,10 +179,11 @@ namespace OPIDDaily.DAL
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
 
                 // A same-day-service client will have c.ServiceDate == c.Expiry
-               // List<Client> clients = opiddailycontext.Clients.Where( c => c.HH == 0 && c.ServiceDate == date && c.Expiry == date).ToList();
+                // List<Client> clients = opiddailycontext.Clients.Where( c => c.HH == 0 && c.ServiceDate == date && c.Expiry == date).ToList();
 
                 // The virtual front desk TicketMaster will create service tickets with a 30-day expiry
                 List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate == date).ToList();
+                clients = clients.OrderByDescending(c => c.ServiceDate).ToList();
 
                 foreach (Client client in clients)
                 {
@@ -299,7 +300,7 @@ namespace OPIDDaily.DAL
             };
         }
 
-        private static bool EndMsg(string textMsg)
+        private static bool IsEndMsg(string textMsg)
         {
             string msg = textMsg.ToUpper();
             return (msg.Equals("END") || msg.Equals("DONE") || msg.Equals("OVER"));
@@ -309,7 +310,7 @@ namespace OPIDDaily.DAL
         {
             string msg;
 
-            if (EndMsg(textMsg))
+            if (IsEndMsg(textMsg))
             {
                 msg = string.Format("END:0");
             }
@@ -330,7 +331,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void AddTextMsg(int nowServing, string sender, TextMsgViewModel tmvm)
+        public static bool AddTextMsg(int nowServing, string sender, TextMsgViewModel tmvm)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
@@ -344,7 +345,13 @@ namespace OPIDDaily.DAL
 
                     client.TextMsgs.Add(textMsg);
                     opiddailycontext.SaveChanges();
+
+                    // Return true if the message being added is an "end message", 
+                    // i.e. one that is meant to stop the conversation.
+                    return IsEndMsg(tmvm.Msg);
                 }
+
+                return false;
             }
         }
 
@@ -422,7 +429,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static List<ClientViewModel> GetMyUnexpiredClients(int referringAgency)
+        public static List<ClientViewModel> GetMyClients(int referringAgency)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
@@ -435,12 +442,6 @@ namespace OPIDDaily.DAL
 
                 foreach (Client client in clients)
                 {
-                    /*
-                    opiddailycontext.Entry(client).Collection(c => c.Visits).Load();
-
-                    client.EXP = client.Visits.Count == 0;
-                    */
-
                     clientCVMS.Add(ClientEntityToClientViewModel(client));
                 }
 

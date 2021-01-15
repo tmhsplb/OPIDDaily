@@ -58,3 +58,7 @@ textarea {
 .hideConversation {
     display: none;
 }
+
+.hideMessages {
+    display: none;
+}

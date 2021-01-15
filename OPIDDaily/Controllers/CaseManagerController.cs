@@ -22,10 +22,21 @@ namespace OPIDDaily.Controllers
             return View();
         }
 
+        public ActionResult ManageMyClients()
+        {
+            DateTime today = Extras.DateTimeToday();
+            int msgCnt = Convert.ToInt32(SessionHelper.Get("MsgCnt"));
+
+            ViewBag.ServiceDate = today.ToString("ddd  MMM d");
+            ViewBag.MsgCnt = msgCnt;
+
+            return View("Clients");
+        }
+
         public JsonResult GetMyClients(int page, int? rows = 25)
         {
             int referringAgency = ReferringAgency();
-            List<ClientViewModel> clients = Clients.GetMyUnexpiredClients(referringAgency);
+            List<ClientViewModel> clients = Clients.GetMyClients(referringAgency);
 
            // VoucherBackButtonHelper("Reset", null);
 
@@ -36,8 +47,6 @@ namespace OPIDDaily.Controllers
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-
-            clients = clients.OrderBy(c => c.ServiceDate).ToList();
 
             var jsonData = new
             {
