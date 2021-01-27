@@ -47,7 +47,7 @@ namespace OPIDDaily.Controllers
             {
                 if (frontdesk == 1)
                 {
-                    clients = Clients.GetClients(Extras.DateTimeToday());
+                    clients = Clients.GetClients(sps, Extras.DateTimeToday());
                 }
                 else
                 {
@@ -113,10 +113,10 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
-        public JsonResult GetClients(int page, int? rows = 25)
+        public JsonResult GetClients(SearchParameters sps, int page, int? rows = 25)
         {
             DateTime today = Extras.DateTimeToday();
-            List<ClientViewModel> clients = Clients.GetClients(today);
+            List<ClientViewModel> clients = Clients.GetClients(sps, today);
 
            // ServiceTicketBackButtonHelper("Reset", null);
            // SpecialReferralBackButtonHelper("Reset", null);
@@ -180,7 +180,7 @@ namespace OPIDDaily.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetContactInfo()
+        public ActionResult GetDemographicInfo()
         {
             int nowServing = NowServing();
 
@@ -190,14 +190,26 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
 
-            ContactInfoViewModel civm = Clients.GetContactInfoViewModel(nowServing);
+            DemographicInfoViewModel civm = Clients.GetDemographicInfoViewModel(nowServing);
 
-            return View("ContactInfo", civm);
+            return View("DemographicInfo", civm);
+        }
+
+        public ActionResult StoreDemographicInfo(DemographicInfoViewModel civm)
+        {
+            int nowServing = NowServing();
+            Clients.StoreDemographicInfo(nowServing, civm);
+            return RedirectToAction("ManageClients");
         }
 
         public string AddClient(ClientViewModel cvm)
         {
             int id = Clients.AddClient(cvm);
+
+            if (id == -1)
+            {
+                return "Failure";
+            }
 
             // Newly added client becomes the client being served.
             // Entity Framework will set client.Id to the Id of the inserted client.
@@ -217,6 +229,11 @@ namespace OPIDDaily.Controllers
 
             DailyHub.Refresh(); 
             
+            if (cvm.Conversation.Equals("Y"))
+            {
+                return "OpenConversation";
+            }
+
             return "Success";
         }
 
@@ -246,6 +263,11 @@ namespace OPIDDaily.Controllers
         {
             int referringAgency = ReferringAgency();
             int id = Clients.AddDependentClient(referringAgency, household, cvm);
+
+            if (id == -1)
+            {
+                return "Failure";
+            }
 
             DailyHub.Refresh();
             SessionHelper.Set("NowServing", id.ToString());

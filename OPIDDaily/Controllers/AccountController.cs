@@ -84,7 +84,8 @@ namespace OPIDDaily.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    Log.Info(string.Format("User {0} has logged in", model.UserName));
+                    string ip = Request.UserHostAddress;
+                    Log.Info(string.Format("User {0} has logged in. IP = {1}", model.UserName, ip));
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

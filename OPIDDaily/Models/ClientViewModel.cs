@@ -33,6 +33,8 @@ namespace OPIDDaily.Models
 
         public DateTime DOB { get; set; }   
 
+        public string sDOB { get; set; }
+
         public int Age { get; set; }
 
         public string EXP { get; set; }

@@ -114,6 +114,7 @@ namespace OPIDDaily.DAL
                 MiddleName = client.MiddleName,
                 BirthName = client.BirthName,
                 DOB = client.DOB.AddHours(12),
+                sDOB = client.DOB.AddHours(12).ToString("MM/dd/yyyy"),
                 Age = client.Age,
                 AgencyName = (!string.IsNullOrEmpty(client.AgencyName) ? client.AgencyName : Agencies.GetAgencyName(client.AgencyId)),
 
@@ -134,16 +135,19 @@ namespace OPIDDaily.DAL
 
         private static void ClientViewModelToClientEntity(ClientViewModel cvm, Client client)
         {
+            DateTime dob = (string.IsNullOrEmpty(cvm.sDOB) ? cvm.DOB : DateTime.Parse(cvm.sDOB));
+
             client.ServiceTicket = cvm.ServiceTicket;
             client.Stage = cvm.Stage;
-            client.Conversation = (client.Conversation ? true : (string.IsNullOrEmpty(cvm.Conversation) ? false : true));
+            client.Conversation = (client.Conversation ? true : (cvm.Conversation.Equals("Y") ? true : false));
+            // default(DateTime) : https://stackoverflow.com/questions/221732/datetime-null-value
             client.Expiry = (cvm.Expiry != default(DateTime) ? cvm.Expiry : client.Expiry);
             client.LastName = cvm.LastName;
             client.FirstName = cvm.FirstName;
             client.MiddleName = cvm.MiddleName;
             client.BirthName = cvm.BirthName;
-            client.DOB = cvm.DOB; 
-            client.Age = CalculateAge(cvm.DOB); 
+            client.DOB = dob;   
+            client.Age = CalculateAge(dob); 
 
             // client.EXP = (cvm.EXP.Equals("Y") ? true : false);
             client.PND = (cvm.PND.Equals("Y") ? true : false);
@@ -171,18 +175,32 @@ namespace OPIDDaily.DAL
             return 0;
         }
 
-        public static List<ClientViewModel> GetClients(DateTime date, bool? superadmin = false, bool? updateWaittimes = true)
+        public static List<ClientViewModel> GetClients(SearchParameters sps, DateTime date, bool? superadmin = false, bool? updateWaittimes = true)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 DateTime today = Extras.DateTimeToday();
+                DateTime dob = (sps != null && sps._search == true && !string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB) : default(DateTime));
+                DateTime dob12 = (sps != null && sps._search == true && !string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB).AddHours(12) : default(DateTime));
+                DateTime nextDate = date.AddHours(24);
+
+                List<Client> clients;
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
 
                 // A same-day-service client will have c.ServiceDate == c.Expiry
                 // List<Client> clients = opiddailycontext.Clients.Where( c => c.HH == 0 && c.ServiceDate == date && c.Expiry == date).ToList();
 
                 // The virtual front desk TicketMaster will create service tickets with a 30-day expiry
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate == date).ToList();
+
+                if (sps != null && sps._search == true)
+                {
+                  clients = opiddailycontext.Clients.Where(c => c.HH == 0 &&  (c.DOB == dob || c.DOB == dob12)).ToList();
+                }
+                else
+                {
+                  clients = opiddailycontext.Clients.Where(c => c.HH == 0 && date <= c.ServiceDate && c.ServiceDate <= nextDate).ToList();
+                }
+               
                 clients = clients.OrderByDescending(c => c.ServiceDate).ToList();
 
                 foreach (Client client in clients)
@@ -214,6 +232,16 @@ namespace OPIDDaily.DAL
         private static List<ClientViewModel> GetFilteredDashboardClients(SearchParameters sps, List<ClientViewModel> cvms)
         {
             List<ClientViewModel> filteredCVMS;
+
+            // default(DateTime) : https://stackoverflow.com/questions/221732/datetime-null-value
+            DateTime dob = (!string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB) : default(DateTime));
+            DateTime dob12 = (!string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB).AddHours(12) : default(DateTime));
+
+            if (dob != default(DateTime))
+            {
+                filteredCVMS = cvms.Where(c => c.DOB == dob || c.DOB == dob12).ToList();
+                return filteredCVMS;
+            }
 
             if (!string.IsNullOrEmpty(sps.AgencyName))
             {
@@ -250,6 +278,10 @@ namespace OPIDDaily.DAL
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
                 DateTime today = Extras.DateTimeToday();
 
+                // default(DateTime) : https://stackoverflow.com/questions/221732/datetime-null-value
+                DateTime dob = (sps._search == true && !string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB) : default(DateTime));
+                DateTime dob12 = (sps._search == true && !string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB).AddHours(12) : default(DateTime));
+
                 // A dashboard client will 
                 //    come from an agency: c.AgencyId != 0
                 //    be a head of household: c.HH == 0
@@ -258,7 +290,7 @@ namespace OPIDDaily.DAL
                 // List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry).ToList();
 
                 // For virtual front desk, c.AgencyId == 0, i.e. agency = OPID
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry && c.Active == true).ToList();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && (today <= c.Expiry || dob == c.DOB || dob12 == c.DOB) && c.Active == true).ToList();
                 clients = clients.OrderByDescending(c => c.ServiceDate).ToList();
 
                 foreach (Client client in clients)
@@ -453,40 +485,53 @@ namespace OPIDDaily.DAL
         {
             DateTime today = Extras.DateTimeToday();
             DateTime now = Extras.DateTimeNow();
-
-            using (OpidDailyDB opidcontext = new OpidDailyDB())
-            {
-                Client client = new Client
+            DateTime dob = DateTime.Parse(cvm.sDOB);
+          
+            try {
+                using (OpidDailyDB opidcontext = new OpidDailyDB())
                 {
-                    ServiceDate = today,
-                    ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
-                    Stage = cvm.Stage,
-                    Conversation = (string.IsNullOrEmpty(cvm.Conversation) ? false : true),
-                    FirstName = cvm.FirstName,
-                    MiddleName = cvm.MiddleName,
-                    LastName = cvm.LastName,
-                    BirthName = cvm.BirthName,
-                    DOB = cvm.DOB,  
-                    Age = CalculateAge(cvm.DOB), 
-                 //   EXP = (cvm.EXP.Equals("Y") ? true : false),
-                    PND = (cvm.PND.Equals("Y") ? true : false),
-                    XID = (cvm.XID.Equals("Y") ? true : false),
-                    XBC = (cvm.XBC.Equals("Y") ? true : false),
-                    Notes = cvm.Notes,
-                    Screened = now,
-                    CheckedIn = now,
-                    Interviewing = now,
-                    Interviewed = now,
-                    BackOffice = now,
-                    Done = now,
-                    Expiry = CalculateExpiry(today),  // was just today
-                    Active = true
-                };
+                    Client client = new Client
+                    {
+                        ServiceDate = now,  // was today, but using now allows inserting at top of dashboards
+                        ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
+                        Stage = cvm.Stage,
+                        Conversation = (string.IsNullOrEmpty(cvm.Conversation) ? false : true),
+                        FirstName = cvm.FirstName,
+                        MiddleName = cvm.MiddleName,
+                        LastName = cvm.LastName,
+                        BirthName = cvm.BirthName,
+                        DOB = dob, // cvm.DOB,
+                        Age = CalculateAge(dob), // CalculateAge(cvm.DOB),
+                        //   EXP = (cvm.EXP.Equals("Y") ? true : false),
+                        PND = (cvm.PND.Equals("Y") ? true : false),
+                        XID = (cvm.XID.Equals("Y") ? true : false),
+                        XBC = (cvm.XBC.Equals("Y") ? true : false),
+                        Notes = cvm.Notes,
+                        Screened = now,
+                        CheckedIn = now,
+                        Interviewing = now,
+                        Interviewed = now,
+                        BackOffice = now,
+                        Done = now,
+                        Expiry = CalculateExpiry(today),  // was just today
+                        Active = true
+                    };
 
-                opidcontext.Clients.Add(client);
-                opidcontext.SaveChanges();
+                    if (String.IsNullOrEmpty(client.LastName))
+                    {
+                        return -1;
+                    }
 
-                return client.Id;
+                    opidcontext.Clients.Add(client);
+                    opidcontext.SaveChanges();
+
+                    return client.Id;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(string.Format("Failed to add new client {0}, {1}. Error: {2}", cvm.LastName, cvm.FirstName, e.Message));
+                return -1;
             }
         }
 
@@ -693,6 +738,11 @@ namespace OPIDDaily.DAL
                         AgencyId = agencyId,
                         Active = true
                     };
+
+                    if (String.IsNullOrEmpty(client.LastName))
+                    {
+                        return -1;
+                    }
 
                     opiddailycontext.Clients.Add(client);
                     opiddailycontext.SaveChanges();
@@ -1177,9 +1227,9 @@ namespace OPIDDaily.DAL
             }
         }
 
-        private static ContactInfoViewModel ClientToClientContactInfoViewModel(Client client)
+        private static DemographicInfoViewModel ClientToClientDemographicInfoViewModel(Client client)
         {
-            return new ContactInfoViewModel
+            return new DemographicInfoViewModel
             {
                 LastName = client.LastName,
                 FirstName = client.FirstName,
@@ -1194,11 +1244,21 @@ namespace OPIDDaily.DAL
                 CurrentAddress = client.CurrentAddress,
                 City = client.City,
                 State = client.Staat,
-                Zip = client.Zip
+                Zip = client.Zip,
+
+                Incarceration = client.Incarceration,
+                HousingStatus = client.HousingStatus,
+                USCitizen = client.USCitizen,
+                Gender = client.Gender,
+                Ethnicity = client.Ethnicity,
+                Race = client.Race,
+                MilitaryVeteran = client.MilitaryVeteran,
+                DischargeStatus = client.DischargeStatus,
+                Disabled = client.Disabled
             };
         }
 
-        public static ContactInfoViewModel GetContactInfoViewModel(int nowServing)
+        public static DemographicInfoViewModel GetDemographicInfoViewModel(int nowServing)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
@@ -1206,14 +1266,14 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    return ClientToClientContactInfoViewModel(client);
+                    return ClientToClientDemographicInfoViewModel(client);
                 }
             }
 
             return null;
         }
 
-        public static void StoreContactInfo(int nowServing, ContactInfoViewModel civm)
+        public static void StoreDemographicInfo(int nowServing, DemographicInfoViewModel civm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
@@ -1230,6 +1290,16 @@ namespace OPIDDaily.DAL
                     client.City = civm.City;
                     client.Staat = civm.State;
                     client.Zip = civm.Zip;
+
+                    client.Incarceration = civm.Incarceration;
+                    client.HousingStatus = civm.HousingStatus;
+                    client.USCitizen = civm.USCitizen;
+                    client.Gender = civm.Gender;
+                    client.Ethnicity = civm.Ethnicity;
+                    client.Race = civm.Race;
+                    client.MilitaryVeteran = civm.MilitaryVeteran;
+                    client.DischargeStatus = civm.DischargeStatus;
+                    client.Disabled = civm.Disabled;
 
                     opiddailycontext.SaveChanges();
                 }

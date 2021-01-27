@@ -20,7 +20,8 @@ $("#dashboardGrid").jqGrid({
         { key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: true },
         { key: false, name: 'MiddleName', index: 'MiddleName', width: 150, editable: true, sortable: false, search: true },
         { key: false, name: 'BirthName', index: 'BirthName', width: 150, editable: true, sortable: false, search: true },
-        { key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 120, editable: true, sortable: true, search: false },
+        // { key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 120, editable: true, sortable: true, search: false },
+        { key: false, align: 'center', name: 'sDOB', index: 'sDOB', width: 120, editable: true, sortable: true, search: true },
         { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: true, search: false },
         { name: 'PND', index: 'PND', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
         { name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
@@ -39,8 +40,8 @@ $("#dashboardGrid").jqGrid({
             lastServed = nowServing;
 
             var dashboard = jQuery("#dashboardGrid"),
-                selRowId = dashboard.jqGrid('getGridParam', 'selrow'),
-                hasConversation = dashboard.jqGrid('getCell', selRowId, 'Conversation');
+               // selRowId = dashboard.jqGrid('getGridParam', 'selrow'),
+                hasConversation = dashboard.jqGrid('getCell', nowServing, 'Conversation');
 
             if (hasConversation == "Y") {
                 jQuery("#conversation").removeClass("hideConversation");
@@ -105,7 +106,8 @@ $("#dashboardGrid").jqGrid({
                 { key: false, name: 'MiddleName', index: 'MiddleName', width: 100, editable: true },
                 { key: false, name: 'LastName', index: 'LastName', width: 100, editable: true },
                 { key: false, name: 'BirthName', index: 'BirthName', width: 100, editable: true, sortable: false, search: false },
-                { key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 120, editable: true },
+               // { key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 120, editable: true },
+                { key: false, align: 'center', name: 'sDOB', index: 'sDOB', width: 120, editable: true, search: false },
                 { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: false, search: false },
                 { name: 'PND', index: 'PND', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { name: 'XID', index: 'XID', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
@@ -161,7 +163,7 @@ jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add:
         recreateForm: true,
 
         afterComplete: function (response) {
-            if (response.responseText == "Success") {
+            if (response.responseText == "OpenConversation") {
                 var theHub = $.connection.dailyHub;
                 theHub.client.openConversation();
             }

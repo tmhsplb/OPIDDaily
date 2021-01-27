@@ -6,7 +6,7 @@ using System.Web;
 
 namespace OPIDDaily.Models
 {
-    public class ContactInfoViewModel
+    public class DemographicInfoViewModel
     {
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
@@ -49,5 +49,23 @@ namespace OPIDDaily.Models
 
         [Display(Name = "Zip")]
         public string Zip { get; set; }
+
+        public string Incarceration { get; set; }
+
+        public string HousingStatus { get; set; }
+
+        public string USCitizen { get; set; }
+
+        public string Gender { get; set; }
+
+        public string Ethnicity { get; set; }
+
+        public string Race { get; set; }
+
+        public string MilitaryVeteran { get; set; }
+
+        public string DischargeStatus { get; set; }
+
+        public string Disabled { get; set; }
     }
 }

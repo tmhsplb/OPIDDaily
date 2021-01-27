@@ -12,7 +12,7 @@
            {key: true, hidden: true, name: 'Id', index: 'Id' },
            { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
            { key: false, align: 'center', name: 'ServiceDate', index: 'ServiceDate', formatter: 'date', width: 120, editable: false, sortable: true, search: false },
-           { key: false, align: 'center', name: 'Expiry', index: 'Expiry', formatter: 'date', width: 120, editable: false, sortable: true, search: false },
+           { key: false, align: 'center', name: 'Expiry', index: 'Expiry', formatter: 'date', width: 120, editable: true, sortable: true, search: false },
           // {key: false, align: 'center', name: 'WaitTime', index: 'WaitTime', width: 50, formatter: rowColorFormatter, editable: false, sortable: true, search: false },
            {key: false, name: 'Stage', index: 'Stage', width: 100, editable: true, edittype: 'select', editoptions: {value: {'Screened': 'Screened', 'CheckedIn': 'CheckedIn', 'Interviewing': 'Interviewing', 'Interviewed': 'Interviewed', 'BackOffice': 'BackOffice', 'Done': 'Done' } }, sortable: false, search: false },
            {key: false, name: 'HeadOfHousehold', index: 'HeadOfHousehold', width: 35, align: 'center', editable: false, sortable: false, search: false },
@@ -20,11 +20,12 @@
            {key: false, name: 'FirstName', index: 'FirstName', width: 150, editable: true, sortable: false, search: false },
            {key: false, name: 'MiddleName', index: 'MiddleName', width: 150, editable: true, sortable: false, search: false },
            {key: false, name: 'BirthName', index: 'BirthName', width: 150, editable: true, sortable: false, search: false },
-           {key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 100, editable: true, sortable: true, search: false },
+           // { key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 100, editable: true, sortable: true, search: false },
+           { key: false, align: 'center', name: 'sDOB', index: 'sDOB', width: 120, editable: true, sortable: true, search: true },
            {key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: false, search: false },
-           {name: 'PND', index: 'PND', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" }, },
-           {name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" } },
-           {name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" }, },
+           {name: 'PND', index: 'PND', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" }, search: false },
+           {name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" }, search: false },
+           {name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" }, search: false },
            {key: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: {rows: '2', cols: '300' }  }
     ],
     pager: '#clientsPager',
@@ -143,8 +144,8 @@
         closeAfterAdd: true,
         recreateForm: true,
              afterComplete: function (response) {
-                 if (response.responseText) {
-                     //   alert("Added dependent client: " + response.responseText);
+                 if (response.responseText != "Success") {
+                     alert("Failed to add dependent client: Are you missing client last name?");
                  }
         }
      },
@@ -161,9 +162,10 @@
         }
      })
   } // close subgridRowExpanded
-})
+    })
 
-    jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', {edit: true, add: true, del: true, search: false, refresh: false },
+    jQuery("#clientsGrid").jqGrid('filterToolbar', { searchOperators: true });
+    jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', {edit: true, add: true, del: true, search: false, refresh: true },
       {
         zIndex: 100,
         url: "EditClient",  // "@Url.Action("EditClient", "FrontDesk")",
@@ -182,11 +184,9 @@
         closeAfterAdd: true,
         recreateForm: true,
         afterComplete: function (response) {
-             if (response.responseText) {
-                  if (response.responseText != "Success") {
-                     alert(response.responseText);
-                  }
-             }
+            if (response.responseText != "Success") {
+                     alert("Failed to add client. Are you missing client last name?");
+            }   
          }
       },
       {

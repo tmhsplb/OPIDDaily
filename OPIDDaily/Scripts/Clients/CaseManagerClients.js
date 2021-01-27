@@ -153,8 +153,8 @@ $("#clientsGrid").jqGrid({
                 closeAfterAdd: true,
                 recreateForm: true,
                 afterComplete: function (response) {
-                    if (response.responseText) {
-                        //   alert("Added dependent client: " + response.responseText);
+                    if (response.responseText != "Success") {
+                          alert("Failed to add dependent client. Are you missing client last name?");
                     }
                 }
             },
@@ -195,11 +195,9 @@ jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: tru
         closeAfterAdd: true,
         recreateForm: true,
         afterComplete: function (response) {
-            if (response.responseText) {
-                if (response.responseText != "Success") {
-                    alert(response.responseText);
-                }
-            }
+            if (response.responseText != "Success") {
+                alert("Failed to add client. Are you missing client last name?");
+            }         
         }
     },
     {

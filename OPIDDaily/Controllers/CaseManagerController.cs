@@ -64,6 +64,11 @@ namespace OPIDDaily.Controllers
             int referringAgency = ReferringAgency();
             int id = Clients.AddMyClient(cvm, referringAgency);
 
+            if (id == -1)
+            {
+                return "Failure";
+            }
+
             // Newly added client becomes the client being served.
             // Entity Framework will set client.Id to the Id of the inserted client.
             // See: https://stackoverflow.com/questions/5212751/how-can-i-get-id-of-inserted-entity-in-entity-framework
@@ -138,13 +143,6 @@ namespace OPIDDaily.Controllers
 
             //  VoucherBackButtonHelper("Get", rsvm);
             return View("ExpressClientServiceRequest", rsvm);
-        }
-
-        public ActionResult StoreContactInfo(ContactInfoViewModel civm)
-        {
-            int nowServing = NowServing();
-            Clients.StoreContactInfo(nowServing, civm);
-            return RedirectToAction("ManageClients");
         }
 
         public ActionResult ExistingClientServiceRequest()

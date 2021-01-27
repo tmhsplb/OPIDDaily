@@ -1,0 +1,259 @@
+﻿@model OPIDDaily.Models.DemographicInfoViewModel
+
+@{
+    ViewBag.Title = "Demographic Info";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
+}
+
+<br />
+
+@* See https://stackoverflow.com/questions/24471636/inline-bootstrap-form-layout-with-labels-above-inputs *@
+<div class="row">
+    <div class="col-md-12">
+        <section id="contactInfo">
+            <h3>Contact Info</h3>
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.FirstName, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.MiddleName, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.MiddleName, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.LastName, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.BirthName, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.BirthName, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-6 col-md-6">
+                        @Html.LabelFor(m => m.AKA, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.AKA, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+                    <div class="form-group col-xs-6 col-md-6">
+                        @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Email, new { disabled = "disbaled", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.DOB, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.DOB, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.BirthCity, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.BirthCity, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.BirthState, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.BirthState, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.Phone, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Phone, new { disabled = " disabled", @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.CurrentAddress, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.CurrentAddress, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.City, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.City, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.State, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.State, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+
+                    <div class="form-group col-xs-3 col-md-3">
+                        @Html.LabelFor(m => m.Zip, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Zip, new { disabled = "disabled", @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <section id="demographicsInfo">
+        <h3>Demographics</h3>
+        <br />
+        @* Table style: https://stackoverflow.com/questions/2637696/how-to-place-div-side-by-side *@
+        <div style="width: 100%; display: table;">
+            <div style="display: table-row">
+                <div style="width: 33%; display: table-cell;">
+                    <p><strong>History of incarceration?</strong></p>
+                    @Html.RadioButtonFor(m => m.Incarceration, "WasIncarcerated")
+                    <label>Yes</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Incarceration, "WasNotIncarcerated")
+                    <label>No</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.HousingStatus, "N/A")
+                    <label>Not Available</label>
+                </div>
+                <div style="width: 33%; display: table-cell;">
+                    <p><strong>Is person homeless?</strong></p>
+                    @Html.RadioButtonFor(m => m.HousingStatus, "Homeless")
+                    <label>Yes</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.HousingStatus, "NotHomeless")
+                    <label>No</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.HousingStatus, "N/A")
+                    <label>Not Available</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.HousingStatus, "TransitionalHousing")
+                    <label>Transitional Housing</label>
+                </div>
+                <div style="width: 33%; display: table-cell;">&nbsp;</div>
+            </div>
+        </div>
+        <br />
+
+        <div style="width: 100%; display: table;">
+            <div style="display: table-row">
+                <div style="width: 33%; display: table-cell;">
+                    <p><strong>US Citizen?</strong></p>
+                    @Html.RadioButtonFor(m => m.USCitizen, "Y")
+                    <label>Yes</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.USCitizen, "N")
+                    <label>No</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.USCitizen, "N/A")
+                    <label>Not Available</label>
+                </div>
+                <div style="display: table-cell;">
+                    <p><strong>Gender</strong></p>
+                    @Html.RadioButtonFor(m => m.Gender, "M")
+                    <label>Male</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Gender, "F")
+                    <label>Female</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Gender, "M2F")
+                    <label>Transgender: Male to Female</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Gender, "F2M")
+                    <label>Transgender: Female to Male</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Gender, "N/A")
+                    <label>Not Available</label>
+                </div>
+                <div style="width: 33%; display: table-cell;">&nbsp;</div>
+            </div>
+        </div>
+        <br />
+
+        <div style="width: 100%; display: table;">
+            <div style="display: table-row">
+                <div style="width: 33%; display: table-cell;">
+                    <p><strong>Ethnicity</strong></p>
+                    @Html.RadioButtonFor(m => m.Ethnicity, "Hispanic")
+                    <label>Hispanic or Latino</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Ethnicity, "NotHispanic")
+                    <label>Not Hispanic or Latino</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Ethnicity, "N/A")
+                    <label>Not Available</label>
+                </div>
+
+                <div style="width: 33%; display: table-cell;">
+                    <p><strong>Race</strong></p>
+                    @Html.RadioButtonFor(m => m.Race, "Black")
+                    <label>AA/Black</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Race, "White")
+                    <label>Caucasian/White</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Race, "NativeAmerican")
+                    <label>American Indian/Alaska Native</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Race, "Asian")
+                    <label>Asian</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Race, "HawaiianPacificIslander")
+                    <label>Native Hawaiian/Pacific Islander</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Race, "Multiracial")
+                    <label>Multiracial</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Race, "Unknown")
+                    <label>Unknown</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Race, "N/A")
+                    <label>Not Available</label>
+                </div>
+                <div style="width: 33%; display: table-cell;">&nbsp;</div>
+            </div>
+        </div>
+        <br />
+
+        <div style="width: 100%; display: table;">
+            <div style="display: table-row">
+                <div style="width: 33%; display: table-cell;">
+                    <p><strong>Military Veteran</strong></p>
+                    @Html.RadioButtonFor(m => m.MilitaryVeteran, "Y")
+                    <label>Yes</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.MilitaryVeteran, "N")
+                    <label>No</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.MilitaryVeteran, "N/A")
+                    <label>Not Available</label>
+                </div>
+                <div style="width: 33%; display: table-cell;">
+                    <p><strong>Discharge Status</strong></p>
+                    @Html.RadioButtonFor(m => m.DischargeStatus, "Honorable")
+                    <label>Honorable</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.DischargeStatus, "Dishonorable")
+                    <label>Dishonorable</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.DischargeStatus, "General")
+                    <label>General</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.DischargeStatus, "Not Applicable")
+                    <label>Not Applicable</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.DischargeStatus, "N/A")
+                    <label>Not Available</label>
+                </div>
+                <div style="width: 33%; display: table-cell;">
+                    <p><strong>Disabled?</strong></p>
+                    @Html.RadioButtonFor(m => m.Disabled, "Y")
+                    <label>Yes</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Disabled, "N")
+                    <label>No</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.Disabled, "N/A")
+                    <label>Not Available</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.HousingStatus, "TransitionalHousing")
+                    <label>Transitional Housing</label>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+ 

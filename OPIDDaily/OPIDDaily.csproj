@@ -361,6 +361,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202012111620016_AgencyName.Designer.cs">
       <DependentUpon>202012111620016_AgencyName.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202101261405456_Demographics.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202101261405456_Demographics.Designer.cs">
+      <DependentUpon>202101261405456_Demographics.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -380,7 +384,7 @@
     <Compile Include="Models\ClientRow.cs" />
     <Compile Include="Models\ClientServedViewModel.cs" />
     <Compile Include="Models\ClientViewModel.cs" />
-    <Compile Include="Models\ContactInfoViewModel.cs" />
+    <Compile Include="Models\DemographicInfoViewModel.cs" />
     <Compile Include="Models\DataRow.cs" />
     <Compile Include="Models\DatePickerViewModel.cs" />
     <Compile Include="Models\DispositionRow.cs" />
@@ -975,8 +979,8 @@
     <Content Include="Views\Shared\_ExistingClientServiceTicket.cshtml" />
     <Content Include="Views\BackOffice\PrintExpressClient.cshtml" />
     <Content Include="Views\Shared\_ReadOnlySupportingDocuments.cshtml" />
-    <Content Include="Views\CaseManager\ContactInfo.cshtml" />
-    <Content Include="Views\BackOffice\ContactInfo.cshtml" />
+    <Content Include="Views\CaseManager\DemographicInfo.cshtml" />
+    <Content Include="Views\BackOffice\DemographicInfo.cshtml" />
     <Content Include="Views\Superadmin\Demo.cshtml" />
     <Content Include="Views\BackOffice\Dashboard.cshtml" />
     <Content Include="Views\FrontDesk\Dashboard.cshtml" />
@@ -1000,6 +1004,8 @@
     <Content Include="Views\Interviewer\RecentChecks.cshtml" />
     <Content Include="Views\Interviewer\AncientChecks.cshtml" />
     <Content Include="Views\Shared\_BackOfficeRequestedServicesForm.cshtml" />
+    <Content Include="Views\FrontDesk\DemographicInfo.cshtml" />
+    <Content Include="Views\Interviewer\DemographicInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
@@ -1121,6 +1127,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202012111620016_AgencyName.resx">
       <DependentUpon>202012111620016_AgencyName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202101261405456_Demographics.resx">
+      <DependentUpon>202101261405456_Demographics.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

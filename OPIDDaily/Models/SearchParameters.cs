@@ -25,6 +25,8 @@ namespace OPIDDaily.Models
 
         public string BirthName { get; set; }
 
+        public string sDOB { get; set; } 
+ 
       //  public string searchField { get; set; }
 
       //  public string searchOper { get; set; }

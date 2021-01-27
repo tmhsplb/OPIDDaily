@@ -25,9 +25,9 @@ namespace OpidDailyEntities
         public string MiddleName { get; set; }
 
         public string BirthName { get; set; }
-        
+
         public bool Conversation { get; set; }
-        
+
         public bool HeadOfHousehold { get; set; }
 
         public int HH { get; set; }
@@ -128,6 +128,24 @@ namespace OpidDailyEntities
 
         public string SDOthersd { get; set; }
 
+        public string Incarceration { get; set; }
+
+        public string HousingStatus { get; set; }
+
+        public string USCitizen { get; set; }
+
+        public string Gender { get; set; }
+
+        public string Ethnicity { get; set; }
+ 
+        public string Race { get; set; }
+
+        public string MilitaryVeteran { get; set; }
+
+        public string DischargeStatus { get; set; }
+
+        public string Disabled { get; set; }
+
         public bool EXP { get; set; }
 
         public bool PND { get; set; }
@@ -146,6 +164,6 @@ namespace OpidDailyEntities
 
         public ICollection<TextMsg> TextMsgs { get; set; }
 
-     //   public ICollection<Visit> Visits { get; set; }
+      
     }
 }

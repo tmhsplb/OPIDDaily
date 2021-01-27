@@ -39,8 +39,8 @@ $("#dashboardGrid").jqGrid({
             lastServed = nowServing;
 
             var dashboard = jQuery("#dashboardGrid"),
-                selRowId = dashboard.jqGrid('getGridParam', 'selrow'),
-                hasConversation = dashboard.jqGrid('getCell', selRowId, 'Conversation');
+                // selRowId = dashboard.jqGrid('getGridParam', 'selrow'),
+                hasConversation = dashboard.jqGrid('getCell', nowServing, 'Conversation');
 
             if (hasConversation == "Y") {
                 jQuery("#conversation").removeClass("hideConversation");
@@ -159,7 +159,7 @@ jQuery("#dashboardGrid").jqGrid('navGrid', '#dashboardPager', { edit: true, add:
         recreateForm: true,
 
         afterComplete: function (response) {
-            if (response.responseText == "Success") {
+            if (response.responseText == "OpenConversation") {
                 var theHub = $.connection.dailyHub;
                 theHub.client.openConversation();
             }
