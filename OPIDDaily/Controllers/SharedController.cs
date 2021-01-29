@@ -129,8 +129,6 @@ namespace OPIDDaily.Controllers
 
             clients = clients.Skip(pageIndex * pageSize).Take(pageSize).ToList();
 
-            clients = clients.OrderBy(c => c.ServiceDate).ToList();
-
             var jsonData = new
             {
                 total = totalPages,
@@ -229,7 +227,7 @@ namespace OPIDDaily.Controllers
 
             DailyHub.Refresh(); 
             
-            if (cvm.Conversation.Equals("Y"))
+            if (!string.IsNullOrEmpty(cvm.Conversation) && cvm.Conversation.Equals("Y"))
             {
                 return "OpenConversation";
             }

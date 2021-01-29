@@ -139,7 +139,7 @@ namespace OPIDDaily.DAL
 
             client.ServiceTicket = cvm.ServiceTicket;
             client.Stage = cvm.Stage;
-            client.Conversation = (client.Conversation ? true : (cvm.Conversation.Equals("Y") ? true : false));
+            client.Conversation = (client.Conversation ? true : (!string.IsNullOrEmpty(cvm.Conversation) && cvm.Conversation.Equals("Y") ? true : false));
             // default(DateTime) : https://stackoverflow.com/questions/221732/datetime-null-value
             client.Expiry = (cvm.Expiry != default(DateTime) ? cvm.Expiry : client.Expiry);
             client.LastName = cvm.LastName;
@@ -492,7 +492,7 @@ namespace OPIDDaily.DAL
                 {
                     Client client = new Client
                     {
-                        ServiceDate = now,  // was today, but using now allows inserting at top of dashboards
+                        ServiceDate = now,  // was "today", but using "now" allows inserting at top of dashboards
                         ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
                         Stage = cvm.Stage,
                         Conversation = (string.IsNullOrEmpty(cvm.Conversation) ? false : true),
@@ -513,7 +513,7 @@ namespace OPIDDaily.DAL
                         Interviewed = now,
                         BackOffice = now,
                         Done = now,
-                        Expiry = CalculateExpiry(today),  // was just today
+                        Expiry = CalculateExpiry(today), 
                         Active = true
                     };
 
