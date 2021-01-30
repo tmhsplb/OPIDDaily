@@ -383,7 +383,7 @@ namespace OPIDDaily.Utils
             {
                 // log the dataRow that failed
                 Log.Warn(string.Format("Bad record (2): RecordID = {0}, InterviewRecordID = {1}, Name = {2}, {3}, DOB = {4}", recordID, interviewRecordID, lname, fname, dob));
-                Log.Error(e.Message);
+                Log.Error(string.Format("Above warning generated the following exception: {0}", e.Message));
                 return null;
             }
         }

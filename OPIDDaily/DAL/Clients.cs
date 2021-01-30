@@ -179,25 +179,20 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
-                DateTime today = Extras.DateTimeToday();
-                DateTime dob = (sps != null && sps._search == true && !string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB) : default(DateTime));
-                DateTime dob12 = (sps != null && sps._search == true && !string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB).AddHours(12) : default(DateTime));
                 DateTime nextDate = date.AddHours(24);
-
                 List<Client> clients;
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-
-                // A same-day-service client will have c.ServiceDate == c.Expiry
-                // List<Client> clients = opiddailycontext.Clients.Where( c => c.HH == 0 && c.ServiceDate == date && c.Expiry == date).ToList();
-
-                // The virtual front desk TicketMaster will create service tickets with a 30-day expiry
-
-                if (sps != null && sps._search == true)
+               
+                if (sps != null && sps._search == true && !string.IsNullOrEmpty(sps.sDOB))
                 {
-                  clients = opiddailycontext.Clients.Where(c => c.HH == 0 &&  (c.DOB == dob || c.DOB == dob12)).ToList();
+                    DateTime dob = DateTime.Parse(sps.sDOB);
+                    DateTime dob12 = DateTime.Parse(sps.sDOB).AddHours(12);
+                    // When searching by DOB, allow a dependent of the Head of Household to be returned, i.e. don't check for HH == 0.
+                    clients = opiddailycontext.Clients.Where(c => c.DOB == dob || c.DOB == dob12).ToList();
                 }
                 else
                 {
+                  // When not searching by DOB, return only top level clients, i.e. clients for which HH == 0.
                   clients = opiddailycontext.Clients.Where(c => c.HH == 0 && date <= c.ServiceDate && c.ServiceDate <= nextDate).ToList();
                 }
                
@@ -233,14 +228,11 @@ namespace OPIDDaily.DAL
         {
             List<ClientViewModel> filteredCVMS;
 
-            // default(DateTime) : https://stackoverflow.com/questions/221732/datetime-null-value
-            DateTime dob = (!string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB) : default(DateTime));
-            DateTime dob12 = (!string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB).AddHours(12) : default(DateTime));
-
-            if (dob != default(DateTime))
+            if (!string.IsNullOrEmpty(sps.sDOB))
             {
+                DateTime dob = DateTime.Parse(sps.sDOB);
+                DateTime dob12 = DateTime.Parse(sps.sDOB).AddHours(12);
                 filteredCVMS = cvms.Where(c => c.DOB == dob || c.DOB == dob12).ToList();
-                return filteredCVMS;
             }
 
             if (!string.IsNullOrEmpty(sps.AgencyName))
@@ -275,13 +267,9 @@ namespace OPIDDaily.DAL
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
+                List<Client> clients;
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-                DateTime today = Extras.DateTimeToday();
-
-                // default(DateTime) : https://stackoverflow.com/questions/221732/datetime-null-value
-                DateTime dob = (sps._search == true && !string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB) : default(DateTime));
-                DateTime dob12 = (sps._search == true && !string.IsNullOrEmpty(sps.sDOB) ? DateTime.Parse(sps.sDOB).AddHours(12) : default(DateTime));
-
+              
                 // A dashboard client will 
                 //    come from an agency: c.AgencyId != 0
                 //    be a head of household: c.HH == 0
@@ -289,8 +277,20 @@ namespace OPIDDaily.DAL
                 //    be unexpired: today <= c.Expiry
                 // List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId != 0 && c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry).ToList();
 
-                // For virtual front desk, c.AgencyId == 0, i.e. agency = OPID
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && (today <= c.Expiry || dob == c.DOB || dob12 == c.DOB) && c.Active == true).ToList();
+                if (sps != null && sps._search == true && !string.IsNullOrEmpty(sps.sDOB))
+                {
+                    // When searching by DOB, allow a dependent of the Head of Household to be returned, i.e. don't check for HH == 0.
+                    DateTime dob = DateTime.Parse(sps.sDOB);
+                    DateTime dob12 = DateTime.Parse(sps.sDOB).AddHours(12);
+                    clients = opiddailycontext.Clients.Where(c => (dob == c.DOB || dob12 == c.DOB) && c.Active == true).ToList();
+                }
+                else
+                {
+                    // When not searching, return only unexpired top level clients, i.e. clients for which HH == 0.
+                    DateTime today = Extras.DateTimeToday();
+                    clients = opiddailycontext.Clients.Where(c => c.HH == 0 && today <= c.Expiry && c.Active == true).ToList();
+                }
+               
                 clients = clients.OrderByDescending(c => c.ServiceDate).ToList();
 
                 foreach (Client client in clients)
@@ -298,7 +298,7 @@ namespace OPIDDaily.DAL
                     clientCVMS.Add(ClientEntityToClientViewModel(client));
                 }
 
-                if (!sps._search)
+                if (sps != null && sps._search == false)
                 {
                     // if not performing filtered search (example, when refreshing) then
                     // just return the required view models
