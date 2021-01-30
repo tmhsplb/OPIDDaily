@@ -718,6 +718,8 @@ namespace OPIDDaily.Controllers
                 return View("PrintExistingClient", objTuple);
             }
 
+            DailyHub.Refresh();
+
             return View("PrintExpressClient", rsvm);
         }
 
@@ -757,6 +759,8 @@ namespace OPIDDaily.Controllers
             }
 
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
+
+            DailyHub.Refresh();
 
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClient", objTuple);
@@ -833,7 +837,7 @@ namespace OPIDDaily.Controllers
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
             List<VisitViewModel> visits = Visits.GetVisits(nowServing);
- 
+
             return View("PrintExistingClientVisits", visits);
         }
 
