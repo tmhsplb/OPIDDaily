@@ -150,7 +150,7 @@ namespace OPIDDaily.DAL
             client.Age = CalculateAge(dob); 
 
             // client.EXP = (cvm.EXP.Equals("Y") ? true : false);
-            client.PND = (cvm.PND.Equals("Y") ? true : false);
+            client.PND = (client.PND ? true : (!string.IsNullOrEmpty(cvm.PND) && cvm.PND.Equals("Y")) ? true : false);
             client.XID = (cvm.XID.Equals("Y") ? true : false);
             client.XBC = (cvm.XBC.Equals("Y") ? true : false);
             client.Msgs = cvm.Msgs;
@@ -503,7 +503,7 @@ namespace OPIDDaily.DAL
                         DOB = dob, // cvm.DOB,
                         Age = CalculateAge(dob), // CalculateAge(cvm.DOB),
                         //   EXP = (cvm.EXP.Equals("Y") ? true : false),
-                        PND = (cvm.PND.Equals("Y") ? true : false),
+                        PND = (!string.IsNullOrEmpty(cvm.PND) && cvm.PND.Equals("Y") ? true : false),
                         XID = (cvm.XID.Equals("Y") ? true : false),
                         XBC = (cvm.XBC.Equals("Y") ? true : false),
                         Notes = cvm.Notes,
@@ -646,15 +646,15 @@ namespace OPIDDaily.DAL
 
         public static int AddMyClient(ClientViewModel cvm, int agencyId)
         {
-            DateTime now = Extras.DateTimeNow();
+           // DateTime now = Extras.DateTimeNow();
 
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
-                DateTime today = Extras.DateTimeToday();
+                DateTime now = Extras.DateTimeNow();
 
                 Client client = new Client
                 {
-                    ServiceDate = today,
+                    ServiceDate = now,
                     ServiceTicket = (string.IsNullOrEmpty(cvm.ServiceTicket) ? "?" : cvm.ServiceTicket),
                     Stage = "Screened",
                     FirstName = cvm.FirstName,
@@ -671,7 +671,7 @@ namespace OPIDDaily.DAL
                     Interviewed = now,
                     BackOffice = now,
                     Done = now,
-                    Expiry = CalculateExpiry(today),
+                    Expiry = CalculateExpiry(now),
                     AgencyId = agencyId,
                     Active = true
                 };

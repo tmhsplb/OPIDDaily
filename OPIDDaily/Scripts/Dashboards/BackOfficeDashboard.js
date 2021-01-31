@@ -100,7 +100,7 @@ $("#dashboardGrid").jqGrid({
             mtype: 'post',
             editurl: "Dummy", // "@Url.Action("Dummy", "BackOffice")",
             cellsubmit: 'clientArray',
-            colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
+            colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', /* 'ACK', */ 'XID', 'XBC', 'Notes'],
             colModel: [
                 { key: true, hidden: true, name: 'Id', index: 'Id', editable: true },
                 { key: false, name: 'FirstName', index: 'FirstName', width: 100, editable: true },
@@ -110,7 +110,7 @@ $("#dashboardGrid").jqGrid({
                 //{ key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 120, editable: true },
                 { key: false, align: 'center', name: 'sDOB', index: 'sDOB', width: 120, editable: true, search: false },
                 { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: false, search: false },
-                { name: 'PND', index: 'PND', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
+               // { name: 'PND', index: 'PND', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { name: 'XID', index: 'XID', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
