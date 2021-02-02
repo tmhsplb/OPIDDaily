@@ -951,7 +951,7 @@ namespace OPIDDaily.Controllers
                 ViewBag.Warning = "Could not find selected client.";
                 return View("Warning");
             }
-            
+
             if (CheckManager.HasHistory(client.Id))
             {
                // client.EXP = false;

@@ -80,6 +80,18 @@ namespace OPIDDaily.DAL
                     rsvm.SDOthersd = client.SDOthersd;
                 }
 
+                DateTime today = Extras.DateTimeToday();
+
+                if (client.Expiry < today)
+                {
+                    DateTime now = Extras.DateTimeNow();
+                    // Retrieving a client who has rolled off the board.
+                    // Make client appear as first in client list
+                    client.ServiceDate = now;
+                    client.Expiry = Clients.CalculateExpiry(now);
+                    opidcontext.SaveChanges();
+                }
+
                 return client;
             }
         }
