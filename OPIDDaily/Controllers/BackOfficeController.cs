@@ -55,6 +55,7 @@ namespace OPIDDaily.Controllers
 
         public ActionResult BackOfficeExpressClient()
         {
+            /*
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
@@ -68,6 +69,9 @@ namespace OPIDDaily.Controllers
             // ServiceTicketBackButtonHelper("Get", rsvm);
 
             return View("ExpressClient", rsvm);
+            */
+
+            return RedirectToAction("PrepareBackOfficeExpressClient");
         }
 
         public ActionResult PrepareBackOfficeExpressClient()
@@ -93,6 +97,7 @@ namespace OPIDDaily.Controllers
 
         public ActionResult BackOfficeExistingClient()
         {
+            /*
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
@@ -106,6 +111,9 @@ namespace OPIDDaily.Controllers
             // ServiceTicketBackButtonHelper("Get", rsvm);
 
             return View("ExistingClient", rsvm);
+            */
+
+            return RedirectToAction("PrepareBackOfficeExistingClient");
         }
                
         public ActionResult PrepareBackOfficeExistingClient()

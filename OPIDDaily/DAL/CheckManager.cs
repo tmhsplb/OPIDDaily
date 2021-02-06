@@ -907,12 +907,12 @@ namespace OPIDDaily.DAL
 
         public static void SetDisposition(System.Data.DataRow dataRow, int checkNumber, string disposition)
         {
+            string lastName = dataRow["Last Name"].ToString();
+            string firstName = dataRow["First Name"].ToString();
+            DateTime dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
+
             try
             {
-                string lastName = dataRow["Last Name"].ToString();
-                string firstName = dataRow["First Name"].ToString();
-                DateTime dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
-
                 using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
                 {
                     AncientCheck ancientCheck = opiddailycontext.AncientChecks.Where(ac => ac.DOB == dob && ac.Name.ToUpper().StartsWith(lastName) && ac.Num == checkNumber).SingleOrDefault();
@@ -958,7 +958,8 @@ namespace OPIDDaily.DAL
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Log.Error(string.Format("Error setting check dispositon for {0}, {1} -- Check number: {2}, Error: {3}", 
+                    lastName, firstName, checkNumber, e.Message));
             }
         }
 

@@ -17,20 +17,38 @@ namespace OPIDDaily.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        public ActionResult InterviewerServiceTicket()
+        {
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please first select a client from the Dashboard.";
+                return View("Warning");
+            }
+
+            Client client = Clients.GetClient(nowServing, null);
+
+            if (client == null)
+            {
+                ViewBag.Warning = "Could not find selected client.";
+                return View("Warning");
+            }
+
+            if (CheckManager.HasHistory(client.Id))
+            {
+                //  client.EXP = false;
+                return RedirectToAction("PrepareInterviewerExistingClient");
+            }
+
+            // client.EXP = true;
+            return RedirectToAction("PrepareInterviewerExpressClient");
+        }
+
         public ActionResult PrepareInterviewerExpressClient(RequestedServicesViewModel rsvm)
         {
             int nowServing = NowServing();
          
-            // This is the POST method of
-            //   ~/Views/FrontDesk/ExpressClient.cshtml
-            // If the NowServing client comes from the front desk, then the client will
-            // have no supporting documents and the supporting documents section of the service
-            // ticket will simply be a worksheet for the interviewer to fill in. If the NowServing
-            // client comes from the Dashboard, then the client will have supporting documents.
-            // So in either case, passing rsvm instead of null as the second argument of
-            // GetClient is correct.
             Client client = Clients.GetClient(nowServing, rsvm);
             PrepareClientNotes(client, rsvm);
 

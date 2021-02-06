@@ -279,13 +279,20 @@ namespace OPIDDaily.Utils
 
             try
             {
+                int checkNumber = Convert.ToInt32(dataRow["Check Number"].ToString());
                 string reissued = dataRow["Reissued"].ToString();
                 string scammed = dataRow["Scammed"].ToString();
                 int cid = Clients.IdentifyClient(lname, fname, dob);
 
                 if (cid == 0)
                 {
-                    Log.Warn(string.Format("Could not identify client: {0}, {1}, DOB = {2}", lname, fname, dob));
+                    // This is the case where a check appears in the tracking file, but the client
+                    // is not in the Clients table. The check may be a legacy 5-digit check in the research 
+                    // table and should have its disposition changed according to what the tracking file says.
+                    string disposition = dataRow["Check Disposition"].ToString();
+                    CheckManager.SetDisposition(dataRow, checkNumber, disposition);
+                    // Log.Warn(string.Format("Could not identify client: {0}, {1}, DOB = {2}", lname, fname, dob));
+                    // Don't create a new tracking row.
                     return null;
                 }
 
@@ -295,7 +302,6 @@ namespace OPIDDaily.Utils
                 {
                     // We are reissuing an existing check. Change the disposition of
                     // the existing check to the reissuing reason.
-                    int checkNumber = Convert.ToInt32(dataRow["Check Number"].ToString());
                     string reissuedReason = string.Format("{0}/{1}", reissued, dataRow["Reissued Reason"]).ToString();
                     CheckManager.SetDisposition(dataRow, checkNumber, reissuedReason);
 
@@ -307,7 +313,6 @@ namespace OPIDDaily.Utils
                 {
                     // We are marking an existing check as scammed. Change the disposition
                     // of the existing check to "Scammed Check"
-                    int checkNumber = Convert.ToInt32(dataRow["Check Number"].ToString());
                     CheckManager.SetDisposition(dataRow, checkNumber, "Scammed Check");
 
                     // Don't create a new tracking row.

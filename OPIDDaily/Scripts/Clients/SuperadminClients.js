@@ -5,7 +5,7 @@ $("#clientsGrid").jqGrid({
     datatype: "json",
     pageable: true,
     mtype: "Get",
-    colNames: ['Id', 'ST', 'Expiry', 'Stage', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
+    colNames: ['Id', 'CM', 'Expiry', 'Stage', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'Notes'],
     colModel: [
     { key: true, hidden: true, name: 'Id', index: 'Id' },
     { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },

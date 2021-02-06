@@ -194,32 +194,37 @@ namespace OPIDDaily.DAL
                 DateTime nextDate = date.AddHours(24);
                 List<Client> clients;
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
-               
-                if (sps != null && sps._search == true && !string.IsNullOrEmpty(sps.sDOB))
+                bool dobSearch = sps != null && sps._search == true && !string.IsNullOrEmpty(sps.sDOB);
+
+                if (dobSearch)
                 {
                     DateTime dob = DateTime.Parse(sps.sDOB);
                     DateTime dob12 = DateTime.Parse(sps.sDOB).AddHours(12);
                     // When searching by DOB, allow a dependent of the Head of Household to be returned, i.e. don't check for HH == 0.
+                    // Return both active and inactive clients. Filter below.
                     clients = opiddailycontext.Clients.Where(c => c.DOB == dob || c.DOB == dob12).ToList();
                 }
                 else
                 {
-                  // When not searching by DOB, return only top level clients, i.e. clients for which HH == 0.
-                  clients = opiddailycontext.Clients.Where(c => c.HH == 0 && date <= c.ServiceDate && c.ServiceDate <= nextDate).ToList();
+                    // When not searching by DOB, return only top level clients, i.e. clients for which HH == 0.
+                    // Return both active and inactive clients. Filter below.
+                    clients = opiddailycontext.Clients.Where(c => c.HH == 0 && date <= c.ServiceDate && c.ServiceDate <= nextDate).ToList();
                 }
                
                 clients = clients.OrderByDescending(c => c.ServiceDate).ToList();
 
                 foreach (Client client in clients)
                 {
-                    if (client.Active == false && superadmin == false)
+                    if (dobSearch)
+                    {
+                        // If DOB search returned an inactive client, then set cliet to active
+                        client.Active = true;
+                    }
+
+                    if (!(client.Active == false && superadmin == false))
                     {
                         // If superadmin == true, then this call is coming from SuperadminController.
                         // In this case return both active and inactive clients. Otherwise return only active clients.
-                    }
-                    else
-                    {
-                        //  bool hasHistory = CheckManager.HasHistory(client);
 
                         if (updateWaittimes == true)
                         {
@@ -1051,14 +1056,15 @@ namespace OPIDDaily.DAL
             if (client != null)
             {
                 string clientName;
+                string phone = (string.IsNullOrEmpty(client.Phone) ? "N/A" : client.Phone);
 
                 if (string.IsNullOrEmpty(client.BirthName))
                 {
-                    clientName = string.Format("{0}, {1} {2}", client.LastName, client.FirstName, client.MiddleName);
+                    clientName = string.Format("{0}, {1} {2} -- Phone: {3}", client.LastName, client.FirstName, client.MiddleName, phone);
                 }
                 else
                 {
-                    clientName = string.Format("{0}, {1} {2} (Birth name: {3})", client.LastName, client.FirstName, client.MiddleName, client.BirthName);
+                    clientName = string.Format("{0}, {1} {2} (Birth name: {3}) --  Phone: {4}", client.LastName, client.FirstName, client.MiddleName, client.BirthName, phone);
                 }
 
                 return clientName;

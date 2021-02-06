@@ -6,7 +6,7 @@
 }
 
     <div id="printerDiv">
-        <br/>
+        <br />
         <h3>Service Ticket: @ViewBag.ServiceTicket</h3>
         <br />
         <h3>Express Client: @ViewBag.ClientName</h3>
@@ -15,6 +15,8 @@
         <br />
 
         @Html.Partial("_RequestedServices")
+        <br />
+        @Html.Partial("_SupportingDocuments", Model)
         <br /><br />
         @Html.Partial("_SignatureBlock")
     </div>
