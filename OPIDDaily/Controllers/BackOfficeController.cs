@@ -141,6 +141,48 @@ namespace OPIDDaily.Controllers
             return View("PrintExistingClient", objTuple);
         }
 
+        public ActionResult ManagePocketChecks()
+        {
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please first select a client from the Dashboard.";
+                return View("Warning");
+            }
+
+            Client client = Clients.GetClient(nowServing, null);
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
+
+            return View("PocketChecks");
+        }
+
+        public JsonResult GetPocketChecks(int page, int rows)
+        {
+            int nowServing = NowServing();
+
+            List<VisitViewModel> visits = Visits.GetPocketChecks(nowServing);
+            int pageIndex = page - 1;
+            int pageSize = rows;
+            int totalRecords = visits.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            visits = visits.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            visits = visits.OrderBy(v => v.Date).ToList();
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = visits
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+        
+       
+
         public ActionResult Resolved()
         {
             return View();

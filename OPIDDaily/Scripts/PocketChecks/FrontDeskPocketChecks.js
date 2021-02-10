@@ -42,10 +42,13 @@ $("#historyGrid").jqGrid({
     multiselect: false,
 })
 
+
 jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: true, del: false, search: false, refresh: false },
     {
+        // Checks prior to 2016 are handled as pocket checks.
+        // When the twice-in-a-lifetime policy is changed there will not be a need to track ancient checks.
         zIndex: 100,
-        url: "EditVisit", 
+        url: "EditPocketCheck", 
         closeOnEscape: true,
         closeAfterEdit: true,
         recreateForm: true,

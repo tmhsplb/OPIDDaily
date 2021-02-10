@@ -53,7 +53,6 @@ namespace OPIDDaily.Controllers
                 {
                     clients = Clients.GetDashboardClients(sps);
                 }
-               
             }
             else
             {
@@ -309,30 +308,14 @@ namespace OPIDDaily.Controllers
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetPocketChecks(int page, int rows)
+        public string EditVisit(VisitViewModel vvm)
         {
             int nowServing = NowServing();
-
-            List<VisitViewModel> visits = Visits.GetPocketChecks(nowServing);
-            int pageIndex = page - 1;
-            int pageSize = rows;
-            int totalRecords = visits.Count;
-            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
-
-            visits = visits.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-            visits = visits.OrderBy(v => v.Date).ToList();
-
-            var jsonData = new
-            {
-                total = totalPages,
-                page,
-                records = totalRecords,
-                rows = visits
-            };
-
-            return Json(jsonData, JsonRequestBehavior.AllowGet);
+            Visits.EditVisit(nowServing, vvm);
+            DailyHub.Refresh();
+            return "Success";
         }
-
+        
         public string AddPocketCheck(VisitViewModel vvm)
         {
             int nowServing = NowServing();
@@ -341,7 +324,7 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
-        public string EditVisit(VisitViewModel vvm)
+        public string EditPocketCheck(VisitViewModel vvm)
         {
             int nowServing = NowServing();
             Visits.EditVisit(nowServing, vvm);

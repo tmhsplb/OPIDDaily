@@ -1,0 +1,28 @@
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
+@{
+    ViewBag.Title = "Pocket Checks";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
+}
+
+<br /><br /><br />
+
+<div>
+    <table id="pocketCheckGrid"></table>
+    <div id="pocketCheckPager"></div>
+</div>
+
+<link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
+
+<script src="@Url.Content("~/Scripts/i18n/grid.locale-en.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.jqGrid.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var clientName = "@ViewBag.ClientName";
+    function GetClientName() {
+        return clientName;
+    }
+</script>
+ 
+<script type="text/javascript" src="@Url.Content("~/Scripts/PocketChecks/BackOfficePocketChecks.js")"></script>
+

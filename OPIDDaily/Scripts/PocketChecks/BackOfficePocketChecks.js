@@ -1,6 +1,6 @@
 ﻿var rowsToColor = [];
 
-$("#historyGrid").jqGrid({
+$("#pocketCheckGrid").jqGrid({
     url: "GetPocketChecks", 
     datatype: "json",
     mtype: "Get",
@@ -14,7 +14,7 @@ $("#historyGrid").jqGrid({
         { key: false, hidden: true, name: 'Sender', index: 'Sender', formatter: rowColorFormatter, editable: false, sortable: false, search: false },
         { key: false, hidden: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }    
     ],
-    pager: '#historyPager',
+    pager: '#pocketCheckPager',
     rowNum: 25,
 
     height: "100%",
@@ -28,7 +28,7 @@ $("#historyGrid").jqGrid({
         }
     },
 
-    caption: 'Checks for ' + GetClientName(),
+    caption: 'Pocket Checks for ' + GetClientName(),
     emptyrecords: 'No records to display',
     jsonReader: {
         root: "rows",
@@ -42,10 +42,10 @@ $("#historyGrid").jqGrid({
     multiselect: false,
 })
 
-jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: true, del: false, search: false, refresh: false },
+jQuery("#pocketCheckGrid").jqGrid('navGrid', '#pocketCheckPager', { edit: true, add: true, del: false, search: false, refresh: false },
     {
         zIndex: 100,
-        url: "EditVisit", 
+        url: "EditPocketCheck", 
         closeOnEscape: true,
         closeAfterEdit: true,
         recreateForm: true,

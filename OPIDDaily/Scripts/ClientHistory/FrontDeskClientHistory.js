@@ -99,7 +99,7 @@ $("#historyGrid").jqGrid({
     } // close subgridRowExpanded
 })
 
-jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: true, del: false, search: false, refresh: false },
+jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: false, del: false, search: false, refresh: false },
     {
         zIndex: 100,
         url: "EditVisit", // "@Url.Action("EditVisit", "FrontDesk")",
@@ -111,21 +111,8 @@ jQuery("#historyGrid").jqGrid('navGrid', '#historyPager', { edit: true, add: tru
                 //  alert("FrontDesk: " + response.responseText);
             }
         }
-    },
-    {
-        zIndex: 100,
-        url: "AddPocketCheck", 
-        closeOnEscape: true,
-        closeAfterAdd: true,
-        recreateForm: true,
-        afterComplete: function (response) {
-            if (response.responseText) {
-                if (response.responseText != "Success") {
-                    alert(response.responseText);
-                }
-            }
-        }
     }
+ 
     /*
     {
         zIndex: 100,

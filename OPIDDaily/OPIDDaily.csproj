@@ -1006,6 +1006,7 @@
     <Content Include="Views\Shared\_BackOfficeRequestedServicesForm.cshtml" />
     <Content Include="Views\FrontDesk\DemographicInfo.cshtml" />
     <Content Include="Views\Interviewer\DemographicInfo.cshtml" />
+    <Content Include="Views\BackOffice\PocketChecks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
