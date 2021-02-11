@@ -315,7 +315,31 @@ namespace OPIDDaily.Controllers
             DailyHub.Refresh();
             return "Success";
         }
-        
+
+        public JsonResult GetPocketChecks(int page, int rows)
+        {
+            int nowServing = NowServing();
+
+            List<VisitViewModel> visits = Visits.GetPocketChecks(nowServing);
+            int pageIndex = page - 1;
+            int pageSize = rows;
+            int totalRecords = visits.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            visits = visits.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            visits = visits.OrderBy(v => v.Date).ToList();
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = visits
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
         public string AddPocketCheck(VisitViewModel vvm)
         {
             int nowServing = NowServing();

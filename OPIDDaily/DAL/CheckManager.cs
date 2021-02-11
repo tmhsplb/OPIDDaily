@@ -30,6 +30,7 @@ namespace OPIDDaily.DAL
         private static List<Check> newResearchChecks;
         private static List<Check> newTrackingChecks;
         private static List<CheckViewModel> resolvedChecks;
+        private static List<CheckViewModel> resolvedPocketChecks;
         private static List<int> mistakenlyResolved;
        // private static List<Check> typoChecks;
 
@@ -39,6 +40,7 @@ namespace OPIDDaily.DAL
             {
              //   typoChecks = new List<Check>();
                 resolvedChecks = new List<CheckViewModel>();
+                resolvedPocketChecks = new List<CheckViewModel>();
                 mistakenlyResolved = new List<int>();
                 firstCall = false;
             }
@@ -701,6 +703,20 @@ namespace OPIDDaily.DAL
             }
         }
 
+        public static bool IsProtectedCheck(string disposition)
+        {
+            if (string.IsNullOrEmpty(disposition))
+            {
+                return false;
+            }
+
+            return disposition.Equals("Voided/Replaced")
+                || disposition.Equals("Voided/Reissued")
+                || disposition.Equals("Voided/No Reissue")
+                || disposition.Equals("Voided/Reissue Other")
+                || disposition.Equals("Scammed Check");
+        }
+
         public static void ResolvePocketChecks(List<Check> excelChecks, string disposition)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
@@ -715,6 +731,10 @@ namespace OPIDDaily.DAL
                     if (resolved)
                     {
                         // If pcheck is among resolvedChecks, then mark pcheck as inactive
+                        // This will not happen when we are no longer updating the Research Table
+                        // by uploading an OPID Daily Tracking file from Apricot and copying Origen
+                        // checks directy into the Research Table. Only the else-clause will happen,
+                        // that is, we will only resolve Pocket Checks by loading Origen checks.
                         pcheck.IsActive = false;
                     }
                     else
@@ -723,14 +743,29 @@ namespace OPIDDaily.DAL
 
                         if (resolved)
                         {
-                            // This is the case of an excel check resolving a pocket check.
-                            pcheck.Disposition = disposition;
+                            // This is the case of an Origen Bank check resolving a pocket check.
+                            // This pocket check will become a full-fledged research check if it is not protected.
+                            // If it is protected, it doesn't belong among Pocket Checks; it belongs in the
+                            // Research Table. Still need to solve this problem.
+                            bool protectedCheck = IsProtectedCheck(pcheck.Disposition);
+                           
+                            if (!protectedCheck)
+                            {
+                                CheckManager.NewResolvedPocketCheck(pcheck, disposition);
+                            }
                         }
                     }                 
                 }
 
+                MoveResolvedPocketChecksToResearchTable();
+
                 opiddailycontext.SaveChanges();
             }
+        }
+
+        private static void MoveResolvedPocketChecksToResearchTable()
+        {
+
         }
 
         public static bool ResearchTableIsEmpty()
@@ -1053,6 +1088,40 @@ namespace OPIDDaily.DAL
                 };
 
                 resolvedChecks.Add(cvm);
+            }
+        }
+
+        public static void NewResolvedPocketCheck(PocketCheck pcheck, string disposition)
+        {
+            // PLB 1/23/2019 Added r.RecordID == check.RecordID.
+            // This fixed the problem that Bill reported in an email dated 1/21/2019.
+            CheckViewModel alreadyResolved = resolvedPocketChecks.Where(r => (r.InterviewRecordID == pcheck.ClientId && r.Num == pcheck.Num)).FirstOrDefault();
+            CheckViewModel cvm = null;
+            DateTime checkDate = new DateTime(1900, 1, 1);
+
+            if (pcheck.Date != null)
+            {
+                checkDate = (DateTime)pcheck.Date;
+            }
+
+            if (alreadyResolved == null)
+            {
+                cvm = new CheckViewModel
+                {
+                    RecordID = 0,
+                    sRecordID = "0",
+                    InterviewRecordID = pcheck.ClientId,
+                    sInterviewRecordID = pcheck.ClientId.ToString(),
+                    Name = pcheck.Name,
+                    Num = pcheck.Num,
+                    sNum = pcheck.Num.ToString(),
+                    Date = ((DateTime)pcheck.Date).ToShortDateString(),
+                    sDate = (pcheck.Date == null ? "" : checkDate.ToString("MM/dd/yyyy")),
+                    Service = pcheck.Item,
+                    Disposition = disposition
+                };
+
+                resolvedPocketChecks.Add(cvm);
             }
         }
 

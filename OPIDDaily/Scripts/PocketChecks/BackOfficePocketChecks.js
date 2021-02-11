@@ -1,7 +1,7 @@
 ﻿var rowsToColor = [];
 
 $("#pocketCheckGrid").jqGrid({
-    url: "GetPocketChecks", 
+    url: "GetUnresolvedPocketChecks", 
     datatype: "json",
     mtype: "Get",
     colNames: ['Id', 'Date', 'Item', 'Check', 'Status', 'Sender', 'Notes'],

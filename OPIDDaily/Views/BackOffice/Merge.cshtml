@@ -112,75 +112,140 @@
 
                 <br /><br /><br />
 
-                <fieldset>
-                    <legend>Disposition Files</legend>
+                            <fieldset>
+                                <legend>Disposition Files</legend>
 
-                    @using (Html.BeginForm("UploadClearedChecksFile", "BackOffice", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
-                    {
-                        // Idea for
-                        //   TextxboxFor(m => m.File, new { type = "file"})
-                        // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationMessage("ClearedChecksError", new { @class = "text-danger" })
+                                @using (Html.BeginForm("UploadClearedChecksFile", "BackOffice", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                                {
+                                    // Idea for
+                                    //   TextxboxFor(m => m.File, new { type = "file"})
+                                    // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationMessage("ClearedChecksError", new { @class = "text-danger" })
 
-                        <table style="width:100%;">
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <label class="control-label">Cleared Checks File</label>
-                                        @Html.TextBoxFor(m => m.File, new { type = "file" })
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="submit" value="Upload" />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    @ViewData["UploadedCCFile"]
-                                </td>
-                            </tr>
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label class="control-label">Cleared Checks File</label>
+                                                    @Html.TextBoxFor(m => m.File, new { type = "file" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="submit" value="Upload" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @ViewData["UploadedCCFile"]
+                                            </td>
+                                        </tr>
 
-                        </table>
-                    }
+                                    </table>
+                                }
 
-                </fieldset>
+                                <br />
 
-                <br />
+                                @using (Html.BeginForm("UploadVoidedChecksFile", "BackOffice", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                                {
+                                    // Idea for
+                                    //   TextxboxFor(m => m.File, new { type = "file"})
+                                    // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationMessage("VoidedChecksError", new { @class = "text-danger" })
 
-                @using (Html.BeginForm("UploadVoidedChecksFile", "BackOffice", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
-                {
-                    // Idea for
-                    //   TextxboxFor(m => m.File, new { type = "file"})
-                    // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationMessage("VoidedChecksError", new { @class = "text-danger" })
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label class="control-label">Voided Checks File</label>
+                                                    @Html.TextBoxFor(m => m.File, new { type = "file" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="submit" value="Upload" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @ViewData["UploadedVCFile"]
+                                            </td>
+                                        </tr>
 
-                    <table style="width:100%;">
-                        <tr>
-                            <td>
-                                <div class="form-group">
-                                    <label class="control-label">Voided Checks File</label>
-                                    @Html.TextBoxFor(m => m.File, new { type = "file" })
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <input type="submit" value="Upload" />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                @ViewData["UploadedVCFile"]
-                            </td>
-                        </tr>
+                                    </table>
+                                }
 
-                    </table>
-                }
+                                <br />
 
+                                @using (Html.BeginForm("UploadClearedOrigenChecksFile", "BackOffice", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                                {
+                                    // Idea for
+                                    //   TextxboxFor(m => m.File, new { type = "file"})
+                                    // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationMessage("ClearedChecksError", new { @class = "text-danger" })
+
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label class="control-label">Cleared Origen Checks File</label>
+                                                    @Html.TextBoxFor(m => m.File, new { type = "file" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="submit" value="Upload" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @ViewData["UploadedCCFile"]
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                }
+
+                                <br />
+
+                                @using (Html.BeginForm("UploadVoidedOrigenChecksFile", "BackOffice", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                                {
+                                    // Idea for
+                                    //   TextxboxFor(m => m.File, new { type = "file"})
+                                    // comes from https://stackoverflow.com/questions/304617/html-helper-for-input-type-file
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationMessage("VoidedChecksError", new { @class = "text-danger" })
+
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label class="control-label">Voided Origen Checks File</label>
+                                                    @Html.TextBoxFor(m => m.File, new { type = "file" })
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="submit" value="Upload" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @ViewData["UploadedVCFile"]
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                }
+
+                            </fieldset>
 
                 <br /><br /><br />
 

@@ -157,11 +157,11 @@ namespace OPIDDaily.Controllers
             return View("PocketChecks");
         }
 
-        public JsonResult GetPocketChecks(int page, int rows)
+        public JsonResult GetUnresolvedPocketChecks(int page, int rows)
         {
             int nowServing = NowServing();
 
-            List<VisitViewModel> visits = Visits.GetPocketChecks(nowServing);
+            List<VisitViewModel> visits = Visits.GetUnresolvedPocketChecks(nowServing);
             int pageIndex = page - 1;
             int pageSize = rows;
             int totalRecords = visits.Count;
@@ -180,8 +180,6 @@ namespace OPIDDaily.Controllers
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-        
-       
 
         public ActionResult Resolved()
         {
@@ -343,7 +341,61 @@ namespace OPIDDaily.Controllers
         }
 
         [HttpPost]
+        public ActionResult UploadVoidedOrigenChecksFile(FileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var postedFile = Request.Files["File"];
+
+                string fname = postedFile.FileName;
+
+                if (!fname.EndsWith("xlsx"))
+                {
+                    ModelState.AddModelError("VoidedChecksError", "This is not an Excel xlsx file.");
+                    return View("Merge", model);
+                }
+
+                List<string> docfiles = FileUploader.UploadFile(postedFile);
+                TempData["UploadedFile"] = fname;
+                TempData["FileType"] = "VoidedChecks";
+                ViewData["UploadedVCFile"] = string.Format("Uploaded File: {0}", fname);
+
+                return View("Merge", model);
+            }
+
+            ModelState.AddModelError("VoidedChecksError", "Please supply a file name.");
+            return View("Merge", model);
+        }
+
+        [HttpPost]
         public ActionResult UploadClearedChecksFile(FileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var postedFile = Request.Files["File"];
+
+                string fname = postedFile.FileName;
+
+                if (!fname.EndsWith("xlsx"))
+                {
+                    ModelState.AddModelError("ClearedChecksError", "This is not an Excel xlsx file.");
+                    return View("Merge", model);
+                }
+
+                List<string> docfiles = FileUploader.UploadFile(postedFile);
+                TempData["UploadedFile"] = fname;
+                TempData["FileType"] = "ClearedChecks";
+                ViewData["UploadedCCFile"] = string.Format("Uploaded File: {0}", fname);
+
+                return View("Merge", model);
+            }
+
+            ModelState.AddModelError("ClearedChecksError", "Please supply a file name.");
+            return View("Merge", model);
+        }
+
+        [HttpPost]
+        public ActionResult UploadClearedOrigenChecksFile(FileViewModel model)
         {
             if (ModelState.IsValid)
             {

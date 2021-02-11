@@ -150,7 +150,7 @@ namespace OPIDDaily.DAL
                     {
                         visits.Add(PocketCheckToVisitViewModel(pcheck));
                     }
-
+                    
                     // Make sure that visits are listed by ascending date
                     visits = visits.OrderBy(v => v.Date).ToList();
                     return visits;
@@ -166,6 +166,30 @@ namespace OPIDDaily.DAL
             {
                 Client client = opiddailycontext.Clients.Find(nowServing);
                 List<PocketCheck> pchecks = opiddailycontext.PocketChecks.Where(pc => pc.ClientId == client.Id && pc.IsActive == true).ToList();
+
+                List<VisitViewModel> visits = new List<VisitViewModel>();
+
+                foreach (PocketCheck pcheck in pchecks)
+                {
+                    if (pcheck.IsActive)
+                    {
+                        visits.Add(PocketCheckToVisitViewModel(pcheck));
+                    }
+                }
+
+                // Make sure that visits are listed by ascending date
+                visits = visits.OrderBy(v => v.Date).ToList();
+                return visits;
+            }
+        }
+
+        // A Pocket Check is unresolved if it has a non-zero check number and an unknown disposition.
+        public static List<VisitViewModel> GetUnresolvedPocketChecks(int nowServing)
+        {
+            using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
+            {
+                Client client = opiddailycontext.Clients.Find(nowServing);
+                List<PocketCheck> pchecks = opiddailycontext.PocketChecks.Where(pc => pc.ClientId == client.Id && pc.Num != 0 && (pc.Disposition.Equals(null) || pc.Disposition.Equals("")) && pc.IsActive == true).ToList();
 
                 List<VisitViewModel> visits = new List<VisitViewModel>();
 
@@ -207,8 +231,16 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    opiddailycontext.PocketChecks.Add(NewPocketCheck(client, vvm));
-                    opiddailycontext.SaveChanges();
+                    PocketCheck pocketCheck = NewPocketCheck(client, vvm);
+
+                    if (pocketCheck != null)
+                    {
+                        // A Pocket Check will be moved to the Research Table
+                        // when it is resolved by loading an Origen Bank file
+                        // of checks. See CheckManager.ResolvePocketChecks.
+                        opiddailycontext.PocketChecks.Add(pocketCheck);
+                        opiddailycontext.SaveChanges();
+                    }
                 }
             }
         }
