@@ -84,8 +84,10 @@ namespace OPIDDaily.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    string ip = Request.UserHostAddress;
-                    Log.Info(string.Format("User {0} has logged in. IP = {1}", model.UserName, ip));
+                    // string ip = Request.UserHostAddress;
+                    // From AppHarbor Support article about the load-balancer. Returns IP address of user.
+                    string userIP = Request.ServerVariables["HTTP_X_FORWARDED_FOR"]; 
+                    Log.Info(string.Format("User {0} has logged in. IP = {1}", model.UserName, userIP));
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

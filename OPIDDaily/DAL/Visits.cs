@@ -183,13 +183,15 @@ namespace OPIDDaily.DAL
             }
         }
 
+        /*
         // A Pocket Check is unresolved if it has a non-zero check number and an unknown disposition.
         public static List<VisitViewModel> GetUnresolvedPocketChecks(int nowServing)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
                 Client client = opiddailycontext.Clients.Find(nowServing);
-                List<PocketCheck> pchecks = opiddailycontext.PocketChecks.Where(pc => pc.ClientId == client.Id && pc.Num != 0 && (pc.Disposition.Equals(null) || pc.Disposition.Equals("")) && pc.IsActive == true).ToList();
+                List<PocketCheck> pchecks = opiddailycontext.PocketChecks.Where(pc => pc.ClientId == client.Id && pc.Num != 0  // && (pc.Disposition.Equals(null) || pc.Disposition.Equals(""))
+                                                                                      && pc.IsActive == true).ToList();
 
                 List<VisitViewModel> visits = new List<VisitViewModel>();
 
@@ -206,6 +208,7 @@ namespace OPIDDaily.DAL
                 return visits;
             }
         }
+        */
 
         private static PocketCheck NewPocketCheck(Client client, VisitViewModel vvm)
         {
@@ -213,7 +216,7 @@ namespace OPIDDaily.DAL
             {
                 ClientId = client.Id,
                 Date = vvm.Date.AddHours(12),
-                Name = Clients.ClientBeingServed(client),
+                Name = Clients.ClientBeingServed(client, false),
                 DOB = client.DOB,
                 Item = vvm.Item,
                 Num = Convert.ToInt32(vvm.Check),

@@ -193,10 +193,10 @@ namespace OPIDDaily.DAL
            
             DetermineResolvedChecks(excelChecks, disposition, researchChecks);
 
-            // When OPID Daily fully manages the Research Table, then teh Research Table will
+            // When OPID Daily fully manages the Research Table, then the Research Table will
             // contain only resolved checks. Unresolved checks will live in the PocketChecks table
             // until their disposition is known. When that happens, they will be removed from the
-            // PocketChecks table and moved to te Research Table. See CheckManager.ResolvePocketChecks.
+            // PocketChecks table and moved to the Research Table. See CheckManager.ResolvePocketChecks.
             CheckManager.ResolveResearchChecks(); // according to the above comment, this will one day no longer be needed
             CheckManager.ResolvePocketChecks(excelChecks, disposition);
         }

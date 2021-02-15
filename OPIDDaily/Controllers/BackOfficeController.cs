@@ -157,6 +157,7 @@ namespace OPIDDaily.Controllers
             return View("PocketChecks");
         }
 
+        /*
         public JsonResult GetUnresolvedPocketChecks(int page, int rows)
         {
             int nowServing = NowServing();
@@ -180,6 +181,7 @@ namespace OPIDDaily.Controllers
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
+        */
 
         public ActionResult Resolved()
         {

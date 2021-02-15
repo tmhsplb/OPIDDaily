@@ -1051,20 +1051,31 @@ namespace OPIDDaily.DAL
             return age;
         }
 
-        public static string ClientBeingServed(Client client)
+        public static string ClientBeingServed(Client client, bool includePhone = true)
         {
             if (client != null)
             {
                 string clientName;
-                string phone = (string.IsNullOrEmpty(client.Phone) ? "N/A" : client.Phone);
+                string phone = string.IsNullOrEmpty(client.Phone) ? "N/A" : client.Phone;
 
                 if (string.IsNullOrEmpty(client.BirthName))
                 {
-                    clientName = string.Format("{0}, {1} {2} -- Phone: {3}", client.LastName, client.FirstName, client.MiddleName, phone);
+                    if (includePhone)
+                    {
+                        clientName = string.Format("{0}, {1} {2} -- Phone: {3}", client.LastName, client.FirstName, client.MiddleName, phone);
+                    }
+                    else
+                    {
+                        clientName = string.Format("{0}, {1} {2}", client.LastName, client.FirstName, client.MiddleName);
+                    }
+                }
+                else if (includePhone)
+                {
+                    clientName = string.Format("{0}, {1} {2} (Birth name: {3}) --  Phone: {4}", client.LastName, client.FirstName, client.MiddleName, client.BirthName, phone);
                 }
                 else
                 {
-                    clientName = string.Format("{0}, {1} {2} (Birth name: {3}) --  Phone: {4}", client.LastName, client.FirstName, client.MiddleName, client.BirthName, phone);
+                    clientName = string.Format("{0}, {1} {2} (Birth name: {3})", client.LastName, client.FirstName, client.MiddleName, client.BirthName);
                 }
 
                 return clientName;

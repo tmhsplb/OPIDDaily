@@ -348,6 +348,15 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
+        public string AddDatedPocketCheck(VisitViewModel vvm)
+        {
+            int nowServing = NowServing();
+            vvm.Date = Extras.DateTimeToday();
+            Visits.AddPocketCheck(nowServing, vvm);
+            DailyHub.Refresh();
+            return "Success";
+        }
+
         public string EditPocketCheck(VisitViewModel vvm)
         {
             int nowServing = NowServing();
