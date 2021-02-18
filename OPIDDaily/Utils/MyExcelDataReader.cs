@@ -481,14 +481,50 @@ namespace OPIDDaily.Utils
             return cnum;
         }
 
+        private static int GetMemo(System.Data.DataRow row, int num)
+        {
+            string memo;
+            int interviewRecordID;
+
+            if (DBNull.Value.Equals(row["Memo"]))  // For File1 and File2 read on March 30, 2018
+            {
+                // This is a blank field. Return 0.
+                return 0;
+            }
+
+            try
+            {
+                memo = row["Memo"].ToString();
+                interviewRecordID = Convert.ToInt32(memo);
+            }
+            catch (Exception e)
+            {
+                Log.Error(string.Format("Bad memo field for check num {0}", num));
+                interviewRecordID = 0;
+            }
+
+            return interviewRecordID;
+        }
+
+        private static Check NewExcelCheck(System.Data.DataRow dataRow)
+        {
+            Check check;
+            int num = GetCheckNum(dataRow);
+            int interviewRecordID = GetMemo(dataRow, num);  // memo field might provide an Apricot tracking record id
+           
+            check = new Check
+            {
+                Date = GetDateValue(dataRow),
+                Num = num,
+                InterviewRecordID = interviewRecordID
+            };
+
+            return check;
+        }
+
         public static List<Check> GetExcelChecks(string filePath)
         {
-            List<Check> rowChecks = new ExcelData(filePath).GetData().Select(dataRow =>
-                new Check
-                {
-                    Date = GetDateValue(dataRow),
-                    Num = GetCheckNum(dataRow),
-                }).ToList();
+            List<Check> rowChecks = new ExcelData(filePath).GetData().Select(dataRow => NewExcelCheck(dataRow)).ToList();
 
             List<Check> excelChecks = new List<Check>();
 

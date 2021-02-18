@@ -343,6 +343,26 @@ namespace OPIDDaily.DAL
             return newTrackingChecks;
         }
 
+        private static RCheck NewRCheck(Check check, string checkDate)
+        {
+            return new RCheck
+            {
+                RecordID = check.RecordID,
+                sRecordID = check.RecordID.ToString(),
+                InterviewRecordID = check.InterviewRecordID,
+                sInterviewRecordID = check.InterviewRecordID.ToString(),
+                Num = check.Num,
+                sNum = check.Num.ToString(),
+                Name = check.Name,
+                DOB = check.DOB,
+                sDOB = check.DOB.ToString("MM/dd/yyyy"),
+                Date = Convert.ToDateTime(checkDate),
+                sDate = (check.Date == null ? string.Empty : checkDate),
+                Service = check.Service,
+                Disposition = check.Disposition,
+            };
+        }
+
         private static void UpdateCheckTables(List<Check> checks)
         {
             int i = 0;
@@ -358,7 +378,7 @@ namespace OPIDDaily.DAL
                    
                     foreach (Check check in checks)
                     {
-                        bool uec = UpdatedExistingCheck(check, opidcontext);
+                        bool uec = UpdateExistingCheck(check, opidcontext);
 
                         if (!uec)
                         {
@@ -371,22 +391,7 @@ namespace OPIDDaily.DAL
                                 checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
                             }
 
-                            RCheck rcheck = new RCheck
-                            {
-                                RecordID = check.RecordID,
-                                sRecordID = check.RecordID.ToString(),
-                                InterviewRecordID = check.InterviewRecordID,
-                                sInterviewRecordID = check.InterviewRecordID.ToString(),
-                                Num = check.Num,
-                                sNum = check.Num.ToString(),
-                                Name = check.Name,
-                                DOB = check.DOB,
-                                sDOB = check.DOB.ToString("MM/dd/yyyy"),
-                                Date = Convert.ToDateTime(checkDate),
-                                sDate = (check.Date == null ? string.Empty : checkDate),
-                                Service = check.Service,
-                                Disposition = check.Disposition,
-                            };
+                            RCheck rcheck = NewRCheck(check, checkDate);
 
                             rchecks.Add(rcheck);
                         }
@@ -410,7 +415,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        private static bool UpdatedExistingCheck(Check check, OpidDailyDB opidcontext)
+        private static bool UpdateExistingCheck(Check check, OpidDailyDB opidcontext)
         {
             int recordID = check.RecordID;
             bool found = false;
@@ -429,11 +434,19 @@ namespace OPIDDaily.DAL
 
             if (found) return true;
 
+            return UpdateExistingResearchCheck(check, opidcontext);
+        }
+
+        private static bool UpdateExistingResearchCheck(Check check, OpidDailyDB opidcontext)
+        {
+            bool found = false;
+
             List<RCheck> currentMatches = opidcontext.RChecks.Where(u => u.Num == check.Num).ToList();
             foreach (RCheck rcheck in currentMatches)
             {
-                if (rcheck.RecordID == recordID)
+                if (rcheck.RecordID == check.RecordID)
                 {
+                    rcheck.InterviewRecordID = (rcheck.InterviewRecordID == 0 ? check.InterviewRecordID : rcheck.InterviewRecordID);
                     rcheck.Disposition = check.Disposition;
                     found = true;
                 }
@@ -444,8 +457,9 @@ namespace OPIDDaily.DAL
             List<AncientCheck> ancientMatches = opidcontext.AncientChecks.Where(u => u.Num == check.Num).ToList();
             foreach (AncientCheck acheck in ancientMatches)
             {
-                if (acheck.RecordID == recordID)
+                if (acheck.RecordID == check.RecordID)
                 {
+                    acheck.InterviewRecordID = (acheck.InterviewRecordID == 0 ? check.InterviewRecordID : acheck.InterviewRecordID);
                     acheck.Disposition = check.Disposition;
                     found = true;
                 }
@@ -455,8 +469,27 @@ namespace OPIDDaily.DAL
 
             return false;
         }
-        
 
+        private static AncientCheck NewAncientCheck(Check check, string checkDate)
+        {
+            return new AncientCheck
+            {
+                RecordID = check.RecordID,
+                sRecordID = check.RecordID.ToString(),
+                InterviewRecordID = check.InterviewRecordID,
+                sInterviewRecordID = check.InterviewRecordID.ToString(),
+                Num = check.Num,
+                sNum = check.Num.ToString(),
+                Name = check.Name,
+                DOB = check.DOB,
+                sDOB = check.DOB.ToString("MM/dd/yyyy"),
+                Date = check.Date,
+                sDate = (check.Date == null ? string.Empty : checkDate),
+                Service = check.Service,
+                Disposition = check.Disposition,
+            };
+        }
+        
         private static void UpdateAncientChecksTable(List<Check> ancientChecks)
         {
             bool saveIndividualChecks = false;
@@ -504,23 +537,7 @@ namespace OPIDDaily.DAL
                                 checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
                             }
 
-                            AncientCheck acheck = new AncientCheck
-                            {
-                                RecordID = check.RecordID,
-                                sRecordID = check.RecordID.ToString(),
-                                InterviewRecordID = check.InterviewRecordID,
-                                sInterviewRecordID = check.InterviewRecordID.ToString(),
-                                Num = check.Num,
-                                sNum = check.Num.ToString(),
-                                Name = check.Name,
-                                DOB = check.DOB,
-                                sDOB = check.DOB.ToString("MM/dd/yyyy"),
-                                Date = check.Date,
-                                sDate = (check.Date == null ? string.Empty : checkDate),
-                                Service = check.Service,
-                                Disposition = check.Disposition,
-                            };
-
+                            AncientCheck acheck = NewAncientCheck(check, checkDate); 
                             achecks.Add(acheck);
 
                             if (saveIndividualChecks)
@@ -554,6 +571,21 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static CheckViewModel NewCheckViewModel(RCheck rc)
+        {
+            return new CheckViewModel
+            {
+                RecordID = rc.RecordID,
+                InterviewRecordID = rc.InterviewRecordID,
+                Num = rc.Num,
+                Name = rc.Name,
+                DOB = rc.DOB,
+                Date = string.IsNullOrEmpty(rc.Date.ToString()) ? string.Empty : ((DateTime)rc.Date).ToShortDateString(),
+                Service = rc.Service,
+                Disposition = rc.Disposition
+            };
+        }
+
         public static List<CheckViewModel> GetChecks()
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
@@ -564,17 +596,8 @@ namespace OPIDDaily.DAL
 
                 foreach (RCheck rc in rchecks)
                 {
-                    checks.Add(new CheckViewModel
-                    {
-                        RecordID = rc.RecordID,
-                        InterviewRecordID = rc.InterviewRecordID,
-                        Num = rc.Num,
-                        Name = rc.Name,
-                        DOB = rc.DOB,
-                        Date = string.IsNullOrEmpty(rc.Date.ToString()) ? string.Empty : ((DateTime)rc.Date).ToShortDateString(),
-                        Service = rc.Service,
-                        Disposition = rc.Disposition
-                    });
+                    CheckViewModel cvm = NewCheckViewModel(rc);
+                    checks.Add(cvm);
                 }
 
                 return checks;
@@ -603,9 +626,38 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static Check NewRCheck(RCheck rc)
+        {
+            return new Check
+            {
+                RecordID = rc.RecordID,
+                InterviewRecordID = rc.InterviewRecordID,
+                Num = rc.Num,
+                Name = rc.Name,
+                Date = rc.Date,
+                Service = rc.Service,
+                Disposition = rc.Disposition,
+            };
+        }
+
+        private static Check NewACheck(AncientCheck ac)
+        {
+            return new Check
+            {
+                RecordID = ac.RecordID,
+                InterviewRecordID = ac.InterviewRecordID,
+                Num = ac.Num,
+                Name = ac.Name,
+                Date = ac.Date,
+                Service = ac.Service,
+                Disposition = ac.Disposition,
+            };
+        }
+
         public static List<Check> GetResearchChecks()
         {
             List<Check> researchChecks = new List<Check>();
+            Check check;
 
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
@@ -614,30 +666,14 @@ namespace OPIDDaily.DAL
 
                 foreach (var rc in rchecks)
                 {
-                    researchChecks.Add(new Check
-                    {
-                        RecordID = rc.RecordID,
-                        InterviewRecordID = rc.InterviewRecordID,
-                        Num = rc.Num,
-                        Name = rc.Name,
-                        Date = rc.Date,
-                        Service = rc.Service,
-                        Disposition = rc.Disposition,
-                    });
+                    check = NewRCheck(rc);
+                    researchChecks.Add(check);
                 }
 
                 foreach (var ac in ancientChecks)
                 {
-                    researchChecks.Add(new Check
-                    {
-                        RecordID = ac.RecordID,
-                        InterviewRecordID = ac.InterviewRecordID,
-                        Num = ac.Num,
-                        Name = ac.Name,
-                        Date = ac.Date,
-                        Service = ac.Service,
-                        Disposition = ac.Disposition,
-                    });
+                    check = NewACheck(ac);
+                    researchChecks.Add(check);
                 }
             }
 
@@ -746,15 +782,17 @@ namespace OPIDDaily.DAL
                     }
                     else
                     {
-                        resolved = excelChecks.Any(e => e.Num == pcheck.Num);
+                       // resolved = excelChecks.Any(e => e.Num == pcheck.Num);
 
-                        if (resolved && !IsProtectedCheck(pcheck.Disposition))
+                        Check echeck = excelChecks.Where(e => e.Num == pcheck.Num).SingleOrDefault();
+
+                        if (echeck != null && !IsProtectedCheck(pcheck.Disposition))
                         { 
                             // This is the case of an Origen Bank check resolving a pocket check.
                             // This pocket check will become a full-fledged research check.  
                             pcheck.IsActive = false;
                             resolvedClients.Add(pcheck.ClientId);
-                            CheckManager.NewResolvedPocketCheck(pcheck, disposition);
+                            NewResolvedPocketCheck(echeck, pcheck, disposition);
                         }
                     }
                 }
@@ -768,7 +806,7 @@ namespace OPIDDaily.DAL
                             // A protected pocket check belonging to a resolved client will be removed from
                             // the PocketChecks table and moved into the ResearchChecks table.
                             pcheck.IsActive = false;
-                            CheckManager.NewResolvedPocketCheck(pcheck, pcheck.Disposition);
+                            NewResolvedPocketCheck(null, pcheck, pcheck.Disposition);
                         }
                     }
                 }
@@ -777,7 +815,7 @@ namespace OPIDDaily.DAL
             }
 
             DeleteInactivePocketChecks();
-            InsertResolvedPocketChecksIntoResearchTable();
+            UpdateResearchTableByResolvedPocketChecks();
         }
 
         private static void DeleteInactivePocketChecks()
@@ -785,13 +823,13 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
                 // Using RemoveRange as described in: https://stackoverflow.com/questions/21568479/how-can-i-delete-1-000-rows-with-ef6
-                var checksToDelete = opidcontext.PocketChecks.Where(pc => pc.IsActive == false);
-                opidcontext.PocketChecks.RemoveRange(checksToDelete);
+                var pocketChecksToDelete = opidcontext.PocketChecks.Where(pc => pc.IsActive == false);
+                opidcontext.PocketChecks.RemoveRange(pocketChecksToDelete);
                 opidcontext.SaveChanges();
             }
         }
 
-        private static void InsertResolvedPocketChecksIntoResearchTable()
+        private static void UpdateResearchTableByResolvedPocketChecks()
         {
             try
             {
@@ -805,32 +843,22 @@ namespace OPIDDaily.DAL
 
                     foreach (Check check in resolvedPocketChecks)
                     {
-                        string checkDate = "01/01/1900";
+                        bool uec = UpdateExistingResearchCheck(check, opidcontext);
 
-                        if (check.Date != null)
+                        if (!uec)
                         {
-                            // Coerce from DateTime? to DateTime, then get date string
-                            checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
+                            string checkDate = "01/01/1900";
+
+                            if (check.Date != null)
+                            {
+                                // Coerce from DateTime? to DateTime, then get date string
+                                checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
+                            }
+
+                            RCheck rcheck = NewRCheck(check, checkDate);
+                             
+                            rchecks.Add(rcheck);
                         }
-
-                        RCheck rcheck = new RCheck
-                        {
-                            RecordID = check.RecordID,
-                            sRecordID = check.RecordID.ToString(),
-                            InterviewRecordID = check.InterviewRecordID,
-                            sInterviewRecordID = check.InterviewRecordID.ToString(),
-                            Num = check.Num,
-                            sNum = check.Num.ToString(),
-                            Name = check.Name,
-                            DOB = check.DOB,
-                            sDOB = check.DOB.ToString("MM/dd/yyyy"),
-                            Date = Convert.ToDateTime(checkDate),
-                            sDate = (check.Date == null ? string.Empty : checkDate),
-                            Service = check.Service,
-                            Disposition = check.Disposition,
-                        };
-
-                        rchecks.Add(rcheck);
 
                         i += 1;
                         DailyHub.SendProgress("Updating Research Table...", i, checkCount);
@@ -843,7 +871,6 @@ namespace OPIDDaily.DAL
             }
             catch (Exception e)
             {
-                // Check the value of problemCheck;
                 Log.Error(e.Message);
             }
         }
@@ -873,6 +900,27 @@ namespace OPIDDaily.DAL
             }
         }
 
+        private static AncientCheck NewAncientCheck(CheckViewModel cvm, DateTime epoch)
+        {
+            return new AncientCheck
+            {
+                RecordID = cvm.RecordID,
+                sRecordID = cvm.sRecordID,
+                InterviewRecordID = cvm.InterviewRecordID,
+                sInterviewRecordID = cvm.sInterviewRecordID,
+
+                Num = cvm.Num,
+                sNum = cvm.sNum,
+                Name = cvm.Name,
+                DOB = cvm.DOB,
+                sDOB = cvm.DOB.ToString("MM/dd/yyyy"),
+                Date = string.IsNullOrEmpty(cvm.Date) ? epoch : Convert.ToDateTime(cvm.Date),
+                sDate = string.IsNullOrEmpty(cvm.Date) ? string.Empty : cvm.Date,
+                Service = cvm.Service,
+                Disposition = cvm.Disposition
+            };
+        }
+
         private static void RestoreAncientChecksTable(List<CheckViewModel> ancientChecks)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
@@ -894,23 +942,7 @@ namespace OPIDDaily.DAL
                     {
                         try
                         {
-                            AncientCheck ancientCheck = new AncientCheck
-                            {
-                                RecordID = cvm.RecordID,
-                                sRecordID = cvm.sRecordID,
-                                InterviewRecordID = cvm.InterviewRecordID,
-                                sInterviewRecordID = cvm.sInterviewRecordID,
-
-                                Num = cvm.Num,
-                                sNum = cvm.sNum,
-                                Name = cvm.Name,
-                                DOB = cvm.DOB,
-                                sDOB = cvm.DOB.ToString("MM/dd/yyyy"),
-                                Date = string.IsNullOrEmpty(cvm.Date) ? epoch : Convert.ToDateTime(cvm.Date),
-                                sDate = string.IsNullOrEmpty(cvm.Date) ? string.Empty : cvm.Date,
-                                Service = cvm.Service,
-                                Disposition = cvm.Disposition
-                            };
+                            AncientCheck ancientCheck = NewAncientCheck(cvm, epoch);
 
                             if (string.IsNullOrEmpty(ancientCheck.sDate))
                             {
@@ -945,6 +977,27 @@ namespace OPIDDaily.DAL
             RestoreRChecksTable(rchecks);
         }
 
+        private static RCheck NewRCheck(CheckViewModel cvm, DateTime epoch)
+        {
+            return new RCheck
+            {
+                RecordID = cvm.RecordID,
+                sRecordID = cvm.sRecordID,
+                InterviewRecordID = cvm.InterviewRecordID,
+                sInterviewRecordID = cvm.sInterviewRecordID,
+
+                Num = cvm.Num,
+                sNum = cvm.sNum,
+                Name = cvm.Name,
+                DOB = cvm.DOB,
+                sDOB = cvm.DOB.ToString("MM/dd/yyyy"),
+                Date = string.IsNullOrEmpty(cvm.Date) ? epoch : Convert.ToDateTime(cvm.Date),
+                sDate = string.IsNullOrEmpty(cvm.Date) ? string.Empty : cvm.Date,
+                Service = cvm.Service,
+                Disposition = cvm.Disposition
+            };
+        }
+
         private static void RestoreRChecksTable(List<CheckViewModel> rChecks)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
@@ -966,24 +1019,8 @@ namespace OPIDDaily.DAL
                     {
                         try
                         {
-                            RCheck rcheck = new RCheck
-                            {
-                                RecordID = cvm.RecordID,
-                                sRecordID = cvm.sRecordID,
-                                InterviewRecordID = cvm.InterviewRecordID,
-                                sInterviewRecordID = cvm.sInterviewRecordID,
-                               
-                                Num = cvm.Num,
-                                sNum = cvm.sNum,
-                                Name = cvm.Name,
-                                DOB = cvm.DOB,
-                                sDOB = cvm.DOB.ToString("MM/dd/yyyy"),
-                                Date = string.IsNullOrEmpty(cvm.Date) ? epoch : Convert.ToDateTime(cvm.Date),
-                                sDate = string.IsNullOrEmpty(cvm.Date) ? string.Empty : cvm.Date,
-                                Service = cvm.Service,
-                                Disposition = cvm.Disposition
-                            };
-
+                            RCheck rcheck = NewRCheck(cvm, epoch);
+                            
                             if (string.IsNullOrEmpty(rcheck.sDate))
                             {
                                 rcheck.Date = null;
@@ -1020,6 +1057,30 @@ namespace OPIDDaily.DAL
             return trackingRows;
         }
 
+        private static RCheck NewRCheck(System.Data.DataRow dataRow, int checkNumber, string disposition)
+        {
+            string lastName = dataRow["Last Name"].ToString();
+            string firstName = dataRow["First Name"].ToString();
+            DateTime dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
+
+            return new RCheck
+            {
+                RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
+                sRecordID = dataRow["Record ID"].ToString(),
+                InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
+                sInterviewRecordID = dataRow["Interview Record ID"].ToString(),
+                Num = checkNumber,
+                sNum = checkNumber.ToString(),
+                Name = string.Format("{0}, {1}", lastName, firstName),
+                DOB = dob,
+                sDOB = dataRow["Date of Birth"].ToString(),
+                Date = Convert.ToDateTime(dataRow["OPID Interview Date"]),
+                sDate = dataRow["OPID Interview Date"].ToString(),
+                Service = dataRow["Requested Item"].ToString(),
+                Disposition = disposition
+            };
+        }
+
         public static void SetDisposition(System.Data.DataRow dataRow, int checkNumber, string disposition)
         {
             string lastName = dataRow["Last Name"].ToString();
@@ -1051,23 +1112,9 @@ namespace OPIDDaily.DAL
                     // Add a new research check on the fly.
                     // This is the case where an OPID Daily Tracking File reissues or replaces a check which
                     // was not yet recorded as a research check.
-                    opiddailycontext.RChecks.Add(new RCheck
-                    {
-                        RecordID = Convert.ToInt32(dataRow["Record ID"].ToString()),
-                        sRecordID = dataRow["Record ID"].ToString(),
-                        InterviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString()),
-                        sInterviewRecordID = dataRow["Interview Record ID"].ToString(),
-                        Num = checkNumber,
-                        sNum = checkNumber.ToString(),
-                        Name = string.Format("{0}, {1}", lastName, firstName),
-                        DOB = dob,
-                        sDOB = dataRow["Date of Birth"].ToString(),
-                        Date = Convert.ToDateTime(dataRow["OPID Interview Date"]),
-                        sDate = dataRow["OPID Interview Date"].ToString(),
-                        Service = dataRow["Requested Item"].ToString(),
-                        Disposition = disposition
-                    });
+                    rcheck = NewRCheck(dataRow, checkNumber, disposition);
 
+                    opiddailycontext.RChecks.Add(rcheck);
                     opiddailycontext.SaveChanges();
                 }
             }
@@ -1077,8 +1124,7 @@ namespace OPIDDaily.DAL
                     lastName, firstName, checkNumber, e.Message));
             }
         }
-
-
+        
         private static string Successor(string sequencedItem)
         {   // Example: sequencedItem = "TID2"
             // Then:
@@ -1137,6 +1183,24 @@ namespace OPIDDaily.DAL
             return excelChecks;
         }
 
+        private static CheckViewModel NewCheckViewModel(Check check, DateTime checkDate, string disposition)
+        {
+            return new CheckViewModel
+            {
+                RecordID = check.RecordID,
+                sRecordID = check.RecordID.ToString(),
+                InterviewRecordID = check.InterviewRecordID,
+                sInterviewRecordID = check.InterviewRecordID.ToString(),
+                Name = check.Name,
+                Num = check.Num,
+                sNum = check.Num.ToString(),
+                Date = ((DateTime)check.Date).ToShortDateString(),
+                sDate = (check.Date == null ? "" : checkDate.ToString("MM/dd/yyyy")),
+                Service = check.Service,
+                Disposition = disposition
+            };
+        }
+
         public static void NewResolvedCheck(Check check, string disposition)
         {
             // PLB 1/23/2019 Added r.RecordID == check.RecordID.
@@ -1152,28 +1216,34 @@ namespace OPIDDaily.DAL
 
             if (alreadyResolved == null)
             {
-                cvm = new CheckViewModel
-                {
-                    RecordID = check.RecordID,
-                    sRecordID = check.RecordID.ToString(),
-                    InterviewRecordID = check.InterviewRecordID,
-                    sInterviewRecordID = check.InterviewRecordID.ToString(),
-                    Name = check.Name,
-                    Num = check.Num,
-                    sNum = check.Num.ToString(),
-                    Date = ((DateTime)check.Date).ToShortDateString(),
-                    sDate = (check.Date == null ? "" : checkDate.ToString("MM/dd/yyyy")),
-                    Service = check.Service,
-                    Disposition = disposition
-                };
-
+                cvm = NewCheckViewModel(check, checkDate, disposition);
                 resolvedChecks.Add(cvm);
             }
         }
 
-        public static void NewResolvedPocketCheck(PocketCheck pcheck, string disposition)
+        private static Check NewCheck(Client client, Check echeck, PocketCheck pcheck, DateTime checkDate, string disposition)
         {
-            Check alreadyResolved = resolvedPocketChecks.Where(r => (r.InterviewRecordID == pcheck.ClientId && r.Num == pcheck.Num)).FirstOrDefault();
+            // If it is not null, then echeck is an Excel Check created by MyExcelDataReader.GetExcelChecks.
+            // In this case, echeck.InterviewRecordID will be set to the memo field of an Origen Bank check.
+            // Copy this memo field into the InterviewRecordID field of a new pocket check.
+            // This pocket check will be removed from the PocketChecks table and used to update the Research Table.
+            // See method ResolvePocketChecks.
+            return new Check
+            {
+                RecordID = pcheck.ClientId,
+                InterviewRecordID = (echeck == null ? 0 : echeck.InterviewRecordID),
+                DOB = client.DOB,
+                Name = pcheck.Name,
+                Num = pcheck.Num,
+                Date = checkDate,
+                Service = pcheck.Item,
+                Disposition = disposition
+            };
+        }
+
+        public static void NewResolvedPocketCheck(Check echeck, PocketCheck pcheck, string disposition)
+        {
+            Check alreadyResolved = resolvedPocketChecks.Where(r => (r.RecordID == pcheck.ClientId && r.Num == pcheck.Num)).FirstOrDefault();
             DateTime checkDate = new DateTime(1900, 1, 1);
 
             if (pcheck.Date != null)
@@ -1188,19 +1258,8 @@ namespace OPIDDaily.DAL
                     Client client = opidcontext.Clients.Find(pcheck.ClientId);
 
                     if (client != null)
-                    { 
-                        Check check = new Check
-                        {
-                            RecordID = 0,
-                            InterviewRecordID = pcheck.ClientId,
-                            DOB = client.DOB,
-                            Name = pcheck.Name,
-                            Num = pcheck.Num,
-                            Date = checkDate,
-                            Service = pcheck.Item,
-                            Disposition = disposition
-                        };
-
+                    {
+                        Check check = NewCheck(client, echeck, pcheck, checkDate, disposition);
                         resolvedPocketChecks.Add(check);
                     }
                 }
