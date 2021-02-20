@@ -332,7 +332,7 @@ namespace OPIDChecks.Controllers
                                                    || irow.MBVDCheckNum2 == resolvedCheck.Num
                                                    || irow.MBVDCheckNum3 == resolvedCheck.Num
 
-                                                   // Supporting documenta checks
+                                                   // Supporting document checks
                                                    /*
                                                    || irow.SDCheckNum1 == resolvedCheck.Num
                                                    || irow.SDCheckNum2 == resolvedCheck.Num

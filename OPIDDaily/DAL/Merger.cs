@@ -20,7 +20,7 @@ namespace OPIDDaily.DAL
                     break;
 
                 case "OPIDDailyTracking":
-                    UpdateResearchTableFromOPIDTrackingFile(uploadedFile);
+                    UpdateResearchTableFromOPIDTrackingFileCrossLoad(uploadedFile);
                     break;
 
                 case "NewClients":
@@ -32,11 +32,11 @@ namespace OPIDDaily.DAL
                     break;
 
                 case "VoidedChecks":
-                    UpdateResearchTableFromExcelChecksFile(uploadedFile, "Voided");
+                    UpdateResearchTableFromOrigenBankFile(uploadedFile, "Voided");
                     break;
 
                 case "ClearedChecks":
-                    UpdateResearchTableFromExcelChecksFile(uploadedFile, "Cleared");
+                    UpdateResearchTableFromOrigenBankFile(uploadedFile, "Cleared");
                     break;
 
                 case "ReresolvedChecks":
@@ -61,78 +61,7 @@ namespace OPIDDaily.DAL
             List<ClientRow> newClients = Clients.GetNewClients(uploadedFile);
             Clients.AddNewClients(newClients);
         }
-
-        public static bool IsProtectedCheck(string disposition)
-        {
-            if (string.IsNullOrEmpty(disposition))
-            {
-                return false;
-            }
-
-            return disposition.Equals("Voided/Replaced")
-                || disposition.Equals("Voided/Reissued")
-                || disposition.Equals("Voided/No Reissue")
-                || disposition.Equals("Voided/Reissue Other")
-                || disposition.Equals("Scammed Check");
-        }
-
-        private static void DetermineResolvedChecks(List<Check> excelChecks, string disposition, List<Check> researchChecks)
-        {
-            int i = 0;
-            int checkCount = excelChecks.Count;
-
-            foreach (Check echeck in excelChecks)
-            {
-                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == echeck.Num);
-
-                // Normally, matchedChecks.Count() == 0 or matchedChecks.Count == 1 
-                // But in the case of a birth certificate, a single check number may cover
-                // multiple children. In this case matchedChecks.Count() > 1.
-                // The foreach loop below creates a new resolved check for each matched check.
-                // This means that if one check number is used by a parent and his/her children,
-                // then there will be a resolved check for the parent and each child.
-                if (matchedChecks.Count() != 0)
-                {
-                    foreach (Check matchedCheck in matchedChecks)
-                    {
-                        bool protectedCheck = IsProtectedCheck(matchedCheck.Disposition);
-
-                        // string disposition = (type.Equals("ImportMe") ? check.Disposition : type);
-
-                        if (!protectedCheck)
-                        {
-                            CheckManager.NewResolvedCheck(matchedCheck, disposition);
-                        }
-
-                        /* Operation Recovery code
-                        if (type.Equals("ImportMe"))
-                        {
-                            // CheckManager.RecoverLostChecks(check, researchChecks);
-                        }
-                        */
-                    }
-                }
-
-                // Slow down the merging a little bit so we can see the progress bar
-                Thread.Sleep(100);
-
-                i += 1;
-                DailyHub.SendProgress("Merge in progress...", i, checkCount);
-
-                /*
-                else // PLB 1/11/2019
-                {
-                    // Operation Recovery indavertently erased some level 2 checks (LBVD2, TID2, etc.)
-                    // This code restores the lost check numbers and adds the erased checks as nameless
-                    // checks in the Research Table. The lost checks are entered through the Operation Recovery - Dec 2018
-                    // entry on the Merge screen.
-                    CheckManager.AppendResearchCheck(check);
-                    CheckManager.NewResolvedCheck(check, check.Disposition);
-                }
-                */
-            }
-        }
-
+        
         public static void UpdateResearchTableFromOPIDFile(string uploadedFile)
         {
             List<DispositionRow> researchRows = CheckManager.GetResearchRows(uploadedFile);
@@ -150,16 +79,16 @@ namespace OPIDDaily.DAL
             // We don't want this to happen! Most likely, the check number 74726
             // for Mark Justice was a typo.
             // PLB 12/14/2018 CheckManager.HandleIncidentalChecks(researchRows);
-            CheckManager.PersistResearchChecks(researchRows);
+            CheckManager.RebuildResearchChecksTable(researchRows);
             //  PLB 12/14/2018 Don't call RemoveTypoChecks
             // CheckManager.RemoveTypoChecks();
         }
 
-        public static void UpdateResearchTableFromOPIDTrackingFile(string uploadedFile)
+        public static void UpdateResearchTableFromOPIDTrackingFileCrossLoad(string uploadedFile)
         {
             List<TrackingRow> trackingRows = CheckManager.GetTrackingRows(uploadedFile);
 
-            CheckManager.PersistTrackingChecks(trackingRows);
+            CheckManager.CrossLoadTrackingChecks(trackingRows);
         }
 
         public static void UpdateAncientChecksTableFromFile(string uploadedFile)
@@ -179,26 +108,25 @@ namespace OPIDDaily.DAL
             // We don't want this to happen! Most likely, the check number 74726
             // for Mark Justice was a typo.
             // PLB 12/14/2018 CheckManager.HandleIncidentalChecks(researchRows);
-            CheckManager.PersistAncientChecks(researchRows);
+            CheckManager.RebuildAncientChecksTable(researchRows);
             //  PLB 12/14/2018 Don't call RemoveTypoChecks
             // CheckManager.RemoveTypoChecks();
         }
 
-        public static void UpdateResearchTableFromExcelChecksFile(string uploadedFile, string disposition)
+        public static void UpdateResearchTableFromOrigenBankFile(string uploadedFile, string disposition)
         {
             CheckManager.Init();
 
             List<Check> excelChecks = CheckManager.GetExcelChecks(uploadedFile, disposition);
             List<Check> researchChecks = CheckManager.GetResearchChecks();
            
-            DetermineResolvedChecks(excelChecks, disposition, researchChecks);
+            List<CheckViewModel> resolvedChecks = CheckManager.GetResolvedChecks(excelChecks, disposition, researchChecks);
 
-            // When OPID Daily fully manages the Research Table, then the Research Table will
-            // contain only resolved checks. Unresolved checks will live in the PocketChecks table
-            // until their disposition is known. When that happens, they will be removed from the
-            // PocketChecks table and moved to the Research Table. See CheckManager.ResolvePocketChecks.
-            CheckManager.ResolveResearchChecks(); // according to the above comment, this will one day no longer be needed
-            CheckManager.ResolvePocketChecks(excelChecks, disposition);
+            CheckManager.ResolveResearchChecks(resolvedChecks);
+            
+            // Resolving pocket checks is simply a matter of deleting any pocket check
+            // whose corresponding research check has been resolved by the preceding call.
+            CheckManager.ResolvePocketChecks(resolvedChecks);
         }
 
         private static void ProcessMistakenlyResolvedChecks(string uploadedFile)
@@ -214,52 +142,10 @@ namespace OPIDDaily.DAL
             List<Check> researchChecks = CheckManager.GetResearchChecks();
             List<Check> excelChecks = CheckManager.GetExcelChecks(uploadedFile, disposition);
 
-
-            DetermineReResolvedChecks(excelChecks, disposition, researchChecks);
+            CheckManager.DetermineReResolvedChecks(excelChecks, researchChecks);
 
             // Remove the set of resolved checks determined above from the Research Table. 
             // CheckManager.RemoveReResolvedChecks();
-        }
-
-        private static void DetermineReResolvedChecks(List<Check> checks, string type, List<Check> researchChecks)
-        {
-            foreach (Check check in checks)
-            {
-                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == check.Num);
-
-                // Normally, matchedChecks.Count() == 0 or matchedChecks.Count == 1 
-                // But in the case of a birth certificate, a single check number may cover
-                // multiple children. In this case matchedChecks.Count() > 1.
-                // The foreach loop below creates a new resolved check for each matched check.
-                // This means that if one check number is used by a parent and his/her children,
-                // then there will be a resolved check for the parent and each child.
-                if (matchedChecks.Count() != 0)
-                {
-                    foreach (Check matchedCheck in matchedChecks)
-                    {
-                        bool newMistakenlyResolved = CheckManager.IsNewMistakenlyResolved(matchedCheck);
-                        bool protectedCheck = IsProtectedCheck(matchedCheck.Disposition);
-
-                        if (!protectedCheck)
-                        {
-                            if (newMistakenlyResolved)
-                            {
-                                // This will "unset" the radio button from Cleared, Voided, etc. to no setting at all.
-                                CheckManager.NewResolvedCheck(matchedCheck, "");
-                            }
-                            else if (!IsMistakenlyResolved(matchedCheck))
-                            {
-                                CheckManager.NewResolvedCheck(matchedCheck, type);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private static bool IsMistakenlyResolved(Check check)
-        {
-            return check.Disposition.Equals("Mistakenly Resolved");
         }
     }
 }

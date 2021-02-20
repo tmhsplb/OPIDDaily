@@ -30,7 +30,6 @@ namespace OPIDDaily.DAL
         private static List<Check> newResearchChecks;
         private static List<Check> newTrackingChecks;
         private static List<CheckViewModel> resolvedChecks;
-        private static List<Check> resolvedPocketChecks;
         private static List<int> mistakenlyResolved;
        // private static List<Check> typoChecks;
 
@@ -46,12 +45,14 @@ namespace OPIDDaily.DAL
 
             newResearchChecks = new List<Check>();
             newTrackingChecks = new List<Check>();
-            resolvedPocketChecks = new List<Check>();
             //  incidentals = new List<int>();
         }
 
+        // Called only by BackOfficeController.GetResolvedChecks. Used to populate the display
+        // of resolved checks.
         public static IQueryable<CheckViewModel> GetResolvedChecksAsQueryable()
         {
+            // The value of the class variable resolvedChecks is set by method GetResolvedChecks.
             if (resolvedChecks == null)
             {
                 List<CheckViewModel> emptyList = new List<CheckViewModel>();
@@ -61,29 +62,35 @@ namespace OPIDDaily.DAL
             return resolvedChecks.AsQueryable();
         }
 
+        // Called only by FileDownloadController.GetImportRows.
         public static List<CheckViewModel> GetResolvedChecksAsList()
         {
+            // The value of the class variable resolvedChecks is set by method GetResolvedChecks.
             return resolvedChecks;
         }
 
-        public static void PersistResearchChecks(List<DispositionRow> researchRows)
+        public static void RebuildResearchChecksTable(List<DispositionRow> researchRows)
         {
             Init();
             List<Check> rChecks = DetermineResearchChecks(researchRows);
             UpdateCheckTables(rChecks);
         }
 
-        public static void PersistAncientChecks(List<DispositionRow> researchRows)
+        public static void RebuildAncientChecksTable(List<DispositionRow> researchRows)
         {
             Init();
             List<Check> ancientChecks = DetermineResearchChecks(researchRows);
             UpdateAncientChecksTable(ancientChecks);
         }
 
-        public static void PersistTrackingChecks(List<TrackingRow> trackingRows)
+        // When OPID Daily is fully decoupled from Apricot, then cross-loads will no 
+        // longer be performed. As long as OPID Daily is coupled to Apricot, cross-loads
+        // will be necessary. A cross-load may create new (resolved or unresolved) research
+        // checks and new (unresolved) Pocket Checks.
+        public static void CrossLoadTrackingChecks(List<TrackingRow> trackingRows)
         {
             Init();
-            List<Check> trackingChecks = DetermineTrackingChecks(trackingRows);
+            List<Check> trackingChecks = GetTrackingChecks(trackingRows);
             UpdateCheckTables(trackingChecks);
         }
 
@@ -323,7 +330,7 @@ namespace OPIDDaily.DAL
             });
         }
 
-        private static List<Check> DetermineTrackingChecks(List<TrackingRow> trackingRows)
+        private static List<Check> GetTrackingChecks(List<TrackingRow> trackingRows)
         {
             foreach (TrackingRow row in trackingRows)
             {
@@ -341,6 +348,30 @@ namespace OPIDDaily.DAL
             }
 
             return newTrackingChecks;
+        }
+
+        private static bool IsPocketCheck(Check check)
+        {
+            return check.Num < 9999;
+        }
+                
+        private static void NewChecks(Check check, string checkDate, List<RCheck> rchecks, List<PocketCheck> pchecks)
+        {
+            RCheck rcheck = NewRCheck(check, checkDate);
+            rchecks.Add(rcheck);
+
+            if (IsPocketCheck(check))
+            {
+                // This is the case where we are creating a new Pocket Check from a cross-load.
+                // We need to heuristically identify the client referenced by check.
+                Client client = Clients.IdentifyClient(check);
+
+                if (client != null)
+                {
+                    PocketCheck pcheck = NewPocketCheck(client, check);
+                    pchecks.Add(pcheck);
+                }
+            }
         }
 
         private static RCheck NewRCheck(Check check, string checkDate)
@@ -363,6 +394,24 @@ namespace OPIDDaily.DAL
             };
         }
 
+        private static PocketCheck NewPocketCheck(Client client, Check check)
+        {
+            return new PocketCheck
+            {
+                ClientId = client.Id,
+                Date = (DateTime)check.Date,
+                Name = Clients.ClientBeingServed(client, false),
+                DOB = client.DOB,
+                Item = check.Service,
+                Num = check.Num,  
+                Disposition = check.Disposition,  
+                Notes = string.Empty,
+                IsActive = true
+            };
+        }
+
+        // This method is called either when rebuilding the Research Table
+        // or when cross-loading an OPID Tracking File.
         private static void UpdateCheckTables(List<Check> checks)
         {
             int i = 0;
@@ -375,11 +424,14 @@ namespace OPIDDaily.DAL
                     // Using context.AddRange as described in: https://entityframework.net/improve-ef-add-performance
                     opidcontext.Configuration.AutoDetectChangesEnabled = false;
                     List<RCheck> rchecks = new List<RCheck>();
+                    List<PocketCheck> pchecks = new List<PocketCheck>();
                    
                     foreach (Check check in checks)
                     {
-                        bool uec = UpdateExistingCheck(check, opidcontext);
+                        bool uec = UpdateAnExistingCheck(check, opidcontext);
 
+                        // Create new checks only if neither a pocket check
+                        // nor an existing research check was updated.
                         if (!uec)
                         {
                             // This check will become a new RCheck (even if it is ancient)
@@ -391,9 +443,7 @@ namespace OPIDDaily.DAL
                                 checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
                             }
 
-                            RCheck rcheck = NewRCheck(check, checkDate);
-
-                            rchecks.Add(rcheck);
+                            NewChecks(check, checkDate, rchecks, pchecks);                         
                         }
 
                         // Slow down updating/adding a little bit so we can see the progress bar
@@ -404,6 +454,7 @@ namespace OPIDDaily.DAL
                     }
 
                     opidcontext.RChecks.AddRange(rchecks);
+                    opidcontext.PocketChecks.AddRange(pchecks);
                     opidcontext.ChangeTracker.DetectChanges();
                     opidcontext.SaveChanges(); 
                 }
@@ -415,33 +466,52 @@ namespace OPIDDaily.DAL
             }
         }
 
-        private static bool UpdateExistingCheck(Check check, OpidDailyDB opidcontext)
+        private static bool UpdateAnExistingCheck(Check check, OpidDailyDB opidcontext)
         {
-            int recordID = check.RecordID;
-            bool found = false;
+            bool inPocket = false;
+            bool inResearch = false;
 
             // There may be multiple existing checks that share the same check number.
             // For example, members of the same household using a single check number
             // to cover the cost of a birth certificate for each. They all get resolved
             // with the same disposition as the disposition of this check.
 
+            // Update a pocket check that shares this check number. But don't stop there - update
+            // the Research Table too.
             List<PocketCheck> pocketMatches = opidcontext.PocketChecks.Where(u => u.Num == check.Num).ToList();
             foreach (PocketCheck pocketCheck in pocketMatches)
             {
                 pocketCheck.Disposition = check.Disposition;
-                found = true;
+                inPocket = true;
             }
 
-            if (found) return true;
+            inResearch = UpdateAnExistingResearchCheck(check, opidcontext);
 
-            return UpdateExistingResearchCheck(check, opidcontext);
+            if (inPocket || inResearch)
+            {
+                opidcontext.SaveChanges();
+            }
+
+            if (inPocket && !inResearch)
+            {
+                Log.Error(string.Format("Client has a Pocket Check without a corresponding Research Check: {0}: check number: {1}", check.Name, check.Num));
+            }
+
+            // Only return false if check is neither inPocket nor inResearch, i.e. it
+            // didn't update any check anywhere.
+            return (inPocket || inResearch);
         }
 
-        private static bool UpdateExistingResearchCheck(Check check, OpidDailyDB opidcontext)
+        private static bool UpdateAnExistingResearchCheck(Check check, OpidDailyDB opidcontext)
         {
             bool found = false;
 
             List<RCheck> currentMatches = opidcontext.RChecks.Where(u => u.Num == check.Num).ToList();
+
+            // There may be multiple existing checks that share the same check number.
+            // For example, members of the same household using a single check number
+            // to cover the cost of a birth certificate for each. They all get resolved
+            // with the same disposition as the disposition of this check.
             foreach (RCheck rcheck in currentMatches)
             {
                 if (rcheck.RecordID == check.RecordID)
@@ -717,7 +787,119 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static void ResolveResearchChecks()
+        private static bool IsMistakenlyResolved(Check check)
+        {
+            return check.Disposition.Equals("Mistakenly Resolved");
+        }
+
+        public static List<CheckViewModel> GetResolvedChecks(List<Check> excelChecks, string disposition, List<Check> researchChecks)
+        {
+            int i = 0;
+            int checkCount = excelChecks.Count;
+            List<CheckViewModel> resolved = new List<CheckViewModel>();
+
+            foreach (Check echeck in excelChecks)
+            {
+                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == echeck.Num);
+
+                // Normally, matchedChecks.Count() == 0 or matchedChecks.Count == 1 
+                // But in the case of a birth certificate, a single check number may cover
+                // multiple children. In this case matchedChecks.Count() > 1.
+                // The foreach loop below creates a new resolved check for each matched check.
+                // This means that if one check number is used by a parent and his/her children,
+                // then there will be a resolved check for the parent and each child.
+                if (matchedChecks.Count() != 0)
+                {
+                    foreach (Check matchedCheck in matchedChecks)
+                    {
+                        bool protectedCheck = IsProtectedCheck(matchedCheck.Disposition);
+
+                        // string disposition = (type.Equals("ImportMe") ? check.Disposition : type);
+
+                        if (!protectedCheck)
+                        {
+                            CheckViewModel cvm = NewResolvedCheck(matchedCheck, resolved, disposition);
+                            if (cvm != null)
+                            {
+                                resolved.Add(cvm);
+                            }
+                        }
+
+                        /* Operation Recovery code
+                        if (type.Equals("ImportMe"))
+                        {
+                            // CheckManager.RecoverLostChecks(check, researchChecks);
+                        }
+                        */
+                    }
+                }
+
+                // Slow down the merging a little bit so we can see the progress bar
+                Thread.Sleep(100);
+
+                i += 1;
+                DailyHub.SendProgress("Merge in progress...", i, checkCount);
+
+                /*
+                else // PLB 1/11/2019
+                {
+                    // Operation Recovery indavertently erased some level 2 checks (LBVD2, TID2, etc.)
+                    // This code restores the lost check numbers and adds the erased checks as nameless
+                    // checks in the Research Table. The lost checks are entered through the Operation Recovery - Dec 2018
+                    // entry on the Merge screen.
+                    CheckManager.AppendResearchCheck(check);
+                    CheckManager.NewResolvedCheck(check, check.Disposition);
+                }
+                */
+            }
+
+            // Set the class variable resolvedChecks.
+            // The value of this class variable is returned by methods GetResolvedChecksAsQueryable and GetResolvedChecksAsList.
+            resolvedChecks = resolved;
+
+            return resolved;
+        }
+
+        // Legacy code. Probably does not apply now that we are processing checks from Origen Bank.
+        public static void DetermineReResolvedChecks(List<Check> checks, List<Check> researchChecks)
+        {
+            foreach (Check check in checks)
+            {
+                List<Check> matchedChecks = researchChecks.FindAll(c => c.Num == check.Num);
+
+                // Normally, matchedChecks.Count() == 0 or matchedChecks.Count == 1 
+                // But in the case of a birth certificate, a single check number may cover
+                // multiple children. In this case matchedChecks.Count() > 1.
+                // The foreach loop below creates a new resolved check for each matched check.
+                // This means that if one check number is used by a parent and his/her children,
+                // then there will be a resolved check for the parent and each child.
+                if (matchedChecks.Count() != 0)
+                {
+                    foreach (Check matchedCheck in matchedChecks)
+                    {
+                        bool newMistakenlyResolved = CheckManager.IsNewMistakenlyResolved(matchedCheck);
+                        bool protectedCheck = IsProtectedCheck(matchedCheck.Disposition);
+
+                        if (!protectedCheck)
+                        {
+                            if (newMistakenlyResolved)
+                            {
+                                // This will "unset" the radio button from Cleared, Voided, etc. to no setting at all.
+                                // PLB Commented out on 2/20/2021
+                              //  NewResolvedCheck(matchedCheck, "");
+                            }
+                            else if (!IsMistakenlyResolved(matchedCheck))
+                            {
+                                // PLB Commented out on 2/20/2021
+                                // NewResolvedCheck(matchedCheck, type);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void ResolveResearchChecks(List<CheckViewModel> resolvedChecks)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
             {
@@ -758,7 +940,7 @@ namespace OPIDDaily.DAL
                 || disposition.Equals("Scammed Check");
         }
 
-        public static void ResolvePocketChecks(List<Check> excelChecks, string disposition)
+        public static void ResolvePocketChecks(List<CheckViewModel> resolvedChecks)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
@@ -773,27 +955,8 @@ namespace OPIDDaily.DAL
                     if (resolved && !IsProtectedCheck(pcheck.Disposition))
                     {
                         // If pcheck is among resolvedChecks, then mark pcheck as inactive
-                        // This will not happen when we are no longer updating the Research Table
-                        // by uploading an OPID Daily Tracking file from Apricot and copying Origen
-                        // checks directy into the Research Table. Only the else-clause will happen,
-                        // that is, we will only resolve Pocket Checks by loading Origen checks.
                         pcheck.IsActive = false;
                         resolvedClients.Add(pcheck.ClientId);
-                    }
-                    else
-                    {
-                       // resolved = excelChecks.Any(e => e.Num == pcheck.Num);
-
-                        Check echeck = excelChecks.Where(e => e.Num == pcheck.Num).SingleOrDefault();
-
-                        if (echeck != null && !IsProtectedCheck(pcheck.Disposition))
-                        { 
-                            // This is the case of an Origen Bank check resolving a pocket check.
-                            // This pocket check will become a full-fledged research check.  
-                            pcheck.IsActive = false;
-                            resolvedClients.Add(pcheck.ClientId);
-                            NewResolvedPocketCheck(echeck, pcheck, disposition);
-                        }
                     }
                 }
 
@@ -804,9 +967,8 @@ namespace OPIDDaily.DAL
                         if (IsProtectedCheck(pcheck.Disposition) && resolvedClients.Contains(pcheck.ClientId))
                         {
                             // A protected pocket check belonging to a resolved client will be removed from
-                            // the PocketChecks table and moved into the ResearchChecks table.
+                            // the PocketChecks table.
                             pcheck.IsActive = false;
-                            NewResolvedPocketCheck(null, pcheck, pcheck.Disposition);
                         }
                     }
                 }
@@ -815,7 +977,6 @@ namespace OPIDDaily.DAL
             }
 
             DeleteInactivePocketChecks();
-            UpdateResearchTableByResolvedPocketChecks();
         }
 
         private static void DeleteInactivePocketChecks()
@@ -826,52 +987,6 @@ namespace OPIDDaily.DAL
                 var pocketChecksToDelete = opidcontext.PocketChecks.Where(pc => pc.IsActive == false);
                 opidcontext.PocketChecks.RemoveRange(pocketChecksToDelete);
                 opidcontext.SaveChanges();
-            }
-        }
-
-        private static void UpdateResearchTableByResolvedPocketChecks()
-        {
-            try
-            {
-                using (OpidDailyDB opidcontext = new OpidDailyDB())
-                {
-                    // Using context.AddRange as described in: https://entityframework.net/improve-ef-add-performance
-                    opidcontext.Configuration.AutoDetectChangesEnabled = false;
-                    List<RCheck> rchecks = new List<RCheck>();
-                    int i = 0;
-                    int checkCount = resolvedPocketChecks.Count;
-
-                    foreach (Check check in resolvedPocketChecks)
-                    {
-                        bool uec = UpdateExistingResearchCheck(check, opidcontext);
-
-                        if (!uec)
-                        {
-                            string checkDate = "01/01/1900";
-
-                            if (check.Date != null)
-                            {
-                                // Coerce from DateTime? to DateTime, then get date string
-                                checkDate = ((DateTime)check.Date).ToString("MM/dd/yyyy");
-                            }
-
-                            RCheck rcheck = NewRCheck(check, checkDate);
-                             
-                            rchecks.Add(rcheck);
-                        }
-
-                        i += 1;
-                        DailyHub.SendProgress("Updating Research Table...", i, checkCount);
-                    }
-
-                    opidcontext.RChecks.AddRange(rchecks);
-                    opidcontext.ChangeTracker.DetectChanges();
-                    opidcontext.SaveChanges();
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
             }
         }
 
@@ -1136,16 +1251,17 @@ namespace OPIDDaily.DAL
             string item = sequencedItem.Substring(0, length - 1);
             int sequenceNumber = Convert.ToInt32(sequencedItem.Substring(length - 1));
 
-            return string.Format("{0}{1}", item, sequenceNumber + 1);
+            return string.Format("{0}{1}", (item.Equals("BC") ? "LBVD" : item), sequenceNumber + 1);
         }
 
         public static string SequencedRequestedItem(List<VisitViewModel> visits, string requestedItem)
         {
             string sequencedItem = string.Empty;
+            string normalizedRequestedItem = Visits.NormalizedService(requestedItem);
 
             foreach (VisitViewModel vvm in visits)
             {
-                if (vvm.Item.StartsWith(requestedItem))
+                if (vvm.Item.StartsWith(normalizedRequestedItem))
                 {
                     sequencedItem = vvm.Item;
                 }
@@ -1155,11 +1271,13 @@ namespace OPIDDaily.DAL
             {
                 return requestedItem;
             }
-            else if (sequencedItem.Equals(requestedItem))
+            else if (sequencedItem.Equals(normalizedRequestedItem))
             {
-                // Example: if requestedItem = "TDL" and sequencedItem = "TDL"
+                // Example 1: if requestedItem = "TDL" and sequencedItem = "TDL"
                 // then the next sequencedItem is TDL2.
-                return string.Format("{0}2", sequencedItem);
+                // Example 2: if requestedItem = "LBVD" then nomralizedRequestedItem = "BC" so if sequencedItem = "BC"
+                // then the next sequencedItem is LBVD2.
+                return string.Format("{0}2", requestedItem);
             }
 
             return Successor(sequencedItem);
@@ -1201,7 +1319,7 @@ namespace OPIDDaily.DAL
             };
         }
 
-        public static void NewResolvedCheck(Check check, string disposition)
+        public static CheckViewModel NewResolvedCheck(Check check, List<CheckViewModel> resolvedChecks, string disposition)
         {
             // PLB 1/23/2019 Added r.RecordID == check.RecordID.
             // This fixed the problem that Bill reported in an email dated 1/21/2019.
@@ -1217,8 +1335,10 @@ namespace OPIDDaily.DAL
             if (alreadyResolved == null)
             {
                 cvm = NewCheckViewModel(check, checkDate, disposition);
-                resolvedChecks.Add(cvm);
+                return cvm;
             }
+
+            return null;
         }
 
         private static Check NewCheck(Client client, Check echeck, PocketCheck pcheck, DateTime checkDate, string disposition)
@@ -1239,31 +1359,6 @@ namespace OPIDDaily.DAL
                 Service = pcheck.Item,
                 Disposition = disposition
             };
-        }
-
-        public static void NewResolvedPocketCheck(Check echeck, PocketCheck pcheck, string disposition)
-        {
-            Check alreadyResolved = resolvedPocketChecks.Where(r => (r.RecordID == pcheck.ClientId && r.Num == pcheck.Num)).FirstOrDefault();
-            DateTime checkDate = new DateTime(1900, 1, 1);
-
-            if (pcheck.Date != null)
-            {
-                checkDate = (DateTime)pcheck.Date;
-            }
-
-            if (alreadyResolved == null)
-            {
-                using (OpidDailyDB opidcontext = new DataContexts.OpidDailyDB())
-                {
-                    Client client = opidcontext.Clients.Find(pcheck.ClientId);
-
-                    if (client != null)
-                    {
-                        Check check = NewCheck(client, echeck, pcheck, checkDate, disposition);
-                        resolvedPocketChecks.Add(check);
-                    }
-                }
-            }
         }
 
         public static void MarkMistakenlyResolvedChecks(List<Check> mistakenlyResolved)

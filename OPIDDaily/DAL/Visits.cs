@@ -30,7 +30,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        private static string NormalizedService(string service)
+        public static string NormalizedService(string service)
         {
             if (service.StartsWith("LBVD"))
             {
@@ -132,8 +132,6 @@ namespace OPIDDaily.DAL
                 {
                     List<AncientCheck> ancientChecks = opiddailycontext.AncientChecks.Where(ac => ac.DOB == DOB && ac.Name.ToUpper().StartsWith(lastName)).ToList();
                     List<RCheck> rchecks = opiddailycontext.RChecks.Where(rc => rc.DOB == DOB && rc.Name.ToUpper().StartsWith(lastName)).ToList();
-                    List<PocketCheck> pchecks = opiddailycontext.PocketChecks.Where(pc => pc.ClientId == client.Id && pc.IsActive == true).ToList();
-
                     List<VisitViewModel> visits = new List<VisitViewModel>();
 
                     foreach (AncientCheck ancientCheck in ancientChecks)
@@ -146,11 +144,7 @@ namespace OPIDDaily.DAL
                         visits.Add(RCheckToVisitViewModel(rcheck, msgs));
                     }
 
-                    foreach (PocketCheck pcheck in pchecks)
-                    {
-                        visits.Add(PocketCheckToVisitViewModel(pcheck));
-                    }
-                    
+                 
                     // Make sure that visits are listed by ascending date
                     visits = visits.OrderBy(v => v.Date).ToList();
                     return visits;
@@ -225,7 +219,27 @@ namespace OPIDDaily.DAL
                 IsActive = true
             };
         }
-              
+
+        private static RCheck NewRCheck(Client client, VisitViewModel vvm)
+        {
+            return new RCheck
+            {
+                RecordID = client.Id,
+                sRecordID = client.Id.ToString(),
+                InterviewRecordID = 0,
+                sInterviewRecordID = "0",
+                Num = Convert.ToInt32(vvm.Check),
+                sNum = vvm.Check,
+                Name = Clients.ClientBeingServed(client, false),
+                DOB = client.DOB,
+                sDOB = client.DOB.ToString("MM/dd/yyyy"),
+                Date = vvm.Date.AddHours(12),
+                sDate = vvm.Date.AddHours(12).ToString("MM/dd/yyyy"),
+                Service = vvm.Item,
+                Disposition = vvm.Status,
+            };
+        }
+
         public static void AddPocketCheck(int nowServing, VisitViewModel vvm)
         {
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
@@ -233,17 +247,15 @@ namespace OPIDDaily.DAL
                 Client client = opiddailycontext.Clients.Find(nowServing);
 
                 if (client != null)
-                {
-                    PocketCheck pocketCheck = NewPocketCheck(client, vvm);
+                {                   
+                    opiddailycontext.PocketChecks.Add(NewPocketCheck(client, vvm));
 
-                    if (pocketCheck != null)
-                    {
-                        // A Pocket Check will be moved to the Research Table
-                        // when it is resolved by loading an Origen Bank file
-                        // of checks. See CheckManager.ResolvePocketChecks.
-                        opiddailycontext.PocketChecks.Add(pocketCheck);
-                        opiddailycontext.SaveChanges();
-                    }
+                    // A pocket check must always have a corresponding check in the Rsearch Table,
+                    // because Service Tickets are generated from the visit history in the Research
+                    // table, not by using any pocket checks. So, when we add a new pocket check
+                    // we must also add a new corresponding research check.
+                    opiddailycontext.RChecks.Add(NewRCheck(client, vvm));
+                    opiddailycontext.SaveChanges();
                 }
             }
         }

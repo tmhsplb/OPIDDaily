@@ -276,6 +276,7 @@ namespace OPIDDaily.Utils
             string lname = dataRow["Last Name"].ToString();
             string fname = dataRow["First Name"].ToString();
             DateTime dob = Convert.ToDateTime(dataRow["Date of Birth"].ToString());
+            string disp = string.Empty;
 
             try
             {
@@ -302,26 +303,28 @@ namespace OPIDDaily.Utils
                 {
                     // We are reissuing an existing check. Change the disposition of
                     // the existing check to the reissuing reason.
-                    string reissuedReason = string.Format("{0}/{1}", reissued, dataRow["Reissued Reason"]).ToString();
-                    CheckManager.SetDisposition(dataRow, checkNumber, reissuedReason);
+                    // string reissuedReason = string.Format("{0}/{1}", reissued, dataRow["Reissued Reason"]).ToString();
+                    // CheckManager.SetDisposition(dataRow, checkNumber, reissuedReason);
 
                     // Don't create a new tracking row.
-                    return null;
+                    // return null;
+                    disp = string.Format("{0}/{1}", reissued, dataRow["Reissued Reason"]).ToString();
                 }
 
                 if (!string.IsNullOrEmpty(scammed) && scammed.Equals("Yes"))
                 {
                     // We are marking an existing check as scammed. Change the disposition
                     // of the existing check to "Scammed Check"
-                    CheckManager.SetDisposition(dataRow, checkNumber, "Scammed Check");
+                    //  CheckManager.SetDisposition(dataRow, checkNumber, "Scammed Check");
 
                     // Don't create a new tracking row.
-                    return null;
+                    //  return null;
+                    disp = "Scammed Check";
                 }
 
                 List<VisitViewModel> visits = Visits.GetVisits(cid);
                 requestedItem = CheckManager.SequencedRequestedItem(visits, requestedItem);
-                return NewTrackingRow(requestedItem, lname, fname, dob, dataRow, epoch);
+                return NewTrackingRow(requestedItem, lname, fname, dob, dataRow, epoch, disp);
             }
             catch (Exception e)
             {
@@ -332,7 +335,7 @@ namespace OPIDDaily.Utils
             }
         }
 
-        private static TrackingRow NewTrackingRow(string requestedItem, string lname, string fname, DateTime dob, System.Data.DataRow dataRow, string epoch)
+        private static TrackingRow NewTrackingRow(string requestedItem, string lname, string fname, DateTime dob, System.Data.DataRow dataRow, string epoch, string disp)
         {
             int recordID = Convert.ToInt32(dataRow["Record ID"].ToString());
             int interviewRecordID = Convert.ToInt32(dataRow["Interview Record ID"].ToString());
@@ -343,7 +346,7 @@ namespace OPIDDaily.Utils
                 string interviewDate = dataRow["OPID Interview Date"].ToString();
              //   DateTime orderDate = DBNull.Value.Equals(dataRow["Order Date"]) ? epochDate : Convert.ToDateTime(dataRow["Order Date"].ToString());
                 string checkNumber = dataRow["Check Number"].ToString();
-                string checkDisposition = dataRow["Check Disposition"].ToString();
+                string checkDisposition = (string.IsNullOrEmpty(disp) ? dataRow["Check Disposition"].ToString() : disp);
 
                 if (string.IsNullOrEmpty(interviewDate))
                 {

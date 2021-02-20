@@ -29,6 +29,22 @@ namespace OPIDDaily.DAL
             }
         }
 
+        public static Client IdentifyClient(Check check)
+        {
+            DateTime dob = check.DOB;
+            string lastName = Extras.StripSuffix(check.Name.ToUpper());
+
+            // Heuristic match: if client has same DOB and last names match, then return client.
+            // Else return null;
+            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            {
+                Client client = opidcontext.Clients.Where(c => c.DOB == dob && c.LastName.StartsWith(lastName)).SingleOrDefault();
+                return client;
+            }
+
+            return null;
+        }
+
         public static Client GetClient(int nowServing, RequestedServicesViewModel rsvm)
         {
             using (OpidDailyDB opidcontext = new OpidDailyDB())
