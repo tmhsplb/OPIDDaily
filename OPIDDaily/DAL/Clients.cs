@@ -17,15 +17,24 @@ namespace OPIDDaily.DAL
 
         public static int IdentifyClient(string lastName, string firstName, DateTime dob)
         {
-            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            try
             {
-                DateTime today = Extras.DateTimeToday();
-                string lname = Extras.StripSuffix(lastName.ToUpper());
-                Client client = opidcontext.Clients.Where(c => c.LastName.StartsWith(lname) && c.FirstName.StartsWith(firstName) && c.DOB == dob).SingleOrDefault();
+                using (OpidDailyDB opidcontext = new OpidDailyDB())
+                {
+                    DateTime today = Extras.DateTimeToday();
+                    string lname = Extras.StripSuffix(lastName.ToUpper());
+                    Client client = opidcontext.Clients.Where(c => c.LastName.StartsWith(lname) && c.FirstName.StartsWith(firstName) && c.DOB == dob).SingleOrDefault();
 
-                if (client == null) return 0;
+                    if (client == null) return 0;
 
-                return client.Id;
+                    return client.Id;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(string.Format("Could not identify client {0}, {1} DOB {2} Error: {3}", 
+                    lastName, firstName, dob.ToString("MM/dd/yyyy"), e.Message));
+                return 0;
             }
         }
 
@@ -36,13 +45,19 @@ namespace OPIDDaily.DAL
 
             // Heuristic match: if client has same DOB and last names match, then return client.
             // Else return null;
-            using (OpidDailyDB opidcontext = new OpidDailyDB())
+            try
             {
-                Client client = opidcontext.Clients.Where(c => c.DOB == dob && c.LastName.StartsWith(lastName)).SingleOrDefault();
-                return client;
+                using (OpidDailyDB opidcontext = new OpidDailyDB())
+                {
+                    Client client = opidcontext.Clients.Where(c => c.DOB == dob && c.LastName.StartsWith(lastName)).SingleOrDefault();
+                    return client;
+                }
             }
-
-            return null;
+            catch (Exception e)
+            {
+                Log.Error(string.Format("Could not identify client {0} DOB {1} Error {2}", check.Name, dob.ToString("MM/dd/yyyy"), e.Message));
+                return null;
+            }
         }
 
         public static Client GetClient(int nowServing, RequestedServicesViewModel rsvm)
@@ -635,7 +650,7 @@ namespace OPIDDaily.DAL
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                Log.Error(string.Format("Error processing client: {0}",  e.Message));
             }
 
         }

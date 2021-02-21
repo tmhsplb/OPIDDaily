@@ -118,7 +118,7 @@ namespace OPIDDaily.Utils
             catch (Exception e)
             {
                 Log.Error(string.Format("InsertNulls: RecordID = {0}, InterviewRecordID = {1} Name = {2}, {3}", rr.RecordID, rr.InterviewRecordID, rr.Lname, rr.Fname));
-                Log.Error(e.Message);
+                Log.Error(string.Format("Above error generated the following exception: {0}", e.Message));
             }
         }
 
@@ -153,7 +153,7 @@ namespace OPIDDaily.Utils
             {
                 // log the dataRow that failed
                 Log.Warn(string.Format("Bad new client record: RecordID = {0}, Name = {1}, {2}, DOB = {3}", recordID, lname, fname, dob));
-                Log.Error(e.Message);
+                Log.Error(string.Format("Above warning generated the following exception {0}", e.Message));
                 return null;
             }
         }
@@ -266,7 +266,7 @@ namespace OPIDDaily.Utils
             {
                 // log the dataRow that failed
                 Log.Warn(string.Format("Bad record (2): RecordID = {0}, InterviewRecordID = {1}, Name = {2}, {3}, DOB = {4}", recordID, interviewRecordID, lname, fname, dob));
-                Log.Error(e.Message);
+                Log.Error(string.Format("Above warning generated the following exception {0}", e.Message));
                 return null;
             }           
         }
@@ -330,7 +330,7 @@ namespace OPIDDaily.Utils
             {
                 // log the dataRow that failed
                 Log.Warn(string.Format("Bad tracking row:  Name = {0}, {1}, DOB = {2}", lname, fname, dob));
-                Log.Error(e.Message);
+                Log.Error(string.Format("Above warning generated the following exception: {0}", e.Message));
                 return null;
             }
         }

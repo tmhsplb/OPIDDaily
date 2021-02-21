@@ -10,7 +10,9 @@ using System.Web;
 namespace OPIDDaily.DAL
 {
     public class Visits
-    {        
+    {
+        private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(Clients));
+
         private static string MostRecentSender(int id)
         {
             // This method was too complicated to implement.  It was intended
@@ -309,21 +311,28 @@ namespace OPIDDaily.DAL
 
         public static void DeletePocketCheck(int nowServing, int id)
         {
-            using (OpidDailyDB opiddailycontext = new OpidDailyDB())
+            try
             {
-                Client client = opiddailycontext.Clients.Find(nowServing);
-
-                if (client != null)
+                using (OpidDailyDB opiddailycontext = new OpidDailyDB())
                 {
-                    PocketCheck pcheck = opiddailycontext.PocketChecks.Where(p => p.ClientId == nowServing).SingleOrDefault();
+                    Client client = opiddailycontext.Clients.Find(nowServing);
 
-                    if (pcheck != null)
+                    if (client != null)
                     {
-                        DeleteVisitNotes(pcheck.Id);
-                        opiddailycontext.PocketChecks.Remove(pcheck);
-                        opiddailycontext.SaveChanges();
+                        PocketCheck pcheck = opiddailycontext.PocketChecks.Where(p => p.ClientId == nowServing).SingleOrDefault();
+
+                        if (pcheck != null)
+                        {
+                            DeleteVisitNotes(pcheck.Id);
+                            opiddailycontext.PocketChecks.Remove(pcheck);
+                            opiddailycontext.SaveChanges();
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Error(string.Format("Could not delete client with id = {0} Error {1}", nowServing, e.Message));
             }
         }
 

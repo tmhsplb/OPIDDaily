@@ -24,28 +24,28 @@ namespace OPIDDaily.DAL
     {
         private static log4net.ILog Log = log4net.LogManager.GetLogger(typeof(CheckManager));
 
-        private static bool firstCall = true;
-      //  private static List<int> incidentals;
+        private static bool _firstCall = true;
+      //  private static List<int> _incidentals;
 
-        private static List<Check> newResearchChecks;
-        private static List<Check> newTrackingChecks;
-        private static List<CheckViewModel> resolvedChecks;
-        private static List<int> mistakenlyResolved;
-       // private static List<Check> typoChecks;
+        private static List<Check> _newResearchChecks;
+        private static List<Check> _newTrackingChecks;
+        private static List<CheckViewModel> _resolvedChecks;
+        private static List<int> _mistakenlyResolved;
+       // private static List<Check> _typoChecks;
 
         public static void Init()
         {
-            if (firstCall)
+            if (_firstCall)
             {
-             //   typoChecks = new List<Check>();
-                resolvedChecks = new List<CheckViewModel>();
-                mistakenlyResolved = new List<int>();
-                firstCall = false;
+             //   _typoChecks = new List<Check>();
+                _resolvedChecks = new List<CheckViewModel>();
+                _mistakenlyResolved = new List<int>();
+                _firstCall = false;
             }
 
-            newResearchChecks = new List<Check>();
-            newTrackingChecks = new List<Check>();
-            //  incidentals = new List<int>();
+            _newResearchChecks = new List<Check>();
+            _newTrackingChecks = new List<Check>();
+            //  _incidentals = new List<int>();
         }
 
         // Called only by BackOfficeController.GetResolvedChecks. Used to populate the display
@@ -53,20 +53,20 @@ namespace OPIDDaily.DAL
         public static IQueryable<CheckViewModel> GetResolvedChecksAsQueryable()
         {
             // The value of the class variable resolvedChecks is set by method GetResolvedChecks.
-            if (resolvedChecks == null)
+            if (_resolvedChecks == null)
             {
                 List<CheckViewModel> emptyList = new List<CheckViewModel>();
                 return emptyList.AsQueryable();
             }
 
-            return resolvedChecks.AsQueryable();
+            return _resolvedChecks.AsQueryable();
         }
 
         // Called only by FileDownloadController.GetImportRows.
         public static List<CheckViewModel> GetResolvedChecksAsList()
         {
-            // The value of the class variable resolvedChecks is set by method GetResolvedChecks.
-            return resolvedChecks;
+            // The value of the class variable _resolvedChecks is set by method GetResolvedChecks.
+            return _resolvedChecks;
         }
 
         public static void RebuildResearchChecksTable(List<DispositionRow> researchRows)
@@ -175,7 +175,7 @@ namespace OPIDDaily.DAL
                     break;
             }
 
-            newResearchChecks.Add(new Check
+            _newResearchChecks.Add(new Check
             {
                 RecordID = row.RecordID,
                 InterviewRecordID = row.InterviewRecordID,
@@ -312,12 +312,12 @@ namespace OPIDDaily.DAL
                 }
             }
 
-            return newResearchChecks;
+            return _newResearchChecks;
         }
 
         private static void NewTrackingCheck(TrackingRow row)
         {
-            newTrackingChecks.Add(new Check
+            _newTrackingChecks.Add(new Check
             {
                 RecordID = row.RecordID,
                 InterviewRecordID = row.InterviewRecordID,
@@ -347,7 +347,7 @@ namespace OPIDDaily.DAL
                 }
             }
 
-            return newTrackingChecks;
+            return _newTrackingChecks;
         }
 
         private static bool IsPocketCheck(Check check)
@@ -855,7 +855,7 @@ namespace OPIDDaily.DAL
 
             // Set the class variable resolvedChecks.
             // The value of this class variable is returned by methods GetResolvedChecksAsQueryable and GetResolvedChecksAsList.
-            resolvedChecks = resolved;
+            _resolvedChecks = resolved;
 
             return resolved;
         }
@@ -1381,13 +1381,13 @@ namespace OPIDDaily.DAL
 
         public static bool IsNewMistakenlyResolved(Check check)
         {
-            if (mistakenlyResolved.Contains(check.Num))
+            if (_mistakenlyResolved.Contains(check.Num))
             {
                 return false;
             }
             else
             {
-                mistakenlyResolved.Add(check.Num);
+                _mistakenlyResolved.Add(check.Num);
                 return check.Disposition.Equals("Mistakenly Resolved");
             }
         }
