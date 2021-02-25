@@ -211,6 +211,7 @@ namespace OPIDDaily.DAL
             return new PocketCheck
             {
                 ClientId = client.Id,
+                HH = client.HH,
                 Date = vvm.Date.AddHours(12),
                 Name = Clients.ClientBeingServed(client, false),
                 DOB = client.DOB,
@@ -252,7 +253,7 @@ namespace OPIDDaily.DAL
                 {                   
                     opiddailycontext.PocketChecks.Add(NewPocketCheck(client, vvm));
 
-                    // A pocket check must always have a corresponding check in the Rsearch Table,
+                    // A pocket check must always have a corresponding check in the Research Table,
                     // because Service Tickets are generated from the visit history in the Research
                     // table, not by using any pocket checks. So, when we add a new pocket check
                     // we must also add a new corresponding research check.

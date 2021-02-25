@@ -352,7 +352,7 @@ namespace OPIDDaily.DAL
 
         private static bool IsPocketCheck(Check check)
         {
-            return check.Num < 9999;
+            return 0 < check.Num && check.Num < 9999;
         }
                 
         private static void NewChecks(Check check, string checkDate, List<RCheck> rchecks, List<PocketCheck> pchecks)
@@ -399,6 +399,8 @@ namespace OPIDDaily.DAL
             return new PocketCheck
             {
                 ClientId = client.Id,
+                HeadOfHousehold = client.HeadOfHousehold,
+                HH = client.HH,
                 Date = (DateTime)check.Date,
                 Name = Clients.ClientBeingServed(client, false),
                 DOB = client.DOB,

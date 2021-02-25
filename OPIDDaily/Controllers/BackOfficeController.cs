@@ -45,7 +45,7 @@ namespace OPIDDaily.Controllers
 
             if (CheckManager.HasHistory(client.Id))
             {
-              //  client.EXP = false;
+                //  client.EXP = false;
                 return RedirectToAction("BackOfficeExistingClient");
             }
 
@@ -55,22 +55,6 @@ namespace OPIDDaily.Controllers
 
         public ActionResult BackOfficeExpressClient()
         {
-            /*
-            int nowServing = NowServing();
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
-            Client client = Clients.GetClient(nowServing, rsvm);
-        
-            ViewBag.ClientName = Clients.ClientBeingServed(client);
-            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
-            ViewBag.Age = client.Age;
-            ViewBag.Agency = GetClientAgencyName(client);
-            ViewBag.Notes = client.Notes;
-
-            // ServiceTicketBackButtonHelper("Get", rsvm);
-
-            return View("ExpressClient", rsvm);
-            */
-
             return RedirectToAction("PrepareBackOfficeExpressClient");
         }
 
@@ -90,29 +74,12 @@ namespace OPIDDaily.Controllers
             ViewBag.Age = client.Age;
             ViewBag.Agency = GetClientAgencyName(client);
            
-
             // ServiceTicketBackButtonHelper("Set", rsvm);
             return View("PrintExpressClient", rsvm);
         }
 
         public ActionResult BackOfficeExistingClient()
         {
-            /*
-            int nowServing = NowServing();
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
-            Client client = Clients.GetClient(nowServing, rsvm);
-          
-            ViewBag.ClientName = Clients.ClientBeingServed(client);
-            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
-            ViewBag.Age = client.Age;
-            ViewBag.Agency = GetClientAgencyName(client);
-            ViewBag.Notes = client.Notes;
-
-            // ServiceTicketBackButtonHelper("Get", rsvm);
-
-            return View("ExistingClient", rsvm);
-            */
-
             return RedirectToAction("PrepareBackOfficeExistingClient");
         }
                
@@ -157,31 +124,52 @@ namespace OPIDDaily.Controllers
             return View("PocketChecks");
         }
 
-        /*
-        public JsonResult GetUnresolvedPocketChecks(int page, int rows)
+        public ActionResult PocketChecksReport()
         {
-            int nowServing = NowServing();
+            return View("PocketChecksReport");
+        }
 
-            List<VisitViewModel> visits = Visits.GetUnresolvedPocketChecks(nowServing);
+        public JsonResult GetPocketChecks(int page, int rows)
+        {
+            List<PocketCheckViewModel> pchecks = PocketChecks.GetPocketChecks();
             int pageIndex = page - 1;
             int pageSize = rows;
-            int totalRecords = visits.Count;
+            int totalRecords = pchecks.Count;
             int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
 
-            visits = visits.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-            visits = visits.OrderBy(v => v.Date).ToList();
-
+            pchecks = pchecks.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+           
             var jsonData = new
             {
                 total = totalPages,
                 page,
                 records = totalRecords,
-                rows = visits
+                rows = pchecks
             };
 
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
-        */
+
+        public JsonResult GetDependentPocketChecks(int id, int page)
+        {
+            List<PocketCheckViewModel> dependentPocketChecks = PocketChecks.GetDependentPocketChecks(id);
+
+            var jsonData = new
+            {
+                total = 1,
+                page = page,
+                records = dependentPocketChecks.Count,
+                rows = dependentPocketChecks
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
+        public string EditPCRPocketCheck(PocketCheckViewModel pcvm)
+        {
+            PocketChecks.EditPocketCheck(pcvm);
+            return "Success";
+        }
 
         public ActionResult Resolved()
         {

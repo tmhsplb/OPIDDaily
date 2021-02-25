@@ -316,7 +316,7 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
-        public JsonResult GetPocketChecks(int page, int rows)
+        public JsonResult GetClientPocketChecks(int page, int rows)
         {
             int nowServing = NowServing();
 

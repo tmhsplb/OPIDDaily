@@ -1,7 +1,7 @@
 ﻿var rowsToColor = [];
 
 $("#historyGrid").jqGrid({
-    url: "GetPocketChecks", 
+    url: "GetClientPocketChecks", 
     datatype: "json",
     mtype: "Get",
     colNames: ['Id', 'Date', 'Item', 'Check', 'Status', 'Sender', 'Notes'],

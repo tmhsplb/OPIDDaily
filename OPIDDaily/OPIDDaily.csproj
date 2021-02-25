@@ -219,6 +219,7 @@
     <Compile Include="DAL\Identity.cs" />
     <Compile Include="DAL\DailyHub.cs" />
     <Compile Include="DAL\Merger.cs" />
+    <Compile Include="DAL\PocketChecks.cs" />
     <Compile Include="DAL\SessionHelper.cs" />
     <Compile Include="DAL\Users.cs" />
     <Compile Include="DAL\Visits.cs" />
@@ -365,6 +366,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202101261405456_Demographics.Designer.cs">
       <DependentUpon>202101261405456_Demographics.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202102251338310_PCHousehold.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202102251338310_PCHousehold.Designer.cs">
+      <DependentUpon>202102251338310_PCHousehold.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -400,6 +405,7 @@
     <Compile Include="Models\TextMsgViewModel.cs" />
     <Compile Include="Models\TrackingRow.cs" />
     <Compile Include="Models\VisitNoteModel.cs" />
+    <Compile Include="Models\PocketCheckViewModel.cs" />
     <Compile Include="Models\VisitViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -863,6 +869,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\clientsServed.js" />
+    <Content Include="Scripts\PocketChecks\PocketChecksReport.js" />
     <Content Include="Scripts\PocketChecks\FrontDeskPocketChecks.js" />
     <Content Include="Scripts\PocketChecks\InterviewerPocketChecks.js" />
     <Content Include="Scripts\PocketChecks\BackOfficePocketChecks.js" />
@@ -1007,6 +1014,7 @@
     <Content Include="Views\FrontDesk\DemographicInfo.cshtml" />
     <Content Include="Views\Interviewer\DemographicInfo.cshtml" />
     <Content Include="Views\BackOffice\PocketChecks.cshtml" />
+    <Content Include="Views\BackOffice\PocketChecksReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
@@ -1131,6 +1139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202101261405456_Demographics.resx">
       <DependentUpon>202101261405456_Demographics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202102251338310_PCHousehold.resx">
+      <DependentUpon>202102251338310_PCHousehold.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
