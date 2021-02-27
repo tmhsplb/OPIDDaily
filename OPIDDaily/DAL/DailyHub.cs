@@ -14,10 +14,10 @@ namespace OPIDDaily.DAL
             hubContext.Clients.All.refreshPage();
         }
 
-        public static void RefreshConversation(int nowServing, int messageCnt)
+        public static void RefreshConversation(int nowConversing, int messageCnt)
         {
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<DailyHub>();
-            hubContext.Clients.All.refreshConversation(nowServing, messageCnt);
+            hubContext.Clients.All.refreshConversation(nowConversing, messageCnt);
         }
 
         public static void OpenConversation()

@@ -40,7 +40,7 @@
            jQuery("#clientsGrid").jqGrid('setGridParam',
            {
                postData: {
-                   nowServing: nowServing,
+                   nowConversing: nowServing,
                    frontdesk: 1
                },
                url: "NowConversing"

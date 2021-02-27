@@ -1,0 +1,57 @@
+﻿@using OPIDDaily.Models
+@model Tuple<List<ClientViewModel>, RequestedServicesViewModel>
+
+
+
+@{
+    ViewBag.Title = "Print Service Ticket";
+    Layout = "~/Views/Shared/_CaseManager.cshtml";
+}
+
+    <div id="printerDiv">
+        <br />
+        <h1 align="center">Service Ticket</h1>
+        <br />
+        <h4>Client: @ViewBag.ClientName</h4>
+        <h4>Phone: @ViewBag.Phone&nbsp;&nbsp; Email: @ViewBag.Email</h4>
+        <h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+        @if (!string.IsNullOrEmpty(Model.Item2.Notes))
+        {
+          <h4>Notes:&nbsp;@Model.Item2.Notes</h4>
+        }
+        <br />
+
+        @if (Model.Item1.Count > 0)
+        {
+            <h4>Dependents:</h4>
+            <table id="dependents" width="100%">
+                <tr><th>First Name</th><th>Middle Name</th><th>Last Name</th><th>DOB</th><th>Age</th><th>Notes</th></tr>
+                @foreach (ClientViewModel cvm in Model.Item1)
+                {
+                  <tr>
+                    <td align="center" width="80">@cvm.FirstName</td>
+                    <td align="center" width="50">@cvm.MiddleName</td>
+                    <td align="center" width="80">@cvm.LastName</td>
+                    <td align="center" width="30">&nbsp;&nbsp; @cvm.DOB.ToShortDateString()</td>
+                    <td align="center" width="15">&nbsp;&nbsp; @cvm.Age</td>
+                    <td width="150">&nbsp;&nbsp;@cvm.Notes</td>
+                  </tr>
+                }
+            </table>
+        }
+
+
+        <br />
+        <h4>Agency: @ViewBag.Agency</h4>
+        <h4><strong>DISCLAIMER:</strong> Previous visits to Operation ID may make client ineligible for requested services.</h4>
+        <br />
+        @Html.Partial("_RequestedServices", Model.Item2)
+        <br />
+        @Html.Partial("_SupportingDocuments", Model.Item2)
+        <br /><br />
+        @Html.Partial("_CaseManagerSignatureBlock")
+    </div>
+<br />
+<center>
+    <button class="btn btn-primary hidden-print" onclick="printServiceTicket()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span>Print</button>
+</center>

@@ -17,9 +17,9 @@
         });
     };
 
-    theHub.client.refreshConversation = function (nowServing, messageCnt) {
+    theHub.client.refreshConversation = function (nowConversing, messageCnt) {
         var currentPage = jQuery("#conversationGrid").jqGrid('getGridParam', 'page');
-        var url = "GetConversation?page=pageToken&nowServing="+nowServing; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
+        var url = "GetConversation?page=pageToken&nowConversing="+nowConversing; // "@Url.Action("GetDashboard", "BackOffice", new { page = "pageToken" })";
         url = url.replace("pageToken", currentPage);
 
         if (messageCnt > 0) {

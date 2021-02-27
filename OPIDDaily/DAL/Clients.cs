@@ -457,11 +457,11 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static List<TextMsgViewModel> GetConversation(int nowServing)
+        public static List<TextMsgViewModel> GetConversation(int nowConversing)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
-                Client client = opiddailycontext.Clients.Find(nowServing);
+                Client client = opiddailycontext.Clients.Find(nowConversing);
 
                 opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
 
@@ -516,8 +516,8 @@ namespace OPIDDaily.DAL
                 DateTime today = Extras.DateTimeToday();
                 List<ClientViewModel> clientCVMS = new List<ClientViewModel>();
 
-                // An unexpired remote client will have c.ServiceDate != c.Expiry && c.Expiry >= today
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId == referringAgency && c.ServiceDate != c.Expiry && c.Expiry >= today && c.HH == 0).ToList();
+                // An unexpired remote client will have today <= c.Expiry
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.AgencyId == referringAgency && c.HH == 0 && today <= c.Expiry && c.Active == true).ToList();
                 clients = clients.OrderByDescending(c => c.ServiceDate).ToList();
 
                 foreach (Client client in clients)

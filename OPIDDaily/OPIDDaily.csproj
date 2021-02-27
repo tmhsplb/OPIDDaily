@@ -1015,6 +1015,7 @@
     <Content Include="Views\Interviewer\DemographicInfo.cshtml" />
     <Content Include="Views\BackOffice\PocketChecks.cshtml" />
     <Content Include="Views\BackOffice\PocketChecksReport.cshtml" />
+    <Content Include="Views\CaseManager\PrintServiceTicket.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />

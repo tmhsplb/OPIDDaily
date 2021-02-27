@@ -39,8 +39,8 @@ $("#clientsGrid").jqGrid({
             lastServed = nowServing;
 
             var clientsGrid = jQuery("#clientsGrid"),
-                selRowId = clientsGrid.jqGrid('getGridParam', 'selrow'),
-                hasConversation = clientsGrid.jqGrid('getCell', selRowId, 'Conversation');
+               // selRowId = clientsGrid.jqGrid('getGridParam', 'selrow'),
+                hasConversation = clientsGrid.jqGrid('getCell', nowServing, 'Conversation');
 
             if (hasConversation == "Y") {
                 jQuery("#conversation").removeClass("hideConversation");
@@ -51,7 +51,7 @@ $("#clientsGrid").jqGrid({
             jQuery("#clientsGrid").jqGrid('setGridParam',
                 {
                     postData:
-                    { nowServing: nowServing },
+                    { nowConversing: nowServing },
                     url: "NowConversing", // "@Url.Action("NowServing", "CaseManager")"
                     }).trigger('reloadGrid', { fromServer: true });
         }
@@ -176,13 +176,13 @@ $("#clientsGrid").jqGrid({
 jQuery("#clientsGrid").jqGrid('navGrid', '#clientsPager', { edit: true, add: true, del: true, search: false, refresh: false },
     {
         zIndex: 100,
-        url: "EditMyClient", // "@Url.Action("EditClient", "CaseManager")",
+        url: "EditMyClient", // "@Url.Action("EditMyClient", "CaseManager")",
         closeOnEscape: true,
         closeAfterEdit: true,
         recreateForm: true,
 
         afterComplete: function (response) {
-            if (response.responseText == "Success") {
+            if (response.responseText == "OpenConversation") {
                 var theHub = $.connection.dailyHub;
                 theHub.client.openConversation();
             }

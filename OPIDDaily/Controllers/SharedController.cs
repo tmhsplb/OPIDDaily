@@ -32,15 +32,15 @@ namespace OPIDDaily.Controllers
             SessionHelper.Set("NowServing", nowServing.ToString());
         }
 
-        public JsonResult NowConversing(SearchParameters sps, int page, int frontdesk = 0, int? nowServing = 0, int? rows = 15)
+        public JsonResult NowConversing(SearchParameters sps, int page, int frontdesk = 0, int? nowConversing = 0, int? rows = 15)
         {
-          // Log.Debug(string.Format("Enter NowConversing: nowServing = {0}", nowServing));
+          // Log.Debug(string.Format("Enter NowConversing: nowConversing = {0}", nowConversing));
 
             int agencyId = ReferringAgency();
             int msgCnt = Convert.ToInt32(SessionHelper.Get("MsgCnt"));
 
-            SessionHelper.Set("NowServing", nowServing.ToString());
-                     
+            NowServing(nowConversing);
+                                  
             List<ClientViewModel> clients;
 
             if (agencyId == 0)
@@ -69,7 +69,7 @@ namespace OPIDDaily.Controllers
            
             //  Log.Debug(string.Format("NowConversing: page = {0}, rows = {1}, totalPages = {2}", page, rows, totalPages));
 
-            DailyHub.RefreshConversation((int)nowServing, msgCnt);
+            DailyHub.RefreshConversation((int)nowConversing, msgCnt);
 
             var jsonData = new
             {
@@ -901,23 +901,18 @@ namespace OPIDDaily.Controllers
             return "Failure";
         }
 
-        public ActionResult GetConversation(int page, int? nowServing = 0, int? rows = 20)
+        public ActionResult GetConversation(int page, int? nowConversing = 0, int? rows = 20)
         {
-           // Log.Debug(string.Format("Enter GetConversation: nowServing = {0}", nowServing));
-
-            if (nowServing == 0)
-            {
-                nowServing = NowServing();
-               // Log.Debug(string.Format("Reset GetConversation: nowServing = {0}", nowServing));
-            }
-
-            if (nowServing == 0)
+            // Log.Debug(string.Format("Enter GetConversation: nowConversing = {0}", nowConversing));
+            int nowServing = NowServing(); ; 
+             
+            if (nowServing != nowConversing)
             {
               //  Log.Debug("No conversation!");
                 return null;
             }
 
-            List <TextMsgViewModel> texts = Clients.GetConversation((int)nowServing);
+            List <TextMsgViewModel> texts = Clients.GetConversation((int)nowConversing);
 
             int pageIndex = page - 1;
             int pageSize = (int)rows;

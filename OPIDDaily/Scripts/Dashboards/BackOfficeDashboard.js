@@ -51,7 +51,7 @@ $("#dashboardGrid").jqGrid({
                   
             jQuery("#dashboardGrid").jqGrid('setGridParam',
                 {
-                    postData: { nowServing: nowServing },
+                    postData: { nowConversing: nowServing },
                     url: "NowConversing",
                 }).trigger('reloadGrid', { fromServer: true });
         }

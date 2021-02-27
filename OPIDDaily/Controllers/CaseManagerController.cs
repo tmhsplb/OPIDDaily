@@ -33,7 +33,7 @@ namespace OPIDDaily.Controllers
             return View("Clients");
         }
 
-        public JsonResult GetMyClients(int page, int? rows = 25)
+        public JsonResult GetMyClients(int page, int? rows = 15)
         {
             int referringAgency = ReferringAgency();
             List<ClientViewModel> clients = Clients.GetMyClients(referringAgency);
@@ -86,6 +86,12 @@ namespace OPIDDaily.Controllers
             SessionHelper.Set("NowServing", id.ToString());
 
             DailyHub.Refresh();
+
+            if (!string.IsNullOrEmpty(cvm.Conversation) && cvm.Conversation.Equals("Y"))
+            {
+                return "OpenConversation";
+            }
+
             return "Success";
         }
 
@@ -176,7 +182,7 @@ namespace OPIDDaily.Controllers
             return RedirectToAction("ManageClients", "CaseManager");
         }
                  
-        public ActionResult PrepareVoucher()
+        public ActionResult PrepareServiceTicket()
         {
             int nowServing = NowServing();
 
@@ -201,16 +207,16 @@ namespace OPIDDaily.Controllers
             ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");
             ViewBag.Expiry = client.Expiry.ToString("ddd MMM d, yyyy");
                          
-            ViewBag.ClientName = Clients.ClientBeingServed(client);
+            ViewBag.ClientName = Clients.ClientBeingServed(client, false);
             ViewBag.BirthName = client.BirthName;
-            ViewBag.AKA = client.AKA;
+            
 
-            ViewBag.CurrentAddress = Clients.ClientAddress(client);
-            ViewBag.Phone = (!string.IsNullOrEmpty(client.Phone) ? client.Phone : "none given");
-            ViewBag.Email = (!string.IsNullOrEmpty(client.Email) ? client.Email : "none available");
+           // ViewBag.CurrentAddress = Clients.ClientAddress(client);
+            ViewBag.Phone = (!string.IsNullOrEmpty(client.Phone) ? client.Phone : "N/A");
+            ViewBag.Email = (!string.IsNullOrEmpty(client.Email) ? client.Email : "N/A");
 
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
-            ViewBag.BirthPlace = Clients.GetBirthplace(client);
+           // ViewBag.BirthPlace = Clients.GetBirthplace(client);
             ViewBag.Age = client.Age;
             ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);  // rsvm.Agency will be the Id of an Agency as a string
 
@@ -219,7 +225,8 @@ namespace OPIDDaily.Controllers
             var objTuple = new Tuple<List<ClientViewModel>, RequestedServicesViewModel>(dependents, rsvm);
 
             //  VoucherBackButtonHelper("Set", rsvm);
-            return View("PrintVoucher", objTuple);
+           // return View("PrintVoucher", objTuple);
+            return View("PrintServiceTicket", objTuple);
         }
     }
 }
