@@ -163,6 +163,7 @@ namespace OPIDDaily.DAL
 
               //  EXP = (client.EXP == true ? "Y" : string.Empty),
                 PND = (client.PND == true ? "Y" : string.Empty),
+                LCK = (client.LCK == true ? "Y" : string.Empty),
                 XID = (client.XID == true ? "Y" : string.Empty),
                 XBC = (client.XBC == true ? "Y" : string.Empty),
              //   History = (hasHistory ? "Y" : string.Empty),
@@ -174,6 +175,24 @@ namespace OPIDDaily.DAL
             };
 
             return cvm;
+        }
+
+        private static bool LockOrUnLock(Client client, string lockState)
+        {
+            bool lockStatus = client.LCK;
+
+            if (string.IsNullOrEmpty(lockState))
+            {
+                return lockStatus;
+            }
+            else if (lockState.Equals("''"))
+            {
+                lockStatus = (lockStatus == true ? false : true);
+                return lockStatus;
+            }
+
+            // Must have lockState.Equals("Y"), so return true
+            return true;
         }
 
         private static void ClientViewModelToClientEntity(ClientViewModel cvm, Client client)
@@ -194,6 +213,7 @@ namespace OPIDDaily.DAL
 
             // client.EXP = (cvm.EXP.Equals("Y") ? true : false);
             client.PND = (client.PND ? true : (!string.IsNullOrEmpty(cvm.PND) && cvm.PND.Equals("Y")) ? true : false);
+            client.LCK = LockOrUnLock(client, cvm.LCK);
             client.XID = (cvm.XID.Equals("Y") ? true : false);
             client.XBC = (cvm.XBC.Equals("Y") ? true : false);
             client.Msgs = cvm.Msgs;
@@ -463,19 +483,24 @@ namespace OPIDDaily.DAL
             {
                 Client client = opiddailycontext.Clients.Find(nowConversing);
 
-                opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
-
-                List<TextMsgViewModel> texts = new List<TextMsgViewModel>();
-
-                foreach (TextMsg textMsg in client.TextMsgs)
+                if (client != null)
                 {
-                    if (textMsg.Vid == 0)
+                    opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
+
+                    List<TextMsgViewModel> texts = new List<TextMsgViewModel>();
+
+                    foreach (TextMsg textMsg in client.TextMsgs)
                     {
-                        texts.Add(TextMsgToTextMsgViewModel(textMsg));
+                        if (textMsg.Vid == 0)
+                        {
+                            texts.Add(TextMsgToTextMsgViewModel(textMsg));
+                        }
                     }
+
+                    return texts;
                 }
 
-                return texts;
+                return null;
             }
         }
 

@@ -41,7 +41,7 @@ namespace OPIDDaily.Models
         [Display(Name = "Pre-approved")]
         public bool PreApprovedBC { get; set; }
 
-        [Display(Name = "MBVD")]
+        [Display(Name = "Out-of-state BC")]
         public bool MBVD { get; set; }
 
         [Display(Name = "Pre-approved")]
@@ -122,7 +122,7 @@ namespace OPIDDaily.Models
         [Display(Name = "Service Letter")]
         public bool SDSL { get; set; }
 
-        [Display(Name = "DD214")]
+        [Display(Name = "DD-214")]
         public bool SDDD214 { get; set; }
 
         [Display(Name = "Gold Card")]

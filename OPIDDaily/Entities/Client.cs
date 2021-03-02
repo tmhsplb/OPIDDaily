@@ -37,7 +37,7 @@ namespace OpidDailyEntities
         public int Age { get; set; }
 
         public string AKA { get; set; }
-
+ 
         public string Email { get; set; }
 
         public string BirthCity { get; set; }
@@ -146,9 +146,9 @@ namespace OpidDailyEntities
 
         public string Disabled { get; set; }
 
-        public bool EXP { get; set; }
-
         public bool PND { get; set; }
+
+        public bool LCK { get; set; }
 
         public bool XID { get; set; }
 

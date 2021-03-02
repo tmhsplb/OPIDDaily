@@ -222,7 +222,7 @@ namespace OPIDDaily.Controllers
             int id = Clients.EditClient(cvm);
 
             // Edited client becomes the client being served.
-            SessionHelper.Set("NowServing", id.ToString());
+            NowServing(id);
 
             DailyHub.Refresh(); 
             
@@ -906,7 +906,7 @@ namespace OPIDDaily.Controllers
             // Log.Debug(string.Format("Enter GetConversation: nowConversing = {0}", nowConversing));
             int nowServing = NowServing(); ; 
              
-            if (nowServing != nowConversing)
+            if (nowConversing == 0 || nowServing != nowConversing)
             {
               //  Log.Debug("No conversation!");
                 return null;

@@ -36,10 +36,10 @@ namespace OPIDDaily.Models
         public string sDOB { get; set; }
 
         public int Age { get; set; }
-
-        public string EXP { get; set; }
-
+ 
         public string PND { get; set; }
+
+        public string LCK { get; set; }
 
         public string XID { get; set; }
 

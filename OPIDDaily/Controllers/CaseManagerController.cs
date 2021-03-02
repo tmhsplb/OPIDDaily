@@ -5,6 +5,7 @@ using OpidDailyEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
  
@@ -72,7 +73,7 @@ namespace OPIDDaily.Controllers
             // Newly added client becomes the client being served.
             // Entity Framework will set client.Id to the Id of the inserted client.
             // See: https://stackoverflow.com/questions/5212751/how-can-i-get-id-of-inserted-entity-in-entity-framework
-            SessionHelper.Set("NowServing", id.ToString());
+            NowServing(id);
 
             DailyHub.Refresh();
             return "Success";
@@ -83,7 +84,7 @@ namespace OPIDDaily.Controllers
             int id = Clients.EditMyClient(cvm);
 
             // Edited client becomes the client being served.
-            SessionHelper.Set("NowServing", id.ToString());
+            NowServing(id);
 
             DailyHub.Refresh();
 
@@ -127,6 +128,12 @@ namespace OPIDDaily.Controllers
                 return View("Warning");
             }
 
+            if (client.LCK)
+            {
+                ViewBag.Warning = "Operation ID has currently locked Service Requests for this client.";
+                return View("Warning");
+            }
+
             if (CheckManager.HasHistory(client.Id))
             {
                 //client.EXP = false;
@@ -165,23 +172,82 @@ namespace OPIDDaily.Controllers
             return View("ExistingClientServiceRequest", rsvm);
         }
 
+        private bool RequestingBothTIDandTDL(RequestedServicesViewModel rsvm)
+        {
+            bool tid = rsvm.NewTID || rsvm.ReplacementTID;
+            bool tdl = rsvm.NewTDL || rsvm.ReplacementTDL;
+
+            return tid && tdl;
+        }
+
+        private string ServiceRequestError(RequestedServicesViewModel rsvm)
+        {
+            string error = string.Empty;
+
+            if (RequestingBothTIDandTDL(rsvm))
+            {
+                error = "By Texas State Law no resident may possess both an ID and a DL.";
+            }
+            else if (rsvm.MBVD)
+            {
+                error = "Sorry, Operation ID cannot currently process a request for an out-of-state birth certificate.";
+            }
+
+            return error;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult StoreServiceRequest(RequestedServicesViewModel rsvm)
+        public ActionResult StoreExpressServiceRequest(RequestedServicesViewModel rsvm)
         {
-            // Called when either
+            // Called when 
             //   ~/Views/CaseManager/ExpressClientServiceRequest.cshtml
-            // or
-            //   ~/Views/CaseManager/ExistingClientServiceRequest.cshtml
-            // posts to server. In both cases rsvm contains both requested services
+            // posts to server. rsvm will contain both requested services
             // and supporting documents.
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, null);  // pass null so the supporting documents won't be erased
+            string serviceRequestError = ServiceRequestError(rsvm);
+
+            if (!string.IsNullOrEmpty(serviceRequestError))
+            {
+                ViewBag.ClientName = Clients.ClientBeingServed(client);
+                ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+                ViewBag.Age = client.Age;
+                ModelState.AddModelError("ServiceRequestError",  serviceRequestError);
+                return View("ExpressClientServiceRequest", rsvm);
+            }
+
             Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
             return RedirectToAction("ManageClients", "CaseManager");
         }
-                 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult StoreExistingServiceRequest(RequestedServicesViewModel rsvm)
+        {
+            // Called when          
+            //    ~/Views/CaseManager/ExistingClientServiceRequest.cshtml
+            // posts to server. rsvm will contain both requested services
+            // and supporting documents.
+            int nowServing = NowServing();
+            Client client = Clients.GetClient(nowServing, null);  // pass null so the supporting documents won't be erased
+            string serviceRequestError = ServiceRequestError(rsvm);
+
+            if (!string.IsNullOrEmpty(serviceRequestError))
+            {
+                ViewBag.ClientName = Clients.ClientBeingServed(client);
+                ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+                ViewBag.Age = client.Age;
+                ModelState.AddModelError("ServiceRequesstError", serviceRequestError);
+                return View("ExistingClientServiceRequest", rsvm);
+            }
+
+            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
+            PrepareClientNotes(client, rsvm);
+            return RedirectToAction("ManageClients", "CaseManager");
+        }
+
         public ActionResult PrepareServiceTicket()
         {
             int nowServing = NowServing();

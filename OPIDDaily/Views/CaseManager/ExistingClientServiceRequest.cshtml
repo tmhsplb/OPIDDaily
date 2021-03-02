@@ -9,16 +9,7 @@
 
 <br /><br /><br />
 
-<div>
-    <table id="historyGrid"></table>
-    <div id="historyPager"></div>
-</div>
-
-<div>
-    <table id="historyGrid"></table>
-    <div id="historyPager"></div>
-</div>
-
+ 
 <link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
 
 <script src="@Url.Content("~/Scripts/i18n/grid.locale-en.js")" type="text/javascript"></script>
@@ -50,9 +41,12 @@
 <div class="row">
     <div class="col-md-12">
         <section id="voucherForm">
-            @using (Html.BeginForm("StoreServiceRequest", "CaseManager", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("StoreExistingServiceRequest", "CaseManager", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
+
+                @Html.ValidationMessage("ServiceRequestError", new { @class = "text-danger" })
+
                 @Html.Hidden("AgencyId", Model.AgencyId)
                 @Html.Partial("_CaseManagerRequestedServicesForm", Model)
 

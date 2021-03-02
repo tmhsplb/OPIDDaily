@@ -7,7 +7,7 @@ $("#dashboardGrid").jqGrid({
     datatype: "json",
     pageable: true,
     mtype: "Get",
-    colNames: ['Id', 'CM', 'Agency', 'Expires', 'Stage', 'C', 'H', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'XID', 'XBC', 'MSG', 'Notes'],
+    colNames: ['Id', 'CM', 'Agency', 'Expires', 'Stage', 'C', 'H', 'Last Name', 'First Name', 'Middle Name', 'Birth Name', 'DOB', 'Age', 'ACK', 'LCK', 'XID', 'XBC', 'MSG', 'Notes'],
     colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'ServiceTicket', index: 'ServiceTicket', width: 50, editable: true, sortable: true, search: false },
@@ -23,6 +23,7 @@ $("#dashboardGrid").jqGrid({
         { key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 120, editable: true, sortable: true, search: false },
         { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: true, search: false },
         { name: 'PND', index: 'PND', align: 'center', width: 50, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
+        { name: 'LCK', index: 'LCK', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
         { name: 'XID', index: 'XID', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
         { name: 'XBC', index: 'XBC', align: 'center', width: 50, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" }, search: false },
         { key: false, hidden: true, name: 'MSG', index: 'MSG', width: 80, formatter: rowColorFormatter, editable: false, sortable: false, search: false },

@@ -70,7 +70,7 @@ namespace OPIDDaily.DAL
             {
                 Id = ancientCheck.Id,
                 Date = date.AddHours(12),
-                Conversation = (HavingConversation(ancientCheck.Id) ? "Y" : string.Empty),
+              //  Conversation = (HavingConversation(ancientCheck.Id) ? "Y" : string.Empty),
                 Item = NormalizedService(ancientCheck.Service),
                 Check = (ancientCheck.Num == 0 ? string.Empty : ancientCheck.Num.ToString()),
                 Status = ancientCheck.Disposition,
@@ -97,7 +97,7 @@ namespace OPIDDaily.DAL
             {
                 Id = rcheck.Id,
                 Date = date.AddHours(12),
-                Conversation = (HavingConversation(rcheck.Id) ? "Y" : string.Empty),
+              //  Conversation = (HavingConversation(rcheck.Id) ? "Y" : string.Empty),
                 Item = NormalizedService(rcheck.Service),
                 Check = (rcheck.Num == 0 ? string.Empty: rcheck.Num.ToString()),
                 Status = rcheck.Disposition,
@@ -112,7 +112,7 @@ namespace OPIDDaily.DAL
             {
                 Id = pcheck.Id,
                 Date = pcheck.Date,
-                Conversation = (HavingConversation(pcheck.Id) ? "Y" : string.Empty),
+              //  Conversation = (HavingConversation(pcheck.Id) ? "Y" : string.Empty),
                 Item = pcheck.Item,
                 Check = pcheck.Num.ToString(),
                 Status = pcheck.Disposition,
@@ -145,7 +145,6 @@ namespace OPIDDaily.DAL
                     {
                         visits.Add(RCheckToVisitViewModel(rcheck, msgs));
                     }
-
                  
                     // Make sure that visits are listed by ascending date
                     visits = visits.OrderBy(v => v.Date).ToList();
@@ -212,7 +211,7 @@ namespace OPIDDaily.DAL
             {
                 ClientId = client.Id,
                 HH = client.HH,
-                Date = vvm.Date.AddHours(12),
+                Date = vvm.Date.AddHours(12),  
                 Name = Clients.ClientBeingServed(client, false),
                 DOB = client.DOB,
                 Item = vvm.Item,
@@ -275,6 +274,7 @@ namespace OPIDDaily.DAL
 
                     if (ancientCheck != null)
                     {
+                        ancientCheck.Date = vvm.Date;
                         ancientCheck.Num = Convert.ToInt32(vvm.Check);
                         ancientCheck.Service = vvm.Item;
                         ancientCheck.Disposition = vvm.Status;
@@ -287,6 +287,7 @@ namespace OPIDDaily.DAL
 
                     if (rcheck != null)
                     {
+                        rcheck.Date = vvm.Date;
                         rcheck.Num = Convert.ToInt32(vvm.Check);
                         rcheck.Service = vvm.Item;
                         rcheck.Disposition = vvm.Status;
@@ -299,13 +300,14 @@ namespace OPIDDaily.DAL
 
                     if (pcheck != null)
                     {
+                        pcheck.Date = vvm.Date;
                         pcheck.Item = vvm.Item;
                         pcheck.Num = Convert.ToInt32(vvm.Check);
                         pcheck.Disposition = vvm.Status;
                         pcheck.Notes = vvm.Notes;
                         opiddailycontext.SaveChanges();
                         return;
-                    }        
+                    }
                 }
             }
         }

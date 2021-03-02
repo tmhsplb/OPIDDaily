@@ -2,11 +2,11 @@
     url:"GetVisitHistory", // "@Url.Action("GetHistory", "Interviewer")",
     datatype: "json",
     mtype: "Get",
-    colNames: ['Id', 'Date', 'C', 'Item', 'Check', 'Status', 'Notes'],
+    colNames: ['Id', 'Date', 'Item', 'Check', 'Status', 'Notes'],
     colModel: [
         { key: false, hidden: true, name: 'Id', index: 'Id' },  // Id may not be unique
         { key: false, align: 'center', name: 'Date', index: 'Date', formatter: 'date', width: 80, editable: false, sortable: true, search: false },
-        { key: false, name: 'Conversation', index: 'Conversation', width: 35, align: 'center', editable: false, edittype: "checkbox", editoptions: { value: "Y:''" }, sortable: false, search: false },
+      //  { key: false, name: 'Conversation', index: 'Conversation', width: 35, align: 'center', editable: false, edittype: "checkbox", editoptions: { value: "Y:''" }, sortable: false, search: false }, 
         { key: false, name: 'Item', index: 'Item', width: 80, editable: true, sortable: false, search: false },
         { key: false, name: 'Check', index: 'Check', width: 80, editable: true, sortable: false, search: false },
         { key: false, name: 'Status', index: 'Status', width: 100, editable: true, edittype: 'select', editoptions: { value: { '': '', 'Cleared': 'Cleared', 'Voided': 'Voided', 'Voided/No Reissue': 'Voided/No Reissue', 'Voided/Resissued': 'Voided/Reissued', 'Voided/Replaced': 'Voided/Replaced' } }, sortable: false, search: false },
