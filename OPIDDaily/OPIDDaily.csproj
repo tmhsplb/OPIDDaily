@@ -374,6 +374,10 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202103021443197_LockClient.Designer.cs">
       <DependentUpon>202103021443197_LockClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202103032141491_InHouseTexts.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202103032141491_InHouseTexts.Designer.cs">
+      <DependentUpon>202103032141491_InHouseTexts.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
@@ -1150,6 +1154,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202103021443197_LockClient.resx">
       <DependentUpon>202103021443197_LockClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202103032141491_InHouseTexts.resx">
+      <DependentUpon>202103032141491_InHouseTexts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

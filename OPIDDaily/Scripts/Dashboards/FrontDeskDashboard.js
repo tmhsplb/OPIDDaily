@@ -99,7 +99,7 @@ $("#dashboardGrid").jqGrid({
             mtype: 'post',
             editurl: "Dummy", // "@Url.Action("Dummy", "FrontDesk")",
             cellsubmit: 'clientArray',
-            colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', /* 'ACK', */ 'XID', 'XBC', 'Notes'],
+            colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', 'XID', 'XBC', 'Notes'],
             colModel: [
                 { key: true, hidden: true, name: 'Id', index: 'Id', editable: true },
                 { key: false, name: 'FirstName', index: 'FirstName', width: 100, editable: true },
@@ -109,7 +109,6 @@ $("#dashboardGrid").jqGrid({
                // { key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width: 120, editable: true },
                 { key: false, align: 'center', name: 'sDOB', index: 'sDOB', width: 120, editable: true, search: false },
                 { key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: false, search: false },
-              //  { name: 'PND', index: 'PND', align: 'center', width: 35, editable: false, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { name: 'XID', index: 'XID', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
                 { key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
@@ -175,10 +174,10 @@ function rowColorFormatter(cellValue, options, rowObject) {
     if (cellValue != null && cellValue == "END") {
         // End of conversation. Turn coloring off.
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#000000" };  // black
-    } else if (cellValue != null && (cellValue == "FromAgency" || cellValue == "FromOPID" || cellValue == "FromInterviewer")) {
+    } else if (cellValue != null && (cellValue == "FromAgency" || cellValue == "FromOPID" || cellValue == "IHFromOPID" || cellValue == "FromInterviewer" || cellValue == "IHFromInterviewer")) {
         // alert("cellValue == FromAgency");
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#00FF00" };  // green
-    } else if (cellValue != null && cellValue == "FromFrontDesk") {
+    } else if (cellValue != null && (cellValue == "FromFrontDesk" || cellValue == "IHFromFrontDesk")) {
         // alert("cellValue == FromOPID");
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#FF0000" };  // red
     } else if (cellValue != null && cellValue == "StageChange") {

@@ -93,6 +93,11 @@ namespace OPIDDaily.Controllers
             return user.AgencyId;
         }
 
+        private int AgencyOfUser()
+        {
+            return ReferringAgency();
+        }
+
         public string GetClientAgencyName(Client client)
         {
             if (!string.IsNullOrEmpty(client.AgencyName))
@@ -912,7 +917,9 @@ namespace OPIDDaily.Controllers
                 return null;
             }
 
-            List <TextMsgViewModel> texts = Clients.GetConversation((int)nowConversing);
+            int agencyId = AgencyOfUser();
+
+            List <TextMsgViewModel> texts = Clients.GetConversation((int)nowConversing, agencyId);
 
             int pageIndex = page - 1;
             int pageSize = (int)rows;

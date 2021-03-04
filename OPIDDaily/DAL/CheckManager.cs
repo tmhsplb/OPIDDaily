@@ -352,7 +352,11 @@ namespace OPIDDaily.DAL
 
         private static bool IsPocketCheck(Check check)
         {
-            return 0 < check.Num && check.Num < 9999;
+            // Depends on Disposition which must be undetermined (NullOrEmpty) here.
+            // This prevents creating a Pocket Check for a check of known disposition
+            // during a cross-load.
+            // See PocketChecks.IsPocketCheck where the definition DOES NOT depend on disposition. 
+            return string.IsNullOrEmpty(check.Disposition) && 0 < check.Num && check.Num < 9999;
         }
                 
         private static void NewChecks(Check check, string checkDate, List<RCheck> rchecks, List<PocketCheck> pchecks)

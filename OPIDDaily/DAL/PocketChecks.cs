@@ -28,6 +28,9 @@ namespace OPIDDaily.DAL
 
         private static bool IsPocketCheck(PocketCheck pcheck)
         {
+            // Does not depend on Disposition, which might not be determined yet.
+            // It's still a pocket check based on check number alone.
+            // See CheckManager.PocketCheck which DOES depend on disposition.
             return 0 < pcheck.Num && pcheck.Num < 9999;
         }
 

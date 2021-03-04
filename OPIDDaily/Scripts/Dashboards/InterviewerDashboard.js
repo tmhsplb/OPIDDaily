@@ -172,10 +172,10 @@ function rowColorFormatter(cellValue, options, rowObject) {
     if (cellValue != null && cellValue == "END") {
         // End of conversation. Turn coloring off.
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#000000" };  // black
-    } else if (cellValue != null && cellValue == "FromAgency" || cellValue == "FromOPID" || cellValue == "FromFrontDesk") {
+    } else if (cellValue != null && cellValue == "FromAgency" || cellValue == "FromOPID" || cellValue == "IHFromOPID" || cellValue == "FromFrontDesk" || cellValue == "IHFromFrontDesk") {
         // alert("cellValue == FromAgency");
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#00FF00" };  // green
-    } else if (cellValue != null && (cellValue == "FromInterviewer")) {
+    } else if (cellValue != null && (cellValue == "FromInterviewer" || cellValue == "IHFromInterviewer")) {
         // alert("cellValue == FromOPID");
         rowsToColor[rowsToColor.length] = { rowId: rowObject.Id, rowColor: "#FF0000" };  // red
     } else if (cellValue != null && cellValue == "StageChange") {

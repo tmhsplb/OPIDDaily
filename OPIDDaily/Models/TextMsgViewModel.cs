@@ -10,6 +10,8 @@ namespace OPIDDaily.Models
 
         public int Id { get; set; }
 
+        public string InHouse { get; set; }
+
         public DateTime Date { get; set; }
 
         public string From { get; set; }

@@ -11,6 +11,8 @@ namespace OpidDailyEntities
         [Key]
         public int Id { get; set; }
 
+        public bool InHouse { get; set; }
+
         public DateTime Date { get; set; }
 
         public string From { get; set; }

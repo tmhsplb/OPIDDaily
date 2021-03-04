@@ -161,38 +161,17 @@ namespace OPIDDaily.DAL
                 Age = client.Age,
                 AgencyName = (!string.IsNullOrEmpty(client.AgencyName) ? client.AgencyName : Agencies.GetAgencyName(client.AgencyId)),
 
-              //  EXP = (client.EXP == true ? "Y" : string.Empty),
                 PND = (client.PND == true ? "Y" : string.Empty),
                 LCK = (client.LCK == true ? "Y" : string.Empty),
                 XID = (client.XID == true ? "Y" : string.Empty),
                 XBC = (client.XBC == true ? "Y" : string.Empty),
-             //   History = (hasHistory ? "Y" : string.Empty),
-
+            
                 MSG = msg,
                 Msgs = client.Msgs,
-
                 Notes = client.Notes
             };
 
             return cvm;
-        }
-
-        private static bool LockOrUnLock(Client client, string lockState)
-        {
-            bool lockStatus = client.LCK;
-
-            if (string.IsNullOrEmpty(lockState))
-            {
-                return lockStatus;
-            }
-            else if (lockState.Equals("''"))
-            {
-                lockStatus = (lockStatus == true ? false : true);
-                return lockStatus;
-            }
-
-            // Must have lockState.Equals("Y"), so return true
-            return true;
         }
 
         private static void ClientViewModelToClientEntity(ClientViewModel cvm, Client client)
@@ -213,7 +192,7 @@ namespace OPIDDaily.DAL
 
             // client.EXP = (cvm.EXP.Equals("Y") ? true : false);
             client.PND = (client.PND ? true : (!string.IsNullOrEmpty(cvm.PND) && cvm.PND.Equals("Y")) ? true : false);
-            client.LCK = LockOrUnLock(client, cvm.LCK);
+            client.LCK = (string.IsNullOrEmpty(cvm.LCK) || cvm.LCK.Equals("''")) ? false : true;
             client.XID = (cvm.XID.Equals("Y") ? true : false);
             client.XBC = (cvm.XBC.Equals("Y") ? true : false);
             client.Msgs = cvm.Msgs;
@@ -385,6 +364,7 @@ namespace OPIDDaily.DAL
                 Date = textMsg.Date,
                 From = textMsg.From,
                 To = textMsg.To,
+                InHouse = textMsg.InHouse ? "Y" : string.Empty,
                 Msg = textMsg.Msg
             };
         }
@@ -393,9 +373,10 @@ namespace OPIDDaily.DAL
         {
             return new TextMsg
             {
-                Date = Extras.DateTimeToday(),
+                Date = Extras.DateTimeToday().AddHours(12),
                 From = textMsg.From,
                 To = textMsg.To,
+                InHouse = (string.IsNullOrEmpty(textMsg.InHouse) || textMsg.InHouse.Equals("''")) ? false : true,
                 Msg = textMsg.Msg
             };
         }
@@ -406,7 +387,7 @@ namespace OPIDDaily.DAL
             return (msg.Equals("END") || msg.Equals("DONE") || msg.Equals("OVER"));
         }
 
-        private static void PrependMsg(Client client, string sender, string textMsg)
+        private static void PrependMsg(Client client, string sender, string textMsg, bool inHouse)
         {
             string msg;
 
@@ -416,7 +397,7 @@ namespace OPIDDaily.DAL
             }
             else
             {
-                msg = string.Format("From{0}:0", sender);
+                msg = string.Format("{0}From{1}:0", (inHouse ? "IH" : string.Empty), sender);
             }
             
             // client.Msgs will be a comma separated list of messages
@@ -439,7 +420,7 @@ namespace OPIDDaily.DAL
 
                 if (client != null)
                 {
-                    PrependMsg(client, sender, tmvm.Msg);
+                    PrependMsg(client, sender, tmvm.Msg, (!string.IsNullOrEmpty(tmvm.InHouse) && tmvm.InHouse.Equals("Y")));
                     TextMsg textMsg = TextMsgViewModelToTextMsg(tmvm);
                     opiddailycontext.Entry(client).Collection(c => c.TextMsgs).Load();
 
@@ -470,6 +451,7 @@ namespace OPIDDaily.DAL
                     {
                         textMsg.From = tmvm.From;
                         textMsg.To = tmvm.To;
+                        textMsg.InHouse = (string.IsNullOrEmpty(tmvm.InHouse) || tmvm.InHouse.Equals("''")) ? false : true;
                         textMsg.Msg = tmvm.Msg;
                         opiddailycontext.SaveChanges();
                     }                  
@@ -477,7 +459,7 @@ namespace OPIDDaily.DAL
             }
         }
 
-        public static List<TextMsgViewModel> GetConversation(int nowConversing)
+        public static List<TextMsgViewModel> GetConversation(int nowConversing, int agencyId)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
@@ -493,7 +475,10 @@ namespace OPIDDaily.DAL
                     {
                         if (textMsg.Vid == 0)
                         {
-                            texts.Add(TextMsgToTextMsgViewModel(textMsg));
+                            if (agencyId == 0 || (agencyId != 0 && !textMsg.InHouse))
+                            {
+                                texts.Add(TextMsgToTextMsgViewModel(textMsg));
+                            }
                         }
                     }
 
@@ -925,11 +910,13 @@ namespace OPIDDaily.DAL
  
                 if (client != null)
                 {
+                    /*
                     if (client.Stage != cvm.Stage)
                     {
                        // There as been a stage transition
                        PrependStageChangeMsg(cvm, client.Msgs);
                     }
+                    */
 
                     // Disable automatic stage transitioning
                     // StageTransition(cvm, client);
@@ -951,11 +938,15 @@ namespace OPIDDaily.DAL
               
                 if (client != null)
                 {
+                    // Since these fields are not editable by a Case Manager, they will
+                    // be set to NULL in cvm. This will cause ClientViewModelToClientEntity
+                    // to generate an eror if we do not manually set theme here.
                     cvm.Stage = client.Stage;
                     cvm.PND = (client.PND ? "Y" : string.Empty);
+                    cvm.LCK = (client.LCK ? "Y" : string.Empty);
                     cvm.XID = (client.XID ? "Y" : string.Empty);
                     cvm.XBC = (client.XBC ? "Y" : string.Empty);
-
+                    
                     ClientViewModelToClientEntity(cvm, client);
 
                     opidcontext.SaveChanges();

@@ -89,7 +89,7 @@
        mtype: 'post',
        editurl: "Dummy",  // "@Url.Action("Dummy", "FrontDesk")", 
        cellsubmit: 'clientArray',
-       colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', /* 'ACK', */ 'XID', 'XBC', 'Notes'],
+       colNames: ['Id', 'First Name', 'Middle Name', 'Last Name', 'Birth Name', 'DOB', 'Age', 'XID', 'XBC', 'Notes'],
        colModel: [
         {key: true, hidden: true, name: 'Id', index: 'Id', editable: true },
         {key: false, name: 'FirstName', index: 'FirstName', width: 100, editable: true },
@@ -98,7 +98,6 @@
         {key: false, name: 'BirthName', index: 'BirthName', width: 100,  editable: true, sortable: false, search: false },
         {key: false, align: 'center', name: 'DOB', index: 'DOB', formatter: 'date', width:120, editable: true },
         {key: false, align: 'center', name: 'Age', index: 'Age', width: 50, editable: false, sortable: false, search: false },
-      //  {name: 'PND', index: 'PND', align: 'center', width: 35, editable: false, edittype: "checkbox", editoptions: {value: "Y:''" }, },
         {name: 'XID', index: 'XID', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" } },
         {name: 'XBC', index: 'XBC', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: {value: "Y:''" }, },
         {key: false, name: 'Notes', index: 'Notes', width: 150, sortable: false, editable: true, edittype: 'textarea', editoptions: {rows: '2', cols: '300' } }
@@ -106,17 +105,17 @@
        rowNum: 10,
        pager: pager_id,
        onSelectRow: function (nowServing) {
-                    // alert("subgrid nowServing = " + nowServing);
-                    if (nowServing == null || nowServing == lastServed) {
-        // Prevent infinite recursion caused by reloadGrid
-       } else {
-        lastServed = nowServing;
-        jQuery("#clientsGrid").jqGrid('setGridParam',
-        {
-          postData: {nowServing: nowServing },
-          url: "NowServing", // "@Url.Action("NowServing", "FrontDesk")"
-         }).trigger('reloadGrid', {fromServer: true }).jqGrid('setSelection', nowServing, true);
-        }
+            // alert("subgrid nowServing = " + nowServing);
+            if (nowServing == null || nowServing == lastServed) {
+            // Prevent infinite recursion caused by reloadGrid
+            } else {
+              lastServed = nowServing;
+              jQuery("#clientsGrid").jqGrid('setGridParam',
+              {
+                postData: {nowServing: nowServing },
+                url: "NowServing", // "@Url.Action("NowServing", "FrontDesk")"
+              }).trigger('reloadGrid', {fromServer: true }).jqGrid('setSelection', nowServing, true);
+            }
        },
        height: '100%',
        // https://stackoverflow.com/questions/3213984/jqgrid-giving-exception-when-json-is-attempted-to-be-loaded

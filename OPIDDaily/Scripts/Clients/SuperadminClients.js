@@ -34,7 +34,7 @@ $("#clientsGrid").jqGrid({
                 lastServed = nowServing;
                 jQuery("#clientsGrid").jqGrid('setGridParam',
                     {
-                        postData: { nowServing: nowServing },
+                        postData: { nowConversing: nowServing },
                         url: "NowServing" // "@Url.Action("NowServing", "Superadmin")"
                     }).trigger('reloadGrid', { fromServer: true }).jqGrid('setSelection', nowServing, true);
             }

@@ -4,12 +4,13 @@ $("#conversationGrid").jqGrid({
     url: "GetConversation", 
     datatype: "json",
     mtype: "Get",
-    colNames: ['Id', 'Date', 'From', 'To', 'Msg'],
+    colNames: ['Id', 'Date', 'From', 'To', 'IH','Msg'],
     colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },
         { key: false, align: 'center', name: 'Date', index: 'Date', formatter: 'date', width: 80, editable: false, sortable: true, search: false },
         { key: false, align: 'center', name: 'From', index: 'From', width: 80, editable: true, sortable: false, search: false },
         { key: false, align: 'center', name: 'To', index: 'To', width: 80, editable: true, sortable: false, search: false },
+        { key: false, align: 'center', name: 'InHouse', index: 'InHouse', align: 'center', width: 35, editable: true, edittype: "checkbox", editoptions: { value: "Y:''" } },
         { key: false, hidden: false, name: 'Msg', index: 'Msg', width: 850, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', cols: '300' } }
     ],
     pager: '#conversationPager',
