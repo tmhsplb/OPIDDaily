@@ -206,11 +206,13 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InterviewerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MBVDController.cs" />
     <Compile Include="Controllers\ResearchTableController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\SuperadminController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="DAL\MBVDS.cs" />
     <Compile Include="DAL\Agencies.cs" />
     <Compile Include="DAL\CheckManager.cs" />
     <Compile Include="DAL\Clients.cs" />
@@ -378,7 +380,12 @@
     <Compile Include="DataContexts\OPIDDailyMigrations\202103032141491_InHouseTexts.Designer.cs">
       <DependentUpon>202103032141491_InHouseTexts.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataContexts\OPIDDailyMigrations\202103052121547_MBVDS.cs" />
+    <Compile Include="DataContexts\OPIDDailyMigrations\202103052121547_MBVDS.Designer.cs">
+      <DependentUpon>202103052121547_MBVDS.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataContexts\OPIDDailyMigrations\Configuration.cs" />
+    <Compile Include="Entities\MBVD.cs" />
     <Compile Include="Entities\Agency.cs" />
     <Compile Include="Entities\Client.cs" />
     <Compile Include="Entities\PocketCheck.cs" />
@@ -390,6 +397,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\MBVDViewModel.cs" />
     <Compile Include="Models\AgencyViewModel.cs" />
     <Compile Include="Models\Check.cs" />
     <Compile Include="Models\CheckViewModel.cs" />
@@ -1024,6 +1032,7 @@
     <Content Include="Views\BackOffice\PocketChecks.cshtml" />
     <Content Include="Views\BackOffice\PocketChecksReport.cshtml" />
     <Content Include="Views\CaseManager\PrintServiceTicket.cshtml" />
+    <Content Include="Views\MBVD\MBVDS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
@@ -1157,6 +1166,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202103032141491_InHouseTexts.resx">
       <DependentUpon>202103032141491_InHouseTexts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataContexts\OPIDDailyMigrations\202103052121547_MBVDS.resx">
+      <DependentUpon>202103052121547_MBVDS.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

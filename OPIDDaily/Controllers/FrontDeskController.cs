@@ -49,6 +49,7 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, rsvm);
             rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
 
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
@@ -127,6 +128,7 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
             rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
 
             if (client == null)
             {
@@ -150,6 +152,7 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
             rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
 
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
@@ -191,6 +194,7 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             Client client = Clients.GetClient(nowServing, rsvm);
             rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
 
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");

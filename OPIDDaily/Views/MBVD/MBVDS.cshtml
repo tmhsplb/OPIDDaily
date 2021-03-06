@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "MBVDS";
+    Layout = "~/Views/Shared/_SuperAdmin.cshtml";
+}
+
+<br /><br /><br/>
+ 
+<div>
+    <table id="mbvdsGrid"></table>
+    <div id="mbvdsPager"></div>
+</div>
+
+<link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
+
+<link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/i18n/grid.locale-en.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.jqGrid.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $("#mbvdsGrid").jqGrid({
+        url: "@Url.Action("GetMBVDS", "MBVD")",
+        datatype: "json",
+        mtype: "Get",
+        colNames: ['Id', 'MBVDId', 'MBVDName', 'Active'],
+        colModel: [
+            { key: true, hidden: true, name: 'Id', index: 'Id' },
+            { key: false, name: 'MBVDId', index: 'MBVDId', width: 20, editable: true, sortable: false, search: false },
+            { key: false, name: 'MBVDName', index: 'MBVDName', width: 150, editable: true, sortable: false, search: false },
+            { key: false, align: 'center', name: 'IsActive', index: 'IsActive', width: 150, editable: true, edittype: "checkbox", editoptions: { value: "Yes:''" }, sortable: false, search: false}
+        ],
+        pager: jQuery('#mbvdsPager'),
+        rowNum: 20,
+        height: "100%",
+        viewrecords: true,
+        loadonce: false,
+        caption: 'MBVDS',
+        emptyrecords: 'No records to display',
+        jsonReader: {
+            root: "rows",
+            page: "page",
+            total: "total",
+            records: "records",
+            repeatitems: false,
+            id: "Id"
+        },
+        autowidth: true,
+        multiselect: false
+    })
+
+    jQuery("#mbvdsGrid").jqGrid('navGrid', '#mbvdsPager', { edit: true, add: true, del: true, search: false, refresh: true },
+      {
+          zIndex: 100,
+          url: "@Url.Action("EditMBVD", "MBVD")",
+          closeOnEscape: true,
+          closeAfterEdit: true,
+          recreateForm: true,
+          afterComplete: function (response) {
+              if (response.responseText) {
+                  //   alert(response.responseText);
+              }
+          }
+      },
+      {
+          zIndex: 100,
+          url: "@Url.Action("AddMBVD", "MBVD")",
+          closeOnEscape: true,
+          closeAfterAdd: true,
+          recreateForm: true,
+          afterComplete: function (response) {
+              if (response.responseText) {
+                  //  alert(response.responseText);
+              }
+          }
+      },
+      {
+          zIndex: 100,
+          url: "@Url.Action("DeleteMBVD", "MBVD")",
+          closeOnEscape: true,
+          closeAfterDelete: true,
+          recreateForm: true,
+          afterComplete: function (response) {
+              if (response.responseText) {
+                  //   alert(response.responseText);
+              }
+          }
+        });
+
+     // http://www.trirand.com/blog/?page_id=393/help/how-to-use-add-form-dialog-popup-window-set-position
+    $.extend($.jgrid.edit, {
+        recreateForm: true,
+        closeAfterAdd: true,
+        dataheight: '100%',
+        reloadAfterSubmit: true,
+        width: 500,
+        top: 400,
+        left: 450,
+        addCaption: "Add MBVD",
+        editCaption: "Edit MBVD",
+        bSubmit: "Submit",
+        bCancel: "Cancel",
+        bClose: "Close",
+        saveData: "Data has been changed! Save changes?",
+        bYes: "Yes",
+        bNo: "No",
+        bExit: "Cancel"
+    });
+</script>

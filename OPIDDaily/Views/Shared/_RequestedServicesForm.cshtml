@@ -39,7 +39,8 @@
         @Html.LabelFor(m => m.MBVD, new { @class = "control-label" })
     </div>
     <div class="col-md-4">
-        @Html.TextBoxFor(m => m.State, new { placeholder = "State", @class = "form-control" })
+        @* @  @Html.TextBoxFor(m => m.State, new { placeholder = "State", @class = "form-control" }) *@
+        @Html.DropDownListFor(model => model.State, Model.MBVDS, new { @class = "form-control" })
     </div>
     <div class="col-md-2">
         @Html.CheckBoxFor(m => m.PreApprovedMBVD, new { @class = "form-control" })

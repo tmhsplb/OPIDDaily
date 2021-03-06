@@ -149,7 +149,8 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-           
+            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
+
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
@@ -163,7 +164,8 @@ namespace OPIDDaily.Controllers
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
-            
+            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
+
             ViewBag.ClientName = Clients.ClientBeingServed(client);
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
@@ -188,11 +190,12 @@ namespace OPIDDaily.Controllers
             {
                 error = "By Texas State Law no resident may possess both an ID and a DL.";
             }
+            /*
             else if (rsvm.MBVD)
             {
                 error = "Sorry, Operation ID cannot currently process a request for an out-of-state birth certificate.";
             }
-
+            */
             return error;
         }
 
@@ -214,6 +217,7 @@ namespace OPIDDaily.Controllers
                 ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
                 ViewBag.Age = client.Age;
                 ModelState.AddModelError("ServiceRequestError",  serviceRequestError);
+                rsvm.MBVDS = MBVDS.GetMBVDSelectList();
                 return View("ExpressClientServiceRequest", rsvm);
             }
 
@@ -263,7 +267,7 @@ namespace OPIDDaily.Controllers
 
             if (client.HH != 0)
             {
-                ViewBag.Warning = "Cannot prepare voucher for a dependent of another client.";
+                ViewBag.Warning = "Cannot prepare a Service Ticket for a dependent of another client.";
                 return View("Warning");
             }
 

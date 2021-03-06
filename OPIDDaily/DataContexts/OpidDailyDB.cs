@@ -18,6 +18,8 @@ namespace OPIDDaily.DataContexts
 
         public DbSet<Agency> Agencies { get; set; }
 
+        public DbSet<MBVD> MBVDS { get; set; }
+
         public DbSet<Invitation> Invitations { get; set; }
 
         public DbSet<Client> Clients { get; set; }

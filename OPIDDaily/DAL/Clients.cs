@@ -78,7 +78,9 @@ namespace OPIDDaily.DAL
                     // Requested Services
                     rsvm.BC = client.BC;
                     rsvm.HCC = client.HCC;
-                    rsvm.MBVD = client.MBVD;
+                    rsvm.MBVD = client.MBVD;  // boolean
+                    rsvm.MBVDId = client.State;
+
                     rsvm.State = client.State;
                     rsvm.NewTID = client.NewTID;
                     rsvm.ReplacementTID = client.ReplacementTID;
@@ -1252,8 +1254,7 @@ namespace OPIDDaily.DAL
             using (OpidDailyDB opiddailycontext = new OpidDailyDB())
             {
                 Client client = opiddailycontext.Clients.Find(id);
-
-                
+                                
                 if (rsvm.OtherAgency && !string.IsNullOrEmpty(rsvm.OtherAgencyName))
                 {
                     client.AgencyName = rsvm.OtherAgencyName;

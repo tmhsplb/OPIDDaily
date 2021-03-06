@@ -26,6 +26,10 @@ namespace OPIDDaily.Models
 
         public SelectList Agencies { get; set; }
 
+        public string MBVDId { get; set; }
+
+        public SelectList MBVDS { get; set; }
+
         public bool OtherAgency { get; set; }
 
         public string OtherAgencyName { get; set; }

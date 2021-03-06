@@ -80,7 +80,7 @@ namespace OPIDDaily
                 return System.Configuration.ConfigurationManager.AppSettings["SuperadminPwd"];
             }
         }
-
+ 
         public static string Release
         {
             get
@@ -89,7 +89,7 @@ namespace OPIDDaily
             }
         }
 
-        public static string  RecentYears
+        public static string RecentYears
         {
             get
             {
