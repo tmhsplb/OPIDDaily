@@ -182,6 +182,11 @@ namespace OPIDDaily.Controllers
             return tid && tdl;
         }
 
+        private bool RequestingBothBCandMBVD(RequestedServicesViewModel rsvm)
+        {
+            return rsvm.BC & rsvm.MBVD;
+        }
+
         private string ServiceRequestError(RequestedServicesViewModel rsvm)
         {
             string error = string.Empty;
@@ -189,6 +194,10 @@ namespace OPIDDaily.Controllers
             if (RequestingBothTIDandTDL(rsvm))
             {
                 error = "By Texas State Law no resident may possess both an ID and a DL.";
+            }
+            else if (RequestingBothBCandMBVD(rsvm))
+            {
+                error = "Cannot request both in-state and out-of-state birth certificates.";
             }
             /*
             else if (rsvm.MBVD)

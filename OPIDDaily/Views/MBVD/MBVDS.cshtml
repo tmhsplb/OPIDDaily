@@ -22,12 +22,12 @@
         url: "@Url.Action("GetMBVDS", "MBVD")",
         datatype: "json",
         mtype: "Get",
-        colNames: ['Id', 'MBVDId', 'MBVDName', 'Active'],
+        colNames: ['Id', 'Id', 'State', 'Active'],
         colModel: [
             { key: true, hidden: true, name: 'Id', index: 'Id' },
-            { key: false, name: 'MBVDId', index: 'MBVDId', width: 20, editable: true, sortable: false, search: false },
-            { key: false, name: 'MBVDName', index: 'MBVDName', width: 150, editable: true, sortable: false, search: false },
-            { key: false, align: 'center', name: 'IsActive', index: 'IsActive', width: 150, editable: true, edittype: "checkbox", editoptions: { value: "Yes:''" }, sortable: false, search: false}
+            { key: false, align:'center', name: 'MBVDId', index: 'MBVDId', width: 20, editable: true, sortable: false, search: false },
+            { key: false, align:'center', name: 'MBVDName', index: 'MBVDName', width: 80, editable: true, sortable: false, search: false },
+            { key: false, align: 'center', name: 'IsActive', index: 'IsActive', width: 20, editable: true, edittype: "checkbox", editoptions: { value: "Yes:''" }, sortable: false, search: false}
         ],
         pager: jQuery('#mbvdsPager'),
         rowNum: 20,
