@@ -33,7 +33,8 @@
 </div>
 <div class="form-group">
     <div class="col-md-2">
-        @Html.CheckBoxFor(m => m.MBVD, new { @class = "form-control" })
+        @* @Html.CheckBoxFor(m => m.MBVD, new { @class = "form-control" }) *@
+        @Html.DropDownListFor(model => model.State, Model.MBVDS, new { @class = "form-control" })
     </div>
     <div class="col-md-2">
         @Html.LabelFor(m => m.MBVD, new { @class = "control-label" })

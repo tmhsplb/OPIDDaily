@@ -1,0 +1,99 @@
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
+@{
+    ViewBag.Title = "Existing Client";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
+}
+
+<br /><br /><br />
+
+<div>
+    <table id="historyGrid"></table>
+    <div id="historyPager"></div>
+</div>
+
+<link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
+
+<script src="@Url.Content("~/Scripts/i18n/grid.locale-en.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.jqGrid.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var clientName = "@ViewBag.ClientName";
+    function GetClientName() {
+        return clientName;
+    }
+</script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/ClientHistory/BackOfficeClientHistory.js")"></script>
+
+<br />
+@*
+    <table>
+        <tr>
+            <td><a class="button" href="@Url.Action("GetClientHistory", "Frontdesk")">Show Client History</a></td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td><a class="button" href="@Url.Action("ClearClientHistory", "Frontdesk")">Clear Client History</a></td>
+        </tr>
+    </table>
+*@
+
+<div class="col-md-12">
+    <section id="existingclientServicesForm">
+        @using (Html.BeginForm("PrepareExistingClientVisits", "BackOffice", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Prepare Visits Only" class="btn btn-default" />
+                </div>
+            </div>
+        }
+    </section>
+</div>
+<br />
+
+<style>
+    input[type="checkbox"] {
+        transform: scale(0.75,0.75);
+    }
+</style>
+
+<br />
+<h3>Existing Client: @ViewBag.ClientName</h3>
+<h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+<h4>Agency:&nbsp;@ViewBag.Agency</h4>
+@if (!string.IsNullOrEmpty(Model.Notes))
+{
+    <h4>Notes:&nbsp;<strong>@Model.Notes</strong></h4>
+}
+
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <section id="existingclientForm">
+            @using (Html.BeginForm("StoreExistingClientServiceRequest", "BackOffice", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationMessage("ServiceRequestError", new { @class = "text-danger" })
+
+                <h4>Requested Services</h4>
+                <hr />
+
+                @Html.Partial("_BackOfficeRequestedServicesForm", Model)
+                @Html.Partial("_BootstrapSupportingDocuments", Model)
+
+                <br />
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Save Service Request" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.signalR-2.4.1.min.js")"></script>
+<script type="text/javascript" src="~/signalr/hubs"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/HubCode/VisitHistoryHubCode.js")"></script>

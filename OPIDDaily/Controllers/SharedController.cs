@@ -431,177 +431,53 @@ namespace OPIDDaily.Controllers
             return "Success";
         }
 
-        /*
-        protected static void ServiceTicketBackButtonHelper(string mode, RequestedServicesViewModel rsvm)
+        public ActionResult ExpressClientServiceRequest()
         {
-            switch (mode)
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+            rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
+
+            ViewBag.Agency = GetClientAgencyName(client);
+
+            if (!string.IsNullOrEmpty(client.AgencyName))
             {
-                case "Get":
-                    rsvm.NeedsDocs = SessionHelper.Get("NeedsDocs").Equals("Requested") ? true : false;
-                    rsvm.HasDocs = SessionHelper.Get("HasDocs").Equals("Requested") ? true : false;
-                    rsvm.Agency = SessionHelper.Get("Agency");
-                  //  rsvm.UseBirthName = (SessionHelper.Get("UseBirthName").Equals("Requested") ? true : false);
-                    rsvm.BC = (SessionHelper.Get("BC").Equals("Requested") ? true : false);
-                    rsvm.PreApprovedBC = (SessionHelper.Get("PreApprovedBC").Equals("Requested") ? true : false);
-                    rsvm.HCC = (SessionHelper.Get("HCC").Equals("Requested") ? true : false);
-                    rsvm.MBVD = (SessionHelper.Get("MBVD").Equals("Requested") ? true : false);
-                    rsvm.PreApprovedMBVD = (SessionHelper.Get("PreApprovedMBVD").Equals("Requested") ? true : false);
-                    rsvm.State = (SessionHelper.Get("State").Equals("0") ? string.Empty : SessionHelper.Get("State"));
-                    rsvm.NewTID = (SessionHelper.Get("NTID").Equals("Requested") ? true : false);
-                    rsvm.PreApprovedNewTID = (SessionHelper.Get("PreApprovedNewTID").Equals("Requested") ? true : false);
-                    rsvm.ReplacementTID = (SessionHelper.Get("RTID").Equals("Requested") ? true : false);
-                    rsvm.PreApprovedReplacementTID = (SessionHelper.Get("PreApprovedReplacementTID").Equals("Requested") ? true : false);
-                    rsvm.NewTDL = (SessionHelper.Get("NTDL").Equals("Requested") ? true : false);
-                    rsvm.PreApprovedNewTDL = (SessionHelper.Get("PreApprovedNewTDL").Equals("Requested") ? true : false);
-                    rsvm.ReplacementTDL = (SessionHelper.Get("RTDL").Equals("Requested") ? true : false);
-                    rsvm.PreApprovedReplacementTDL = (SessionHelper.Get("PreApprovedReplacementTDL").Equals("Requested") ? true : false);
-                    rsvm.Numident = (SessionHelper.Get("Numident").Equals("Requested") ? true : false);
-
-                    // Supporting documents
-                    rsvm.SDBC = (SessionHelper.Get("SDBC").Equals("Requested") ? true : false);
-                    rsvm.SDSSC = (SessionHelper.Get("SDSSC").Equals("Requested") ? true : false);
-                    rsvm.SDTID = (SessionHelper.Get("SDTID").Equals("Requested") ? true : false);
-                    rsvm.SDTDL = (SessionHelper.Get("SDTDL").Equals("Requested") ? true : false);
-                    rsvm.SDTDCJ = (SessionHelper.Get("SDTDCJ").Equals("Requested") ? true : false);
-                    rsvm.SDVREG = (SessionHelper.Get("SDVREG").Equals("Requested") ? true : false);
-                    rsvm.SDML = (SessionHelper.Get("SDML").Equals("Requested") ? true : false);
-                    rsvm.SDDD = (SessionHelper.Get("SDDD").Equals("Requested") ? true : false);
-                    rsvm.SDSL = (SessionHelper.Get("SDSL").Equals("Requested") ? true : false);
-                    rsvm.SDDD214 = (SessionHelper.Get("SDDD214").Equals("Requested") ? true : false);
-                    rsvm.SDGC = (SessionHelper.Get("SDGC").Equals("Requested") ? true : false);
-                    rsvm.SDEBT = (SessionHelper.Get("SDEBT").Equals("Requested") ? true : false);
-                    rsvm.SDHOTID = (SessionHelper.Get("SDHOTID").Equals("Requested") ? true : false);
-                    rsvm.SDSchoolRecords = (SessionHelper.Get("SDSRECS").Equals("Requested") ? true : false);
-                    rsvm.SDPassport = (SessionHelper.Get("SDPassport").Equals("Requested") ? true : false);
-                    rsvm.SDJobOffer = (SessionHelper.Get("SDJobOffer").Equals("Requested") ? true : false);
-                    rsvm.SDOther = (SessionHelper.Get("SDOTHER").Equals("Requested") ? true : false);
-                    rsvm.SDOthersd = (SessionHelper.Get("OTHERSD").Equals("0") ? string.Empty : SessionHelper.Get("OTHERSD"));
-                    break;
-                    
-                case "Set":
-                    SessionHelper.Set("NeedsDocs", (rsvm.NeedsDocs ? "Requested" : string.Empty));
-                    SessionHelper.Set("HasDocs", (rsvm.HasDocs ? "Requested" : string.Empty));
-                    SessionHelper.Set("Agency", rsvm.Agency);
-                  //  SessionHelper.Set("UseBirthName", (rsvm.UseBirthName ? "Requested" : string.Empty));
-                    SessionHelper.Set("BC", (rsvm.BC ? "Requested" : string.Empty));
-                    SessionHelper.Set("PreApprovedBC", (rsvm.PreApprovedBC ? "Requested" : string.Empty));
-                    SessionHelper.Set("HCC", (rsvm.HCC ? "Requested" : string.Empty));
-                    SessionHelper.Set("MBVD", (rsvm.MBVD ? "Requested" : string.Empty));
-                    SessionHelper.Set("PreApprovedMBVD", (rsvm.PreApprovedMBVD ? "Requested" : string.Empty));
-                    SessionHelper.Set("State", rsvm.State);
-                    SessionHelper.Set("NTID", (rsvm.NewTID ? "Requested" : string.Empty));
-                    SessionHelper.Set("PreApprovedNewTID", (rsvm.PreApprovedNewTID ? "Requested" : string.Empty));
-                    SessionHelper.Set("RTID", (rsvm.ReplacementTID ? "Requested" : string.Empty));
-                    SessionHelper.Set("PreApprovedReplacementTID", (rsvm.PreApprovedReplacementTID ? "Requested" : string.Empty));
-                    SessionHelper.Set("NTDL", (rsvm.NewTDL ? "Requested" : string.Empty));
-                    SessionHelper.Set("PreApprovedNewTDL", (rsvm.PreApprovedNewTDL ? "Requested" : string.Empty));
-                    SessionHelper.Set("RTDL", (rsvm.ReplacementTDL ? "Requested" : string.Empty));
-                    SessionHelper.Set("PreApprovedReplacementTDL", (rsvm.PreApprovedReplacementTDL ? "Requested" : string.Empty));
-                    SessionHelper.Set("Numident", (rsvm.Numident ? "Requested" : string.Empty));
-                 
-                    // Supporting documents
-                    SessionHelper.Set("SDBC", (rsvm.SDBC ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDSSC", (rsvm.SDSSC ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDTID", (rsvm.SDTID ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDTDL", (rsvm.SDTDL ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDTDCJ", (rsvm.SDTDCJ ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDVREG", (rsvm.SDVREG ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDML", (rsvm.SDML ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDDD", (rsvm.SDDD ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDSL", (rsvm.SDSL ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDDD214", (rsvm.SDDD214 ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDGC", (rsvm.SDGC ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDEBT", (rsvm.SDEBT ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDHOTID", (rsvm.SDHOTID ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDSRECS", (rsvm.SDSchoolRecords ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDPassport", (rsvm.SDPassport ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDJobOffer", (rsvm.SDJobOffer ? "Requested" : string.Empty));
-                    SessionHelper.Set("SDOTHER", (rsvm.SDOther ? "Requested" : string.Empty));
-                    SessionHelper.Set("OTHERSD", rsvm.SDOthersd);
-                    break;
-
-                case "Reset":
-                    SessionHelper.Set("Agency", "0");
-                    //   SessionHelper.Set("UseBirthName", string.Empty);
-                    SessionHelper.Set("NeedsDocs", string.Empty);
-                    SessionHelper.Set("HasDocs", string.Empty);
-                    SessionHelper.Set("BC", string.Empty);
-                    SessionHelper.Set("PreApprovedBC", string.Empty);
-                    SessionHelper.Set("HCC", string.Empty);
-                    SessionHelper.Set("MBVD", string.Empty);
-                    SessionHelper.Set("PreApprovedMBVD", string.Empty);
-                    SessionHelper.Set("State", string.Empty);
-                    SessionHelper.Set("NTID", string.Empty);
-                    SessionHelper.Set("PreApprovedNewTID", string.Empty);
-                    SessionHelper.Set("RTID", string.Empty);
-                    SessionHelper.Set("PreApprovedReplacementTID", string.Empty);
-                    SessionHelper.Set("NTDL", string.Empty);
-                    SessionHelper.Set("PreApprovedNewTDL", string.Empty);
-                    SessionHelper.Set("RTDL", string.Empty);
-                    SessionHelper.Set("PreApprovedReplacementTDL", string.Empty);
-                    SessionHelper.Set("Numident", string.Empty);
-
-                    // Supporting documents
-                    SessionHelper.Set("SDBC", string.Empty);
-                    SessionHelper.Set("SDSSC", string.Empty);
-                    SessionHelper.Set("SDTID", string.Empty);
-                    SessionHelper.Set("SDTDL", string.Empty);
-                    SessionHelper.Set("SDTDCJ", string.Empty);
-                    SessionHelper.Set("SDVREG", string.Empty);
-                    SessionHelper.Set("SDML", string.Empty);
-                    SessionHelper.Set("SDDD", string.Empty);
-                    SessionHelper.Set("SDSL", string.Empty);
-                    SessionHelper.Set("SDDD214", string.Empty);
-                    SessionHelper.Set("SDGC", string.Empty);
-                    SessionHelper.Set("SDEBT",string.Empty);
-                    SessionHelper.Set("SDHOTID", string.Empty);
-                    SessionHelper.Set("SDSRECS", string.Empty);
-                    SessionHelper.Set("SDPassport", string.Empty);
-                    SessionHelper.Set("SDJobOffer", string.Empty);
-                    SessionHelper.Set("SDOTHER", string.Empty);
-                    SessionHelper.Set("OTHERSD", string.Empty);
-                    break;
+                rsvm.OtherAgency = true;
+                rsvm.OtherAgencyName = client.AgencyName;
             }
+
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+
+            //  VoucherBackButtonHelper("Get", rsvm);
+            return View("ExpressClientServiceRequest", rsvm);
         }
 
-        protected void VoucherBackButtonHelper(string mode, RequestedServicesViewModel rsvm)
+        public ActionResult ExistingClientServiceRequest()
         {
-           // ServiceTicketBackButtonHelper(mode, rsvm);
-        }
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+            rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
 
-        protected static void SpecialReferralBackButtonHelper(string mode, SpecialReferralViewModel srvm)
-        {
-            switch (mode)
+            ViewBag.Agency = GetClientAgencyName(client);
+
+            if (!string.IsNullOrEmpty(client.AgencyName))
             {
-                case "Get":
-                    srvm.FirstName = (SessionHelper.Get("FirstName").Equals("0") ? string.Empty : SessionHelper.Get("FirstName"));
-                    srvm.MiddleName = (SessionHelper.Get("MiddleName").Equals("0") ? string.Empty : SessionHelper.Get("MiddleName"));
-                    srvm.LastName = (SessionHelper.Get("LastName").Equals("0") ? string.Empty : SessionHelper.Get("LastName"));
-                    srvm.Agency = (SessionHelper.Get("Agency").StartsWith("_") ? string.Empty : SessionHelper.Get("Agency"));
-                    srvm.AgencyContact = (SessionHelper.Get("AgencyContact").StartsWith("_") ? string.Empty : SessionHelper.Get("AgencyContact"));
-                    srvm.Notes = (SessionHelper.Get("Notes").Equals("0") ? string.Empty : SessionHelper.Get("Notes"));
-                    break;
-
-                case "Set":
-                    SessionHelper.Set("FirstName", srvm.FirstName);
-                    SessionHelper.Set("MiddleName", srvm.MiddleName);
-                    SessionHelper.Set("LastName", srvm.LastName);
-                    SessionHelper.Set("Agency", srvm.Agency);
-                    SessionHelper.Set("AgencyContact", srvm.AgencyContact);
-                    SessionHelper.Set("Notes", srvm.Notes);
-                    break;
-
-                case "Reset":
-                    SessionHelper.Set("FirstName", string.Empty);
-                    SessionHelper.Set("MiddleName", string.Empty);
-                    SessionHelper.Set("LastName", string.Empty);
-                    SessionHelper.Set("Agency", string.Empty);
-                    SessionHelper.Set("AgencyContact", string.Empty);
-                    SessionHelper.Set("Notes", string.Empty);
-                    break;
+                rsvm.OtherAgency = true;
+                rsvm.OtherAgencyName = client.AgencyName;
             }
+
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+
+            // VoucherBackButtonHelper("Get", rsvm);
+            return View("ExistingClientServiceRequest", rsvm);
         }
-        */
 
         protected static void PrepareBCNotes(Client client, RequestedServicesViewModel rsvm)
         {
@@ -953,7 +829,186 @@ namespace OPIDDaily.Controllers
             ViewBag.AncientYears = Config.AncientYears;
             return View();
         }
+        private bool RequestingBothTIDandTDL(RequestedServicesViewModel rsvm)
+        {
+            bool tid = rsvm.NewTID || rsvm.ReplacementTID;
+            bool tdl = rsvm.NewTDL || rsvm.ReplacementTDL;
 
+            return tid && tdl;
+        }
+
+        private bool RequestingBothBCandMBVD(RequestedServicesViewModel rsvm)
+        {
+            return rsvm.BC & rsvm.MBVD;
+        }
+
+        protected string ServiceRequestError(RequestedServicesViewModel rsvm)
+        {
+            string error = string.Empty;
+
+            if (RequestingBothTIDandTDL(rsvm))
+            {
+                error = "By Texas State Law no resident may possess both an ID and a DL.";
+            }
+            else if (RequestingBothBCandMBVD(rsvm))
+            {
+                error = "Cannot request both in-state and out-of-state birth certificates.";
+            }
+            /*
+            else if (rsvm.MBVD)
+            {
+                error = "Sorry, Operation ID cannot currently process a request for an out-of-state birth certificate.";
+            }
+            */
+            return error;
+        }
+
+        public ActionResult ServiceRequest()
+        {
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please first select a client from the Clients Table.";
+                return View("Warning");
+            }
+
+            Client client = Clients.GetClient(nowServing, null);
+
+            if (client == null)
+            {
+                ViewBag.Warning = "Could not find selected client.";
+                return View("Warning");
+            }
+
+            if (client.LCK)
+            {
+                ViewBag.Warning = "Operation ID has currently locked Service Requests for this client.";
+                return View("Warning");
+            }
+
+            if (CheckManager.HasHistory(client.Id))
+            {
+                return RedirectToAction("ExistingClientServiceRequest");
+            }
+
+            return RedirectToAction("ExpressClientServiceRequest");
+        }
+
+        public ActionResult ExpressClientServiceTicket()
+        {
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+            PrepareClientNotes(client, rsvm);
+
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
+            ViewBag.ServiceTicket = client.ServiceTicket;
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
+            ViewBag.BirthName = client.BirthName;
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            ViewBag.Agency = GetClientAgencyName(client);
+
+            // ServiceTicketBackButtonHelper("Set", rsvm);
+            return View("PrintExpressClient", rsvm);
+        }
+
+        public ActionResult ExistingClientServiceTicket()
+        {
+            int nowServing = NowServing();
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+            PrepareClientNotes(client, rsvm);
+
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.TicketDate = today.ToString("MM/dd/yyyy");
+            ViewBag.ServiceTicket = client.ServiceTicket;
+            ViewBag.ClientName = Clients.ClientBeingServed(client);
+            ViewBag.BirthName = client.BirthName;
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            ViewBag.Age = client.Age;
+            ViewBag.Agency = GetClientAgencyName(client);
+            List<VisitViewModel> visits = Visits.GetVisits(nowServing);
+
+            rsvm.XBC = client.XBC == true ? "XBC" : string.Empty;
+            rsvm.XID = client.XID == true ? "XID" : string.Empty;
+
+            // ServiceTicketBackButtonHelper("Set", rsvm);
+            var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
+            return View("PrintExistingClient", objTuple);
+        }
+
+        public JsonResult GetPocketChecks(int page, int rows)
+        {
+            List<PocketCheckViewModel> pchecks = PocketChecks.GetPocketChecks();
+            int pageIndex = page - 1;
+            int pageSize = rows;
+            int totalRecords = pchecks.Count;
+            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            pchecks = pchecks.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = pchecks
+            };
+
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult PrepareServiceTicket()
+        {
+            int nowServing = NowServing();
+
+            if (nowServing == 0)
+            {
+                ViewBag.Warning = "Please first select a client from the Clients Table.";
+                return View("Warning");
+            }
+
+            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
+            Client client = Clients.GetClient(nowServing, rsvm);
+
+            if (client.HH != 0)
+            {
+                ViewBag.Warning = "Cannot prepare a Service Ticket for a dependent of another client.";
+                return View("Warning");
+            }
+
+            PrepareClientNotes(client, rsvm);
+
+            DateTime today = Extras.DateTimeToday();
+            ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");
+            ViewBag.Expiry = client.Expiry.ToString("ddd MMM d, yyyy");
+
+            ViewBag.ClientName = Clients.ClientBeingServed(client, false);
+            ViewBag.BirthName = client.BirthName;
+
+
+            // ViewBag.CurrentAddress = Clients.ClientAddress(client);
+            ViewBag.Phone = (!string.IsNullOrEmpty(client.Phone) ? client.Phone : "N/A");
+            ViewBag.Email = (!string.IsNullOrEmpty(client.Email) ? client.Email : "N/A");
+
+            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+            // ViewBag.BirthPlace = Clients.GetBirthplace(client);
+            ViewBag.Age = client.Age;
+            ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);  // rsvm.Agency will be the Id of an Agency as a string
+
+            List<ClientViewModel> dependents = Clients.GetDependents(nowServing);
+
+            var objTuple = new Tuple<List<ClientViewModel>, RequestedServicesViewModel>(dependents, rsvm);
+
+            //  VoucherBackButtonHelper("Set", rsvm);
+            // return View("PrintVoucher", objTuple);
+            return View("PrintServiceTicket", objTuple);
+        }
+    
         public ActionResult ServiceTicket()
         {
             int nowServing = NowServing();

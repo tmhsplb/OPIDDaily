@@ -1,0 +1,67 @@
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
+@{
+    ViewBag.Title = "Express Client";
+    Layout = "~/Views/Shared/_FrontDesk.cshtml";
+}
+
+<style>
+    input[type="checkbox"] {
+        transform: scale(0.75,0.75);
+    }
+</style>
+
+<br/><br/><br/>
+<div>
+    <table id="historyGrid"></table>
+    <div id="historyPager"></div>
+</div>
+
+<link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
+
+<script src="@Url.Content("~/Scripts/i18n/grid.locale-en.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.jqGrid.min.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var clientName = "@ViewBag.ClientName";
+    function GetClientName() {
+        return clientName;
+    }
+</script>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/PocketChecks/FrontDeskPocketChecks.js")"></script>
+<br />
+
+
+<h3>Express Client: @ViewBag.ClientName</h3>
+<h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <section id="expressclientForm">
+            @using (Html.BeginForm("StoreExpressClientServiceRequest", "FrontDesk", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationMessage("ServiceRequestError", new { @class = "text-danger" })
+
+                @* @Html.Partial("_PreApproval", Model) *@
+
+                <h4>Requested Services</h4>
+                <hr />
+
+                @Html.Partial("_RequestedServicesForm", Model)
+                @Html.Partial("_BootstrapSupportingDocuments", Model)
+
+                <br /><br />
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Save Service Request" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+

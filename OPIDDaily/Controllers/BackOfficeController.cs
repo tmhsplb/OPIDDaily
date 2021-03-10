@@ -45,20 +45,14 @@ namespace OPIDDaily.Controllers
 
             if (CheckManager.HasHistory(client.Id))
             {
-                //  client.EXP = false;
-                return RedirectToAction("BackOfficeExistingClient");
+                return RedirectToAction("ExistingClientServiceTicket");
             }
 
-           // client.EXP = true;
-            return RedirectToAction("BackOfficeExpressClient");
+            return RedirectToAction("ExpressClientServiceTicket");
         }
 
-        public ActionResult BackOfficeExpressClient()
-        {
-            return RedirectToAction("PrepareBackOfficeExpressClient");
-        }
-
-        public ActionResult PrepareBackOfficeExpressClient()
+        /*
+        public ActionResult ExpressClientServiceTicket()
         {
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
@@ -77,13 +71,8 @@ namespace OPIDDaily.Controllers
             // ServiceTicketBackButtonHelper("Set", rsvm);
             return View("PrintExpressClient", rsvm);
         }
-
-        public ActionResult BackOfficeExistingClient()
-        {
-            return RedirectToAction("PrepareBackOfficeExistingClient");
-        }
-               
-        public ActionResult PrepareBackOfficeExistingClient()
+                
+        public ActionResult ExistingClientServiceTicket()
         {
             int nowServing = NowServing();
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
@@ -107,6 +96,63 @@ namespace OPIDDaily.Controllers
             var objTuple = new Tuple<List<VisitViewModel>, RequestedServicesViewModel>(visits, rsvm);
             return View("PrintExistingClient", objTuple);
         }
+        */
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult StoreExpressClientServiceRequest(RequestedServicesViewModel rsvm)
+        {
+            // Called when 
+            //   ~/Views/CaseManager/ExpressClientServiceRequest.cshtml
+            // posts to server. rsvm will contain both requested services
+            // and supporting documents.
+            int nowServing = NowServing();
+            Client client = Clients.GetClient(nowServing, null);  // pass null so the supporting documents won't be erased
+            string serviceRequestError = ServiceRequestError(rsvm);
+
+            if (!string.IsNullOrEmpty(serviceRequestError))
+            {
+                ViewBag.ClientName = Clients.ClientBeingServed(client);
+                ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+                ViewBag.Age = client.Age;
+                ModelState.AddModelError("ServiceRequestError", serviceRequestError);
+                rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+                rsvm.MBVDS = MBVDS.GetMBVDSelectList();
+                return View("ExpressClientServiceRequest", rsvm);
+            }
+
+            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
+            PrepareClientNotes(client, rsvm);
+            return RedirectToAction("ManageDashboard", "BackOffice");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult StoreExistingClientServiceRequest(RequestedServicesViewModel rsvm)
+        {
+            // Called when          
+            //    ~/Views/CaseManager/ExistingClientServiceRequest.cshtml
+            // posts to server. rsvm will contain both requested services
+            // and supporting documents.
+            int nowServing = NowServing();
+            Client client = Clients.GetClient(nowServing, null);  // pass null so the supporting documents won't be erased
+            string serviceRequestError = ServiceRequestError(rsvm);
+
+            if (!string.IsNullOrEmpty(serviceRequestError))
+            {
+                ViewBag.ClientName = Clients.ClientBeingServed(client);
+                ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
+                ViewBag.Age = client.Age;
+                ModelState.AddModelError("ServiceRequestError", serviceRequestError);
+                rsvm.Agencies = Agencies.GetAgenciesSelectList(client.AgencyId);
+                rsvm.MBVDS = MBVDS.GetMBVDSelectList();
+                return View("ExistingClientServiceRequest", rsvm);
+            }
+
+            Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
+            PrepareClientNotes(client, rsvm);
+            return RedirectToAction("ManageDashboard", "BackOffice");
+        }
 
         public ActionResult ManagePocketChecks()
         {
@@ -127,27 +173,6 @@ namespace OPIDDaily.Controllers
         public ActionResult PocketChecksReport()
         {
             return View("PocketChecksReport");
-        }
-
-        public JsonResult GetPocketChecks(int page, int rows)
-        {
-            List<PocketCheckViewModel> pchecks = PocketChecks.GetPocketChecks();
-            int pageIndex = page - 1;
-            int pageSize = rows;
-            int totalRecords = pchecks.Count;
-            int totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
-
-            pchecks = pchecks.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-           
-            var jsonData = new
-            {
-                total = totalPages,
-                page,
-                records = totalRecords,
-                rows = pchecks
-            };
-
-            return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetDependentPocketChecks(int id, int page)

@@ -1,0 +1,56 @@
+﻿@model OPIDDaily.Models.RequestedServicesViewModel
+
+@{
+    ViewBag.Title = "Express Client";
+    Layout = "~/Views/Shared/_BackOffice.cshtml";
+}
+
+<style>
+    input[type="checkbox"] {
+        transform: scale(0.75,0.75);
+    }
+</style>
+
+<br /><br /><br />
+
+<link href="@Url.Content("~/Content/jquery.jqGrid/copied.ui.jqgrid.css")" rel="stylesheet" />
+
+<script src="@Url.Content("~/Scripts/i18n/grid.locale-en.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.jqGrid.min.js")" type="text/javascript"></script>
+
+
+<h3>Express Client: @ViewBag.ClientName</h3>
+<h4>DOB: @ViewBag.DOB (Age @ViewBag.Age)</h4>
+<h4>Agency:&nbsp;@ViewBag.Agency</h4>
+@if(!string.IsNullOrEmpty(@ViewBag.Notes))
+{
+    <h4>Notes:&nbsp;<strong>@ViewBag.Notes</strong></h4>
+}
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <section id="expressclientForm">
+            @using (Html.BeginForm("StoreExpressClientServiceRequest", "BackOffice", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationMessage("ServiceRequestError", new { @class = "text-danger" })
+
+                <h4>Requested Services</h4>
+                <hr />
+
+                @Html.Partial("_BackOfficeRequestedServicesForm")
+                @Html.Partial("_BootstrapSupportingDocuments", Model)
+
+                <br />
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Save Service Request" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+

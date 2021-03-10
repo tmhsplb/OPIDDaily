@@ -109,108 +109,10 @@ namespace OPIDDaily.Controllers
             DailyHub.Refresh();
             return "Success";
         }
- 
-        public ActionResult ServiceRequest()
-        {
-            int nowServing = NowServing();
-
-            if (nowServing == 0)
-            {
-                ViewBag.Warning = "Please first select a client from the Clients Table.";
-                return View("Warning");
-            }
-                      
-            Client client = Clients.GetClient(nowServing, null);
-
-            if (client == null)
-            {
-                ViewBag.Warning = "Could not find selected client.";
-                return View("Warning");
-            }
-
-            if (client.LCK)
-            {
-                ViewBag.Warning = "Operation ID has currently locked Service Requests for this client.";
-                return View("Warning");
-            }
-
-            if (CheckManager.HasHistory(client.Id))
-            {
-                //client.EXP = false;
-                return RedirectToAction("ExistingClientServiceRequest");
-            }
-
-            //client.EXP = true;
-            return RedirectToAction("ExpressClientServiceRequest");
-        }
-
-        public ActionResult ExpressClientServiceRequest()
-        {
-            int nowServing = NowServing();
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
-            Client client = Clients.GetClient(nowServing, rsvm);
-            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
-
-            ViewBag.ClientName = Clients.ClientBeingServed(client);
-            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
-            ViewBag.Age = client.Age;
-
-            //  VoucherBackButtonHelper("Get", rsvm);
-            return View("ExpressClientServiceRequest", rsvm);
-        }
-
-        public ActionResult ExistingClientServiceRequest()
-        { 
-            int nowServing = NowServing();
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
-            Client client = Clients.GetClient(nowServing, rsvm);
-            rsvm.MBVDS = MBVDS.GetMBVDSelectList();
-
-            ViewBag.ClientName = Clients.ClientBeingServed(client);
-            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
-            ViewBag.Age = client.Age;
-
-            // VoucherBackButtonHelper("Get", rsvm);
-            return View("ExistingClientServiceRequest", rsvm);
-        }
-
-        private bool RequestingBothTIDandTDL(RequestedServicesViewModel rsvm)
-        {
-            bool tid = rsvm.NewTID || rsvm.ReplacementTID;
-            bool tdl = rsvm.NewTDL || rsvm.ReplacementTDL;
-
-            return tid && tdl;
-        }
-
-        private bool RequestingBothBCandMBVD(RequestedServicesViewModel rsvm)
-        {
-            return rsvm.BC & rsvm.MBVD;
-        }
-
-        private string ServiceRequestError(RequestedServicesViewModel rsvm)
-        {
-            string error = string.Empty;
-
-            if (RequestingBothTIDandTDL(rsvm))
-            {
-                error = "By Texas State Law no resident may possess both an ID and a DL.";
-            }
-            else if (RequestingBothBCandMBVD(rsvm))
-            {
-                error = "Cannot request both in-state and out-of-state birth certificates.";
-            }
-            /*
-            else if (rsvm.MBVD)
-            {
-                error = "Sorry, Operation ID cannot currently process a request for an out-of-state birth certificate.";
-            }
-            */
-            return error;
-        }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult StoreExpressServiceRequest(RequestedServicesViewModel rsvm)
+        public ActionResult StoreExpressClientServiceRequest(RequestedServicesViewModel rsvm)
         {
             // Called when 
             //   ~/Views/CaseManager/ExpressClientServiceRequest.cshtml
@@ -232,12 +134,12 @@ namespace OPIDDaily.Controllers
 
             Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
-            return RedirectToAction("ManageClients", "CaseManager");
+            return RedirectToAction("ManageMyClients", "CaseManager");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult StoreExistingServiceRequest(RequestedServicesViewModel rsvm)
+        public ActionResult StoreExistingClientServiceRequest(RequestedServicesViewModel rsvm)
         {
             // Called when          
             //    ~/Views/CaseManager/ExistingClientServiceRequest.cshtml
@@ -258,54 +160,7 @@ namespace OPIDDaily.Controllers
 
             Clients.StoreRequestedServicesAndSupportingDocuments(client.Id, rsvm);
             PrepareClientNotes(client, rsvm);
-            return RedirectToAction("ManageClients", "CaseManager");
-        }
-
-        public ActionResult PrepareServiceTicket()
-        {
-            int nowServing = NowServing();
-
-            if (nowServing == 0)
-            {
-                ViewBag.Warning = "Please first select a client from the Clients Table.";
-                return View("Warning");
-            }
-
-            RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
-            Client client = Clients.GetClient(nowServing, rsvm);
-
-            if (client.HH != 0)
-            {
-                ViewBag.Warning = "Cannot prepare a Service Ticket for a dependent of another client.";
-                return View("Warning");
-            }
-
-            PrepareClientNotes(client, rsvm);
-            
-            DateTime today = Extras.DateTimeToday();
-            ViewBag.VoucherDate = today.ToString("MM/dd/yyyy");
-            ViewBag.Expiry = client.Expiry.ToString("ddd MMM d, yyyy");
-                         
-            ViewBag.ClientName = Clients.ClientBeingServed(client, false);
-            ViewBag.BirthName = client.BirthName;
-            
-
-           // ViewBag.CurrentAddress = Clients.ClientAddress(client);
-            ViewBag.Phone = (!string.IsNullOrEmpty(client.Phone) ? client.Phone : "N/A");
-            ViewBag.Email = (!string.IsNullOrEmpty(client.Email) ? client.Email : "N/A");
-
-            ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
-           // ViewBag.BirthPlace = Clients.GetBirthplace(client);
-            ViewBag.Age = client.Age;
-            ViewBag.Agency = Agencies.GetAgencyName(client.AgencyId);  // rsvm.Agency will be the Id of an Agency as a string
-
-            List<ClientViewModel> dependents = Clients.GetDependents(nowServing);
-
-            var objTuple = new Tuple<List<ClientViewModel>, RequestedServicesViewModel>(dependents, rsvm);
-
-            //  VoucherBackButtonHelper("Set", rsvm);
-           // return View("PrintVoucher", objTuple);
-            return View("PrintServiceTicket", objTuple);
+            return RedirectToAction("ManageMyClients", "CaseManager");
         }
     }
 }

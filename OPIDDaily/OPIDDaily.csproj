@@ -1033,6 +1033,12 @@
     <Content Include="Views\BackOffice\PocketChecksReport.cshtml" />
     <Content Include="Views\CaseManager\PrintServiceTicket.cshtml" />
     <Content Include="Views\MBVD\MBVDS.cshtml" />
+    <Content Include="Views\FrontDesk\ExistingClientServiceRequest.cshtml" />
+    <Content Include="Views\FrontDesk\ExpressClientServiceRequest.cshtml" />
+    <Content Include="Views\Interviewer\ExistingClientServiceRequest.cshtml" />
+    <Content Include="Views\Interviewer\ExpressClientServiceRequest.cshtml" />
+    <Content Include="Views\BackOffice\ExistingClientServiceRequest.cshtml" />
+    <Content Include="Views\BackOffice\ExpressClientServiceRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FileDownload\" />
