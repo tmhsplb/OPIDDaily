@@ -451,7 +451,6 @@ namespace OPIDDaily.Controllers
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            //  VoucherBackButtonHelper("Get", rsvm);
             return View("ExpressClientServiceRequest", rsvm);
         }
 
@@ -475,7 +474,6 @@ namespace OPIDDaily.Controllers
             ViewBag.DOB = client.DOB.ToString("MM/dd/yyyy");
             ViewBag.Age = client.Age;
 
-            // VoucherBackButtonHelper("Get", rsvm);
             return View("ExistingClientServiceRequest", rsvm);
         }
 
