@@ -216,7 +216,7 @@ namespace OPIDDaily.Controllers
             // Newly added client becomes the client being served.
             // Entity Framework will set client.Id to the Id of the inserted client.
             // See: https://stackoverflow.com/questions/5212751/how-can-i-get-id-of-inserted-entity-in-entity-framework
-            SessionHelper.Set("NowServing", id.ToString());
+            NowServing(id);
 
             DailyHub.Refresh();
             return "Success";
@@ -272,7 +272,7 @@ namespace OPIDDaily.Controllers
             }
 
             DailyHub.Refresh();
-            SessionHelper.Set("NowServing", id.ToString());
+            NowServing(id);
             return "Success";
         }
 

@@ -82,20 +82,20 @@ namespace OPIDDaily.Controllers
                 else if (IsInRole("FrontDesk"))
                 {
                     Users.SetDashboardMsgCnt();
-                    return RedirectToAction("Home", "FrontDesk");
+                    return RedirectToAction("ManageClients", "FrontDesk");
                 }
 
                 else if (IsInRole("Interviewer"))
                 {
                     Users.SetDashboardMsgCnt();
-                    return RedirectToAction("Home", "Interviewer");
+                    return RedirectToAction("ManageDashboard", "Interviewer");
                 }
 
                 else if (IsInRole("BackOffice"))
                 {
                     Users.SetDashboardMsgCnt();
                     // Log.Debug("User is in role BackOffice. Redirect to Backoffice.Home");
-                    return RedirectToAction("Home", "BackOffice");
+                    return RedirectToAction("ManageDashboard", "BackOffice");
                 }
 
                 else if (IsInRole("Client"))
@@ -114,7 +114,7 @@ namespace OPIDDaily.Controllers
 
                 else if (IsInRole("CaseManager"))
                 {
-                    return RedirectToAction("Home", "CaseManager");
+                    return RedirectToAction("ManageMyClients", "CaseManager");
                 }
 
                 ViewBag.Warning = "User in unrecognized role.";

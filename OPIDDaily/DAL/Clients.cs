@@ -776,7 +776,7 @@ namespace OPIDDaily.DAL
 
                     Client client = new Client
                     {
-                        ServiceDate = today,
+                        ServiceDate = today.AddHours(12),
                         ServiceTicket = familyHead.ServiceTicket,
                         Stage = "Screened",
                         FirstName = cvm.FirstName,
