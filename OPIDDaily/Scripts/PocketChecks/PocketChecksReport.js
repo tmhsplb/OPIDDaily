@@ -8,12 +8,12 @@ $("#pocketChecksReportGrid").jqGrid({
     colNames: ['Id', 'Agency', 'Name', 'HH', 'Date', 'Item', 'Check', 'Status', 'Notes'],
     colModel: [
         { key: true, hidden: true, name: 'Id', index: 'Id' },  // Id may not be unique!
-        { key: false, name: 'AgencyName', index: 'AgencyName', width: 80, editable: false, sortable: false, search: false },
-        { key: false, name: 'Name', index: 'Name', width: 80, editable: true, sortable: false, search: false },
+        { key: false, name: 'AgencyName', index: 'AgencyName', width: 80, editable: false, sortable: false, search: true },
+        { key: false, name: 'Name', index: 'Name', width: 80, editable: true, sortable: false, search: true },
         { key: false, name: 'HeadOfHousehold', index: 'HeadOfHousehold', width: 25, align: 'center', editable: false, sortable: false, search: false },
         { key: false, align: 'center', name: 'Date', index: 'Date', formatter: 'date', width: 40, editable: true, sortable: true, search: false },
         { key: false, align: 'center', name: 'Item', index: 'Item', width: 30, editable: true, sortable: false, search: false },
-        { key: false, align: 'center', name: 'Check', index: 'Check', width: 30, editable: true, sortable: false, search: false },
+        { key: false, align: 'center', name: 'Check', index: 'Check', width: 30, editable: true, sortable: false, search: true },
         { key: false, name: 'Status', index: 'Status', width: 60, editable: true, edittype: 'select', editoptions: { value: { '': '', 'Cleared': 'Cleared', 'Voided': 'Voided', 'Voided/No Reissue': 'Voided/No Reissue', 'Voided/Resissued': 'Voided/Reissued', 'Voided/Replaced': 'Voided/Replaced', 'Scammed Check': 'Scammed Check', 'Used': 'Used', 'Not Used': 'Not Used' } }, sortable: false, search: false },
         { key: false, hidden: false, name: 'Notes', index: 'Notes', width: 150, editable: true, sortable: false, search: false, edittype: 'textarea', editoptions: { rows: '2', columns: '10' } }
     ],
@@ -84,8 +84,8 @@ $("#pocketChecksReportGrid").jqGrid({
     } // close subgridRowExpanded
 })
 
-
-jQuery("#pocketChecksReportGrid").jqGrid('navGrid', '#pocketChecksReportPager', { edit: true, add: false, del: false, search: false, refresh: false },
+jQuery("#pocketChecksReportGrid").jqGrid('filterToolbar', { searchOperators: true });
+jQuery("#pocketChecksReportGrid").jqGrid('navGrid', '#pocketChecksReportPager', { edit: true, add: false, del: false, search: false, refresh: true },
     {
         zIndex: 100,
         url: "EditPCRPocketCheck", 

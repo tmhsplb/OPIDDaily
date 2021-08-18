@@ -34,7 +34,32 @@ namespace OPIDDaily.DAL
             return 0 < pcheck.Num && pcheck.Num < 9999;
         }
 
-        public static List<PocketCheckViewModel> GetPocketChecks()
+        
+        private static List<PocketCheckViewModel> GetFilteredPocketChecks(SearchParameters sps, List<PocketCheckViewModel> pocketChecks)
+        {
+            List<PocketCheckViewModel> filteredPocketChecks;
+
+            if (!string.IsNullOrEmpty(sps.AgencyName))
+            {
+                filteredPocketChecks = pocketChecks.Where(pc => pc.AgencyName != null && pc.AgencyName.ToUpper().StartsWith(sps.AgencyName.ToUpper())).ToList();
+            }
+            else if (!string.IsNullOrEmpty(sps.Name))
+            {
+                filteredPocketChecks = pocketChecks.Where(pc => pc.Name != null && pc.Name.ToUpper().StartsWith(sps.Name.ToUpper())).ToList();
+            }
+            else if (!string.IsNullOrEmpty(sps.Check))
+            {
+                filteredPocketChecks = pocketChecks.Where(pc => pc.Check != 0 && Convert.ToString(pc.Check).Equals(sps.Check)).ToList();
+            }
+            else
+            {
+                filteredPocketChecks = pocketChecks;
+            }
+
+            return filteredPocketChecks;
+        }
+
+        public static List<PocketCheckViewModel> GetPocketChecks(SearchParameters sps)
         {
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
@@ -53,12 +78,18 @@ namespace OPIDDaily.DAL
                         }
                     }
                 }
- 
-                // Make sure that pocket checks are listed in alphabetical order
-                pocketChecks = pocketChecks.OrderBy(pc => pc.Name).ToList();
-                return pocketChecks;
+
+                if (sps != null && sps._search == false)
+                {
+                    // Make sure that pocket checks are listed in alphabetical order
+                    pocketChecks = pocketChecks.OrderBy(pc => pc.Name).ToList();
+                    return pocketChecks;
+                }
+
+                return GetFilteredPocketChecks(sps, pocketChecks); 
             }
         }
+
 
         public static void EditPocketCheck(PocketCheckViewModel pcvm)
         {

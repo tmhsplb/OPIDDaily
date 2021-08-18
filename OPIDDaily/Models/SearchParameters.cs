@@ -17,6 +17,8 @@ namespace OPIDDaily.Models
 
         public string AgencyName { get; set; }
 
+        public string Name { get; set; }
+
         public string LastName { get; set; }
 
         public string FirstName { get; set; }
@@ -26,6 +28,8 @@ namespace OPIDDaily.Models
         public string BirthName { get; set; }
 
         public string sDOB { get; set; } 
+
+        public string Check { get; set; }
  
       //  public string searchField { get; set; }
 

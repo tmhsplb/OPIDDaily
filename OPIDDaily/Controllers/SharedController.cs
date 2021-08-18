@@ -938,9 +938,9 @@ namespace OPIDDaily.Controllers
             return View("PrintExistingClient", objTuple);
         }
 
-        public JsonResult GetPocketChecks(int page, int rows)
+        public JsonResult GetPocketChecks(SearchParameters sps, int page, int rows)
         {
-            List<PocketCheckViewModel> pchecks = PocketChecks.GetPocketChecks();
+            List<PocketCheckViewModel> pchecks = PocketChecks.GetPocketChecks(sps);
             int pageIndex = page - 1;
             int pageSize = rows;
             int totalRecords = pchecks.Count;
