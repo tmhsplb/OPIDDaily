@@ -404,7 +404,7 @@ namespace OPIDDaily.DAL
             {
                 ClientId = client.Id,
                 HeadOfHousehold = client.HeadOfHousehold,
-                HH = client.HH,
+                HH = (client.HHId == null ? 0 : (int)client.HHId),
                 Date = (DateTime)check.Date,
                 Name = Clients.ClientBeingServed(client, false),
                 DOB = client.DOB,

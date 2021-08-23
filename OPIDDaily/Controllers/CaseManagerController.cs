@@ -105,7 +105,7 @@ namespace OPIDDaily.Controllers
                 return "Failure";
             }
 
-            Clients.DeleteMyClient(id);
+            Clients.DeleteDependentClient(id);
             DailyHub.Refresh();
             return "Success";
         }

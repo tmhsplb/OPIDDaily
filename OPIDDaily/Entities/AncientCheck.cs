@@ -20,6 +20,7 @@ namespace OpidDailyEntities
         public DateTime? Date { get; set; }
         public string sDate { get; set; }
         public string Service { get; set; }
+        public int Amount { get; set; }
         public string Disposition { get; set; }
         public string Notes { get; set; }
     }

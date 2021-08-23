@@ -210,7 +210,7 @@ namespace OPIDDaily.DAL
             return new PocketCheck
             {
                 ClientId = client.Id,
-                HH = client.HH,
+                HH = (client.HHId == null ? 0 : (int)client.HHId),
                 Date = vvm.Date.AddHours(12),  
                 Name = Clients.ClientBeingServed(client, false),
                 DOB = client.DOB,

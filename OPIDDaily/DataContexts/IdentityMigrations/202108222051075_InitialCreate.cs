@@ -35,6 +35,7 @@ namespace OPIDDaily.DataContexts.IdentityMigrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
+                        AgencyId = c.Int(nullable: false),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),

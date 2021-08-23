@@ -20,7 +20,7 @@ namespace OPIDDaily.DAL
 
             using (OpidDailyDB opiddailycontext = new DataContexts.OpidDailyDB())
             {
-                List<Client> clients = opiddailycontext.Clients.Where(c => c.HH == 0 && c.ServiceDate != c.Expiry && today <= c.Expiry && c.Active == true).ToList();
+                List<Client> clients = opiddailycontext.Clients.Where(c => c.HHId == null && c.ServiceDate != c.Expiry && today <= c.Expiry && c.IsActive == true).ToList();
 
                 foreach (Client client in clients)
                 {

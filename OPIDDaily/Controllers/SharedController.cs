@@ -284,7 +284,7 @@ namespace OPIDDaily.Controllers
 
         public string DeleteDependentClient(int id)
         {
-            Clients.DeleteMyClient(id);
+            Clients.DeleteDependentClient(id);
             DailyHub.Refresh();
             return "Success";
         }
@@ -973,7 +973,7 @@ namespace OPIDDaily.Controllers
             RequestedServicesViewModel rsvm = new RequestedServicesViewModel();
             Client client = Clients.GetClient(nowServing, rsvm);
 
-            if (client.HH != 0)
+            if (client.HHId != 0)
             {
                 ViewBag.Warning = "Cannot prepare a Service Ticket for a dependent of another client.";
                 return View("Warning");

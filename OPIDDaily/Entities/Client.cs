@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace OpidDailyEntities
 {
+    // The list of client is threaded: both parents and children are in the Clients table
+    // using the Foreign Key technique described in:
+    // https://stackoverflow.com/questions/29516342/fk-to-the-same-table-code-first-entity-framework
+    // This solution does not make use of the Fluent API. An overview of the FLuent API is provided
+    // in this article:
+    // https://weblogs.asp.net/dotnetstories/looking-into-fluent-api-in-an-asp-net-mvc-4-0-code-first-application
     public class Client
     {
         [Key]
@@ -12,6 +19,12 @@ namespace OpidDailyEntities
 
         public DateTime ServiceDate { get; set; }
 
+        public DateTime Expiry { get; set; }
+
+        public int AgencyId { get; set; }
+
+        public string AgencyName { get; set; }
+        
         public string ServiceTicket { get; set; }
 
         public int WaitTime { get; set; }
@@ -26,15 +39,21 @@ namespace OpidDailyEntities
 
         public string BirthName { get; set; }
 
+        public DateTime DOB { get; set; }
+
+        public int Age { get; set; }
+
         public bool Conversation { get; set; }
 
         public bool HeadOfHousehold { get; set; }
 
-        public int HH { get; set; }
+        [ForeignKey("Household")]
+        public int? HHId { get; set; }
 
-        public DateTime DOB { get; set; }
+        // This is necessary even though it has no references in the code. See the referenced article.
+        public virtual Client Household { get; set; }
 
-        public int Age { get; set; }
+        public virtual ICollection<Client> Dependents { get; set; }
 
         public string AKA { get; set; }
  
@@ -146,7 +165,7 @@ namespace OpidDailyEntities
 
         public string Disabled { get; set; }
 
-        public bool PND { get; set; }
+        public bool ACK { get; set; }
 
         public bool LCK { get; set; }
 
@@ -154,13 +173,7 @@ namespace OpidDailyEntities
 
         public bool XBC { get; set; }
 
-        public int AgencyId { get; set; }
-
-        public string AgencyName { get; set; }
-
-        public DateTime Expiry { get; set; }
-
-        public bool Active { get; set; }
+        public bool IsActive { get; set; }
 
         public ICollection<TextMsg> TextMsgs { get; set; }
 

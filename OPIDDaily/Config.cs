@@ -8,11 +8,11 @@ namespace OPIDDaily
 {
     public class Config
     {
-        public static int CaseManagerVoucherDuration
+        public static int CaseManagerExpiryDuration
         {
             get
             {
-                return Convert.ToInt32(ConfigurationManager.AppSettings["CaseManagerVoucherDuration"]);
+                return Convert.ToInt32(ConfigurationManager.AppSettings["CaseManagerExpiryDuration"]);
             }
         }
         public static string ConnectionString
@@ -20,7 +20,7 @@ namespace OPIDDaily
             get
             {
                 // The value of OpidDailyConnectionString configured on Web.config is overwritten at AppHarbor deployment time.
-                return ConfigurationManager.ConnectionStrings["OpidDailyConnectionString"].ToString();
+                return ConfigurationManager.ConnectionStrings["HereToServeConnectionString"].ToString();
             }
         }
 

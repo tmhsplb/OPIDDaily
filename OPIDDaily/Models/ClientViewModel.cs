@@ -37,7 +37,7 @@ namespace OPIDDaily.Models
 
         public int Age { get; set; }
  
-        public string PND { get; set; }
+        public string ACK { get; set; }
 
         public string LCK { get; set; }
 
